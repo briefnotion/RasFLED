@@ -1,8 +1,0 @@
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/install/strip.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/install/local.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/rpi_ws2811.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/edit_cache.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/rebuild_cache.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/list_install_components.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/PiFLED.dir
-/home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/install.dir
