@@ -464,21 +464,16 @@ struct led_strip
 
 // Large color variable. 
 
-struct CRGB
+class CRGB
 // Simple RGB varible for computation.
 {
+public: 
   char r = 0;
   char g = 0;
   char b = 0;
-  
-  CRGB ret (char R,char G,char B)
-  {
-    CRGB newColor;
-    newColor.r = R;
-    newColor.g = G; //
-    newColor.b = B;
-    return newColor;
-  }
+
+  CRGB();
+  CRGB(char,char,char);
   
   bool operator== (CRGB color)
   {
@@ -488,6 +483,20 @@ struct CRGB
       return false;
   }
 };
+
+CRGB::CRGB()
+{
+  char r = 0;
+  char g = 0;
+  char b = 0;
+}
+
+CRGB::CRGB(char R,char G,char B)
+{
+  char r = R;
+  char g = G;
+  char b = B;
+}
 
 struct bigCRGB
 // Simple RGB varible for computation.
@@ -2627,7 +2636,7 @@ void teSystem(led_strip lsStripList[], timed_event teEvent[], uint64_t tmeCurren
                   //    teEvent[channel].teDATA[event].crgbCOLORSTART1.g == 0 &&
                   //    teEvent[channel].teDATA[event].crgbCOLORSTART1.b == 0)
                   
-                  if (teEvent[channel].teDATA[event].crgbCOLORSTART1 == CRGB.ret(0,0,0))
+                  if (teEvent[channel].teDATA[event].crgbCOLORSTART1 == CRGB(0,0,0))
                   {
                     cont = true;
                   }
@@ -2929,6 +2938,10 @@ void ledprep(ws2811_t *ws2811)
 // ***************************************************************************************
 
 
+
+
+
+
 // ***************************************************************************************
 // MAIN
 // ***************************************************************************************
@@ -3112,10 +3125,11 @@ void loop()
   
   int intRestTime = RESTTIME;  // 16 = 60 fps     // Do not check for update until rest 
                                                   //  time is passed.
-
+    printf("time %d < %d\n", tmeStartTime, (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count())  );
   // ---------------------------------------------------------------------------------------
-  while((tmeStartTime + 10000) < (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()))
+  while((tmeStartTime + 100000) < (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) )
   {
+    printf("true\n");
     //  Only update the hardware when changes have been detected.
     //    This vabiable will be checked at the end of the loop.  If nothing was updated,
     //    the loop will just walk on past any hardware updates that would otherwise be
@@ -3224,9 +3238,6 @@ void loop()
 
   printf ("PiFLED Loop ... Exit\n");
   //return ret;
-  return;
-
-
 }
 
 
