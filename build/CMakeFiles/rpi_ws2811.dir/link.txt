@@ -1,2 +1,0 @@
-/usr/bin/ar qc librpi_ws2811.a  CMakeFiles/rpi_ws2811.dir/rpi_ws281x-master/mailbox.c.o CMakeFiles/rpi_ws2811.dir/rpi_ws281x-master/ws2811.c.o CMakeFiles/rpi_ws2811.dir/rpi_ws281x-master/pwm.c.o CMakeFiles/rpi_ws2811.dir/rpi_ws281x-master/pcm.c.o CMakeFiles/rpi_ws2811.dir/rpi_ws281x-master/dma.c.o CMakeFiles/rpi_ws2811.dir/rpi_ws281x-master/rpihw.c.o
-/usr/bin/ranlib librpi_ws2811.a
