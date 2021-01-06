@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/PiFLED.dir/main.cpp.o  -o PiFLED librpi_ws2811.a -lm 
