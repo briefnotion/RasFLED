@@ -1,0 +1,149 @@
+Standard Event:
+
+teEvent[ StripID ].set( tmeCurrentTime , StartInTime, Duration, Speed , 
+AnimationType , Pixel Animation Type, 
+Start 1 , Dest 1 , Start 2, Dest 2, 
+Pix Start Pos, Pix End Pos, Repeat, Clear on End);
+
+StripID - ID
+tmeCurrentTime  - Time event was Created.
+StartInTime     - How long to wait before starting animation.
+Duration        - How long the Pixel Animation runs.
+---
+Pix Start Pos   - Channel pixel start pos
+Pix End Pos     - Channel pixel start pos
+Repeat          - Animation repeats continuously.
+Clear on End    - Animtion Clears itself on end.
+
+
+
+Animation Types:
+
+AnEvSweep - Sweep activation of pixels on from Start to End
+    
+    Speed           - Duration in millis to wait before activating
+                        the next pixel in the sweep.
+                    
+    Pix Start Pos   - Cannel Pixel Position
+        to 
+    Pix End Pos     - Channel End Postion 
+
+    Start and End can be less or greater than the other. It can 
+        go backwards or forwards.
+
+
+crgbTempStart and crgbTempDest is computed before animation is 
+    called based on Start 1 , Dest 1 , Start 2, Dest 2.
+
+// ---------------------------------------------------------------------------------------
+Coding reference
+
+crgbTempStart and crgbTempDest is computed before call made.
+
+Call: 
+tempColor = crgb_anim_color(teDATA[event].intDURATION,
+                            teDATA[event].bytLEDANIMATION,
+                            crgbTempStart, crgbTempDest, 
+                            tmeCurrentTime, tmeStartAnim, 
+                            teDATA[event].booCLEARONEND);
+
+Proc:
+bigCRGB crgb_anim_color(int intDur, byte bytLedAnimation,
+                        CRGB crgbCDest1, CRGB crgbCDest2,
+                        unsigned long tmeCurrentTime, unsigned long tmeAnimTime, 
+                        boolean booClearOnEnd)
+// ---------------------------------------------------------------------------------------
+
+teEvent[ StripID ].set( tmeCurrentTime , StartInTime, Duration, Speed , 
+AnimationType , Pixel Animation Type, 
+Start 1 , Dest 1 , Start 2, Dest 2, 
+Pix Start Pos, Pix End Pos, Repeat, Clear on End);
+
+Pixel Animation Types:
+AnPiFade - Simple, low processor use, fade on pixel color from start to end 
+    Duration    - Amout of time to change from start to end. 
+    Start 1     - Start pixel Color 
+    Dest 1      - Ending Pixel Color
+    Start 2     - Not Implemented
+    Dest 2      - Not Implemented
+
+    Clear on End 
+        False   - Keeps the animation running past its expired
+            time so that no animations will overwrite its
+            Destination Color.
+        True    - Event is cleared. Color will stay until 
+            overwritten by another animation event. 
+
+
+AnPiFadeDith - Fade Pixel Colors on 
+    Duration    - Amout of time to change from start to end. 
+
+    Start Colors    - is the pixel color at Beginning of animation
+    Start 1         - Color of Pixel at Start Postion
+    Start 2         - Color of Pixel at End Postion
+
+    Destination Colors  - is the pixel color at End of animation
+    Dest 1         - Color of Pixel at Start Postion
+    Dest 2         - Color of Pixel at End Postion
+
+    ClearOnEnd:
+        False   - Keeps the animation running past its expired
+            time so that no animations will overwrite its
+            Destination Color.
+        True    - Event is cleared. Color will stay until 
+            overwritten by another animation event. 
+
+
+AnPiPulse - Pulses a light from start color to dest color 
+    and back to start color
+
+    All Pulses are to be non interfering. Start color is 
+        always 0, or clear. 
+
+    Start 1 - Color Pulsing to
+    Dest 1  - Not Implemented
+    Start 2 - Not Implemented - Dither Not Implemented
+    Dest 2  - Not Implemented - Dither Not Implemented
+
+    ClearOnEnd:
+        False   - Keeps the animation running past its expired
+            time so that no animations will overwrite its
+            Destination Color.
+        True    - ??????? Event is cleared. Color will stay until 
+            overwritten by another animation event. 
+
+    Repeat: 
+        True - Pulse will continously repeat 
+
+    For Repeat Puslse set ClearOnEnd = True, Repeat = True      
+
+
+AnPiPulseTo - Pulses to Color then back back to Color 2
+    Start 1 - Color Pulsing to
+    Dest 1  - Color Pulsing return (or return) to
+    Start 2 - Not Implemented - Dither Not Implemented
+    Dest 2  - Not Implemented - Dither Not Implemented
+
+    ClearOnEnd:
+        False   - Keeps the animation running past its expired
+            time so that no animations will overwrite its
+            Destination Color.
+        True    - ?????? Event is cleared. Color will stay until 
+            overwritten by another animation event. 
+
+    Repeat: 
+        False   - Pulse will continously not repeat
+        True    - Pulse will continously repeat. 
+                    !!!!! Colors will mismatch on repeat pass.
+
+    For Repeat Puslse set ClearOnEnd = True, Repeat = True                    
+
+
+Note:
+??????  - I don't know if this is working right.
+          This is untested.
+          I don't know why this is like this.
+
+!!!!!!  - This may work, but I doubt that the results will 
+            be appealing.
+          Maybe untested, non the less. 

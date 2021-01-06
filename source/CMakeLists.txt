@@ -19,7 +19,7 @@ option(BUILD_TEST "Build test application" ON)
 set(CMAKE_C_STANDARD 11)
 
 set(LIB_TARGET rpi_ws2811)
-set(TEST_TARGET PiFLED)
+set(TEST_TARGET RasFLED)
 
 set(LIB_PUBLIC_HEADERS
     rpi_ws281x-master/rpi_ws2811.h

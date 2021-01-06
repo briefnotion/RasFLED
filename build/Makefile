@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/Documents/Programming/source/PiFLED/source
+CMAKE_SOURCE_DIR = /home/pi/Documents/Programming/source/RasFLED/source
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/Documents/Programming/source/PiFLED/build
+CMAKE_BINARY_DIR = /home/pi/Documents/Programming/source/RasFLED/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -126,9 +126,9 @@ install/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles /home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Documents/Programming/source/RasFLED/build/CMakeFiles /home/pi/Documents/Programming/source/RasFLED/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Documents/Programming/source/PiFLED/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/Documents/Programming/source/RasFLED/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -157,6 +157,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named RasFLED
+
+# Build rule for target.
+RasFLED: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 RasFLED
+.PHONY : RasFLED
+
+# fast build rule for target.
+RasFLED/fast:
+	$(MAKE) -f CMakeFiles/RasFLED.dir/build.make CMakeFiles/RasFLED.dir/build
+.PHONY : RasFLED/fast
+
+#=============================================================================
 # Target rules for targets named rpi_ws2811
 
 # Build rule for target.
@@ -169,26 +182,13 @@ rpi_ws2811/fast:
 	$(MAKE) -f CMakeFiles/rpi_ws2811.dir/build.make CMakeFiles/rpi_ws2811.dir/build
 .PHONY : rpi_ws2811/fast
 
-#=============================================================================
-# Target rules for targets named PiFLED
-
-# Build rule for target.
-PiFLED: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 PiFLED
-.PHONY : PiFLED
-
-# fast build rule for target.
-PiFLED/fast:
-	$(MAKE) -f CMakeFiles/PiFLED.dir/build.make CMakeFiles/PiFLED.dir/build
-.PHONY : PiFLED/fast
-
 main.o: main.cpp.o
 
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/PiFLED.dir/build.make CMakeFiles/PiFLED.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/RasFLED.dir/build.make CMakeFiles/RasFLED.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -197,7 +197,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/PiFLED.dir/build.make CMakeFiles/PiFLED.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/RasFLED.dir/build.make CMakeFiles/RasFLED.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -206,7 +206,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/PiFLED.dir/build.make CMakeFiles/PiFLED.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/RasFLED.dir/build.make CMakeFiles/RasFLED.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 rpi_ws281x-master/dma.o: rpi_ws281x-master/dma.c.o
@@ -379,11 +379,11 @@ help:
 	@echo "... depend"
 	@echo "... install/strip"
 	@echo "... install/local"
+	@echo "... RasFLED"
 	@echo "... rpi_ws2811"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... list_install_components"
-	@echo "... PiFLED"
 	@echo "... install"
 	@echo "... main.o"
 	@echo "... main.i"

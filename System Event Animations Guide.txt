@@ -1,0 +1,76 @@
+Standard Event:
+
+teEvent[ StripID ].set( tmeCurrentTime , StartInTime, Duration, Speed , 
+AnimationType , Pixel Animation Type, 
+Start 1 , Dest 1 , Start 2, Dest 2, 
+Pix Start Pos, Pix End Pos, Repeat, Clear on End);
+
+StripID - ID
+tmeCurrentTime  - Time event was Created.
+StartInTime     - How long to wait before starting animation.
+Duration        - How long the Pixel Animation runs.
+---
+Pix Start Pos   - Channel pixel start pos
+Pix End Pos     - Channel pixel start pos
+Repeat          - Animation repeats continuously.
+Clear on End    - Animtion Clears itself on end.
+
+
+
+System Animation Types:
+
+AnEvClear - Clears and Ends all events at a specific time. 
+    Example:
+        teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvClear, 0, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
+    
+    Params:
+        StartInTime - How long to wait before starting animation.
+        Start Pos   - Only Clear Events that have interactions within Start and End Pos.
+        End Pos     - Only Clear Events that have interactions within Start and End Pos.
+
+AnEvClearRunning - Clears and Ends all currently running events at a specific time. 
+                    Events not started will be preserved. 
+    Example:
+        teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvClear, 0, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
+    
+    Params:
+        StartInTime - How long to wait before starting animation.
+        Start Pos   - Only Clear Events that have interactions within Start and End Pos.
+        End Pos     - Only Clear Events that have interactions within Start and End Pos.
+
+AnEvSchedule - 
+    Example:
+        teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvSchedule, AnTaDoorCloseBack, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
+
+    Params:
+        StartInTime - How long to wait before starting animation.
+        PARAM6      - Event anmation to call.
+        Start Pos   - ????? Unknown
+        End Pos     - ????? Unknown
+
+AnEvSetToEnd - 
+    Example:
+        teEvent[0].set(tmeCurrentMillis, X, X, 0, AnEvSchedule, AnEvSetToEnd, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(X, X, X), CRGB(X, X, X), 0, 0, false, false);
+        if booRepeat set to true then pulse animations will continue till end of cycle.
+
+    Params:
+        StartInTime - How long to wait before starting animation.
+        Duration    - How long the Pixel Animation runs.
+        Start Color - ????? Unknown
+        Start Color - ????? Unknown
+        Repeat      - ????? Animation repeats continuously.
+            False:  Existing pulse animations will just end.
+            True:   Existing pulse animations will continue till it gets to its end. 
+        Clear on End- ????? 
+            False: 
+            True:
+
+
+Note:
+??????  - I don't know if this is working right.
+          This is untested.
+          I don't know why this is like this.
+
+!!!!!!  - This may work, but I doubt that the results will 
+            be appealing.
+          Maybe untested, non the less. 
