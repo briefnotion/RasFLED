@@ -1,5 +1,5 @@
 # RasFLED
-Create a control module multi colored light strips. The individual modules, running on an Arduino board, will be able to run as stand alone and or, while working together, as a single device. The module will be able to be preprogrammed to display certain effects when triggered by different preprogrammed events. 
+Create a control module multi colored light strips. The individual modules, running on a Raspberry Pi 3b, will be able to run as stand alone and or, while working together, as a single device. The module will be able to be preprogrammed to display certain effects when triggered by different preprogrammed events. 
 
 ## Description:
 LED is an acronym for Light Emitting Diode. My goal for this little project is to create a control module multi colored light strips. The individual modules, running on an Arduino board, will be able to run as stand alone and or, while working together, as a single device. The module will be able to be preprogrammed to display certain effects when triggered by different preprogrammed events. 
@@ -18,7 +18,7 @@ The F in FLED stands of Failed, as in I failed to receive backing for this proje
 
 ## Getting Started
 Its probably best to go to the wiki first, considering its may be more up to date.
-* [FLED wiki](https://github.com/briefnotion/RasFled/wiki)
+* [RasFLED wiki](https://github.com/briefnotion/RasFled/wiki)
 
 
 
@@ -41,3 +41,4 @@ Anyway, enough of the sad stuff. I’ll tell you what I know. I will develop a m
 
 The truth is I have to fund the model myself, because that’s how the Federation works when you are alone. This Censor can’t pay for it because it doesn’t get money. It just wants to be useful to its society and not die in exchange.
 
+note: This document was ported over from the FLED project and has not been completely proofread.  Disregard any references that may be to the Arduino Nano.
