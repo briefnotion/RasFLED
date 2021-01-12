@@ -100,8 +100,8 @@ AnPiPulse - Pulses a light from start color to dest color
     All Pulses are to be non interfering. Start color is 
         always 0, or clear. 
 
-    Start 1 - Color Pulsing to
-    Dest 1  - Not Implemented
+    Start 1 - Not Implemented
+    Dest 1  - Color Pulsing to
     Start 2 - Not Implemented - Dither Not Implemented
     Dest 2  - Not Implemented - Dither Not Implemented
 

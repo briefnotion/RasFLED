@@ -48,6 +48,7 @@ AnEvSchedule -
         Start Pos   - ????? Unknown
         End Pos     - ????? Unknown
 
+
 AnEvSetToEnd - 
     Example:
         teEvent[0].set(tmeCurrentMillis, X, X, 0, AnEvSchedule, AnEvSetToEnd, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(X, X, X), CRGB(X, X, X), 0, 0, false, false);
@@ -63,7 +64,7 @@ AnEvSetToEnd -
             True:   Existing pulse animations will continue till it gets to its end. 
         Clear on End- ????? 
             False: 
-            True:
+            True:   Set to end events in the future also.
 
 
 Note:
