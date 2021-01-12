@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.03
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.04
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,11 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// *
+// * V 0.04 _210113
+// *    - Minor Changes code.
+// *    - Added and changed comments.
+// *    - Removed unneeded commented code.
 // *
 // * V 0.03 _210112
 // *    - Rebuilt all animations. These are slightly more interesting than the ones 
@@ -202,7 +207,6 @@ static char VERSION[] = "XX.YY.ZZ";
 // -------------------------------------------------------------------------------------
 // LED Strip Setup
 
-
 // Door 1
 //TOTAL NUM_LEDS    482     
 
@@ -221,44 +225,6 @@ static char VERSION[] = "XX.YY.ZZ";
 // Overhead
 #define s1Bs          66      // s1 B Start
 #define s1Be          117     // s1 B End
-
-
-
-
-/*
-// TEST
-#define NUM_LEDSs0    123     
-// Door 2
-#define s0As          0       // s0 A Start
-#define s0Ae          30      // s0 A End
-// Overhead 1
-#define s0Bs          31      // s0 B Start
-#define s0Be          60     // s0 B End
-
-#define NUM_LEDSs1    118
-// Door 2
-#define s1As          122     // 0 s1 A Start   // was 0
-#define s1Ae          187     // 65 s1 A End    // was 65
-// Overhead 2
-#define s1Bs          188     // 66 s1 B Start  // was 66
-#define s1Be          239     // 117 s1 B End   // was 117
-
-#define NUM_LEDSs2    123
-// Door 3
-#define s2As          240     // s0 A Start     // was 0
-#define s2Ae          309     // s0 A End       // was 69
-// Overhead 3
-#define s2Bs          310     // s0 B Start     // was 70
-#define s2Be          361     // s0 B End       // was 121
-
-#define NUM_LEDSs3    118
-// Door 4
-#define s3As          362     // 0 s1 A Start   // was 0
-#define s3Ae          427     // 65 s1 A End    // was 65
-// Overhead 4
-#define s3Bs          430     // 66 s1 B Start  // was 66
-#define s3Be          481     // 117 s1 B End   // was 117
-*/
 
 // -------------------------------------------------------------------------------------
 // Arduino switch pin for doors and switches
@@ -279,12 +245,12 @@ static char VERSION[] = "XX.YY.ZZ";
 // -------------------------------------------------------------------------------------
 
 #define NUM_CHANNELS      4   // Amount of LED strips we will be controlling.
-#define NUM_TIMED_EVENTS  50  //15  // Untill I can remember how LL, this is being
+#define NUM_TIMED_EVENTS  50  // Untill I can remember how LL, this is being
 //  Also, total number of this will be multiplied by the
 //  amount of LED strips you have setup.  Watch your memory.
-#define NUM_SWITCHES      4   // 4
+#define NUM_SWITCHES      4   
 
-#define BRIGHTNESS        1  //96  Using Example Code.  Max unknown
+#define BRIGHTNESS        96  //96  Using Example Code.  Max unknown
 #define FRAMES_PER_SECOND 60 // Will not be necessary, but keeping, for now, just in 
 //  case.
 
@@ -363,6 +329,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // Main Power On Animation
 #define AnTaPowerOn             1
 
+// -------------------------------------------------------------------------------------
 // Scripts 
 
 // Door Open Animation 
@@ -382,6 +349,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // Over Off Animation
 #define AnTaStripOverOff        5
 
+// -------------------------------------------------------------------------------------
 // Effects
 
 //  Normal Effects  
@@ -437,7 +405,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // ***************************************************************************************
 
 // Console
-class Console
+class Console  // Doesnt Work
 {
   private:
   struct XY
@@ -624,8 +592,6 @@ struct stupid_random
     while(pos < StuRNDsize)
     {
       // Get a number.
-      //number = rand(StuRNDsize);
-
       number = rand() % StuRNDsize;
       number = floor(number);
 
@@ -698,9 +664,7 @@ struct led_strip
   }
 };
 
-
 // -------------------------------------------------------------------------------------
-
 
 // Large color variable. 
 
@@ -745,7 +709,6 @@ struct bigCRGB
   bool complete = true;
 };
 
-
 // -------------------------------------------------------------------------------------
 
 // Timed Event Data Variable
@@ -779,8 +742,6 @@ struct timed_event_data
     // since then.
 
     if (booCOMPLETE == true)
-      //if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() >= tmeSTARTTIME + intDURATION +
-      //    ((abs(intENDPOS - intSTARTPOS) + 1) * intSPEED))
     {
       // The event repeats, collision is irrelevant.
       if (booREPEAT == true)
@@ -1410,7 +1371,6 @@ struct timed_event
       if (booEventActive[e] == true && booEventComplete[e] == true)
       {
         teDATA[e].booCOMPLETE = true;
-        //teDATA[e].PostCheck(tmeCurrentTime, booEventColision[e]);
         teDATA[e].PostCheck(tmeCurrentTime);
       }
     }
@@ -1486,7 +1446,7 @@ struct hardware_monitor
       booPREVCHANGEDETECTED = true;
       return  false;
     }
-    // Only report change of status when Leeway time is passed.  This is a essentially and
+    // Only report change of status when Leeway time is passed.  This is a essentially a
     //  debouncer.
     else if (tmeTme < (tmeCHANGEDETECTEDTIME + tmeLEEWAY))
     {
@@ -1516,7 +1476,6 @@ int intRandomHD(int intBase)
   int intUpperOffset = (intBase * 2) - intLowerOffset;
   return ((rand() % intUpperOffset) + intLowerOffset);
 }
-
 
 // Clear events on a channel 
 void vdClearAllTimedEvent(timed_event teEvent[], int intPos, int intStartPos, int intEndPos)
@@ -1801,27 +1760,6 @@ void vdPowerOnAnimation(led_strip lsStrips[], int intStripID, timed_event teEven
   teEvent[1].set(tmeCurrentTime, 890, intDur, intSp, AnEvSweep, AnPiFade, false, CRGB(0, 0, 25), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[Front_Over].Ed, lsStrips[Front_Door].St, false, true);
   // Clear Back Door
   teEvent[0].set(tmeCurrentTime, 1480, intDur, intSp, AnEvSweep, AnPiFade, false, CRGB(0, 0, 25), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[Back_Over].Ed, lsStrips[Back_Door].St, false, true);
-}
-*/
-
-// -------------------------------------------------------------------------------------
-
-// Pulse white then green fadeout
-
-/*
-void vdSimplePulse(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Just to show the lights work when the program starts.        
-// vdSimplePulse(teEvent, 1, tmeCurrentTime);
-{
-  int intTm;
-  int intDur;
-  int intSp;
-
-  intDur = 250; intSp = 5;
-  // Pulse Front Door
-  teEvent[1].set(tmeCurrentTime, 50, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(125, 125, 125), CRGB(0, 0, 25), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[Front_Over].Ed, lsStrips[Front_Door].St, false, true);
-  // Pulse Back Door
-  teEvent[0].set(tmeCurrentTime, 50, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(125, 125, 125), CRGB(0, 0, 25), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[Back_Over].Ed, lsStrips[Back_Door].St, false, true);
 }
 */
 
@@ -2145,12 +2083,12 @@ void vdPacificaishAnimation(led_strip lsStrips[], int intStripID, timed_event te
 // -------------------------------------------------------------------------------------
 
 void vdEndAllAnimationsADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Door Open Stage 0
-// Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
+// Run this routine on all Doors after all doors are closed to ensure no lingering animations have not been ended for whatever reason.
 {
   printf("vdEndAllAnimationsADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 15000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
 }
+
 
 void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 0
@@ -2162,6 +2100,7 @@ void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, timed_event 
   int intCt;
   int intSp;
 
+  // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
   CRGB lead = CRGB(20, 20, 20);
@@ -2188,26 +2127,31 @@ void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, timed_event 
   intDur = 50; intSp = 1; intCt = lsStrips[intStripID].Ct();
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
+  
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 100; intSp = 2; intCt = lsStrips[intStripID].Ct();
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
+  
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 200; intSp = 4; intCt = lsStrips[intStripID].Ct();
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
+  
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 400; intSp = 8; intCt = lsStrips[intStripID].Ct();
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
+  
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 800; intSp = 16; intCt = lsStrips[intStripID].Ct();
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, 100, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
+  
   //intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   // Repeat Pulse
@@ -2215,19 +2159,22 @@ void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, timed_event 
   int intMid = lsStrips[intStripID].Ct() / 2;
   int intTm2Off = (intMid * intSp + intDur) /2;
   
+  // Pulse up to mid
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed - intMid, true, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed - intMid, true, true);
 
+  // Pulse down to mid
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St + intMid, true, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St + intMid, true, true);
 }
 
+
 void vdDoorCloseRunningADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Door Open Stage 0
-// Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
+// Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
 {
   printf("vdDoorCloseRunningADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
+  // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
   int intTm;
@@ -2238,22 +2185,19 @@ void vdDoorCloseRunningADV(led_strip lsStrips[], int intStripID, timed_event teE
   CRGB lead = CRGB(20, 20, 20);
   CRGB shadow = CRGB(50 ,50, 50);
 
-  //teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 5, 2000, 0, AnEvClearRunning, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
+  intTm = 600; intDur = 5000; intSp = 50; intCt = lsStrips[intStripID].Ct();
 
-  // Door Open Animation
-  intTm = 600; intDur = 5000; intSp = 50; intCt = lsStrips[intStripID].Ct(); // was 60
-
-  // Clear set background to door open colors.
+  // Clear set background colors.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(0, 0, 32), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
 
 void vdDoorCloseActiveADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Door Open Stage 0
-// Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
+// Effect to run on doors when all closed doors at least one other door is open.
 {
   printf("vdDoorCloseRunningADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
+  // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
   int intTm;
@@ -2272,22 +2216,25 @@ void vdDoorCloseActiveADV(led_strip lsStrips[], int intStripID, timed_event teEv
 
   intTm = 100; intDur = 5000; intSp = 5;
 
+  // Pulse to white (accumulation of prev color and this color = CRGP(70, 70, 70) then back to original color.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(30, 62, 70) , CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, false);
   
 }
 
+
 void vdPacificaishAnimationADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Blue Waves
+// Blue Waves. Much more interesting than the old version of this.
 {
   printf("vdPacificaishAnimationADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
+  // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
   // Swap sweep start and end, depending on front or back.
   int start;
   int end;
 
-  teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 0, 0, AnEvClearRunning, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, false);
+  //teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 0, 0, AnEvClearRunning, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, false);
 
   if (lsStrips[intStripID].Cl == 0)
   {
@@ -2314,6 +2261,7 @@ void vdPacificaishAnimationADV(led_strip lsStrips[], int intStripID, timed_event
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(10, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(30, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
+  // Counter waves.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(50, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(20, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
@@ -2321,24 +2269,19 @@ void vdPacificaishAnimationADV(led_strip lsStrips[], int intStripID, timed_event
 
 }
 
+
 void vdCloseOverADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Conviencance Lights
+// Overhead Lights Off
 {
   printf("vdCloseOverADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
-  int intTm;
-  int intDur;
-  int intSp;
 
-  int bgonedly;
-
-  int intDelay;
-  
+  // Just set all the current over head lights to fade away.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
 }
 
 void vdCoADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Conviencance Lights
+// Conviencance Lights On then Off.
 {
   printf("vdCoADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
   int intTm;
@@ -2346,9 +2289,6 @@ void vdCoADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsign
   int intSp;
 
   int bgonedly;
-
-  int intDelay;
-  
 
   // Assign the top and bottom of the strip
   int top;
@@ -2366,8 +2306,6 @@ void vdCoADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsign
     bot = lsStrips[intStripID].St;
 }
 
-  
-
   // Background Color Fade out.
   // Set the background color.
   CRGB background = CRGB(40, 8, 0);
@@ -2375,14 +2313,18 @@ void vdCoADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsign
   
   intTm = 500; intDur = 3000; intSp = 250;
 
+  // Set the currently running animations to fade away. (NOTE: CLEARONEND = true to end scheduled future animations end on complete, also.)
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
+  //Set All the animations to end after the code 4 lines down, is finished fading away  
   bgonedly = (lsStrips[intStripID].Ct() * intSp + intDur);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, bgonedly, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
+  // Fading away by writing a color as background, then slowly sweeping in the same color in reverse color, to make it disappear slowly. 
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 500, 0, AnEvSweep, AnPiFade, false,  CRGB(0, 0, 0), background, CRGB(0, 0, 0), CRGB(0, 0, 0), bot, top, false, false);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFade, true,  CRGB(0, 0, 0), background, CRGB(0, 0, 0), CRGB(0, 0, 0), bot, top, false, false);
 
+  // The Pulses.  Timed according to their own speed.
   intTm = 500; intSp = 30;
   intDur = intSp * 6;
 
@@ -2392,18 +2334,12 @@ void vdCoADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsign
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm + (2 * bgonedly), intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), backgroundbgone, CRGB(0, 0, 0), CRGB(0, 0, 0), top, bot, true, false);
   // Schedule all lights to turn ahead of time at end of cycle
   // teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, AUXDRLINGERBCK - 6000, 9000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, false);
-
-  // The Lights.
-  //teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 15000, 0, AnEvSweep, AnPiTwinkle, false, CRGB(200, 0, 0), CRGB(0, 200, 0), CRGB(0, 0, 200), CRGB(2, 75, 3), lsStrips[intStripID].St +6, lsStrips[intStripID].Ed -6, false, false);
-  // with Sparkle
-  //teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 5500, 0, AnEvSweep, AnPiTwinkle, false, CRGB(128, 128, 128), CRGB(64, 0, 64), CRGB(0, 64, 64), CRGB(2, 85, 1), lsStrips[intStripID].St +6, lsStrips[intStripID].Ed -6, true, false);
+  // !!! Need to get AUXDRLINGERBACK back into the code.
 }
 
 
-
-
 void vdAddOpenADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Turn (force) Additional Lights On on a Strip
+// Turn (force) Additional Lights On on to show the door is open.
 {
   printf("vdAddOpenADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
   //teEvent[lsStrips[intStripID +1].Cl].set(tmeCurrentTime, 1000, 1000, 80, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(125,124,16), CRGB(0, 0, 0), CRGB(0, 0, 0), top, top + lsStrips[intStripID +1].Ct() /2, false, false);
@@ -2432,11 +2368,13 @@ void vdAddOpenADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], u
   
 }
 
+
 void vdAddCloseADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
   printf("vdAddCloseADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
+  // Seach the strip for light colors and set them to end after animation completes.  
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(254, 254, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(254, 254, 254), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 }
@@ -3316,6 +3254,9 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
 
   // Scan Through Doors and Check for Changes
 
+  // DO NOT CLEAR ANIMATIONS HERE!  CLEAR ANIMATIONS IN ANIMATION SCRIPT!
+  //              (easier to track and debug that way)
+
   // Check for newly opened and run animation on them.
   for (int door=0; door < NUM_SWITCHES; door++)
   {
@@ -3329,12 +3270,13 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
         if (hwmDoor[door].ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
         {
           strip = door *2;
-          //Door Animation
-
+          
+          // Door Animation
           printf("  Door %d Open ... ", door);
           lsStrips[strip].AnimationStatus = StDoorOpen;
           vdDoorOpenAnimationADV00(lsStrips,strip,teEvent,tmeCurrentTime);
 
+          // Turn on additional lights overhead
           printf("  Add On S%d ... ", strip + 1);
           vdAddOpenADV(lsStrips,strip + 1,teEvent,tmeCurrentTime);
         }
@@ -3346,13 +3288,13 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
         {
           strip = door *2;
           
-          // Pulse Clear All Animations
+          // Replace Open or Current door animation to closed door animation
           printf("  Door %d Close ... ", door);
-          
           printf(" S%d ... ", strip);
           lsStrips[strip].AnimationStatus = StDoorCloseA;        
           vdDoorCloseActiveADV(lsStrips,strip,teEvent,tmeCurrentTime);
-                   
+
+          // Turn off additional lights overhead
           printf("  Add Off S%d ... ", strip);
           vdAddCloseADV(lsStrips,strip + 1,teEvent,tmeCurrentTime);
         }
@@ -3372,6 +3314,7 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
       }
     }
     printf("Open Door Count: %d\n", opencount);
+    // -----
 
     if (opencount > 0)
     {
@@ -3382,15 +3325,22 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
         if (hwmDoor[door].ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
         {
 
+          // If a door is open
           if (lsStrips[strip].AnimationStatus != StDoorOpen && lsStrips[strip].AnimationStatus != StDoorCloseA)
           {
+            // If this door is not open then make sure the closed door animation is running on it.
+            printf("  Door %d Running Active Closed: ", door);
+
+            // Closed Active Doors animation
             printf(" S%d ... ", strip);
             lsStrips[strip].AnimationStatus = StDoorCloseA;        
             vdDoorCloseActiveADV(lsStrips,strip,teEvent,tmeCurrentTime);
           }
 
+          // If  a door is open
           if (lsStrips[strip + 1].AnimationStatus != stOverOpen)
           {
+            // Make sure this door has the overhead animation running on it.
             printf("  Door %d Running Overhead: ", door);
 
             // Normal Overhead Animation 
@@ -3433,9 +3383,11 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
             // printf("Door Toggle Time (current time - toggle time): %d - %dms < 1500\n", tmeCurrentTime, hwmDoor[door].tmeTOGGLEDTIME);
             if ((tmeCurrentTime - hwmDoor[door].tmeTOGGLEDTIME) < 15000)
             {
-              //  The door was recently closed. Run the Amber Pacifica on it.
-
-              // This needs to be moved outside of this routine, int an animation event. 
+              // The door was recently closed. Run the Convienance lights on it.
+              printf("  Door %d Conviencance Lights On: ", door);
+              
+              // Turn on Convienance Lights 
+              printf(" S%d ... ", strip);
               lsStrips[strip + 1].AnimationStatus = StOverCloseCon;  
               vdCoADV(lsStrips,strip + 1,teEvent,tmeCurrentTime);
             }
@@ -3443,8 +3395,10 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
             {
               // The door was closed for a while, just turn off the lights.
               // Start the Close Door Overhead Animation
+              printf("  Door %d Conviencance Lights Off: ", door);
 
               // Just turn off the lights.
+              printf(" S%d ... ", strip);
               lsStrips[strip + 1].AnimationStatus = stOverClose;
               vdCloseOverADV(lsStrips,strip + 1,teEvent,tmeCurrentTime);
             }
@@ -3453,21 +3407,11 @@ void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEv
       }
     }
   }
-  
-
-  // *************************************************
-  //
-  //  This Section of code reserved for a routine 
-  //  to check for lights should be off.  After
-  //  ten minutes, manualy turn them off. 
-  //
-  // *************************************************
-
 }
 
 bool kbhit(void)
 {
-    //https://www.raspberrypi.org/forums/viewtopic.php?t=20070 (genius cred)
+    //https://www.raspberrypi.org/forums/viewtopic.php?t=20070 (Thank You)
 	
   struct termios original;
     tcgetattr(STDIN_FILENO, &original);
@@ -3528,32 +3472,12 @@ void ledprep(ws2811_t *ws2811)
 
 
 
-
-
-
 // ***************************************************************************************
 // MAIN
 // ***************************************************************************************
 
-// GLOBAL VARIABLES
-
-
-
-/*
-//  Light Strip Hardware
-CRGB hwLEDs0[NUM_LEDSs0];       // LED Strip 1 values.
-CRGB hwLEDs1[NUM_LEDSs1];       // LED Strip 2 values.
-*/
-
-
-
-/*
-// Onboard LED to signify data being sent to LED strip.
-const int ledPin =  LED_BUILTIN;
-*/
-
-//bool booRandom = false;
-
+//  GLOBAL VARIABLES
+// Global Varables are evil.  They are all gone now.
 
 
 
@@ -3576,11 +3500,6 @@ void setup()
   */
 
   /*
-  // Arduino Onboard LED
-  pinMode(ledPin, OUTPUT);
-  */
-
-  /*
     // Define Communications.
     Wire.begin(SLAVEID);              // Connect to I2C bus with defined slave ID as 
                                       //  address
@@ -3589,22 +3508,10 @@ void setup()
 
 
   /*
-
-  // Open serial communications if in debug mode.
-  if (BOOTEST == true)
-  {
-    //Serial.begin(115200);
-    //Serial.println("Program Start");
-    //vdTESTFLASHAnimation(teEvent, 0, tmeCurrentMillis);
-    vdPowerOnAnimation(lsStrips, 0, teEvent, tmeCurrentMillis);
-  }
-  else
-  {
-    // Boot Animation
-    // Make sure we have the current time before we try any test animations.
-    vdPowerOnAnimation(lsStrips, 0, teEvent, tmeCurrentMillis);
-  }
+    Serial Comms in the future
   */
+
+  // Nothing here anymore.
 
   printf("OK\n");
 }
@@ -3692,14 +3599,11 @@ void loop()
   lsStrips[Passenger_Front_Door].set(3, s1As, s1Ae);  // Passenger Front Door
   lsStrips[Passenger_Front_Over].set(3, s1Bs, s1Be);  // Passenger Front Overhed
 
-
-
   // Define the Supid Random Numbers
   stupid_random sRND;
 
   // Initialize the Stupid Random Numbers
   sRND.init();
-
 
   // FLED LED Array
   struct CRGB crgbMainArrays0[NUM_LEDSs0];
@@ -3717,41 +3621,29 @@ void loop()
   hardware_monitor hwDoors[NUM_SWITCHES];
   bool boAuxLightsIsOn = false;
 
-  
   // Define Door Sensors.
   hwDoors[0].set(true, (unsigned long)tmeFled.now(), 50, true);
   hwDoors[1].set(true, (unsigned long)tmeFled.now(), 50, true);
   hwDoors[2].set(true, (unsigned long)tmeFled.now(), 50, true);
   hwDoors[3].set(true, (unsigned long)tmeFled.now(), 50, true);
   
-
-
-
-  // Delay less Loop Variables
-  //    intRestTime defines the amount of time, in milliseconds, passed before another data
-  //    read pass is performed and transmitted from the controller to the main system.
-
-
+  // Sleeping Loop Variables
   tmeFled.setframetime();
-  //printf("EXT Time Sec: %f\n", tmeFled.tmeFrameMillis);
+  
   double tmeStartTime = tmeFled.tmeFrameMillis;
   unsigned long tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
-  //double tmePrevMillis = 0;
-  
-  // TEST ANIMATION
-  //teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 200, 3000, 70, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 60, false, false);
-  // normal
-  //teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 400, 200, 20, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(25, 25, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 60, true, false);
-  // fast
-  //teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 400, 50, 5, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 50), CRGB(0, 0, 0), CRGB(0, 0, 0), 120, 160, true, false);
-  //teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 100, 500, 10, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(255, 32, 32), 0, 60, false, false);
 
+  // ---------------------------------------------------------------------------------------
+  //  Repeating Sleeping Loop until eXit is triggered.
   // ---------------------------------------------------------------------------------------
   while( keywatch.get('x') == 0 )
   {
+    // --- Prpare the Loop ---
+
+    //  Get current time.  This will be our timeframe to work in.
     tmeFled.setframetime();
     tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
-    //printf("Frame Time: %f  ... Current: %d \n", tmeFled.tmeFrameMillis, tmeCurrentMillis);
+    
     //  Only update the hardware when changes have been detected.
     //    This vabiable will be checked at the end of the loop.  If nothing was updated,
     //    the loop will just walk on past any hardware updates that would otherwise be
@@ -3762,17 +3654,9 @@ void loop()
     bool booUpdates2 = false;
     bool booUpdates3 = false;
 
-    //  Get current time.  This will be our timeframe to work in.
-    //tmeCurrentMillis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
     //printf("time: %d\n" , tmeCurrentMillis);
 
-    // --- Begin of Delayless Loop ---
-    //if (tmeFled.tmeFrameMillis - tmePrevMillis >= intRestTime)
-    //{
-
-    //tmePrevMillis = tmeFled.tmeFrameMillis;
-
+    // ---------------------------------------------------------------------------------------
     // --- Grabbing Data From Hardware inputs ---
     
     // Keyboard Input
@@ -3792,6 +3676,7 @@ void loop()
     booSensors[3] = digitalRead(SWITCH_PINs3);
     */
 
+    // Toggle on and off the door sensors with keyboard.
     booSensors[0] = keywatch.getTF('1');
     booSensors[1] = keywatch.getTF('2');
     booSensors[2] = keywatch.getTF('3');
@@ -3801,22 +3686,19 @@ void loop()
     // Check the doors and start or end all animations
     DoorMonitorAndAnimationControlModule(lsStrips, teEvent, hwDoors, booSensors, tmeCurrentMillis);
 
-    
+    // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
 
-    //  Timed Event ALL GLOBAL
+    //  Run ALL GLOBAL Timed Events
     teSystem(lsStrips, teEvent, tmeCurrentMillis);
 
-    //  Timed Event 0
+    //  Run ANIMATION EVENT ON LEDS - 0
     booUpdates0 = teEvent[0].execute(sRND, crgbMainArrays0, tmeCurrentMillis);
-
-    //  Timed Event 1
+    //  Run ANIMATION EVENT ON LEDS - 1
     booUpdates1 = teEvent[1].execute(sRND, crgbMainArrays1, tmeCurrentMillis);
-
-    //  Timed Event 0
+    //  Run ANIMATION EVENT ON LEDS - 2
     booUpdates2 = teEvent[2].execute(sRND, crgbMainArrays2, tmeCurrentMillis);
-
-    //  Timed Event 1
+    //  Run ANIMATION EVENT ON LEDS - 3
     booUpdates3 = teEvent[3].execute(sRND, crgbMainArrays3, tmeCurrentMillis);
 
     
@@ -3830,34 +3712,35 @@ void loop()
       // Render - Copy my array int its array.
       //  Do I need to move the whole thing or can I just move the changed pixels?
 
-
       int mcount = 0;
 
+
+      // Toggle through with 't' to test the lights:
       if(keywatch.pressed('t') == true)
       {
         switch (keywatch.get('t'))
         {
-          case 0:
+          case 0:   // Show all lights.  This is normal.
           {
             printf("Full Array\n");
             break;
           }
-          case 1:
+          case 1:   // Show only Light Set 1
           {
             printf("Door 1\n");
             break;
           }
-          case 2:
+          case 2:   // Show only Light Set 2
           {
             printf("Door 2\n");
             break;
           }
-          case 3:
+          case 3:   // Show only Light Set 3
           {
             printf("Door 3\n");
             break;
           }
-          case 4:
+          case 4:   // Show only Light Set 4
           {
             printf("Door 4\n");
             break;
@@ -3865,6 +3748,7 @@ void loop()
         }
       }
 
+      // Toggle with 'c' to test all lights by setting them all to white.
       if (keywatch.get('c') !=0)
       {
         for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
@@ -3885,6 +3769,7 @@ void loop()
         }
       }
 
+      // Determine and display which lights get shown.
       if (keywatch.get('t') == 0 || keywatch.get('t') == 1)
       {
         for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
@@ -3933,31 +3818,6 @@ void loop()
         }
       }
 
-
-      /*
-      for(int l=0; l<LED_COUNT;l=l+1)
-      {
-        // Copy each mastter LED list into the LED Matrix.
-        // Fake LED List
-        //char r,g,b;
-        //r = 20; g = 0; b = 0;
-        //matrix[l]=b + (g << 8) + (r << 16) + (0 << 24);
-        // FLED LED List
-        matrix[l]=crgbMainArrays0[l].b + (crgbMainArrays0[l].g << 8) + (crgbMainArrays0[l].r << 16) + (0 << 24);
-        //printf("r = %d, g = %d, b = %d \n",crgbMainArrays0[l].r,crgbMainArrays0[l].g,crgbMainArrays0[l].b);
-      }
-      */
-      
-      /*
-      char r,g,b;
-      r = 12; g = 20; b = 65;
-      for(int l=0; l<LED_COUNT;l=l+1)
-      {
-        matrix[l]=b + (g << 8) + (r << 16) + (0 << 24);;
-        //printf("r = %d, g = %d, b = %d \n",crgbMainArrays0[l].r,crgbMainArrays0[l].g,crgbMainArrays0[l].b);
-      }
-      */
-
       // LED Library Renderer -- Recommend: DON'T TOUCH        
       matrix_render();
       if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
@@ -3976,7 +3836,7 @@ void loop()
       //}
     }   // End Delayless Loop
 
-    // DIAG
+    // DIAG -  makeshift timing debug and diagnosis stuff
     float ct, et, st;
     ct = tmeFled.tmeFrameElapse();
     st = (1 * (1000 - tmeFled.tmeFrameElapse()) / FRAMES_PER_SECOND  );
@@ -3984,11 +3844,10 @@ void loop()
     usleep ( 1000 * (1000 - tmeFled.tmeFrameElapse()) / FRAMES_PER_SECOND );
     //usleep ( (1000 - (tmeFled.tmeFrameElapse()) * 1000) / FRAMES_PER_SECOND );
     
- 
+    // measur how much time has passed since the beginning of the loop
     et = tmeFled.tmeFrameElapse();
 
-
-    // Print Status
+    // Print the makeshift timing debug and diagnosis stuff, but only when its ready.
     if (cons.isready(tmeCurrentMillis))
     {
       printf(SCRPOS, 1, 1);
@@ -4010,11 +3869,10 @@ void loop()
       printf(SCRPOSS, 23, 1, "\n");
       cons.upd(tmeCurrentMillis);
     }
-
-    
-    
   }  // While loop
 
+  // If we are here, then we are closing the program.
+  
   // Shutdown the LED strip routine.
   ws2811_fini(&ledstring);
 
@@ -4023,24 +3881,20 @@ void loop()
 }
 
 
-
+// ---------------------------------------------------------------------------------------
 
 
 int main(int argc, char *argv[])
 {
-    printf("PiFLED Start ... \n");
- 
+  printf("PiFLED Start ... \n");
 
-    setup();
-    loop();
+  // Setup the Program
+  setup();
 
+  // Start the main loop.
+  loop();
 
-/*
-    for(int x=0;x<5;x++)
-    {
-      printf("time: %d\n", millis());
-    }
-*/
+  // Exit the program.
+  // return 0;
+
 }
-
-
