@@ -24,7 +24,7 @@ Its probably best to go to the wiki first, considering its may be more up to dat
 
 ## Video Playlist
 I created several videos demonstrating the working code. Here is
-* [My FLED Playlist](https://www.youtube.com/playlist?list=PLaNcnWj05DSWdfasAjF31oveOzSs7lRmX)
+* [My FLED and RasFLED Playlist](https://www.youtube.com/playlist?list=PLaNcnWj05DSWU4L03nQF-jxyJTv5qVbJ1)
 
 
 
