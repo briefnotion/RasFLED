@@ -17,6 +17,7 @@ The F in FLED stands of Failed, as in I failed to receive backing for this proje
 
 
 ## Getting Started
+The library included within this build is from https://github.com/wryan67/neopixel_rpi_lib.  I don't know if he is the original creator.  To keep the code seperate, I put his code in a sub direcory of my source directory.  I modified his cmake.txt file to work with my compile.
 Its probably best to go to the wiki first, considering its may be more up to date.
 * [RasFLED wiki](https://github.com/briefnotion/RasFled/wiki)
 
