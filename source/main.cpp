@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.05
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.06
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,26 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.06 _210116
+// *    - Corrected some major problems.
+// *    - Reverted teEvents back to a simple array.  The events are still in a linked
+// *        vector list that was the already accomplished goal. The reversion was a 
+// *        byproduct of getting rid of the errors.  I may have seen the bug fly past 
+// *        on my way to this, now working as I expect it to be, version.  But, I'm not 
+// *        entirely sure.  I think its behind me and I am scared of letting it get near 
+// *        me again.
+// *    - More byproducts as a result:
+// *        - Convert the stucts to classes.
+// *        - ReDo the DoorMonitorAndAnimationControlModule to handle a a few thintgs more
+// *            appropriately.
+// *        - Port the GitHub page over from previous FLED project.
+// *        - Learned, created, then completely destroy an interface designed with the 
+// *            ncurses library.  After I feel like the bug isnt hiding, I may create 
+// *            it again.  I liked what it could do, so I may try again.
+// *        - Spent, maybe 36 hours of programming, in the past 2 days, only to revert 
+// *            all the way back to the GitHub version (twice.)  Yes, I had major pointer 
+// *            problems.  Did I get them all? Stay tuned.
+// *
 // * V 0.05 _210114
 // *    - Convert the Event system to use Linked List Push, Pop method.  This would be 
 // *        less work on the cpu, while both idle and running.
@@ -100,17 +120,14 @@
 // *    - Get everything properly classified whith reference .h, supporting, and helper 
 // *        libraries.
 // *    - Try to decide whether I want everthing in retro c++ or classical c++.
-// *    - Convert the stucts to classes.
 // *    - Create a way to import all animations from an animations file.
 // *    - Clean up 90% of the code.
 // *    - Move all the main animations into their own subroutines.
 // *    - Create animations for day and night running.
 // *    - Create specialized animations for specific alerts and hazards.
-// *    - ReDo the DoorMonitorAndAnimationControlModule to handle a a few thintgs more
-// *        appropriately.
+// *    - 
 // *    - Set up an animation ID tag.
 // *    - Generate animations for shutting down animations.
-// *    - Port the GitHub page over from previous FLED project.
 // *    - Class the Doors.
 // *    - Class the LED strips.
 // *    - Convert the ControlModule to run on psudo events of DoorOpen, Door Closed, 
@@ -124,8 +141,9 @@
 //#include <Wire.h>
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
-#include <ctime>
+//#include <time.h>
+//#include <ctime>
+#include <string>
 #include <chrono>
 #include <unistd.h>
 #include <termio.h>
@@ -435,7 +453,7 @@ class Console  // Doesnt Work
 
   bool isready(unsigned long time)
   {
-    if(time > Update_Time + 500)
+    if(time > Update_Time + 100)
     {
       return true;
     }
@@ -573,13 +591,15 @@ class FledTime
 
 
 // Stupid Random Generator Structure
-struct stupid_random
+class stupid_random
 //  This is a simple solution to random numbers not being randomly generated.
 //    Generate a string of random numbers to be used and referenced throughout the
 //    entirity of the program run.
 {
+  private:
   char  stupidnumbers[StuRNDsize];
 
+  public:
   void init()
   {
     long number;
@@ -624,7 +644,7 @@ struct stupid_random
   }
 
   // Return random char  from list based on seed.
-  char  getB(unsigned long seed, int size)
+  char getB(unsigned long seed, int size)
   {
     int pos = (seed % StuRNDsize);
 
@@ -650,8 +670,9 @@ struct stupid_random
 
 // -------------------------------------------------------------------------------------
 // Defines a basic LED Strip
-struct led_strip
+class led_strip
 {
+  public:
   int Cl = 0; // Channel
   int St = 0; // Start Led Pos
   int Ed = 0; // End Led Pos
@@ -679,9 +700,9 @@ class CRGB
 // RGB varible.
 {
 public: 
-  char r;
-  char g;
-  char b;
+  char r = 0;
+  char g = 0;
+  char b = 0;
 
   CRGB()
   {
@@ -707,9 +728,10 @@ public:
 };
 
 
-struct bigCRGB
+class bigCRGB
 // Simple RGB varible for computation.
 {
+  public:
   int r = 0;
   int g = 0;
   int b = 0;
@@ -720,22 +742,23 @@ struct bigCRGB
 
 // Timed Event Data Variable
 
-struct timed_event_data
+class timed_event_data
 // Varibles to control the timed_event.
 {
-  unsigned long tmeSTARTTIME;
-  unsigned int intDURATION;
-  unsigned int intSPEED;
-  char  bytANIMATION;
-  char  bytLEDANIMATION;
-  CRGB crgbCOLORSTART1;
-  CRGB crgbCOLORSTART2;
-  CRGB crgbCOLORDEST1;
-  CRGB crgbCOLORDEST2;
-  char  intSTARTPOS;
-  char  intENDPOS;
+  public:
+  unsigned long tmeSTARTTIME = 0;
+  int intDURATION = 0;
+  int intSPEED= 0;
+  char  bytANIMATION = 0;
+  char  bytLEDANIMATION = 0;
+  CRGB crgbCOLORSTART1 = CRGB(0,0,0);
+  CRGB crgbCOLORSTART2 = CRGB(0,0,0);
+  CRGB crgbCOLORDEST1 = CRGB(0,0,0);
+  CRGB crgbCOLORDEST2 = CRGB(0,0,0);
+  int  intSTARTPOS = 0;
+  int  intENDPOS = 0;
   bool booINVERTCOLOR = false;
-  bool booREPEAT;
+  bool booREPEAT = false;
   bool booCLEARONEND = true;
 
   bool booCOMPLETE = true;
@@ -767,23 +790,24 @@ struct timed_event_data
 
 // Timed Event Variable
 
-struct timed_event
+class timed_event
 //  Create a Timed LED Event:
 //    Controls when a group of LEDs are to begin their individual light path animation.
 //    If an event is over written the previous animation will be lost.
 {
+  public:
   //timed_event_data teDATA[NUM_TIMED_EVENTS];
   std::vector<timed_event_data> teDATA;
-  unsigned int      intLEDCOUNT;
+  int      intLEDCOUNT;
 
-  void create(unsigned intLedCount)
+  void create(int intLedCount)
   // On startup, define the amount of LEDs in this event list.
   {
     intLEDCOUNT = intLedCount;
   }
 
   void set(unsigned long tmeCurrentTime,
-           unsigned long tmeStartInTime, unsigned long intDuration, unsigned int intSpeed, 
+           int tmeStartInTime, int intDuration, int intSpeed, 
            char  bytAnimation, char  bytLEDAnimation, bool booInvertColor, 
            CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
            int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd)
@@ -792,38 +816,6 @@ struct timed_event
 
     bool booCreated = false;
 
-    /*
-    for (int x = 0; ((x < NUM_TIMED_EVENTS) && (booCreated == false)) ; x++)
-    {
-      if (teDATA[x].booCOMPLETE == true)
-      {
-        unsigned long tmeStartTime = tmeCurrentTime + tmeStartInTime;
-
-        teDATA[x].tmeSTARTTIME = tmeStartTime;
-        teDATA[x].intDURATION = intDuration;
-        teDATA[x].intSPEED = intSpeed;
-        teDATA[x].bytANIMATION = bytAnimation;
-        teDATA[x].bytLEDANIMATION = bytLEDAnimation;
-
-        teDATA[x].booINVERTCOLOR = booInvertColor;
-
-        teDATA[x].crgbCOLORSTART1 = crgbStart1;
-        teDATA[x].crgbCOLORSTART2 = crgbStart2;
-        teDATA[x].crgbCOLORDEST1 = crgbDest1;
-        teDATA[x].crgbCOLORDEST2 = crgbDest2;
-
-        teDATA[x].intSTARTPOS = intStartPos;
-        teDATA[x].intENDPOS = intEndPos;
-        teDATA[x].booREPEAT = booRepeat;
-        teDATA[x].booCLEARONEND = booClearOnEnd;
-
-        teDATA[x].booCOMPLETE = false;
-
-        booCreated = true;
-        //printf("Event create: Anim:%d LED:%d P1:%d P2:%d\n", bytAnimation, bytLEDAnimation, intStartPos, intEndPos);
-      }
-    }
-      */
     unsigned long tmeStartTime = tmeCurrentTime + tmeStartInTime;
 
     timed_event_data newteDATA;
@@ -852,12 +844,6 @@ struct timed_event
 
     booCreated = true;
     //printf("Event create: Anim:%d LED:%d P1:%d P2:%d\n", bytAnimation, bytLEDAnimation, intStartPos, intEndPos);
-
-    
-    if (booCreated == false)
-    {
-      printf("Event create fail: EventCount:%d Anim:%d LED:%d P1:%d P2:%d\n", teDATA.size(), bytAnimation, bytLEDAnimation, intStartPos, intEndPos);
-    }
   }
 
   // -------------------------------------------------------------------------------------
@@ -866,7 +852,7 @@ struct timed_event
   void ClearAll(int intStartPos, int intEndPos)
   //Remove all timed event animations on a specific animation strip.
   {
-    //printf("Clearing Events with LEDs between (%d and %d)\n", intStartPos, intEndPos);
+
     for (int x = 0; x < teDATA.size(); x++)
 
     if (teDATA[x].booCOMPLETE == false && 
@@ -879,7 +865,7 @@ struct timed_event
       
       {
         teDATA[x].booCOMPLETE = true;
-        //printf("Cleared Event: %d\n", x);
+        //printf("Cleared Event: E%d S%d E%d\n", x, intStartPos, intEndPos);
       }
     }
   }
@@ -1391,9 +1377,9 @@ struct timed_event
           }
 
           // Set the color of the LED on the strip.
-          hwLEDArray[led].r = bigcrgbNewColor.r;
-          hwLEDArray[led].g = bigcrgbNewColor.g;
-          hwLEDArray[led].b = bigcrgbNewColor.b;
+          hwLEDArray[led].r = (char)bigcrgbNewColor.r;
+          hwLEDArray[led].g = (char)bigcrgbNewColor.g;
+          hwLEDArray[led].b = (char)bigcrgbNewColor.b;
 
           booChanged = true;
         }
@@ -1441,20 +1427,23 @@ struct timed_event
 
 // Hardware Monitor Variable
 
-struct hardware_monitor
+class hardware_monitor
 // Create a hardware switch or button varable type.
 {
+  public:
   // External
-  bool booVALUE;
-  unsigned long tmeTOGGLEDTIME;
+  bool booVALUE = false;
+  unsigned long tmeTOGGLEDTIME = 0;
   bool ISHARDWARE = false;
 
+  private:
   // Internal
-  unsigned long tmeCHANGEDETECTEDTIME;
-  bool booPREVCHANGEDETECTED;
-  unsigned int tmeLEEWAY;
+  unsigned long tmeCHANGEDETECTEDTIME = 0;
+  bool booPREVCHANGEDETECTED = false;
+  unsigned int tmeLEEWAY = 0;
   bool booFIRSTRUN = true;
 
+  public:
   void set(bool booValue, unsigned long tmeCheckTime, int tmeLeeWay, bool isHardware)
   // Prepare the switch.
   {
@@ -1533,7 +1522,7 @@ int intRandomHD(int intBase)
 }
 
 // Clear events on a channel 
-void vdClearAllTimedEvent(std::vector<timed_event> &teEvent, int intPos, int intStartPos, int intEndPos)
+void vdClearAllTimedEvent(timed_event teEvent[], int intPos, int intStartPos, int intEndPos)
 //  Sort through the timed event list a create an event at the first slot available.
 {
   teEvent[intPos].ClearAll(intStartPos, intEndPos);
@@ -1592,31 +1581,31 @@ void vdTESTFLASHAnimation(led_strip lsStrips[], led_strip lsSt, timed_event teEv
 
 
 
-void vdOpenDoorNormal(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdOpenDoorNormal(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavdOpenDoorNormal
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 10, 0, 0, AnEvSchedule, AnTaDoorOpen00, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdOpenOverNormal(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdOpenOverNormal(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavdOpenOverNormal
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 10, 0, 0, AnEvSchedule, AnTavdPacificaish, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdCloseDoorNormal(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseDoorNormal(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavdCloseDoorNormal
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, CRGB(125,125,0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdCloseOverNormal(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseOverNormal(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavdCloseOverNormal
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 10, 0, 0, AnEvSchedule, AnTaStripOverOff, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdCloseOverCoNormal(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseOverCoNormal(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavdCloseOve2Normal
 {
   int intTm;
@@ -1712,43 +1701,43 @@ void vdAddCloseThanks(led_strip lsStrips[], int intStripID, timed_event teEvent[
 
 // Normal Animations (Main Procedures)
 
-void vdOpenDoorChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdOpenDoorChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // ---
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 10, 0, 0, AnEvSchedule, AnTaDoorOpen00Christmas, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdOpenOverChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdOpenOverChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // ---
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 10, 0, 0, AnEvSchedule, AnTavdChristmasTree, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdCloseDoorChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseDoorChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // ---
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, CRGB(64,64,0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdCloseOverChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseOverChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // ---
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, CRGB(64,64,0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdCloseOverCoChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseOverCoChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // ---
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 10, 0, 0, AnEvSchedule, AnTavdChristmasTreeCo, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);  
 }
 
-void vdAddOpenChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdAddOpenChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavd----  // Simple
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 0, 0, AnEvSchedule, AnTavdAddOpenChristm, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);  
 }
 
-void vdAddCloseChristmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdAddCloseChristmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavd----  // Simple
 {
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 0, 0, AnEvSchedule, AnTavdAddCloseChristm, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);    
@@ -1759,7 +1748,7 @@ void vdAddCloseChristmas(led_strip lsStrips[], int intStripID, std::vector<timed
 
 // Test Animations (Main Procedures)
 
-void vdOpenDoorTest(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdOpenDoorTest(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // AnTavdOpenDoorNormal
 {
   //teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 8000, 0, AnEvSweep, AnPiTwinkle, CRGB(128, 0, 0), CRGB(0, 128, 0), CRGB(0, 0, 128), CRGB(1, 90, 3), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, false);
@@ -1822,7 +1811,7 @@ void vdPowerOnAnimation(led_strip lsStrips[], int intStripID, timed_event teEven
 
 // Pulse strip Color then fade out.
 
-void vdStripOverOff(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdStripOverOff(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Lights Off ona Strip
 {
   int intTm;
@@ -1865,7 +1854,7 @@ void vdStripOverOff(led_strip lsStrips[], int intStripID, std::vector<timed_even
 
 // Pulse channel Specific Color then fade out.
 
-void vdChannelLightPulseColor(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime, CRGB crgbColor)
+void vdChannelLightPulseColor(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Turn (force) Green Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
@@ -1919,7 +1908,7 @@ void vdChannelLightPulseColor(led_strip lsStrips[], int intStripID, std::vector<
 // Normal door open animation script
 
 // Mock Normal Open Door Animation
-void vdDoorOpenAnimation(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open 
 // Door is open, engage safety lights and start door overhead lights.
 {
@@ -1935,7 +1924,7 @@ void vdDoorOpenAnimation(led_strip lsStrips[], int intStripID, std::vector<timed
 
 // -------------------------------------------------------------------------------------
 
-void vdDoorOpenAnimation00(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation00(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
@@ -1963,7 +1952,7 @@ void vdDoorOpenAnimation00(led_strip lsStrips[], int intStripID, std::vector<tim
 
 // -------------------------------------------------------------------------------------
 
-void vdDoorOpenAnimation01(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation01(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 1
 {
   printf("vdDoorOpenAnimation01 (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -1988,7 +1977,7 @@ void vdDoorOpenAnimation01(led_strip lsStrips[], int intStripID, std::vector<tim
 
 // -------------------------------------------------------------------------------------
 
-void vdDoorOpenAnimation02(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation02(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 2
 {
   printf("vdDoorOpenAnimation02 (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2010,7 +1999,7 @@ void vdDoorOpenAnimation02(led_strip lsStrips[], int intStripID, std::vector<tim
 // Normal close door animation script.
 
 // Mock Normal Close Door Animation
-void vdDoorCloseAnimation(led_strip lsStrips[], int intStripID, std::vector<timed_event> teEvent, unsigned long tmeCurrentTime)
+void vdDoorCloseAnimation(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Close Stage 0
 // Door is closed, disengage safety lights and stop door overhead lights.
 {
@@ -2041,7 +2030,7 @@ void vdDoorCloseAnimation(led_strip lsStrips[], int intStripID, std::vector<time
 
 // -------------------------------------------------------------------------------------
 
-void vdDoorCloseAnimation00(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorCloseAnimation00(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door closed.  Quick animation to show and turn off lights.
 {
   // Fade remaining colors out.
@@ -2137,15 +2126,15 @@ void vdPacificaishAnimation(led_strip lsStrips[], int intStripID, timed_event te
 // Advanced Animations
 // -------------------------------------------------------------------------------------
 
-void vdEndAllAnimationsADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdEndAllAnimationsADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Run this routine on all Doors after all doors are closed to ensure no lingering animations have not been ended for whatever reason.
 {
   printf("vdEndAllAnimationsADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
-  teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 15000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
+  teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 20000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
 }
 
 
-void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
@@ -2224,7 +2213,7 @@ void vdDoorOpenAnimationADV00(led_strip lsStrips[], int intStripID, std::vector<
 }
 
 
-void vdDoorCloseRunningADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorCloseRunningADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
 {
   printf("vdDoorCloseRunningADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2247,37 +2236,32 @@ void vdDoorCloseRunningADV(led_strip lsStrips[], int intStripID, std::vector<tim
 }
 
 
-void vdDoorCloseActiveADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorCloseActiveADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all closed doors at least one other door is open.
 {
-  printf("vdDoorCloseRunningADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
+  printf("vdDoorCloseActiveADV (CL:%d ID:%d S:%d E:%d)\n",lsStrips[intStripID].Cl, intStripID, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
   // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
 
   int intTm;
   int intDur;
-  int intCt;
   int intSp;
 
   CRGB lead = CRGB(20, 20, 20);
-  CRGB shadow = CRGB(50 ,50, 50);
 
   // Door Open Animation
-  intTm = 100; intDur = 5000; intSp = 50;
+  intTm = 100; intDur = 5000; intSp = 5;
 
   // Clear set background to door open colors.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(40, 8, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, false);
 
-  intTm = 100; intDur = 5000; intSp = 5;
-
   // Pulse to white (accumulation of prev color and this color = CRGP(70, 70, 70) then back to original color.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(30, 62, 70) , CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, false);
-  
 }
 
 
-void vdPacificaishAnimationADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdPacificaishAnimationADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Blue Waves. Much more interesting than the old version of this.
 {
   printf("vdPacificaishAnimationADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2324,7 +2308,7 @@ void vdPacificaishAnimationADV(led_strip lsStrips[], int intStripID, std::vector
 }
 
 
-void vdCloseOverADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCloseOverADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Overhead Lights Off
 {
   printf("vdCloseOverADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2334,7 +2318,7 @@ void vdCloseOverADV(led_strip lsStrips[], int intStripID, std::vector<timed_even
 
 }
 
-void vdCoADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdCoADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
 {
   printf("vdCoADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2358,8 +2342,8 @@ void vdCoADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teE
     // Front Door
     top = lsStrips[intStripID].Ed;
     bot = lsStrips[intStripID].St;
-}
-
+  }
+  
   // Background Color Fade out.
   // Set the background color.
   CRGB background = CRGB(40, 8, 0);
@@ -2368,7 +2352,7 @@ void vdCoADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teE
   intTm = 500; intDur = 3000; intSp = 250;
 
   // Set the currently running animations to fade away. (NOTE: CLEARONEND = true to end scheduled future animations end on complete, also.)
-  teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
+  teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
   //Set All the animations to end after the code 4 lines down, is finished fading away  
   bgonedly = (lsStrips[intStripID].Ct() * intSp + intDur);
@@ -2392,7 +2376,7 @@ void vdCoADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teE
 }
 
 
-void vdAddOpenADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdAddOpenADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights On on to show the door is open.
 {
   printf("vdAddOpenADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2423,7 +2407,7 @@ void vdAddOpenADV(led_strip lsStrips[], int intStripID, std::vector<timed_event>
 }
 
 
-void vdAddCloseADV(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdAddCloseADV(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
   printf("vdAddCloseADV (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2706,7 +2690,7 @@ void vdNightSky(led_strip lsStrips[], int intStripID, timed_event teEvent[], uns
 // Christmas Effects
 // -------------------------------------------------------------------------------------
 
-void vdChristmasTree(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdChristmasTree(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Christmas Overhead Open
 {
   printf("vdChristmasTree (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2749,7 +2733,7 @@ void vdChristmasTree(led_strip lsStrips[], int intStripID, std::vector<timed_eve
 
 // -------------------------------------------------------------------------------------
 
-void vdChristmasTreeCo(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdChristmasTreeCo(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Lights Off ona Strip
 
 // AnTavdChristmasTreeCo
@@ -2808,7 +2792,7 @@ void vdChristmasTreeCo(led_strip lsStrips[], int intStripID, std::vector<timed_e
 // -------------------------------------------------------------------------------------
 //  Christmas Door Open Animation
 
-void vdDoorOpenAnimation00Christmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation00Christmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
@@ -2832,7 +2816,7 @@ void vdDoorOpenAnimation00Christmas(led_strip lsStrips[], int intStripID, std::v
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, intTm, 0, 0, AnEvSchedule, AnTaDoorOpen01Christmas, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
-void vdDoorOpenAnimation01Christmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation01Christmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 1
 {
   printf("vdDoorOpenAnimation01Christmas (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2857,7 +2841,7 @@ void vdDoorOpenAnimation01Christmas(led_strip lsStrips[], int intStripID, std::v
 
 // -------------------------------------------------------------------------------------
 
-void vdDoorOpenAnimation02Christmas(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdDoorOpenAnimation02Christmas(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 2
 {
   printf("vdDoorOpenAnimation02Christmas (S:%d E:%d)\n",lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2877,7 +2861,7 @@ void vdDoorOpenAnimation02Christmas(led_strip lsStrips[], int intStripID, std::v
   //teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 500, 5500, 0, AnEvSweep, AnPiTwinkle, false, CRGB(128, 128, 128), CRGB(64, 0, 64), CRGB(0, 64, 64), CRGB(2, 95, 1), lsStrips[intStripID].St +20, lsStrips[intStripID].Ed -20, true, false);
 }
 
-void vdAddOpenChristm(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdAddOpenChristm(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Lights Off ona Strip
 
 // AnTavdvdAddOpenChristm
@@ -2905,7 +2889,7 @@ void vdAddOpenChristm(led_strip lsStrips[], int intStripID, std::vector<timed_ev
 }
 
 
-void vdAddCloseChristm(led_strip lsStrips[], int intStripID, std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
+void vdAddCloseChristm(led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Lights Off on a Strip
 
 // AnTavdvdAddCloseChristm
@@ -2932,8 +2916,8 @@ void vdAddCloseChristm(led_strip lsStrips[], int intStripID, std::vector<timed_e
 
 // System event system for non animations.
 
+void teSystem(led_strip lsStripList[], timed_event teEvent[], unsigned long tmeCurrentTime)
 //void teSystem(led_strip lsStripList[], timed_event teEvent[], unsigned long tmeCurrentTime)
-void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsigned long tmeCurrentTime)
 // Example:
 //  teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvSchedule, AnTaDoorCloseBack, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
 //    or      ( X is the values that can be set )
@@ -2944,20 +2928,23 @@ void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsign
 
 // Guide: (tmeCurrentTime, tmeStartInTime, intDuration, intSpeed, bytAnimation, bytLEDAnimation, crgbStart1, crgbDest1, crgbStart2, crgbDest2, intStartPos, intEndPos, booRepeat, booClearOnEnd)
 {
+
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
-    for (int event = 0; event < teEvent[NUM_CHANNELS].teDATA.size(); event++)
+    if (teEvent[channel].teDATA.size() > 0)
     {
-      if (teEvent[channel].teDATA.size() > 0)
+      for (int event = 0; event < teEvent[channel].teDATA.size(); event++)
       {
         if (tmeCurrentTime >= teEvent[channel].teDATA[event].tmeSTARTTIME && teEvent[channel].teDATA[event].booCOMPLETE == false)
         {
           // Process Timed System Events (keeping the LED type event scheduler format for 
           //  now)
+
           switch (teEvent[channel].teDATA[event].bytANIMATION)
           {
             case AnEvClear:   // Clear all events, whether running or not, if event is within Start and End Position.
             {
+              printf("Event: AnEvClear\n");
               teEvent[channel].teDATA[event].booCOMPLETE = true;
               teEvent[channel].ClearAll(teEvent[channel].teDATA[event].intSTARTPOS,teEvent[channel].teDATA[event].intENDPOS);
               break;
@@ -2965,9 +2952,10 @@ void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsign
             
             case AnEvClearRunning:  // Clear all active events if event is within Start and End Position.
             {                       // Possible problem if InTime is set to 0.
+              printf("Event: AnEvClearRunning\n");
               teEvent[channel].teDATA[event].booCOMPLETE = true;
 
-              for (int eventscan = 0; eventscan < teEvent[NUM_CHANNELS].teDATA.size(); eventscan++)
+              for (int eventscan = 0; eventscan < teEvent[channel].teDATA.size(); eventscan++)
               {
                 if(tmeCurrentTime >= teEvent[channel].teDATA[eventscan].tmeSTARTTIME)
                 {
@@ -2990,6 +2978,7 @@ void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsign
             case AnEvSchedule:
             //  Schedule an animation
             {  
+              printf("Event: AnEvSchedule\n");
               // Clear the Event whether the event ran or not.
               teEvent[channel].teDATA[event].booCOMPLETE = true;
               
@@ -3183,11 +3172,12 @@ void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsign
 
             case AnEvSetToEnd:  // Schedules an animation to end. Fades out Fades and stops repeat on Pulses.
             {                   // Possible problem if InTime is set to 0.  
+              printf("Event: AnEvSetToEnd\n");
               // Clear the Event whether the event ran or not.
               teEvent[channel].teDATA[event].booCOMPLETE = true;   
 
               // Is the Event we are processing within the event?
-              for (int eventscan = 0; eventscan < teEvent[NUM_CHANNELS].teDATA.size(); eventscan++)
+              for (int eventscan = 0; eventscan < teEvent[channel].teDATA.size(); eventscan++)
               {
 
                 if(teEvent[channel].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime || teEvent[channel].teDATA[eventscan].booCLEARONEND == true)   // May Have Fixed It.  IDK
@@ -3287,8 +3277,8 @@ void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsign
             } // End Case AnEvSetToEnd
           } // End Switch 
         } // End If time check
-      }
-    } // End FOR event
+      } // End FOR event
+    } // If datasize >0
   } // End FOR strip
 }
 
@@ -3298,7 +3288,7 @@ void teSystem(led_strip lsStripList[], std::vector<timed_event> &teEvent, unsign
 
 //  AuxLightControlModule
 
-void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], std::vector<timed_event> & teEvent, hardware_monitor hwmDoor[], bool booSensors[], unsigned long tmeCurrentTime)
+void DoorMonitorAndAnimationControlModule(led_strip lsStrips[], timed_event teEvent[], hardware_monitor hwmDoor[], bool booSensors[], unsigned long tmeCurrentTime)
 // This routine is designed to scan all the doors or switches.  If anthing is open, opened 
 //  closed or closed (odd twist of english there) then set the appropriate or maintain
 //  animations.  
@@ -3499,7 +3489,7 @@ bool kbhit(void)
 int led_count = LED_COUNT;
 ws2811_t ledstring;
 int *matrix;
-static uint8_t running = 1;
+static char running = 1;
 void matrix_render(void)
 {
     int x;
@@ -3547,7 +3537,7 @@ void setup()
   // Generate RandomSeed based on Temperture, Humidity, Air Quality, Gravametric Indifferences, 
   //  Planatery Alignment, and Current Horoscope Predictions.
 
-  printf("Setting System Hardware ... ");
+  printf("RasFLED Starting ... ");
 
   /*
   // Define Door Sensors.
@@ -3575,14 +3565,13 @@ void setup()
 }
 
 
-
 // ---------------------------------------------------------------------------------------
 // MAIN LOOP
 void loop()
 //  Main Loop:
 //    Events and Light Path animations should only be called when their time is up.
 {
-  using namespace std::chrono;
+  using namespace std;
 
   printf("PiFLED Loop ('x' to Exit) ...\n");
 
@@ -3623,6 +3612,8 @@ void loop()
   Console cons;
   cons.createwindow(1,10,10);
 
+  string str1;
+
   // Key Watch
   Keys keywatch;
   keywatch.set('x',2);  // Exit
@@ -3645,15 +3636,7 @@ void loop()
   
   // Light Strip Event System
   printf("Initializing Channels\n");
-  //timed_event teEvent[NUM_CHANNELS];
-  std::vector<timed_event> teEvent;
-  timed_event blankTeEvent;
-  for(int x = 0; x < NUM_CHANNELS; x++)
-  {
-    teEvent.push_back(blankTeEvent);
-  }
-
-  printf ("*** TEDATASIZE %d\n",teEvent[0].teDATA.size());
+  timed_event teEvent[NUM_CHANNELS];
 
   // Define Led Strips
   printf("Initializing LED Strips\n");
@@ -3677,12 +3660,11 @@ void loop()
 
   // FLED LED Array
   printf("Initializing LED Arrays\n");
-  struct CRGB crgbMainArrays0[NUM_LEDSs0];
-  struct CRGB crgbMainArrays1[NUM_LEDSs1];
-  struct CRGB crgbMainArrays2[NUM_LEDSs0];
-  struct CRGB crgbMainArrays3[NUM_LEDSs1];
-  //struct CRGB crgbMainArrays1[LED_COUNT];
-
+  CRGB crgbMainArrays0[NUM_LEDSs0];
+  CRGB crgbMainArrays1[NUM_LEDSs1];
+  CRGB crgbMainArrays2[NUM_LEDSs0];
+  CRGB crgbMainArrays3[NUM_LEDSs1];
+  
   printf("Initializing Event System\n");
   teEvent[0].create(NUM_LEDSs0);
   teEvent[1].create(NUM_LEDSs1);
@@ -3707,6 +3689,14 @@ void loop()
   double tmeStartTime = tmeFled.tmeFrameMillis;
   unsigned long tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
 
+  /*
+  // False events
+  teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
+  teEvent[lsStrips[2].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
+  teEvent[lsStrips[4].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
+  teEvent[lsStrips[6].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
+  */
+
   // ---------------------------------------------------------------------------------------
   //  Repeating Sleeping Loop until eXit is triggered.
   // ---------------------------------------------------------------------------------------
@@ -3727,16 +3717,6 @@ void loop()
     bool booUpdates1 = false;
     bool booUpdates2 = false;
     bool booUpdates3 = false;
-
-    // ---------------------------------------------------------------------------------------
-    // --- Grabbing Data From Hardware inputs ---
-    
-    // Keyboard Input
-    if (kbhit())
-    {
-        key = getchar();
-        keywatch.in(key);
-    }
 
     // Sensor Array (QUICK FIX)
     bool booSensors[NUM_SWITCHES];
@@ -3918,6 +3898,18 @@ void loop()
     // measur how much time has passed since the beginning of the loop
     et = tmeFled.tmeFrameElapse();
 
+
+    // ---------------------------------------------------------------------------------------
+    // --- Grabbing Data From Hardware inputs ---
+    
+    // Keyboard Input
+    if (kbhit())
+    {
+        key = getchar();
+        keywatch.in(key);
+    }
+
+    // ---------------------------------------------------------------------------------------
     // Print the makeshift timing debug and diagnosis stuff, but only when its ready.
     if (cons.isready(tmeCurrentMillis))
     {
@@ -3934,12 +3926,12 @@ void loop()
         {
           printf("D%d ", dx + 1);
         }
+        printf(" te:%d                                                                     \n", teEvent[dx].teDATA.size());
       }      
-      printf ("                                 |\n");
-      //printf ("teDATA size of 1 : %d              %n", teEvent[0].teDATA.size());
-      printf ("*** TEDATASIZE %d                 \n",teEvent[0].teDATA.size());
+
       printf ("---------------------------------------------+\n");
       printf(SCRPOSS, 23, 1, "\n");
+
       cons.upd(tmeCurrentMillis);
     }
   }  // While loop
