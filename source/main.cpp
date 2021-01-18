@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.07
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.08
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,11 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.08 _210118
+// *    - Converted the interface to utilize some of the, fancier, features of ncurses.
+// *        Dynamic sized console window, suporting resizing.
+// *        Started working on the better interface.
+// *
 // * V 0.07 _210117
 // *    - Fixed the Sleep Timer to sleep and display the acurate times.
 // *    - Built a simple console interface.
@@ -158,6 +163,8 @@
 #include <termio.h>
 #include <vector>
 #include <iostream>
+#include <ncurses.h>
+
 
 // Distros: Jeremy Garff <jer @ jers.net>
 //  Zips at https://github.com/jgarff/rpi_ws281x
@@ -527,44 +534,76 @@ class system_data
 
 };
 
-// Console
+// NCurses Console
 class Console  // Doesnt Work
 {
   private:
+  // NCurses Variables
+  int YMax = 0;
+  int XMax = 0;
+  int Xmid = 0;
+  
+  WINDOW * winTop;
+  WINDOW * winBot;
+  std::vector<std::string> ou;
+
+  std::string strBotLine;
+
+  // Display Variables
+  int YSeperator = 0;
+  int YConOut = 0;
 
   unsigned long Update_Time = 0;
-  int YSTART = 0;
-  int YMAX = 0;
-  int YPOS = 0;
-  std::vector<std::string> ou;
-  int outputpos = 0;
-
+  
   public:
 
-  std::string strCurP(int y, int x)
+  void set(int intSeperator)
   {
-    std::string p = "\33[" + std::to_string(y) + ";" + std::to_string(x) + "H";
-    return (p);
+    YSeperator = intSeperator;
+
+    Xmid = XMax / 2;
+    getmaxyx(stdscr, YMax, XMax);
+
+    winTop = newwin(YSeperator, XMax, 0, 0);
+    winBot = newwin(YMax - YSeperator, XMax, YSeperator, 0);
+    refresh();
+
+    wborder(winTop,'|','|','-','-','/','\\','\\' , '/') ;
+    wborder(winBot,'|','|','-','-','/','\\','\\' , '/') ;
+
+    wrefresh(winBot);
+    wrefresh(winTop);
+    
+    strBotLine = "";
+    strBotLine = strBotLine.append(XMax-1, '-');
+    // cbreak();
+	  // raw();
+	  noecho();
   }
 
   void printout()
   {
+    std::string strTemp;
+
     while(ou.size() > 0)
     {
-      if (YPOS + YSTART > YMAX)
+      if ((YConOut > YMax - YSeperator - 2) )
       {
-        YPOS = 0;
+        YConOut = 1;
       }
 
-      std::cout << strCurP(YSTART + YPOS,0) << "                                                                              +\r";
-      //std::cout << "\33[" << std::to_string(YSTART + YPOS) << ";0H" << "                                                                              +\r";
-      std::cout << ou[0];
-      
-      std::cout  << strCurP(YSTART + YPOS + 1 ,0) << "------------------------------------------------------------------------------+";
-      //std::cout << "\33[" << std::to_string(YSTART + YPOS+1) << ";0H" << "------------------------------------------------------------------------------+";
-      ou.erase(ou.begin());
+      wmove(winBot, YConOut,0);
+      wclrtoeol(winBot);
+      mvwprintw(winBot, YConOut, 0, "%s", ou[0].c_str());
 
-      YPOS++;
+      wmove(winBot, YConOut +1,0);
+      wclrtoeol(winBot);
+      mvwprintw(winBot, YConOut +1 , 0, "%s", strBotLine.c_str());
+
+      ou.erase(ou.begin());
+      YConOut++;
+
+      wrefresh(winBot);      
     }
   }
 
@@ -574,7 +613,7 @@ class Console  // Doesnt Work
     printout();
   }
 
-  void printw (std::string in)
+  void printwait (std::string in)
   {
     ou.push_back(in);
   }
@@ -597,54 +636,43 @@ class Console  // Doesnt Work
     Update_Time = time;
   }
 
-  // Console Escape Codes.
-  #define SCRCLEAR "\33[2J\r"
-  #define SCRPOS "\33[%d;%dH\r"
-  #define SCRPOSS "\33[%d;%dH%s"
-  // Example:
-  // printf(SCRCLEAR);
-  // printf(SCRPOS, 1, 1);
-
-  void set(int Ystart, int Ymax)
-  {
-    YSTART = Ystart;
-    YMAX = Ymax;
-  }
-
   void output(system_data sdSysData)
   {
-      printf(SCRPOS, 1, 1);
-      printf("Compute: %fms | ", sdSysData.fltCOMPUTETIME.data);
-      printf("Sleep: %fms | ", sdSysData.fltPREVSLEEPTIME.data);
-      printf("Cycle: %fms ", sdSysData.fltCYCLETIME.data);
-      printf("(m:%fms)", sdSysData.fltCYCLETIME.max);
-      
-      // ------------------------
-      printf(SCRPOS, 3, 1);
-      for (int dx = 0; dx < 4; dx++)
-      {
-        if (sdSysData.boolDOORSENSORS[dx] == false)
-          printf("XX ");
-        else
-        {
-          printf("                                                                              \r");
-          printf("D%d ", dx + 1);
-        }
-        printf(" te:%d                        \n", sdSysData.intEVENTCOUNTS[dx]);
-      }   
 
-      printf ("------------------------------------------------------------------------------+\n");
+    mvwprintw(winTop, 1, 1, "Compute: %fms |", sdSysData.fltCOMPUTETIME.data);
+    mvwprintw(winTop, 1, 23, "Sleep: %fms | ", sdSysData.fltPREVSLEEPTIME.data);
+    mvwprintw(winTop, 1, 44, "Cycle: %fms ", sdSysData.fltCYCLETIME.data);
+    mvwprintw(winTop, 1, 63, "(m:%fms)", sdSysData.fltCYCLETIME.max);
+    
+    mvwprintw(winTop, 3, 26, "RNG: %s", sdSysData.strLEDRANGE.c_str());
+    mvwprintw(winTop, 4, 26, "LVL:");
+    //printi("test");
+    
+    if (sdSysData.boolDOORSENSORS[0] == true) {wattron(winTop, A_REVERSE);}
+    mvwprintw(winTop, 4, 10, "D1");
+    if (sdSysData.boolDOORSENSORS[0] == true) {wattroff(winTop, A_REVERSE);}
+    mvwprintw(winTop, 4, 4, "%03d:E", sdSysData.intEVENTCOUNTS[0]);
 
-      std::cout << strCurP(3,40) << "LED Range: " << sdSysData.strLEDRANGE;
-   
-      printf(SCRPOSS, 23, 1, "\n");
+    if (sdSysData.boolDOORSENSORS[1] == true) {wattron(winTop, A_REVERSE);}
+    mvwprintw(winTop, 3, 10, "D2");
+    if (sdSysData.boolDOORSENSORS[1] == true) {wattroff(winTop, A_REVERSE);}
+    mvwprintw(winTop, 3, 4, "%03d:E", sdSysData.intEVENTCOUNTS[1]);
 
-      //printi("test");
+    if (sdSysData.boolDOORSENSORS[2] == true) {wattron(winTop, A_REVERSE);}
+    mvwprintw(winTop, 4, 15, "D3");
+    if (sdSysData.boolDOORSENSORS[2] == true) {wattroff(winTop, A_REVERSE);}
+    mvwprintw(winTop, 4, 18, "E:%03d", sdSysData.intEVENTCOUNTS[2]);
 
-      printout();
+    if (sdSysData.boolDOORSENSORS[3] == true) {wattron(winTop, A_REVERSE);}
+    mvwprintw(winTop, 3, 15, "D4");
+    if (sdSysData.boolDOORSENSORS[3] == true) {wattroff(winTop, A_REVERSE);}
+    mvwprintw(winTop, 3, 18, "E:%03d", sdSysData.intEVENTCOUNTS[3]);
+
+    wrefresh(winTop);
+
+    printout();
   }
 };
-
 
 
 class Keys
@@ -663,7 +691,6 @@ class Keys
 
   void set(int letter, int size)
   {
-    //Chars[letter].Letter = letter;
     Chars[letter].COUNT = size - 1;
     Chars[letter].VALUE = 0;
   }
@@ -706,7 +733,6 @@ class FledTime
   std::chrono::time_point<std::chrono::system_clock> tmeFrame;
 
   public:
-  //using namespace std::chrono;
 
   double tmeFrameMillis;
 
@@ -2094,7 +2120,7 @@ void vdDoorOpenAnimation00(Console &cons, led_strip lsStrips[], int intStripID, 
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printw("vdDoorOpenAnimation00 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation00 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm;
   int intDur;
   int intCt;
@@ -2121,7 +2147,7 @@ void vdDoorOpenAnimation00(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorOpenAnimation01(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 1
 {
-  cons.printw("vdDoorOpenAnimation01 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation01 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm = 50;
   int intDur;
   int intCt;
@@ -2146,7 +2172,7 @@ void vdDoorOpenAnimation01(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorOpenAnimation02(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 2
 {
-  cons.printw("vdDoorOpenAnimation02 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation02 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm = 0;
   int intDur;
   int intCt;
@@ -2169,7 +2195,7 @@ void vdDoorCloseAnimation(Console &cons, led_strip lsStrips[], int intStripID, t
 // Door Close Stage 0
 // Door is closed, disengage safety lights and stop door overhead lights.
 {
-  cons.printw("vdDoorCloseAnimation (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorCloseAnimation (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm;
   int intDur;
   int intSp;
@@ -2295,7 +2321,7 @@ void vdPacificaishAnimation(Console &cons, led_strip lsStrips[], int intStripID,
 void vdEndAllAnimationsADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Run this routine on all Doors after all doors are closed to ensure no lingering animations have not been ended for whatever reason.
 {
-  cons.printw("vdEndAllAnimationsADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdEndAllAnimationsADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 20000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
 }
 
@@ -2304,7 +2330,7 @@ void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripI
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printw("vdDoorOpenAnimationADV00 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimationADV00 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm;
   int intDur;
   int intCt;
@@ -2382,7 +2408,7 @@ void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripI
 void vdDoorCloseRunningADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
 {
-  cons.printw("vdDoorCloseRunningADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorCloseRunningADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
 
   // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2405,7 +2431,7 @@ void vdDoorCloseRunningADV(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorCloseActiveADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all closed doors at least one other door is open.
 {
-  cons.printw("vdDoorCloseActiveADV (CL:%d ID:%d S:%d E:%d)" + std::to_string(lsStrips[intStripID].Cl) + std::to_string(intStripID) + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorCloseActiveADV (CL:%d ID:%d S:%d E:%d)" + std::to_string(lsStrips[intStripID].Cl) + std::to_string(intStripID) + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
 
   // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2430,7 +2456,7 @@ void vdDoorCloseActiveADV(Console &cons, led_strip lsStrips[], int intStripID, t
 void vdPacificaishAnimationADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Blue Waves. Much more interesting than the old version of this.
 {
-  cons.printw("vdPacificaishAnimationADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdPacificaishAnimationADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
 
   // Give strip a fresh start.
   //vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2477,7 +2503,7 @@ void vdPacificaishAnimationADV(Console &cons, led_strip lsStrips[], int intStrip
 void vdCloseOverADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Overhead Lights Off
 {
-  cons.printw("vdCloseOverADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdCloseOverADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
 
   // Just set all the current over head lights to fade away.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
@@ -2487,7 +2513,7 @@ void vdCloseOverADV(Console &cons, led_strip lsStrips[], int intStripID, timed_e
 void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
 {
-  cons.printw("vdCoADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdCoADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm;
   int intDur;
   int intSp;
@@ -2545,7 +2571,7 @@ void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event te
 void vdAddOpenADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights On on to show the door is open.
 {
-  cons.printw("vdAddOpenADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdAddOpenADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   //teEvent[lsStrips[intStripID +1].Cl].set(tmeCurrentTime, 1000, 1000, 80, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(125,124,16), CRGB(0, 0, 0), CRGB(0, 0, 0), top, top + lsStrips[intStripID +1].Ct() /2, false, false);
 
   int intTm, intDur, intSp, intCt; 
@@ -2576,7 +2602,7 @@ void vdAddOpenADV(Console &cons, led_strip lsStrips[], int intStripID, timed_eve
 void vdAddCloseADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
-  cons.printw("vdAddCloseADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdAddCloseADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
 
   // Seach the strip for light colors and set them to end after animation completes.  
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(254, 254, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
@@ -2859,7 +2885,7 @@ void vdNightSky(Console &cons, led_strip lsStrips[], int intStripID, timed_event
 void vdChristmasTree(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Christmas Overhead Open
 {
-  cons.printw("vdChristmasTree (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdChristmasTree (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   // AnTavdChristmasTree
 
   // Assign the top and bottom of the strip
@@ -2905,7 +2931,7 @@ void vdChristmasTreeCo(Console &cons, led_strip lsStrips[], int intStripID, time
 // AnTavdChristmasTreeCo
 
 {
-  cons.printw("vdChristmasTreeCo (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdChristmasTreeCo (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm;
   int intDurW;
   int intDurG;
@@ -2962,7 +2988,7 @@ void vdDoorOpenAnimation00Christmas(Console &cons, led_strip lsStrips[], int int
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printw("vdDoorOpenAnimation00Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation00Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
 
   int intTm;
   int intDur;
@@ -2985,7 +3011,7 @@ void vdDoorOpenAnimation00Christmas(Console &cons, led_strip lsStrips[], int int
 void vdDoorOpenAnimation01Christmas(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 1
 {
-  cons.printw("vdDoorOpenAnimation01Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation01Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm = 50;
   int intDur;
   int intCt;
@@ -3010,7 +3036,7 @@ void vdDoorOpenAnimation01Christmas(Console &cons, led_strip lsStrips[], int int
 void vdDoorOpenAnimation02Christmas(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 2
 {
-  cons.printw("vdDoorOpenAnimation02Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation02Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
   int intTm = 0;
   int intDur;
   int intCt;
@@ -3110,7 +3136,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
           {
             case AnEvClear:   // Clear all events, whether running or not, if event is within Start and End Position.
             {
-              cons.printw("Event: AnEvClear");
+              cons.printwait("Event: AnEvClear");
               teEvent[channel].teDATA[event].booCOMPLETE = true;
               teEvent[channel].ClearAll(teEvent[channel].teDATA[event].intSTARTPOS,teEvent[channel].teDATA[event].intENDPOS);
               break;
@@ -3118,7 +3144,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
             
             case AnEvClearRunning:  // Clear all active events if event is within Start and End Position.
             {                       // Possible problem if InTime is set to 0.
-              cons.printw("Event: AnEvClearRunning");
+              cons.printwait("Event: AnEvClearRunning");
               teEvent[channel].teDATA[event].booCOMPLETE = true;
 
               for (int eventscan = 0; eventscan < teEvent[channel].teDATA.size(); eventscan++)
@@ -3144,7 +3170,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
             case AnEvSchedule:
             //  Schedule an animation
             {  
-              cons.printw("Event: AnEvSchedule");
+              cons.printwait("Event: AnEvSchedule");
               // Clear the Event whether the event ran or not.
               teEvent[channel].teDATA[event].booCOMPLETE = true;
               
@@ -3338,7 +3364,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
 
             case AnEvSetToEnd:  // Schedules an animation to end. Fades out Fades and stops repeat on Pulses.
             {                   // Possible problem if InTime is set to 0.  
-              cons.printw("Event: AnEvSetToEnd");
+              cons.printwait("Event: AnEvSetToEnd");
               // Clear the Event whether the event ran or not.
               teEvent[channel].teDATA[event].booCOMPLETE = true;   
 
@@ -3488,12 +3514,12 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
           strip = door *2;
           
           // Door Animation
-          cons.printw("  Door " + std::to_string(door) + " Open ... ");
+          cons.printwait("  Door " + std::to_string(door) + " Open ... ");
           lsStrips[strip].AnimationStatus = StDoorOpen;
           vdDoorOpenAnimationADV00(cons, lsStrips,strip,teEvent,tmeCurrentTime);
 
           // Turn on additional lights overhead
-          cons.printw("  Add On Strip:" + std::to_string(strip + 1));
+          cons.printwait("  Add On Strip:" + std::to_string(strip + 1));
           vdAddOpenADV(cons, lsStrips,strip + 1,teEvent,tmeCurrentTime);
         }
       }
@@ -3505,12 +3531,12 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
           strip = door *2;
           
           // Replace Open or Current door animation to closed door animation
-          cons.printw("  Door " + std::to_string(door) + " Close ... ");
+          cons.printwait("  Door " + std::to_string(door) + " Close ... ");
           lsStrips[strip].AnimationStatus = StDoorCloseA;        
           vdDoorCloseActiveADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
 
           // Turn off additional lights overhead
-          cons.printw("  Add Off Strtip:" + std::to_string(strip));
+          cons.printwait("  Add Off Strtip:" + std::to_string(strip));
           vdAddCloseADV(cons, lsStrips,strip + 1,teEvent,tmeCurrentTime);
         }
       }
@@ -3528,7 +3554,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
         opencount = opencount  + 1;
       }
     }
-    cons.printw("Open Door Count: " + std::to_string(opencount));
+    cons.printwait("Open Door Count: " + std::to_string(opencount));
     // -----
 
     if (opencount > 0)
@@ -3544,7 +3570,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
           if (lsStrips[strip].AnimationStatus != StDoorOpen && lsStrips[strip].AnimationStatus != StDoorCloseA)
           {
             // If this door is not open then make sure the closed door animation is running on it.
-            cons.printw("  Door " + std::to_string(door) + " Running Active Closed: ");
+            cons.printwait("  Door " + std::to_string(door) + " Running Active Closed: ");
 
             // Closed Active Doors animation
             lsStrips[strip].AnimationStatus = StDoorCloseA;        
@@ -3555,7 +3581,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
           if (lsStrips[strip + 1].AnimationStatus != stOverOpen)
           {
             // Make sure this door has the overhead animation running on it.
-            cons.printw("  Door " + std::to_string(door) + " Running Overhead: ");
+            cons.printwait("  Door " + std::to_string(door) + " Running Overhead: ");
 
             // Normal Overhead Animation 
             lsStrips[strip + 1].AnimationStatus = stOverOpen;
@@ -3567,7 +3593,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
     else 
       {
       // All doors are closed.
-      cons.printw("  All Doors Closed: ");
+      cons.printwait("  All Doors Closed: ");
 
       for (int door=0; door < NUM_SWITCHES; door++)
       {
@@ -3586,18 +3612,18 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
           lsStrips[strip].AnimationStatus = StDoorCloseR;
           vdDoorCloseRunningADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
 
-          //cons.printw("All Doors Closed HWLVL: D%d AS%d" + std::to_string(door) + std::to_string(lsStrips[strip + 1].AnimationStatus));
+          //cons.printwait("All Doors Closed HWLVL: D%d AS%d" + std::to_string(door) + std::to_string(lsStrips[strip + 1].AnimationStatus));
           
           // Make sure lights are off or turning off and Amber Up the newly closded doors.
           if (lsStrips[strip + 1].AnimationStatus == stOverOpen)
           {
             // Start Overhead Turn On Convenience Animation.
             // See when the door was closed
-            // cons.printw("Door Toggle Time (current time - toggle time): %d - %dms < 1500", tmeCurrentTime, hwmDoor[door].tmeTOGGLEDTIME);
+            // cons.printwait("Door Toggle Time (current time - toggle time): %d - %dms < 1500", tmeCurrentTime, hwmDoor[door].tmeTOGGLEDTIME);
             if ((tmeCurrentTime - hwmDoor[door].tmeTOGGLEDTIME) < 15000)
             {
               // The door was recently closed. Run the Convienance lights on it.
-              cons.printw("  Door " + std::to_string(door) + " Conviencance Lights On: ");
+              cons.printwait("  Door " + std::to_string(door) + " Conviencance Lights On: ");
               
               // Turn on Convienance Lights 
               lsStrips[strip + 1].AnimationStatus = StOverCloseCon;  
@@ -3607,7 +3633,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
             {
               // The door was closed for a while, just turn off the lights.
               // Start the Close Door Overhead Animation
-              cons.printw("  Door " + std::to_string(door) + " Conviencance Lights Off: ");
+              cons.printwait("  Door " + std::to_string(door) + " Conviencance Lights Off: ");
 
               // Just turn off the lights.
               lsStrips[strip + 1].AnimationStatus = stOverClose;
@@ -3620,6 +3646,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
   }
 }
 
+/*
 bool kbhit(void)
 {
     //https://www.raspberrypi.org/forums/viewtopic.php?t=20070 (Thank You)
@@ -3642,6 +3669,7 @@ bool kbhit(void)
 
     return pressed;
 }
+*/
 
 
 // ***************************************************************************************
@@ -3737,9 +3765,12 @@ void loop()
   using namespace std;
 
   // Define Console
-  
   Console cons;
-  cons.set(8,24);
+  
+  initscr();
+  
+  nodelay(stdscr, true);
+  cons.set(8);
 
   cons.printi("Initializing Console");
   cons.printi("RasFLED Loop ('x' to Exit) ...");
@@ -3792,8 +3823,10 @@ void loop()
   keywatch.set((int)'3',2);  // 
   keywatch.set((int)'4',2);  // 
 
+  keywatch.set(KEY_RESIZE,2);
+
   // Keyboard
-  int key = ' ';
+  int key = -1;
 
   // FLED
   cons.printi("Initializing Timer");
@@ -4064,16 +4097,31 @@ void loop()
     // --- Grabbing Data From Hardware inputs ---
     
     // Keyboard Input
+    /*
     if (kbhit())
     {
         key = getchar();
         keywatch.in(key);
+    }
+    */
+    key = wgetch(stdscr);
+    if (key != -1)
+    {
+      keywatch.in(key);
     }
 
     // ---------------------------------------------------------------------------------------
     // Print the makeshift timing debug and diagnosis stuff, but only when its ready.
     if (cons.isready(tmeCurrentMillis, 100))
     {
+
+    if (keywatch.get(KEY_RESIZE) == 1)
+    {
+      cons.printwait("RESIZING SCREEN");
+      keywatch.Chars[KEY_RESIZE].VALUE = 0;
+      cons.set(8);
+    }
+
       // Refresh Displayed Data
       sdSystem.store_door_switch_states(booSensors);
       sdSystem.store_event_counts(teEvent[0].teDATA.size(),teEvent[1].teDATA.size(),teEvent[2].teDATA.size(),teEvent[3].teDATA.size());
@@ -4101,6 +4149,8 @@ void loop()
   
   // Shutdown the LED strip routine.
   ws2811_fini(&ledstring);
+
+  endwin();
 
   printf ("\nRasFLED Loop ... Exit\n");
   //return ret;
