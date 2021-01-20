@@ -56,6 +56,15 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.09 _210119
+// *    - Moved the Keys variable keywatch to the Console, since it is the part of the 
+// *        console anyway.
+// *    - Changed the look of the interface.
+// *    - Normal operation will now disable debug inputs.
+// *    - Moved more console related routines into the console class.
+// *    - Created a Command Line on the interface.  This will be part of the routines 
+// *        to call specific animations fly style.
+// *
 // * V 0.08 _210118
 // *    - Converted the interface to utilize some of the, fancier, features of ncurses.
 // *        Dynamic sized console window, suporting resizing.
@@ -199,19 +208,19 @@ static char VERSION[] = "XX.YY.ZZ";
 // -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
-// HARDWARE SETUP
+// CONSOLE AND INTEFACE SETUP
 
-#define SCRCOL4 "\33[0;%dm\r"     // http://www.cplusplus.com/forum/unices/36461/
-                                    // 30 -black
-                                    // 31 -red
-                                    // 32 -green
-                                    // 33 -brown
-                                    // 34 -blue
-                                    // 35 -magenta
-                                    // 36 -cyan
-                                    // 37 -lightgray
-#define SCRCOL8 "\33[38;5;%dm\r"  // https://en.wikipedia.org/wiki/ANSI_escape_code
-                                    // 208 -orange
+#define SCREENUPDATEDELAY 100
+#define CONSOLESPLITSIZE  6
+
+// Key Mapping
+#define KEYEXIT           'x'
+
+// Debugging and Diagnosis Keys
+#define KEYDEBUG          '/' // Enter, Exit debug mode.
+#define KEYLEDTEST        'c' // Turn all LEDs on
+#define KEYLEDDRCYCL      't' // Cycle through the doors
+#define KEYLEDUPLW        'l' // Cycle Upper or Lower limits of LEDs
 
 // Testing and Debugging
 #define BOOTEST       false       // Not Implemented - Fading Away
@@ -439,7 +448,8 @@ static char VERSION[] = "XX.YY.ZZ";
 // STRUCTURES
 // ***************************************************************************************
 
-// System Data
+// -------------------------------------------------------------------------------------
+// All variables to keep track of the interface and program status.  All psssive.
 class system_data
 {
   // This is just a repository of data that the program will be accessing and storing 
@@ -534,10 +544,112 @@ class system_data
 
 };
 
-// NCurses Console
+// -------------------------------------------------------------------------------------
+// Tacks all key presses and remembers data associated to whatever key is pressed.
+class Keys
+{
+  private:
+  struct Letter
+  {
+    int LETTER;
+    int COUNT = 0;
+    int VALUE = 0;
+    bool PRESSED = true; // Assume anything could have been press when 
+                         //   program starts.
+    bool ACTIVE = true ; // Only process keys that are set to active.
+  };
+
+  struct CommandLine
+  {
+    std::string COMMANDLINE = "";
+    bool PRESSED = true;
+  };
+
+  public:
+  Letter Chars[256];
+  CommandLine Command;
+
+  void cmdClear()
+  {
+    Command.COMMANDLINE = "";
+  }
+
+  bool cmdPressed()
+  {
+    return Command.PRESSED;
+  }
+
+  std::string cmdRead()
+  {
+    Command.PRESSED = false;
+    return(Command.COMMANDLINE);
+  }
+
+  void cmdIn(int c)
+  {
+    if(c == (char)'\n')
+    {
+      cmdClear();
+    }
+    else
+    {
+      if( (c>47 && c<57) || (c>65 && c<90) || (c>97 && c<122) )
+      {
+        Command.COMMANDLINE = Command.COMMANDLINE + (char)c;
+        Command.PRESSED = true;
+      }
+    }
+  }
+
+  void set(int letter, int size)
+  {
+    Chars[letter].COUNT = size - 1;
+    Chars[letter].VALUE = 0;
+  }
+
+  void in(int c)
+  {
+    if (Chars[c].ACTIVE == true)
+    {
+      Chars[c].VALUE++;
+      Chars[c].PRESSED = true;
+      if (Chars[c].VALUE > Chars[c].COUNT)
+      {
+        Chars[c].VALUE = 0;
+      }
+    }
+  }
+
+  int get(int c)
+  {
+    Chars[c].PRESSED = false;
+    return Chars[c].VALUE;
+  }
+
+  bool getTF(int c)
+  {
+    Chars[c].PRESSED = false;
+    if (Chars[c].VALUE == 0)
+      return false;
+    else
+      return true;
+  }
+
+  bool pressed(int c)
+  {
+    return (Chars[c].PRESSED);
+  }
+};
+
+// -------------------------------------------------------------------------------------
+// NCurses Console.  Responsible for all screen and user interfaces.
 class Console  // Doesnt Work
 {
   private:
+
+  // Keyboard input variable
+  int key = -1;
+
   // NCurses Variables
   int YMax = 0;
   int XMax = 0;
@@ -556,26 +668,36 @@ class Console  // Doesnt Work
   unsigned long Update_Time = 0;
   
   public:
+  Keys keywatch;
 
   void set(int intSeperator)
   {
-    YSeperator = intSeperator;
-
-    Xmid = XMax / 2;
     getmaxyx(stdscr, YMax, XMax);
 
+    YSeperator = intSeperator;
+    Xmid = XMax / 2;
+  
     winTop = newwin(YSeperator, XMax, 0, 0);
     winBot = newwin(YMax - YSeperator, XMax, YSeperator, 0);
     refresh();
 
-    wborder(winTop,'|','|','-','-','/','\\','\\' , '/') ;
-    wborder(winBot,'|','|','-','-','/','\\','\\' , '/') ;
+    //wborder(winTop,'|','|','-','-','/','\\','\\','/') ;
+    //wborder(winBot,'|','|','-','-','/','\\','\\','/') ;
+    
+    //wborder(winTop,' ',' ','_','_','┌','┐','└','┘') ;
+    //wborder(winBot,' ',' ','_','_','┌','┐','└','┘') ;
+
+    wborder(winTop,' ',' ',' ','_',' ',' ',' ',' ') ;
+    wborder(winBot,' ',' ',' ','_',' ',' ',' ',' ') ;
+
+    //wborder(winTop) ;
+    //wborder(winBot) ;
 
     wrefresh(winBot);
     wrefresh(winTop);
     
     strBotLine = "";
-    strBotLine = strBotLine.append(XMax-1, '-');
+    strBotLine = strBotLine.append(XMax-1, '_');
     // cbreak();
 	  // raw();
 	  noecho();
@@ -587,7 +709,7 @@ class Console  // Doesnt Work
 
     while(ou.size() > 0)
     {
-      if ((YConOut > YMax - YSeperator - 2) )
+      if ((YConOut > YMax - YSeperator - 2) || (YConOut < 1) )
       {
         YConOut = 1;
       }
@@ -631,101 +753,215 @@ class Console  // Doesnt Work
     }
   }
 
+  void readkeyboardinput()
+  {
+    key = wgetch(stdscr);
+    if (key != -1)
+    {
+      keywatch.in(key);
+
+      // Put all input into the Command Line, also,
+      keywatch.cmdIn(key);
+    }
+  }
+
+  void processkeyboadinput()
+  {
+    // Check for screen resize.
+    if (keywatch.get(KEY_RESIZE) == 1)
+    {
+      printwait("RESIZING SCREEN");
+      keywatch.Chars[KEY_RESIZE].VALUE = 0;
+      set(CONSOLESPLITSIZE);
+    }
+
+    // Turn on and off debug. Deactivate debug keys when off.
+    if (keywatch.pressed(KEYDEBUG) == true)
+    {
+      if (keywatch.get(KEYDEBUG) == 0)
+      {
+        keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
+        keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
+        
+        keywatch.Chars[KEYLEDUPLW].VALUE = 0;
+        keywatch.Chars[KEYLEDUPLW].ACTIVE = false;
+
+        keywatch.Chars[KEYLEDTEST].VALUE = 0;
+        keywatch.Chars[KEYLEDTEST].ACTIVE = false;
+
+        keywatch.Chars['1'].VALUE = 0;
+        keywatch.Chars['1'].ACTIVE = false;
+        
+        keywatch.Chars['2'].VALUE = 0;
+        keywatch.Chars['2'].ACTIVE = false;
+
+        keywatch.Chars['3'].VALUE = 0;
+        keywatch.Chars['3'].ACTIVE = false;
+
+        keywatch.Chars['4'].VALUE = 0;
+        keywatch.Chars['4'].ACTIVE = false;
+
+        // Turn Pressed back on because console will need to check it.
+        keywatch.Chars[KEYDEBUG].PRESSED = true;
+      }
+      else
+      {
+        keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
+        keywatch.Chars[KEYLEDUPLW].ACTIVE = true;
+        keywatch.Chars[KEYLEDTEST].ACTIVE = true;
+        keywatch.Chars['1'].ACTIVE = true;
+        keywatch.Chars['2'].ACTIVE = true;
+        keywatch.Chars['3'].ACTIVE = true;
+        keywatch.Chars['4'].ACTIVE = true;
+      }
+    }
+  }
+
   void update_displayed_time(unsigned long time)
   {
     Update_Time = time;
   }
 
+  // Main Display Screen
   void output(system_data sdSysData)
   {
+    bool RedrawTestParts = false;
 
-    mvwprintw(winTop, 1, 1, "Compute: %fms |", sdSysData.fltCOMPUTETIME.data);
-    mvwprintw(winTop, 1, 23, "Sleep: %fms | ", sdSysData.fltPREVSLEEPTIME.data);
-    mvwprintw(winTop, 1, 44, "Cycle: %fms ", sdSysData.fltCYCLETIME.data);
-    mvwprintw(winTop, 1, 63, "(m:%fms)", sdSysData.fltCYCLETIME.max);
+    if (keywatch.pressed(KEYDEBUG) == true)
+        RedrawTestParts = true;
+        
+    // Debug Stuff: Display Compute Times
+    if (keywatch.get(KEYDEBUG) == 1)
+    {
+      mvwprintw(winTop, 2, 26, "Compute: %fms", sdSysData.fltCOMPUTETIME.data);
+      mvwprintw(winTop, 3, 26, "  Sleep: %fms", sdSysData.fltPREVSLEEPTIME.data);
+      mvwprintw(winTop, 4, 26, "  Cycle: %fms", sdSysData.fltCYCLETIME.data);
+
+      /*
+      mvwprintw(winTop, 2, 46, "t - Cycle Doors         ");
+      mvwprintw(winTop, 3, 46, "l - Cycle Limits         ");
+      mvwprintw(winTop, 4, 46, "c - Test Lights          ");
+      */
+      mvwprintw(winTop, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
+    }
+    else if ( RedrawTestParts == true )
+    {
+      mvwprintw(winTop, 2, 26, "                       ");
+      mvwprintw(winTop, 3, 26, "                       ");
+      mvwprintw(winTop, 4, 26, "                       ");
+
+      mvwprintw(winTop, 2, 47, "                      ");
+      mvwprintw(winTop, 3, 47, "                      ");
+      mvwprintw(winTop, 4, 47, "/ - Debug             ");
+    }
     
-    mvwprintw(winTop, 3, 26, "RNG: %s", sdSysData.strLEDRANGE.c_str());
-    mvwprintw(winTop, 4, 26, "LVL:");
-    //printi("test");
-    
+    // Debug stuff: Display Range and Seleced Strips to Diplay
+    if(keywatch.get(KEYDEBUG) == 1)
+    {
+      // Display LED range selected to display.
+      std::string strRange;
+      std::string strLevel;
+      // Check for Door Selected to Print
+      switch (keywatch.get(KEYLEDDRCYCL))
+      {
+        case 0:   // Show all lights.  This is normal.
+        {
+          strRange = "A ";
+          break;
+        }
+        case 1:   // Show only Light Set 1
+        {
+          strRange = "D1";
+          break;
+        }
+        case 2:   // Show only Light Set 2
+        {
+          strRange = "D2";
+          break;
+        }
+        case 3:   // Show only Light Set 3
+        {
+          strRange = "D3";
+          break;
+        }
+        case 4:   // Show only Light Set 4
+        {
+          strRange = "D4";
+          break;
+        }
+
+      }    
+
+      // Check for Upper or Lower Range
+      if (keywatch.get(KEYLEDUPLW) == 0)
+      {
+        strLevel = "L";
+      }
+      else
+      {
+        strLevel = "U";
+      }
+
+      mvwprintw(winTop, 2, 19, "RNG: %s", strRange.c_str());
+      mvwprintw(winTop, 3, 19, "LVL: %s", strLevel.c_str());
+    }    
+    else if ( RedrawTestParts == true )
+      {
+        mvwprintw(winTop, 2, 19, "       ");
+        mvwprintw(winTop, 3, 19, "       ");
+      }
+    // ------
+
+    //Display Door Statuses
     if (sdSysData.boolDOORSENSORS[0] == true) {wattron(winTop, A_REVERSE);}
-    mvwprintw(winTop, 4, 10, "D1");
+    mvwprintw(winTop, 3, 7, "D1");
     if (sdSysData.boolDOORSENSORS[0] == true) {wattroff(winTop, A_REVERSE);}
-    mvwprintw(winTop, 4, 4, "%03d:E", sdSysData.intEVENTCOUNTS[0]);
-
+    
     if (sdSysData.boolDOORSENSORS[1] == true) {wattron(winTop, A_REVERSE);}
-    mvwprintw(winTop, 3, 10, "D2");
+    mvwprintw(winTop, 2, 7, "D2");
     if (sdSysData.boolDOORSENSORS[1] == true) {wattroff(winTop, A_REVERSE);}
-    mvwprintw(winTop, 3, 4, "%03d:E", sdSysData.intEVENTCOUNTS[1]);
-
+    
     if (sdSysData.boolDOORSENSORS[2] == true) {wattron(winTop, A_REVERSE);}
-    mvwprintw(winTop, 4, 15, "D3");
+    mvwprintw(winTop, 3, 10, "D3");
     if (sdSysData.boolDOORSENSORS[2] == true) {wattroff(winTop, A_REVERSE);}
-    mvwprintw(winTop, 4, 18, "E:%03d", sdSysData.intEVENTCOUNTS[2]);
 
     if (sdSysData.boolDOORSENSORS[3] == true) {wattron(winTop, A_REVERSE);}
-    mvwprintw(winTop, 3, 15, "D4");
+    mvwprintw(winTop, 2, 10, "D4");
     if (sdSysData.boolDOORSENSORS[3] == true) {wattroff(winTop, A_REVERSE);}
-    mvwprintw(winTop, 3, 18, "E:%03d", sdSysData.intEVENTCOUNTS[3]);
 
+
+    if (keywatch.get(KEYDEBUG) == 1)
+    {
+      mvwprintw(winTop, 3, 1, "%03d:E", sdSysData.intEVENTCOUNTS[0]);
+      mvwprintw(winTop, 2, 1, "%03d:E", sdSysData.intEVENTCOUNTS[1]);
+      mvwprintw(winTop, 3, 13, "E:%03d", sdSysData.intEVENTCOUNTS[2]);
+      mvwprintw(winTop, 2, 13, "E:%03d", sdSysData.intEVENTCOUNTS[3]);
+    }
+    else if ( RedrawTestParts == true )
+    {
+      mvwprintw(winTop, 3, 1, "     ");
+      mvwprintw(winTop, 2, 1, "     ");
+      mvwprintw(winTop, 3, 13, "     ");
+      mvwprintw(winTop, 2, 13, "     ");
+    }
+
+
+    // Display Command Line
+    if (keywatch.cmdPressed() == true)
+    {
+      mvwprintw(winTop, 0, 1, "CMD: %s", keywatch.cmdRead().c_str());
+    }
+
+
+    // ------
+    // Refresh the Status Window and print any console info.
     wrefresh(winTop);
-
     printout();
   }
 };
 
-
-class Keys
-{
-  private:
-  struct Letter
-  {
-    int LETTER;
-    int COUNT = 0;
-    int VALUE = 0;
-    bool PRESSED = false;
-  };
-
-  public:
-  Letter Chars[256];
-
-  void set(int letter, int size)
-  {
-    Chars[letter].COUNT = size - 1;
-    Chars[letter].VALUE = 0;
-  }
-
-  void in(int c)
-  {
-    Chars[c].VALUE++;
-    Chars[c].PRESSED = true;
-    if (Chars[c].VALUE > Chars[c].COUNT)
-    {
-      Chars[c].VALUE = 0;
-    }
-  }
-
-  int get(int c)
-  {
-    Chars[c].PRESSED = false;
-    return Chars[c].VALUE;
-  }
-
-  bool getTF(int c)
-  {
-    Chars[c].PRESSED = false;
-    if (Chars[c].VALUE == 0)
-      return false;
-    else
-      return true;
-  }
-
-  bool pressed(int c)
-  {
-    return (Chars[c].PRESSED);
-  }
-};
-
+// -------------------------------------------------------------------------------------
+// Keeps track of timing variables
 class FledTime
 {
   private:
@@ -2120,7 +2356,7 @@ void vdDoorOpenAnimation00(Console &cons, led_strip lsStrips[], int intStripID, 
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printwait("vdDoorOpenAnimation00 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation00 (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm;
   int intDur;
   int intCt;
@@ -2147,7 +2383,7 @@ void vdDoorOpenAnimation00(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorOpenAnimation01(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 1
 {
-  cons.printwait("vdDoorOpenAnimation01 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation01 (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm = 50;
   int intDur;
   int intCt;
@@ -2172,7 +2408,7 @@ void vdDoorOpenAnimation01(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorOpenAnimation02(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 2
 {
-  cons.printwait("vdDoorOpenAnimation02 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation02 (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm = 0;
   int intDur;
   int intCt;
@@ -2195,7 +2431,7 @@ void vdDoorCloseAnimation(Console &cons, led_strip lsStrips[], int intStripID, t
 // Door Close Stage 0
 // Door is closed, disengage safety lights and stop door overhead lights.
 {
-  cons.printwait("vdDoorCloseAnimation (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorCloseAnimation (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm;
   int intDur;
   int intSp;
@@ -2321,7 +2557,7 @@ void vdPacificaishAnimation(Console &cons, led_strip lsStrips[], int intStripID,
 void vdEndAllAnimationsADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Run this routine on all Doors after all doors are closed to ensure no lingering animations have not been ended for whatever reason.
 {
-  cons.printwait("vdEndAllAnimationsADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdEndAllAnimationsADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 20000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
 }
 
@@ -2330,7 +2566,7 @@ void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripI
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printwait("vdDoorOpenAnimationADV00 (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimationADV00 (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm;
   int intDur;
   int intCt;
@@ -2408,7 +2644,7 @@ void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripI
 void vdDoorCloseRunningADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
 {
-  cons.printwait("vdDoorCloseRunningADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorCloseRunningADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2431,7 +2667,7 @@ void vdDoorCloseRunningADV(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorCloseActiveADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all closed doors at least one other door is open.
 {
-  cons.printwait("vdDoorCloseActiveADV (CL:%d ID:%d S:%d E:%d)" + std::to_string(lsStrips[intStripID].Cl) + std::to_string(intStripID) + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorCloseActiveADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Give strip a fresh start.
   vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2456,7 +2692,7 @@ void vdDoorCloseActiveADV(Console &cons, led_strip lsStrips[], int intStripID, t
 void vdPacificaishAnimationADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Blue Waves. Much more interesting than the old version of this.
 {
-  cons.printwait("vdPacificaishAnimationADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdPacificaishAnimationADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Give strip a fresh start.
   //vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
@@ -2503,7 +2739,7 @@ void vdPacificaishAnimationADV(Console &cons, led_strip lsStrips[], int intStrip
 void vdCloseOverADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Overhead Lights Off
 {
-  cons.printwait("vdCloseOverADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdCloseOverADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Just set all the current over head lights to fade away.
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 25, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
@@ -2513,7 +2749,7 @@ void vdCloseOverADV(Console &cons, led_strip lsStrips[], int intStripID, timed_e
 void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
 {
-  cons.printwait("vdCoADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdCoAD (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm;
   int intDur;
   int intSp;
@@ -2571,7 +2807,7 @@ void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event te
 void vdAddOpenADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights On on to show the door is open.
 {
-  cons.printwait("vdAddOpenADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdAddOpenADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   //teEvent[lsStrips[intStripID +1].Cl].set(tmeCurrentTime, 1000, 1000, 80, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(125,124,16), CRGB(0, 0, 0), CRGB(0, 0, 0), top, top + lsStrips[intStripID +1].Ct() /2, false, false);
 
   int intTm, intDur, intSp, intCt; 
@@ -2602,7 +2838,7 @@ void vdAddOpenADV(Console &cons, led_strip lsStrips[], int intStripID, timed_eve
 void vdAddCloseADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
-  cons.printwait("vdAddCloseADV (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdAddCloseADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Seach the strip for light colors and set them to end after animation completes.  
   teEvent[lsStrips[intStripID].Cl].set(tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(254, 254, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
@@ -2885,7 +3121,7 @@ void vdNightSky(Console &cons, led_strip lsStrips[], int intStripID, timed_event
 void vdChristmasTree(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Christmas Overhead Open
 {
-  cons.printwait("vdChristmasTree (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdChristmasTree (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   // AnTavdChristmasTree
 
   // Assign the top and bottom of the strip
@@ -2931,7 +3167,7 @@ void vdChristmasTreeCo(Console &cons, led_strip lsStrips[], int intStripID, time
 // AnTavdChristmasTreeCo
 
 {
-  cons.printwait("vdChristmasTreeCo (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdChristmasTreeCo (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm;
   int intDurW;
   int intDurG;
@@ -2988,7 +3224,7 @@ void vdDoorOpenAnimation00Christmas(Console &cons, led_strip lsStrips[], int int
 // Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printwait("vdDoorOpenAnimation00Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation00Christmas (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   int intTm;
   int intDur;
@@ -3011,7 +3247,7 @@ void vdDoorOpenAnimation00Christmas(Console &cons, led_strip lsStrips[], int int
 void vdDoorOpenAnimation01Christmas(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 1
 {
-  cons.printwait("vdDoorOpenAnimation01Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation01Christmas (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm = 50;
   int intDur;
   int intCt;
@@ -3036,7 +3272,7 @@ void vdDoorOpenAnimation01Christmas(Console &cons, led_strip lsStrips[], int int
 void vdDoorOpenAnimation02Christmas(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Door Open Stage 2
 {
-  cons.printwait("vdDoorOpenAnimation02Christmas (S:%d E:%d)" + std::to_string(lsStrips[intStripID].St) + std::to_string(lsStrips[intStripID].Ed));
+  cons.printwait("vdDoorOpenAnimation02Christmas (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm = 0;
   int intDur;
   int intCt;
@@ -3768,13 +4004,27 @@ void loop()
   Console cons;
   
   initscr();
-  
+  cons.set(CONSOLESPLITSIZE);
   nodelay(stdscr, true);
-  cons.set(8);
-
+  
   cons.printi("Initializing Console");
   cons.printi("RasFLED Loop ('x' to Exit) ...");
+  
+  // Console Key Watch
+  cons.keywatch.set((int)KEYEXIT,2);  // Exit the program.
 
+  // Debugging keys
+  cons.keywatch.set((int)KEYDEBUG,2);  // Testing Mode Toggle
+  cons.keywatch.set((int)KEYLEDDRCYCL,5);  // Test Doors
+  cons.keywatch.set((int)KEYLEDUPLW,2);   // Swap LED limits
+  cons.keywatch.set((int)KEYLEDTEST,2);  // Test LEDs.  Turn all on low level white.
+  cons.keywatch.set((int)'1',2);  // Door Toggles
+  cons.keywatch.set((int)'2',2);  // 
+  cons.keywatch.set((int)'3',2);  // 
+  cons.keywatch.set((int)'4',2);  // 
+
+  // Console resize key (automatic detection)
+  cons.keywatch.set(KEY_RESIZE,2);
 
   // ---------------------------------------------------------------------------------------
   // LED Library Vars and Init
@@ -3810,23 +4060,6 @@ void loop()
 
   // Define System Data
   system_data sdSystem;
-
-  // Key Watch
-  Keys keywatch;
-  keywatch.set((int)'x',2);  // Exit
-  keywatch.set((int)'t',5);  // Test Doors
-  keywatch.set((int)'l',2);   // Swap LED limits
-  keywatch.set((int)'c',2);  // Test Colors
-
-  keywatch.set((int)'1',2);  // Door Toggles
-  keywatch.set((int)'2',2);  // 
-  keywatch.set((int)'3',2);  // 
-  keywatch.set((int)'4',2);  // 
-
-  keywatch.set(KEY_RESIZE,2);
-
-  // Keyboard
-  int key = -1;
 
   // FLED
   cons.printi("Initializing Timer");
@@ -3899,7 +4132,7 @@ void loop()
   // ---------------------------------------------------------------------------------------
   //  Repeating Sleeping Loop until eXit is triggered.
   // ---------------------------------------------------------------------------------------
-  while( keywatch.get('x') == 0 )
+  while( cons.keywatch.get(KEYEXIT) == 0 )
   {
     // --- Prpare the Loop ---
 
@@ -3932,10 +4165,10 @@ void loop()
     */
 
     // Toggle on and off the door sensors with keyboard.
-    booSensors[0] = keywatch.getTF('1');
-    booSensors[1] = keywatch.getTF('2');
-    booSensors[2] = keywatch.getTF('3');
-    booSensors[3] = keywatch.getTF('4');
+    booSensors[0] = cons.keywatch.getTF('1');
+    booSensors[1] = cons.keywatch.getTF('2');
+    booSensors[2] = cons.keywatch.getTF('3');
+    booSensors[3] = cons.keywatch.getTF('4');
 
 
     // Check the doors and start or end all animations
@@ -3968,11 +4201,11 @@ void loop()
 
       int mcount = 0;
 
-
+      /*
       // Toggle through with 't' to test the lights:
-      if(keywatch.pressed('t') == true)
+      if(cons.keywatch.pressed('t') == true)
       {
-        switch (keywatch.get('t'))
+        switch (cons.keywatch.get('t'))
         {
           case 0:   // Show all lights.  This is normal.
           {
@@ -4001,9 +4234,10 @@ void loop()
           }
         }
       }
+      */
 
       // Toggle with 'c' to test all lights by setting them all to white.
-      if (keywatch.get('c') !=0)
+      if (cons.keywatch.get(KEYLEDTEST) !=0)
       {
         for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
         {
@@ -4024,11 +4258,11 @@ void loop()
       }
 
       // Determine and display which lights get shown.
-      if (keywatch.get('t') == 0 || keywatch.get('t') == 1)
+      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 1)
       {
         for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
         {
-          if(keywatch.get('l') == 0)
+          if(cons.keywatch.get(KEYLEDUPLW) == 0)
             matrix[mcount]=crgbMainArrays0[lcount].b + (crgbMainArrays0[lcount].g << 8) + (crgbMainArrays0[lcount].r << 16) + (0 << 24);
           else
             matrix[mcount]=crgbMainArrays0[NUM_LEDSs0 - lcount].b + (crgbMainArrays0[NUM_LEDSs0 - lcount].g << 8) + (crgbMainArrays0[NUM_LEDSs0 - lcount].r << 16) + (0 << 24);
@@ -4036,11 +4270,11 @@ void loop()
         }
       }
 
-      if (keywatch.get('t') == 0 || keywatch.get('t') == 2)
+      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 2)
       {
         for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
         {
-          if(keywatch.get('l') == 0)
+          if(cons.keywatch.get(KEYLEDUPLW) == 0)
             matrix[mcount]=crgbMainArrays1[lcount].b + (crgbMainArrays1[lcount].g << 8) + (crgbMainArrays1[lcount].r << 16) + (0 << 24);
           else
             matrix[mcount]=crgbMainArrays1[NUM_LEDSs1 - lcount].b + (crgbMainArrays1[NUM_LEDSs1 - lcount].g << 8) + (crgbMainArrays1[NUM_LEDSs1 - lcount].r << 16) + (0 << 24);
@@ -4048,11 +4282,11 @@ void loop()
         }
       }
 
-      if (keywatch.get('t') == 0 || keywatch.get('t') == 3)
+      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 3)
       {
         for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
         {
-          if(keywatch.get('l') == 0)
+          if(cons.keywatch.get(KEYLEDUPLW) == 0)
             matrix[mcount]=crgbMainArrays2[lcount].b + (crgbMainArrays2[lcount].g << 8) + (crgbMainArrays2[lcount].r << 16) + (0 << 24);
           else
             matrix[mcount]=crgbMainArrays2[NUM_LEDSs0 - lcount].b + (crgbMainArrays2[NUM_LEDSs0 - lcount].g << 8) + (crgbMainArrays2[NUM_LEDSs0 - lcount].r << 16) + (0 << 24);
@@ -4060,11 +4294,11 @@ void loop()
         }
       }
 
-      if (keywatch.get('t') == 0 || keywatch.get('t') == 4)
+      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 4)
       {
         for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
         {
-          if(keywatch.get('l') == 0)
+          if(cons.keywatch.get(KEYLEDUPLW) == 0)
             matrix[mcount]=crgbMainArrays3[lcount].b + (crgbMainArrays3[lcount].g << 8) + (crgbMainArrays3[lcount].r << 16) + (0 << 24);
           else
             matrix[mcount]=crgbMainArrays3[NUM_LEDSs1 - lcount].b + (crgbMainArrays3[NUM_LEDSs1 - lcount].g << 8) + (crgbMainArrays3[NUM_LEDSs1 - lcount].r << 16) + (0 << 24);
@@ -4080,47 +4314,19 @@ void loop()
           fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
           break;
       }
-      // ---------------------------------------------------------------------------------------
-
-
-      // Debug Routines ---
-      // Slow delay if in testing mode.
-      //if (BOOTEST == true)
-      //{
-      //  intRestTime = TESTRESTTIME;
-      //}
     }   // End Delayless Loop
 
-
-  
     // ---------------------------------------------------------------------------------------
-    // --- Grabbing Data From Hardware inputs ---
-    
-    // Keyboard Input
-    /*
-    if (kbhit())
-    {
-        key = getchar();
-        keywatch.in(key);
-    }
-    */
-    key = wgetch(stdscr);
-    if (key != -1)
-    {
-      keywatch.in(key);
-    }
+    // --- Grabbing Data From Keyboard and Updating Interface
 
-    // ---------------------------------------------------------------------------------------
-    // Print the makeshift timing debug and diagnosis stuff, but only when its ready.
-    if (cons.isready(tmeCurrentMillis, 100))
-    {
+    cons.readkeyboardinput();
 
-    if (keywatch.get(KEY_RESIZE) == 1)
+    // Displaying and updating the screen, but only when its ready.  
+    //  This will be every SCREENUPDATEDELAY ms.
+    if (cons.isready(tmeCurrentMillis, SCREENUPDATEDELAY))
     {
-      cons.printwait("RESIZING SCREEN");
-      keywatch.Chars[KEY_RESIZE].VALUE = 0;
-      cons.set(8);
-    }
+      // Process keyboard info before displaying the screen
+      cons.processkeyboadinput();
 
       // Refresh Displayed Data
       sdSystem.store_door_switch_states(booSensors);
