@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.08
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.10A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,44 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.10 _210125
+// *    - Main routine now returns an int, for no programmed reason at all at this time,
+// *        just as any C based program should. Still haven't programed any flags yet. 
+// *        As of this writing, I cant think of any reason to do so, except for maybe 
+// *        console dislay colors, for when I actually have a monitor in the car or 
+// *        something. 
+// *    - Went through some of the newer portions of the program and put a few lines of 
+// *        comments and descriptions, for reference. 
+// *    - Not seen or displayed in any of this code, but what was done. 
+// *        Experimented with althernate ways of displaying and rending all the LEDS 
+// *        that with alternate LED librarys.  This was important because I don't 
+// *        like the one pin, LED strip limit.
+// *        - Atttempted to utilize the second channel programmed in the library. 
+// *            It failed because I just couldn't get it to work. Either it doesn't
+// *            look as if the original programme finished it.  Also, it has been 
+// *            years since he worked on it, so chance are it will never be finished. 
+// *        - This following portion of my test was sucessful.  
+// *            Instead of having the RPi hardware display the LEDs, I had the the Pi
+// *            generate what was displayed, then I sent those values to Arduinos, who 
+// *            were resonsible for their own LED strips.  
+// *          This is great because it allowed the arduinos to work as modules. This is 
+// *            primary intintions of the program.  It also allowed a, backup, failsafe, 
+// *            mode for the LEDs to work, if a break in the line occured, and or, 
+// *            limited operation when the RPI was offline and or booting up. 
+// *            It would also allow (MANY!) more LED strips to be running at the same 
+// *            time because the 90% of the clock cycles taken by this program is just 
+// *            timing and pushing the LED values to the LED strips through that DMA 
+// *            channel.  Also, I would get DMA 10 back so I could get my audio back. 
+// *          Although I was sucessful, I stopped progress on this because I was limited 
+// *            by the serial bus, which ran, at best, 14400 bytes per second.  Or, at 
+// *            best, 14 kbs.  And thats, with errors.  LED strips run at about 800 kbs. 
+// *            My best results yeilded at about 30 FPS with 130 LEDs without error 
+// *            correction.
+// *          I want to bring this back in the future.  I want to get Ethernet Hats 
+// *            for the Arduinos and stupid little low power ENet hub. I could then 
+// *            just attach and power an Arduino, directly to the LED strip via 
+// *            a simple Ethernet and power cable.  But, only if it works properly. 
+// *
 // * V 0.09 _210119
 // *    - Moved the Keys variable keywatch to the Console, since it is the part of the 
 // *        console anyway.
@@ -224,9 +262,6 @@ static char VERSION[] = "XX.YY.ZZ";
 
 // Testing and Debugging
 #define BOOTEST       false       // Not Implemented - Fading Away
-
-//!!!!!!!!!! NEEDS TO GO  !!!!!!!!!!!!!!
-//#define RESTTIME      25      // Ok, 125 FPS, max and estimated.      
 
 // -------------------------------------------------------------------------------------
 // LED Strip Declarations
@@ -428,21 +463,6 @@ static char VERSION[] = "XX.YY.ZZ";
 // StupidRandom Parameters
 #define StuRNDsize              100
 
-// -------------------------------------------------------------------------------------
-
-// COMMUNICATIONS
-/*
-  // Handled by Wire library I2C/TWI.  Pins are hardwired and only defined here for
-  //  reference.
-  #define COMMDATA      D4      // D4 - Data line.
-  #define COMMCLK       D5      // D5 - Clock line.
-
-  #define SLAVEID       5       // ID of this device on the bus.  Needs to change for
-  //  every device.  A percistand unique ID would make
-  //  this much easier during deployment.
-  #define DATASIZE      1       // The size of the data packet.
-*/
-
 
 // ***************************************************************************************
 // STRUCTURES
@@ -487,6 +507,7 @@ class system_data
   bool  boolDOORSENSORS[NUM_SWITCHES];
   int   intEVENTCOUNTS[NUM_SWITCHES];
 
+  // Reference to the door values
   void store_door_switch_states(bool switches[])
   {
     for(int x=0; x < NUM_SWITCHES; x++)
@@ -495,6 +516,7 @@ class system_data
     }
   }
 
+  // Reference for the amount for events running.
   void store_event_counts(int EventCount0, int EventCount1, int EventCount2, int EventCount3)
   {
     intEVENTCOUNTS[0] = EventCount0;
@@ -503,6 +525,7 @@ class system_data
     intEVENTCOUNTS[3] = EventCount3;
   }
 
+  // Reference for the time (elapsed) since program start.
   void store_compute_time(float fltComputeTime)
   {
     fltCOMPUTETIME.data = fltComputeTime;
@@ -517,6 +540,7 @@ class system_data
     }
   }
 
+  // Reference since sleep started and wake up time elapsed. 
   float getsleeptime(int intFPS)
   {
     // Return, in milliseconds, the amount of time required to sleep 
@@ -532,6 +556,7 @@ class system_data
     return (sleeptime);
   }
 
+  // reset monitor times.
   void refresh()
   {
     fltCOMPUTETIME.min  = 0;
@@ -550,15 +575,17 @@ class Keys
 {
   private:
   struct Letter
+  // For each letter, assign a behavior and type for it.
   {
-    int LETTER;
-    int COUNT = 0;
-    int VALUE = 0;
-    bool PRESSED = true; // Assume anything could have been press when 
-                         //   program starts.
-    bool ACTIVE = true ; // Only process keys that are set to active.
+    int LETTER;           // Letter, keypress, main value
+    int COUNT = 0;        // set up how many times the key can be pressed brofor reset.
+    int VALUE = 0;        // with every press, this value increases, this is value returned.
+    bool PRESSED = true;  // Assume anything could have been press when 
+                          //   program starts.
+    bool ACTIVE = true ;  // Only process keys that are set to active.
   };
 
+  // Full Command Line value(as is)
   struct CommandLine
   {
     std::string COMMANDLINE = "";
@@ -566,35 +593,41 @@ class Keys
   };
 
   public:
-  Letter Chars[256];
-  CommandLine Command;
+  Letter Chars[256];      // Full array of all letters
+  CommandLine Command;    // Command Line Reference.
 
   void cmdClear()
+  // Clear Command line
   {
     Command.COMMANDLINE = "";
   }
 
   bool cmdPressed()
+  // Return if Command Line Recently Changed.
   {
     return Command.PRESSED;
   }
 
   std::string cmdRead()
+  // Read Command Line and sets recently changed to false (no longer dirty)
   {
     Command.PRESSED = false;
     return(Command.COMMANDLINE);
   }
 
   void cmdIn(int c)
+  // Add another character to the command line.
   {
     if(c == (char)'\n')
     {
+      // If enter pressed, clear the line.
       cmdClear();
     }
     else
     {
       if( (c>47 && c<57) || (c>65 && c<90) || (c>97 && c<122) )
       {
+        // only accept letters and numbers.
         Command.COMMANDLINE = Command.COMMANDLINE + (char)c;
         Command.PRESSED = true;
       }
@@ -602,12 +635,14 @@ class Keys
   }
 
   void set(int letter, int size)
+  // Set behavior of letter to be watched.
   {
     Chars[letter].COUNT = size - 1;
     Chars[letter].VALUE = 0;
   }
 
   void in(int c)
+  // Letter watched is pressed, change its value atnd set pressed (dirty)
   {
     if (Chars[c].ACTIVE == true)
     {
@@ -621,11 +656,13 @@ class Keys
   }
 
   int get(int c)
+  // return value of letter and reset pressed (clean)
   {
     Chars[c].PRESSED = false;
     return Chars[c].VALUE;
   }
 
+  // returns true false value of letter, reset pressed (clean)
   bool getTF(int c)
   {
     Chars[c].PRESSED = false;
@@ -635,11 +672,13 @@ class Keys
       return true;
   }
 
+  // returns pressed value (clean or dirty)
   bool pressed(int c)
   {
     return (Chars[c].PRESSED);
   }
 };
+
 
 // -------------------------------------------------------------------------------------
 // NCurses Console.  Responsible for all screen and user interfaces.
@@ -690,9 +729,6 @@ class Console  // Doesnt Work
     wborder(winTop,' ',' ',' ','_',' ',' ',' ',' ') ;
     wborder(winBot,' ',' ',' ','_',' ',' ',' ',' ') ;
 
-    //wborder(winTop) ;
-    //wborder(winBot) ;
-
     wrefresh(winBot);
     wrefresh(winTop);
     
@@ -704,6 +740,7 @@ class Console  // Doesnt Work
   }
 
   void printout()
+  // Print out console.
   {
     std::string strTemp;
 
@@ -730,19 +767,21 @@ class Console  // Doesnt Work
   }
 
   void printi (std::string in)
+  // Print to console immediatly to console without waiting for refresh.
   {
     ou.push_back(in);
     printout();
   }
 
   void printwait (std::string in)
+  // Print out a line to console during next refresh.
   {
     ou.push_back(in);
   }
 
   bool isready(unsigned long time, int intmsWaitTime)
   {
-    //measured in ms.
+    //Check to see if enough time has passed to refresh the console. (wait is in ms)
     if(time > Update_Time + intmsWaitTime)
     {
       return true;
@@ -754,10 +793,12 @@ class Console  // Doesnt Work
   }
 
   void readkeyboardinput()
+  // read keyboard for keypresses.  Just exit if nothing is being pressed.
   {
     key = wgetch(stdscr);
     if (key != -1)
     {
+      // Check to see if the key being pressed is in watch list and inc its value if it is.
       keywatch.in(key);
 
       // Put all input into the Command Line, also,
@@ -766,6 +807,7 @@ class Console  // Doesnt Work
   }
 
   void processkeyboadinput()
+  // Run through this routine before before the console is refreshed.
   {
     // Check for screen resize.
     if (keywatch.get(KEY_RESIZE) == 1)
@@ -776,36 +818,45 @@ class Console  // Doesnt Work
     }
 
     // Turn on and off debug. Deactivate debug keys when off.
+    // Store behavior values for debug info.
     if (keywatch.pressed(KEYDEBUG) == true)
     {
       if (keywatch.get(KEYDEBUG) == 0)
       {
+        // Draw values for debug LED CYCLE through displayed range (all, Door #)
         keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
         keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
         
+        // Draw values for debug LED RANGE UPer or LOWer.
         keywatch.Chars[KEYLEDUPLW].VALUE = 0;
         keywatch.Chars[KEYLEDUPLW].ACTIVE = false;
 
+        // Draw values for debug LED TEST toggle all lights on to static value.
         keywatch.Chars[KEYLEDTEST].VALUE = 0;
         keywatch.Chars[KEYLEDTEST].ACTIVE = false;
 
+        // Draw values for toggle door open or closed.
         keywatch.Chars['1'].VALUE = 0;
         keywatch.Chars['1'].ACTIVE = false;
         
+        // Draw values for toggle door open or closed.
         keywatch.Chars['2'].VALUE = 0;
         keywatch.Chars['2'].ACTIVE = false;
 
+        // Draw values for toggle door open or closed.
         keywatch.Chars['3'].VALUE = 0;
         keywatch.Chars['3'].ACTIVE = false;
 
+        // Draw values for toggle door open or closed.
         keywatch.Chars['4'].VALUE = 0;
         keywatch.Chars['4'].ACTIVE = false;
 
-        // Turn Pressed back on because console will need to check it.
+        // Draw value and console control value for Debug mode.
         keywatch.Chars[KEYDEBUG].PRESSED = true;
       }
       else
       {
+        // Reset console debug values to default values if debug turned off.
         keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
         keywatch.Chars[KEYLEDUPLW].ACTIVE = true;
         keywatch.Chars[KEYLEDTEST].ACTIVE = true;
@@ -818,15 +869,19 @@ class Console  // Doesnt Work
   }
 
   void update_displayed_time(unsigned long time)
+  // Set the consoles last redraw time, a now should be passed in.
   {
     Update_Time = time;
   }
 
-  // Main Display Screen
+  // Draw the console, starting with status window, then update console with pending
+  // console prints.
   void output(system_data sdSysData)
   {
     bool RedrawTestParts = false;
 
+    // Check to see if we have just toggled the debug mode.  
+    // If we have toggled DEBUG, then we will need to clean up things on the screan.
     if (keywatch.pressed(KEYDEBUG) == true)
         RedrawTestParts = true;
         
@@ -837,14 +892,10 @@ class Console  // Doesnt Work
       mvwprintw(winTop, 3, 26, "  Sleep: %fms", sdSysData.fltPREVSLEEPTIME.data);
       mvwprintw(winTop, 4, 26, "  Cycle: %fms", sdSysData.fltCYCLETIME.data);
 
-      /*
-      mvwprintw(winTop, 2, 46, "t - Cycle Doors         ");
-      mvwprintw(winTop, 3, 46, "l - Cycle Limits         ");
-      mvwprintw(winTop, 4, 46, "c - Test Lights          ");
-      */
       mvwprintw(winTop, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
     }
     else if ( RedrawTestParts == true )
+    // If exiting debug mode, clean out what was printed in when in debug mode.
     {
       mvwprintw(winTop, 2, 26, "                       ");
       mvwprintw(winTop, 3, 26, "                       ");
@@ -861,7 +912,8 @@ class Console  // Doesnt Work
       // Display LED range selected to display.
       std::string strRange;
       std::string strLevel;
-      // Check for Door Selected to Print
+
+      // Displaying LEDs selected to be displayed CYCLE selected.
       switch (keywatch.get(KEYLEDDRCYCL))
       {
         case 0:   // Show all lights.  This is normal.
@@ -902,17 +954,19 @@ class Console  // Doesnt Work
         strLevel = "U";
       }
 
+      // Draw RANGE and UPPER OR LOWER VALUES selected.
       mvwprintw(winTop, 2, 19, "RNG: %s", strRange.c_str());
       mvwprintw(winTop, 3, 19, "LVL: %s", strLevel.c_str());
     }    
     else if ( RedrawTestParts == true )
+    // If exiting debug mode, clean out what was printed in when in debug mode.
       {
         mvwprintw(winTop, 2, 19, "       ");
         mvwprintw(winTop, 3, 19, "       ");
       }
     // ------
 
-    //Display Door Statuses
+    //Display Door Statuses, highlighting values that are on (doors open)
     if (sdSysData.boolDOORSENSORS[0] == true) {wattron(winTop, A_REVERSE);}
     mvwprintw(winTop, 3, 7, "D1");
     if (sdSysData.boolDOORSENSORS[0] == true) {wattroff(winTop, A_REVERSE);}
@@ -930,6 +984,7 @@ class Console  // Doesnt Work
     if (sdSysData.boolDOORSENSORS[3] == true) {wattroff(winTop, A_REVERSE);}
 
 
+    // Debug stuff: Display the amount of events, assoicated to each door, runnng .
     if (keywatch.get(KEYDEBUG) == 1)
     {
       mvwprintw(winTop, 3, 1, "%03d:E", sdSysData.intEVENTCOUNTS[0]);
@@ -938,6 +993,7 @@ class Console  // Doesnt Work
       mvwprintw(winTop, 2, 13, "E:%03d", sdSysData.intEVENTCOUNTS[3]);
     }
     else if ( RedrawTestParts == true )
+    // If exiting debug mode, clean out what was printed in when in debug mode.
     {
       mvwprintw(winTop, 3, 1, "     ");
       mvwprintw(winTop, 2, 1, "     ");
@@ -953,12 +1009,15 @@ class Console  // Doesnt Work
     }
 
 
-    // ------
-    // Refresh the Status Window and print any console info.
+    // Commit all our changes to the status portion of the screen (winTop)
     wrefresh(winTop);
+
+    // Now that we are finished drawing the Console Status part of the screen, 
+    // we needd to go to the console portion of the screen and update it.
     printout();
   }
 };
+
 
 // -------------------------------------------------------------------------------------
 // Keeps track of timing variables
@@ -3946,25 +4005,13 @@ void ledprep(ws2811_t *ws2811)
 // ***************************************************************************************
 
 
-
-// ***************************************************************************************
-// MAIN
-// ***************************************************************************************
-
-//  GLOBAL VARIABLES
-// Global Varables are evil.  They are all gone now.
-
-
-
 // ***************************************************************************************
 // MAIN PROGRAM
 // ***************************************************************************************
 void setup()
 {
-  // Generate RandomSeed based on Temperture, Humidity, Air Quality, Gravametric Indifferences, 
-  //  Planatery Alignment, and Current Horoscope Predictions.
-
-  //printf("RasFLED Starting ... ");
+  // Keeping this for now to remind me of what I haven't implementd, from the preport, 
+  //  yet.
 
   /*
   // Define Door Sensors.
@@ -3974,29 +4021,18 @@ void setup()
   pinMode(SWITCH_PINs3, INPUT_PULLUP);
   */
 
-  /*
-    // Define Communications.
-    Wire.begin(SLAVEID);              // Connect to I2C bus with defined slave ID as 
-                                      //  address
-    Wire.onReceive(onDataAvailable);  // Register data avaiable event.
-  */
-
-
-  /*
-    Serial Comms in the future
-  */
-
-  // Nothing here anymore.
-
-  //printf("OK\n");
 }
 
 
 // ---------------------------------------------------------------------------------------
 // MAIN LOOP
-void loop()
+int loop()
 //  Main Loop:
 //    Events and Light Path animations should only be called when their time is up.
+
+// This was once the main() program.  Ever since we abandoned global variable, the setup 
+//  portion of this program has become convoluted.  It could use a good reorganize and 
+//  maybe a way to get some of this stuff out, subroutine, much of these routines. 
 {
   using namespace std;
 
@@ -4051,8 +4087,7 @@ void loop()
   if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS)
   {
       fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
-      //return ret;
-      return;
+      return ret;
   }
   cons.printi("OK");
 
@@ -4189,71 +4224,43 @@ void loop()
     //  Run ANIMATION EVENT ON LEDS - 3
     booUpdates3 = teEvent[3].execute(cons, sRND, crgbMainArrays3, tmeCurrentMillis);
 
-    //  If we made it to this part of the code then we need to
-    //    tell the LED hardware that it has a change to commit.
+
+
+    // ---------------------------------------------------------------------------------------
+    // Render all the LEDs if changes have been made.
+
+    // This part of the code needs to be clean up and consolidated, but it works for now 
+    // and I havent decided how to future handle this yet, so it stays for now.
 
     // --- Execute LED Hardware Changes If Anything Was Updated ---
     if ((booUpdates0 == true) || (booUpdates1 == true) || (booUpdates2 == true) || (booUpdates3 == true))
     {
-      // ---------------------------------------------------------------------------------------
-      // Render - Copy my array int its array.
       //  Do I need to move the whole thing or can I just move the changed pixels?
 
       int mcount = 0;
 
-      /*
-      // Toggle through with 't' to test the lights:
-      if(cons.keywatch.pressed('t') == true)
-      {
-        switch (cons.keywatch.get('t'))
-        {
-          case 0:   // Show all lights.  This is normal.
-          {
-            sdSystem.strLEDRANGE = "All";
-            break;
-          }
-          case 1:   // Show only Light Set 1
-          {
-            sdSystem.strLEDRANGE = "Door 1";
-            break;
-          }
-          case 2:   // Show only Light Set 2
-          {
-            sdSystem.strLEDRANGE = "Door 2";
-            break;
-          }
-          case 3:   // Show only Light Set 3
-          {
-            sdSystem.strLEDRANGE = "Door 3";
-            break;
-          }
-          case 4:   // Show only Light Set 4
-          {
-            sdSystem.strLEDRANGE = "Door 4";
-            break;
-          }
-        }
-      }
-      */
+      // If debug mode Display all lights static color are selectted, replace all generated led colors
+      // with a static color
 
-      // Toggle with 'c' to test all lights by setting them all to white.
+      CRGB cRGBstaticdisplaycolor =  CRGB(25,25,25);
+
       if (cons.keywatch.get(KEYLEDTEST) !=0)
       {
         for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
         {
-          crgbMainArrays0[lcount] = CRGB(25,25,25);
+          crgbMainArrays0[lcount] = cRGBstaticdisplaycolor;
         }
           for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
         {
-          crgbMainArrays1[lcount] = CRGB(25,25,25);
+          crgbMainArrays1[lcount] = cRGBstaticdisplaycolor;
         }
           for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
         {
-          crgbMainArrays2[lcount] = CRGB(25,25,25);
+          crgbMainArrays2[lcount] = cRGBstaticdisplaycolor;
         }
           for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
         {
-          crgbMainArrays3[lcount] = CRGB(25,25,25);
+          crgbMainArrays3[lcount] = cRGBstaticdisplaycolor;
         }
       }
 
@@ -4316,50 +4323,63 @@ void loop()
       }
     }   // End Delayless Loop
 
-    // ---------------------------------------------------------------------------------------
-    // --- Grabbing Data From Keyboard and Updating Interface
 
+    // ---------------------------------------------------------------------------------------
+    // Now that we have done all the hard work, read hardware, computed, generated, displayed 
+    // all the lights, we will take the latter clock cycles to get keybord input and update 
+    // console with status and so on. 
+
+
+    // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
     cons.readkeyboardinput();
 
     // Displaying and updating the screen, but only when its ready.  
     //  This will be every SCREENUPDATEDELAY ms.
     if (cons.isready(tmeCurrentMillis, SCREENUPDATEDELAY))
     {
-      // Process keyboard info before displaying the screen
+      // Process keyboard info before displaying the screen.
+      // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput();
 
-      // Refresh Displayed Data
+      // Refresh console data storeage from main program. This will be a pass through buffer. 
+      // so the console will not have to access any real data. 
       sdSystem.store_door_switch_states(booSensors);
       sdSystem.store_event_counts(teEvent[0].teDATA.size(),teEvent[1].teDATA.size(),teEvent[2].teDATA.size(),teEvent[3].teDATA.size());
-
-      //cons.printi("test");
 
       cons.output(sdSystem);
       cons.update_displayed_time(tmeCurrentMillis);
       sdSystem.refresh();
     }
 
+
     // ---------------------------------------------------------------------------------------
+    // Now that the complete cycle is over, we need figure out how much time is remaining in 
+    // the cycle and go to sleep for the appropriate amount of time. 
     // Calculate times and sleep till next frame is ready.
 
-    // Store info on how cycle times.
+    // For the next display cycle, we need to store info to the console about how things went.
     // Determine how long it took to compute before sleep.
     sdSystem.store_compute_time(tmeFled.tmeFrameElapse());
     
     // Determine how long to sleep and then sleep.
     usleep (1000 * sdSystem.getsleeptime(FRAMES_PER_SECOND));
     
-  }  // While loop
+  }// End MAIN CYCLE WHILE loop.
 
+
+  // ---------------------------------------------------------------------------------------
   // If we are here, then we are closing the program.
   
   // Shutdown the LED strip routine.
   ws2811_fini(&ledstring);
 
+  // Shutdown NCurses.
   endwin();
 
+  // Just print we have ended the program.
   printf ("\nRasFLED Loop ... Exit\n");
-  //return ret;
+
+  return ret;
 }
 
 
