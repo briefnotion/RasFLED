@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.11A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.12A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,21 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.12 _210127
+// *    - Command line now works as inteded. 
+// *        This was fairly easy to do because I put most of it in the backbone already. 
+// *    - Command line now accepts one command, "help".
+// *    - Also, press enter to clear it.  This will make the command line HOT (not sure
+// *        if there is tech word for this,) meaning, that as soon as a command is 
+// *        recognized, it will execute.  The reasoning for this HOT Command line is I 
+// *        dont want to be fuddling arround with the keyboard while driving when all 
+// *        I want to do is turn on or off hazard lights.  This input method is 
+// *        imprtant because its so easy and fast.  For example, press "Enter" a few 
+// *        times in case the battery powered keyboard is assleep.  press "o" twice 
+// *        to turn on the overhead lights.  Or, something like "ob" to turn overhead 
+// *        lights on in the back.  Not yet implemented, but you see where this is 
+// *        going. 
+// *
 // * V 0.11 _210126
 // *    - Events can now have Identifiers.
 // *    - Updated some both of the Guides.
@@ -616,6 +631,7 @@ class Keys
   {
     std::string COMMANDLINE = "";
     bool PRESSED = true;
+    bool CLEARED = true;
   };
 
   public:
@@ -626,12 +642,28 @@ class Keys
   // Clear Command line
   {
     Command.COMMANDLINE = "";
+    Command.PRESSED = true;
+    Command.CLEARED = true;
   }
 
   bool cmdPressed()
   // Return if Command Line Recently Changed.
   {
     return Command.PRESSED;
+  }
+  
+  bool cmdCleared()
+  // Return if the Command was cleared. Reset it after read if it was.
+  {
+    if (Command.CLEARED == false)
+    {
+      return false;
+    }
+    else
+    {
+      Command.CLEARED = false;
+      return true;
+    }
   }
 
   std::string cmdRead()
@@ -656,6 +688,12 @@ class Keys
         // only accept letters and numbers.
         Command.COMMANDLINE = Command.COMMANDLINE + (char)c;
         Command.PRESSED = true;
+
+        // Limit Command Line Size. Clear when too big.
+        if (Command.COMMANDLINE.size() > 10)
+        {
+          cmdClear();
+        }
       }
     }
   }
@@ -1027,13 +1065,20 @@ class Console  // Doesnt Work
       mvwprintw(winTop, 2, 13, "     ");
     }
 
-
+    // ----------------------------
     // Display Command Line
     if (keywatch.cmdPressed() == true)
     {
+      if (keywatch.cmdCleared() == true)
+      {
+        // Blank out the line before redraw.
+        wmove(winTop, 0, 1);
+        wclrtoeol(winTop);
+      }
       mvwprintw(winTop, 0, 1, "CMD: %s", keywatch.cmdRead().c_str());
     }
-
+    
+    // ----------------------------
 
     // Commit all our changes to the status portion of the screen (winTop)
     wrefresh(winTop);
@@ -4010,30 +4055,40 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
   }
 }
 
-/*
-bool kbhit(void)
+// -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+
+
+// -------------------------------------------------------------------------------------
+
+// Procedures related to the Command Line.
+
+// Display the help screen.
+void consoleprinthelp(Console &cons)
 {
-    //https://www.raspberrypi.org/forums/viewtopic.php?t=20070 (Thank You)
-	
-  struct termios original;
-    tcgetattr(STDIN_FILENO, &original);
-
-    struct termios term;
-    memcpy(&term, &original, sizeof(term));
-
-    term.c_lflag &= ~ICANON;
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
-
-    int characters_buffered = 0;
-    ioctl(STDIN_FILENO, FIONREAD, &characters_buffered);
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &original);
-
-    bool pressed = (characters_buffered != 0);
-
-    return pressed;
+  cons.printwait("----------------");
+  cons.printwait("HELP SCREEN");
+  cons.printwait("");
+  cons.printwait("x    - Safely exits the RasFLED.");
+  cons.printwait("help - Prints this help screen.");
+  cons.printwait("");
+  cons.printwait("\\ - Turn on debug mode.");
+  cons.printwait("");
 }
-*/
+
+// Process and call routines as entered on the command line.
+void processcommandlineinput(Console &cons)
+{
+  if(cons.keywatch.cmdPressed() == true)
+  {
+    // Call routines that match the info on the command line.
+    if(cons.keywatch.Command.COMMANDLINE == "help")
+    {
+      consoleprinthelp(cons);
+      cons.keywatch.cmdClear();
+    }
+  }
+}
 
 
 // ***************************************************************************************
@@ -4409,6 +4464,7 @@ int loop()
       // Process keyboard info before displaying the screen.
       // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput();
+      processcommandlineinput(cons);
 
       // Refresh console data storeage from main program. This will be a pass through buffer. 
       // so the console will not have to access any real data. 
