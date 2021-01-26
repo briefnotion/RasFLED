@@ -1,11 +1,12 @@
 Standard Event:
 
-teEvent[ StripID ].set( tmeCurrentTime , StartInTime, Duration, Speed , 
+teEvent[ StripID ].set( strIdentity , tmeCurrentTime , StartInTime, Duration, Speed , 
 AnimationType , Pixel Animation Type, 
 Start 1 , Dest 1 , Start 2, Dest 2, 
 Pix Start Pos, Pix End Pos, Repeat, Clear on End);
 
 StripID - ID
+strIdentity     - Animation text identifier for reference.
 tmeCurrentTime  - Time event was Created.
 StartInTime     - How long to wait before starting animation.
 Duration        - How long the Pixel Animation runs.
@@ -21,7 +22,7 @@ System Animation Types:
 
 AnEvClear - Clears and Ends all events at a specific time. 
     Example:
-        teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvClear, 0, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
+        teEvent[0].set("Nothing", tmeCurrentMillis, X, 0, 0, AnEvClear, 0, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
     
     Params:
         StartInTime - How long to wait before starting animation.
@@ -31,7 +32,7 @@ AnEvClear - Clears and Ends all events at a specific time.
 AnEvClearRunning - Clears and Ends all currently running events at a specific time. 
                     Events not started will be preserved. 
     Example:
-        teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvClear, 0, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
+        teEvent[0].set("Nothing", tmeCurrentMillis, X, 0, 0, AnEvClear, 0, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
     
     Params:
         StartInTime - How long to wait before starting animation.
@@ -40,7 +41,7 @@ AnEvClearRunning - Clears and Ends all currently running events at a specific ti
 
 AnEvSchedule - 
     Example:
-        teEvent[0].set(tmeCurrentMillis, X, 0, 0, AnEvSchedule, AnTaDoorCloseBack, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
+        teEvent[0].set("Nothing", tmeCurrentMillis, X, 0, 0, AnEvSchedule, AnTaDoorCloseBack, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), X, X, false, false);
 
     Params:
         StartInTime - How long to wait before starting animation.
@@ -51,20 +52,26 @@ AnEvSchedule -
 
 AnEvSetToEnd - 
     Example:
-        teEvent[0].set(tmeCurrentMillis, X, X, 0, AnEvSchedule, AnEvSetToEnd, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(X, X, X), CRGB(X, X, X), 0, 0, false, false);
-        if booRepeat set to true then pulse animations will continue till end of cycle.
+        teEvent[0].set("IDENTITY", tmeCurrentMillis, X, X, 0, AnEvSchedule, AnEvSetToEnd, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(X, X, X), CRGB(X, X, X), 0, 0, false, false);
+        If booRepeat set to true then pulse animations will continue till end of cycle.
+        If not a pulse (static fade in left on) then the color will fade out over duration and speed,
+            as if it was a fade on.
+        Identity works as a serach function, If not empty or "", then only animations with text that match value passed will be set to end.
+        Start Color 1 works as a search function. If not CRGB(0, 0, 0) then only animations with CRGB value passed will be set to end.
+            The search Identity or Color 1 acts as an OR condition.  If either match then the event will be set to end.
 
     Params:
+        ""          - "" for all, or set "XXXXX" with specific text of whatever is in between the quotes, will set to end.
         StartInTime - How long to wait before starting animation.
         Duration    - How long the Pixel Animation runs.
+        Start Color - CRGB(0, 0, 0) for all,  or CRGB(X,X,X) with specific color X,X,X will be set to end.
         Start Color - ????? Unknown
-        Start Color - ????? Unknown
-        Repeat      - ????? Animation repeats continuously.
+        Repeat      - Controls end behavior of animations that repeat.
             False:  Existing pulse animations will just end.
             True:   Existing pulse animations will continue till it gets to its end. 
-        Clear on End- ????? 
-            False: 
-            True:   Set to end events in the future also.
+        Clear on End- Controls end behavior of currently running events all all events. 
+            False:  Set only currently running events to end.
+            True:   Set to end events scheduled in the future to end also.
 
 
 Note:

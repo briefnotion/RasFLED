@@ -1,11 +1,12 @@
 Standard Event:
 
-teEvent[ StripID ].set( tmeCurrentTime , StartInTime, Duration, Speed , 
-AnimationType , Pixel Animation Type, 
-Start 1 , Dest 1 , Start 2, Dest 2, 
-Pix Start Pos, Pix End Pos, Repeat, Clear on End);
+teEvent[ StripID ].set( strIdentity , tmeCurrentTime , StartInTime, Duration, Speed , 
+                        AnimationType , Pixel Animation Type, 
+                        Start 1 , Dest 1 , Start 2, Dest 2, 
+                        Pix Start Pos, Pix End Pos, Repeat, Clear on End);
 
 StripID - ID
+strIdentity     - Animation text identifier for reference.
 tmeCurrentTime  - Time event was Created.
 StartInTime     - How long to wait before starting animation.
 Duration        - How long the Pixel Animation runs.
@@ -54,13 +55,15 @@ bigCRGB crgb_anim_color(int intDur, byte bytLedAnimation,
                         boolean booClearOnEnd)
 // ---------------------------------------------------------------------------------------
 
-teEvent[ StripID ].set( tmeCurrentTime , StartInTime, Duration, Speed , 
-AnimationType , Pixel Animation Type, 
-Start 1 , Dest 1 , Start 2, Dest 2, 
-Pix Start Pos, Pix End Pos, Repeat, Clear on End);
+teEvent[ StripID ].set( strIdentity , tmeCurrentTime , StartInTime, Duration, Speed , 
+                        AnimationType , Pixel Animation Type, 
+                        Start 1 , Dest 1 , Start 2, Dest 2, 
+                        Pix Start Pos, Pix End Pos, Repeat, Clear on End);
 
 Pixel Animation Types:
 AnPiFade - Simple, low processor use, fade on pixel color from start to end 
+    strIdentity - Animation text identifier for reference.
+    
     Duration    - Amout of time to change from start to end. 
     Start 1     - Start pixel Color 
     Dest 1      - Ending Pixel Color
@@ -76,6 +79,8 @@ AnPiFade - Simple, low processor use, fade on pixel color from start to end
 
 
 AnPiFadeDith - Fade Pixel Colors on 
+    strIdentity - Animation text identifier for reference.
+    
     Duration    - Amout of time to change from start to end. 
 
     Start Colors    - is the pixel color at Beginning of animation
@@ -100,10 +105,12 @@ AnPiPulse - Pulses a light from start color to dest color
     All Pulses are to be non interfering. Start color is 
         always 0, or clear. 
 
-    Start 1 - Not Implemented
-    Dest 1  - Color Pulsing to
-    Start 2 - Not Implemented - Dither Not Implemented
-    Dest 2  - Not Implemented - Dither Not Implemented
+    strIdentity - Animation text identifier for reference.
+    
+    Start 1     - Not Implemented
+    Dest 1      - Color Pulsing to
+    Start 2     - Not Implemented - Dither Not Implemented
+    Dest 2      - Not Implemented - Dither Not Implemented
 
     ClearOnEnd:
         False   - Keeps the animation running past its expired
@@ -119,10 +126,12 @@ AnPiPulse - Pulses a light from start color to dest color
 
 
 AnPiPulseTo - Pulses to Color then back back to Color 2
-    Start 1 - Color Pulsing to
-    Dest 1  - Color Pulsing return (or return) to
-    Start 2 - Not Implemented - Dither Not Implemented
-    Dest 2  - Not Implemented - Dither Not Implemented
+    strIdentity - Animation text identifier for reference.
+    
+    Start 1     - Color Pulsing to
+    Dest 1      - Color Pulsing return (or return) to
+    Start 2     - Not Implemented - Dither Not Implemented
+    Dest 2      - Not Implemented - Dither Not Implemented
 
     ClearOnEnd:
         False   - Keeps the animation running past its expired
