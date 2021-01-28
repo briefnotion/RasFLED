@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.12A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.13A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,15 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.13 _210128
+// *    - Created an "events" command to list all running events. I was going to have it 
+// *        display more information, that is more than just the Event Identity, but ...
+// *        wrote this routine because I couldn't find a stuck animation. Immediatly 
+// *        after running it I found "... Animm" and it was suposed to be "... Anim".  :)
+// *    - Moved debug hot keys to the Command Line.
+// *    - Created a pulse white and blue for testing. Commands are "pp" and "pw". 
+// *        Need to keep values below 128.  There is no extreme value checks on the Pulse.
+// *
 // * V 0.12 _210127
 // *    - Command line now works as inteded. 
 // *        This was fairly easy to do because I put most of it in the backbone already. 
@@ -275,7 +284,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define CONSOLESPLITSIZE  6
 
 // Key Mapping
-#define KEYEXIT           'x'
+#define KEYEXIT           'X'
 
 // Debugging and Diagnosis Keys
 #define KEYDEBUG          '/' // Enter, Exit debug mode.
@@ -683,7 +692,8 @@ class Keys
     }
     else
     {
-      if( (c>47 && c<57) || (c>65 && c<90) || (c>97 && c<122) )
+      //if( (c>47 && c<57) || (c>65 && c<90) || (c>97 && c<122) )
+      if( (c>32 && c<126) )
       {
         // only accept letters and numbers.
         Command.COMMANDLINE = Command.COMMANDLINE + (char)c;
@@ -723,6 +733,12 @@ class Keys
   // return value of letter and reset pressed (clean)
   {
     Chars[c].PRESSED = false;
+    return Chars[c].VALUE;
+  }
+
+  int getnoreset(int c)
+  // return value of letter and reset pressed (clean)
+  {
     return Chars[c].VALUE;
   }
 
@@ -862,11 +878,16 @@ class Console  // Doesnt Work
     key = wgetch(stdscr);
     if (key != -1)
     {
-      // Check to see if the key being pressed is in watch list and inc its value if it is.
-      keywatch.in(key);
-
-      // Put all input into the Command Line, also,
-      keywatch.cmdIn(key);
+      // Check for special characters first.
+      if (key == KEY_RESIZE)
+      {
+        keywatch.in(key);
+      }
+      else
+      {
+        // Put all remaining input into the Command Line.
+        keywatch.cmdIn(key); 
+      }
     }
   }
 
@@ -879,56 +900,6 @@ class Console  // Doesnt Work
       printwait("RESIZING SCREEN");
       keywatch.Chars[KEY_RESIZE].VALUE = 0;
       set(CONSOLESPLITSIZE);
-    }
-
-    // Turn on and off debug. Deactivate debug keys when off.
-    // Store behavior values for debug info.
-    if (keywatch.pressed(KEYDEBUG) == true)
-    {
-      if (keywatch.get(KEYDEBUG) == 0)
-      {
-        // Draw values for debug LED CYCLE through displayed range (all, Door #)
-        keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
-        keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
-        
-        // Draw values for debug LED RANGE UPer or LOWer.
-        keywatch.Chars[KEYLEDUPLW].VALUE = 0;
-        keywatch.Chars[KEYLEDUPLW].ACTIVE = false;
-
-        // Draw values for debug LED TEST toggle all lights on to static value.
-        keywatch.Chars[KEYLEDTEST].VALUE = 0;
-        keywatch.Chars[KEYLEDTEST].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        keywatch.Chars['1'].VALUE = 0;
-        keywatch.Chars['1'].ACTIVE = false;
-        
-        // Draw values for toggle door open or closed.
-        keywatch.Chars['2'].VALUE = 0;
-        keywatch.Chars['2'].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        keywatch.Chars['3'].VALUE = 0;
-        keywatch.Chars['3'].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        keywatch.Chars['4'].VALUE = 0;
-        keywatch.Chars['4'].ACTIVE = false;
-
-        // Draw value and console control value for Debug mode.
-        keywatch.Chars[KEYDEBUG].PRESSED = true;
-      }
-      else
-      {
-        // Reset console debug values to default values if debug turned off.
-        keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
-        keywatch.Chars[KEYLEDUPLW].ACTIVE = true;
-        keywatch.Chars[KEYLEDTEST].ACTIVE = true;
-        keywatch.Chars['1'].ACTIVE = true;
-        keywatch.Chars['2'].ACTIVE = true;
-        keywatch.Chars['3'].ACTIVE = true;
-        keywatch.Chars['4'].ACTIVE = true;
-      }
     }
   }
 
@@ -967,7 +938,7 @@ class Console  // Doesnt Work
 
       mvwprintw(winTop, 2, 47, "                      ");
       mvwprintw(winTop, 3, 47, "                      ");
-      mvwprintw(winTop, 4, 47, "/ - Debug             ");
+      mvwprintw(winTop, 4, 47, "                      ");
     }
     
     // Debug stuff: Display Range and Seleced Strips to Diplay
@@ -1019,14 +990,14 @@ class Console  // Doesnt Work
       }
 
       // Draw RANGE and UPPER OR LOWER VALUES selected.
-      mvwprintw(winTop, 2, 19, "RNG: %s", strRange.c_str());
-      mvwprintw(winTop, 3, 19, "LVL: %s", strLevel.c_str());
+      mvwprintw(winTop, 2, 19, "RNG:%s", strRange.c_str());
+      mvwprintw(winTop, 3, 19, "LVL:%s", strLevel.c_str());
     }    
     else if ( RedrawTestParts == true )
     // If exiting debug mode, clean out what was printed in when in debug mode.
       {
-        mvwprintw(winTop, 2, 19, "       ");
-        mvwprintw(winTop, 3, 19, "       ");
+        mvwprintw(winTop, 2, 19, "      ");
+        mvwprintw(winTop, 3, 19, "      ");
       }
     // ------
 
@@ -1064,6 +1035,10 @@ class Console  // Doesnt Work
       mvwprintw(winTop, 3, 13, "     ");
       mvwprintw(winTop, 2, 13, "     ");
     }
+
+    // Display Status
+    mvwprintw(winTop, 1, 6, "REPEAT");
+    mvwprintw(winTop, 1, 14, "DOORAWARE");
 
     // ----------------------------
     // Display Command Line
@@ -2423,6 +2398,7 @@ void vdChannelLightPulseColor(Console &cons, led_strip lsStrips[], int intStripI
 // Turn (force) Green Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
+  cons.printwait("vdChannelLightPulseColor (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   int intTm;
   int intDurW;
   int intDurG;
@@ -2433,9 +2409,9 @@ void vdChannelLightPulseColor(Console &cons, led_strip lsStrips[], int intStripI
 
   // Set the fadeout color 
   CRGB crgbColor4;
-  crgbColor4.r = crgbColor.r + 64;
-  crgbColor4.g = crgbColor.g + 64;
-  crgbColor4.b = crgbColor.b + 64;
+  crgbColor4.r = crgbColor.r + 128;
+  crgbColor4.g = crgbColor.g + 128;
+  crgbColor4.b = crgbColor.b + 128;
 
   // Swap sweep start and end, depending on front or back.
   int start;
@@ -2463,7 +2439,7 @@ void vdChannelLightPulseColor(Console &cons, led_strip lsStrips[], int intStripI
   // Door Color Fadeout
   teEvent[lsStrips[intStripID].Cl].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
   // Overhead Color Fadeout
-  teEvent[lsStrips[intStripID].Cl].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), start, end, false, true);
+  teEvent[lsStrips[intStripID].Cl].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), start, end, false, true);
 }
 
 
@@ -2865,7 +2841,7 @@ void vdPacificaishAnimationADV(Console &cons, led_strip lsStrips[], int intStrip
   teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(30, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
   // Counter waves.
-  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Animm", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(50, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(20, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
@@ -2879,7 +2855,7 @@ void vdCloseOverADV(Console &cons, led_strip lsStrips[], int intStripID, timed_e
   cons.printwait("vdCloseOverADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Just set all the current over head lights to fade away.
-  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 25, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 }
 
 void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
@@ -2916,7 +2892,7 @@ void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event te
   intTm = 500; intDur = 3000; intSp = 250;
 
   // Set the currently running animations to fade away. (NOTE: CLEARONEND = true to end scheduled future animations end on complete, also.)
-  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 25, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 0, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
   //Set All the animations to end after the code 4 lines down, is finished fading away  
   bgonedly = (lsStrips[intStripID].Ct() * intSp + intDur);
@@ -4066,26 +4042,205 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
 // Display the help screen.
 void consoleprinthelp(Console &cons)
 {
-  cons.printwait("----------------");
-  cons.printwait("HELP SCREEN");
   cons.printwait("");
-  cons.printwait("x    - Safely exits the RasFLED.");
-  cons.printwait("help - Prints this help screen.");
+  cons.printwait("HELP SCREEN ------------");
   cons.printwait("");
-  cons.printwait("\\ - Turn on debug mode.");
+  cons.printwait("x or exit - Safely exits the RasFLED.");
+  cons.printwait("");
+  cons.printwait("help    - Prints this help screen.");
+  cons.printwait("events  - Prints all active events.");
+  cons.printwait("");
+  cons.printwait("pp  - Pulse White  pb  - Pulse Blue.");
+  cons.printwait("");
+  cons.printwait("\\   - Turn on debug mode.");
+  cons.printwait("a - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs");
   cons.printwait("");
 }
 
+// Display all running events.
+void consoleprintevents(Console &cons, timed_event teEvent[])
+{
+  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  {
+    cons.printwait("Channel " + std::to_string(channel));
+    if (teEvent[channel].teDATA.size() == 0)
+    {
+      cons.printwait("No Events");
+    }
+    else
+    {
+      for (int event = 0; event < teEvent[channel].teDATA.size(); event++)
+      {
+        cons.printwait(" ID:\"" + teEvent[channel].teDATA[event].strIdent + "\" Anim:" + std::to_string(teEvent[channel].teDATA[event].bytANIMATION)  + " LEDanim:" + std::to_string(teEvent[channel].teDATA[event].bytLEDANIMATION)  + " Strt:" + std::to_string(teEvent[channel].teDATA[event].intSTARTPOS) + " End:" + std::to_string(teEvent[channel].teDATA[event].intENDPOS));
+      }
+    }
+  }
+}
+
+// Pulse Color All Channels
+void processcommandpulse(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+{
+  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  {
+    teEvent[channel].set("Door Close Anim", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+  }
+}
+
+
+
 // Process and call routines as entered on the command line.
-void processcommandlineinput(Console &cons)
+void processcommandlineinput(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
   if(cons.keywatch.cmdPressed() == true)
   {
     // Call routines that match the info on the command line.
+    
+    // Program Exit
+    if((cons.keywatch.Command.COMMANDLINE[0] == KEYEXIT) || (cons.keywatch.Command.COMMANDLINE == "exit"))
+    {
+      cons.keywatch.in(KEYEXIT);
+      cons.keywatch.cmdClear();
+    }
+
+    // help
     if(cons.keywatch.Command.COMMANDLINE == "help")
     {
       consoleprinthelp(cons);
       cons.keywatch.cmdClear();
+    }
+
+    // events
+    if(cons.keywatch.Command.COMMANDLINE == "events")
+    {
+      consoleprintevents(cons, teEvent);
+      cons.keywatch.cmdClear();
+    }
+    
+    // pulse White
+    if(cons.keywatch.Command.COMMANDLINE == "pp")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, CRGB(64,64,64));
+      cons.keywatch.cmdClear();
+    }
+
+    // pulse Blue
+    if(cons.keywatch.Command.COMMANDLINE == "pb")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, CRGB(0,0,64));
+      cons.keywatch.cmdClear();
+    }
+
+    // Debug Characters only active when debug mode is on
+    // debug
+    if(cons.keywatch.Command.COMMANDLINE[0] == KEYDEBUG)
+    {
+      cons.keywatch.in(KEYDEBUG);
+      cons.keywatch.cmdClear();
+    }
+
+    // Only accept debug keys if debug is on.
+    if (cons.keywatch.getnoreset(KEYDEBUG) == 1)
+    {
+      // LED DOOR CYCLE
+      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDDRCYCL)
+      {
+        cons.keywatch.in(KEYLEDDRCYCL);
+        cons.keywatch.cmdClear();
+      }
+
+      // LED RANGE UPer or LOWer.
+      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDUPLW)
+      {
+        cons.keywatch.in(KEYLEDUPLW);
+        cons.keywatch.cmdClear();
+      }
+
+      // LED TEST toggle all lights on to static value.
+      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDTEST)
+      {
+        cons.keywatch.in(KEYLEDTEST);
+        cons.keywatch.cmdClear();
+      }
+
+      // Toggle door open or closed.
+      if(cons.keywatch.Command.COMMANDLINE[0] == '1')
+      {
+        cons.keywatch.in('1');
+        cons.keywatch.cmdClear();
+      }
+
+      // Toggle door open or closed.
+      if(cons.keywatch.Command.COMMANDLINE[0] == '2')
+      {
+        cons.keywatch.in('2');
+        cons.keywatch.cmdClear();
+      }
+
+      // Toggle door open or closed.
+      if(cons.keywatch.Command.COMMANDLINE[0] == '3')
+      {
+        cons.keywatch.in('3');
+        cons.keywatch.cmdClear();
+      }
+
+      // Toggle door open or closed.
+      if(cons.keywatch.Command.COMMANDLINE[0] == '4')
+      {
+        cons.keywatch.in('4');
+        cons.keywatch.cmdClear();
+      }
+    }
+
+    // Turn on and off debug. Deactivate debug keys when off.
+    // Store behavior values for debug info.
+    if (cons.keywatch.pressed(KEYDEBUG) == true)
+    {
+      if (cons.keywatch.get(KEYDEBUG) == 0)
+      {
+        // Draw values for debug LED CYCLE through displayed range (all, Door #)
+        cons.keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
+        cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
+        
+        // Draw values for debug LED RANGE UPer or LOWer.
+        cons.keywatch.Chars[KEYLEDUPLW].VALUE = 0;
+        cons.keywatch.Chars[KEYLEDUPLW].ACTIVE = false;
+
+        // Draw values for debug LED TEST toggle all lights on to static value.
+        cons.keywatch.Chars[KEYLEDTEST].VALUE = 0;
+        cons.keywatch.Chars[KEYLEDTEST].ACTIVE = false;
+
+        // Draw values for toggle door open or closed.
+        cons.keywatch.Chars['1'].VALUE = 0;
+        cons.keywatch.Chars['1'].ACTIVE = false;
+        
+        // Draw values for toggle door open or closed.
+        cons.keywatch.Chars['2'].VALUE = 0;
+        cons.keywatch.Chars['2'].ACTIVE = false;
+
+        // Draw values for toggle door open or closed.
+        cons.keywatch.Chars['3'].VALUE = 0;
+        cons.keywatch.Chars['3'].ACTIVE = false;
+
+        // Draw values for toggle door open or closed.
+        cons.keywatch.Chars['4'].VALUE = 0;
+        cons.keywatch.Chars['4'].ACTIVE = false;
+
+        // Draw value and console control value for Debug mode.
+        cons.keywatch.Chars[KEYDEBUG].PRESSED = true;
+      }
+      else
+      {
+        // Reset console debug values to default values if debug turned off.
+        cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
+        cons.keywatch.Chars[KEYLEDUPLW].ACTIVE = true;
+        cons.keywatch.Chars[KEYLEDTEST].ACTIVE = true;
+        cons.keywatch.Chars['1'].ACTIVE = true;
+        cons.keywatch.Chars['2'].ACTIVE = true;
+        cons.keywatch.Chars['3'].ACTIVE = true;
+        cons.keywatch.Chars['4'].ACTIVE = true;
+      }
     }
   }
 }
@@ -4464,7 +4619,7 @@ int loop()
       // Process keyboard info before displaying the screen.
       // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput();
-      processcommandlineinput(cons);
+      processcommandlineinput(cons, tmeCurrentMillis, teEvent);
 
       // Refresh console data storeage from main program. This will be a pass through buffer. 
       // so the console will not have to access any real data. 
