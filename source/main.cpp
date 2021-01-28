@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.13A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.14A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,14 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.14 _210129
+// *    - SetToEnd can now end Scheduled events.
+// *    - Pulse commands will now repeat indefinitly.
+// *    - "pe" command now added to stop all pulses on all channels.
+// *    - Pulse colors available are Red, Green (Lyft), Blue, Purple (Uber), Cyan, 
+// *        and Yellow.  Need to put an Orange (Lyft).
+// *    - Pulses will automatically end when a door is opened.
+// *
 // * V 0.13 _210128
 // *    - Created an "events" command to list all running events. I was going to have it 
 // *        display more information, that is more than just the Event Identity, but ...
@@ -548,6 +556,9 @@ class system_data
 
   std::string strLEDRANGE  = "";   // Text showing what LEDs will be Displayed.
   std::string strLEDLIMITS = "";   // Text showing what LEDd, upper or lower, displayed.
+
+  int   intDoorsOpen = 0;         // Amount of doors open.
+  bool  booPulsesRunning = false; // Are exta anims running.
 
   // additional time measurements.
   // LED RENDER TIME
@@ -2440,6 +2451,9 @@ void vdChannelLightPulseColor(Console &cons, led_strip lsStrips[], int intStripI
   teEvent[lsStrips[intStripID].Cl].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
   // Overhead Color Fadeout
   teEvent[lsStrips[intStripID].Cl].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), start, end, false, true);
+
+  // Set the pulse to timed repeat
+  teEvent[lsStrips[intStripID].Cl].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
 }
 
 
@@ -3797,8 +3811,9 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
                       if (event != eventscan)
                       {
                         // Manage the Fade Animations to End.
-                        if ((teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFade) ||
-                              (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFadeDith))
+                        if (  (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFade)     ||
+                              (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFadeDith) ||
+                              (teEvent[channel].teDATA[eventscan].bytANIMATION == AnEvSchedule) )
                         {
                           // Stop the event.
                           teEvent[channel].teDATA[eventscan].booREPEAT = false;
@@ -3822,8 +3837,8 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
                         }
 
                         // Manage the Pulse Animations to End
-                        if ((teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulse) ||
-                              (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulseTo))
+                        if (  (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulse)    ||
+                              (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulseTo)  )
                         {
                           // Tell the pulse to stop.
                           if (teEvent[channel].teDATA[event].booREPEAT == false)
@@ -3865,7 +3880,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
 
 //  AuxLightControlModule
 
-void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], timed_event teEvent[], hardware_monitor hwmDoor[], bool booSensors[], unsigned long tmeCurrentTime)
+void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData, led_strip lsStrips[], timed_event teEvent[], hardware_monitor hwmDoor[], bool booSensors[], unsigned long tmeCurrentTime)
 // This routine is designed to scan all the doors or switches.  If anthing is open, opened 
 //  closed or closed (odd twist of english there) then set the appropriate or maintain
 //  animations.  
@@ -3940,6 +3955,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, led_strip lsStrips[], t
       }
     }
     cons.printwait("Open Door Count: " + std::to_string(opencount));
+    sdSysData.intDoorsOpen = opencount;
     // -----
 
     if (opencount > 0)
@@ -4050,7 +4066,12 @@ void consoleprinthelp(Console &cons)
   cons.printwait("help    - Prints this help screen.");
   cons.printwait("events  - Prints all active events.");
   cons.printwait("");
-  cons.printwait("pp  - Pulse White  pb  - Pulse Blue.");
+  cons.printwait("Colors:");
+  cons.printwait(" r - Red    u - Purple");
+  cons.printwait(" g - Green  y - Yellow");
+  cons.printwait(" b - Blue   c - Cyan    e - End");
+  cons.printwait("");
+  cons.printwait("pX  - Pulse X color");
   cons.printwait("");
   cons.printwait("\\   - Turn on debug mode.");
   cons.printwait("a - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs");
@@ -4077,22 +4098,43 @@ void consoleprintevents(Console &cons, timed_event teEvent[])
   }
 }
 
+
+// Set To End All Pulses
+void processcommandpulseend(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[])
+{
+  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  {
+    //teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true);
+  }
+}
+
+
 // Pulse Color All Channels
 void processcommandpulse(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
 {
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Door Close Anim", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
   }
 }
 
 
 
 // Process and call routines as entered on the command line.
-void processcommandlineinput(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
   if(cons.keywatch.cmdPressed() == true)
   {
+    // Color Palettes
+    CRGB crgbWhite  = CRGB(64,64,64);
+    CRGB crgbRed    = CRGB(64,0,0);
+    CRGB crgbGreen  = CRGB(0,64,0);
+    CRGB crgbBlue   = CRGB(0,0,64);
+    CRGB crgbPurple = CRGB(64,0,64);
+    CRGB crgbYellow = CRGB(64,64,0);
+    CRGB crgbCyan   = CRGB(0,64,64);
+    
     // Call routines that match the info on the command line.
     
     // Program Exit
@@ -4115,22 +4157,83 @@ void processcommandlineinput(Console &cons, unsigned long tmeCurrentTime, timed_
       consoleprintevents(cons, teEvent);
       cons.keywatch.cmdClear();
     }
-    
+
+    // -------------
+    // PULSES
+
+    // pulse end
+    if(cons.keywatch.Command.COMMANDLINE == "pe")
+    {
+      // end all pulses on all strips
+      processcommandpulseend(cons, tmeCurrentTime, teEvent);
+      cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = false;
+    }
+
     // pulse White
     if(cons.keywatch.Command.COMMANDLINE == "pp")
     {
       // Keep values below 128
-      processcommandpulse(cons, tmeCurrentTime, teEvent, CRGB(64,64,64));
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
+    }
+
+    // pulse Red
+    if(cons.keywatch.Command.COMMANDLINE == "pr")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbRed);
+      cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
+    }
+
+    // pulse Green
+    if(cons.keywatch.Command.COMMANDLINE == "pg")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbGreen);
+      cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Blue
     if(cons.keywatch.Command.COMMANDLINE == "pb")
     {
       // Keep values below 128
-      processcommandpulse(cons, tmeCurrentTime, teEvent, CRGB(0,0,64));
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbBlue);
       cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
     }
+
+    // pulse Purple
+    if(cons.keywatch.Command.COMMANDLINE == "pu")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbPurple);
+      cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
+    }
+
+    // pulse Yellow
+    if(cons.keywatch.Command.COMMANDLINE == "py")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbYellow);
+      cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
+    }
+
+    // pulse Cyan
+    if(cons.keywatch.Command.COMMANDLINE == "pc")
+    {
+      // Keep values below 128
+      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbCyan);
+      cons.keywatch.cmdClear();
+      sdSysData.booPulsesRunning = true;
+    }
+    
+    // -------------
 
     // Debug Characters only active when debug mode is on
     // debug
@@ -4242,6 +4345,16 @@ void processcommandlineinput(Console &cons, unsigned long tmeCurrentTime, timed_
         cons.keywatch.Chars['4'].ACTIVE = true;
       }
     }
+  }
+}
+
+void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[] )
+{
+  if ( (sdSysData.intDoorsOpen > 0)  && (sdSysData.booPulsesRunning == true) )
+  {
+    // End pulses when door is opened.
+    processcommandpulseend(cons, tmeCurrentTime, teEvent);
+    sdSysData.booPulsesRunning = false;
   }
 }
 
@@ -4486,7 +4599,7 @@ int loop()
 
 
     // Check the doors and start or end all animations
-    DoorMonitorAndAnimationControlModule(cons, lsStrips, teEvent, hwDoors, booSensors, tmeCurrentMillis);
+    DoorMonitorAndAnimationControlModule(cons, sdSystem, lsStrips, teEvent, hwDoors, booSensors, tmeCurrentMillis);
 
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
@@ -4619,8 +4732,8 @@ int loop()
       // Process keyboard info before displaying the screen.
       // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput();
-      processcommandlineinput(cons, tmeCurrentMillis, teEvent);
-
+      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvent);
+      extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvent);
       // Refresh console data storeage from main program. This will be a pass through buffer. 
       // so the console will not have to access any real data. 
       sdSystem.store_door_switch_states(booSensors);
