@@ -17,7 +17,7 @@ option(BUILD_TEST "Build test application" ON)
 
 set(CMAKE_C_STANDARD 11)
 
-set(LIB_TARGET rpi_ws2811 ncurses)
+set(LIB_TARGET rpi_ws2811 wiringPi ncurses)
 #set(LIB_TARGET rpi_ws2811 )
 set(TEST_TARGET RasFLED)
 

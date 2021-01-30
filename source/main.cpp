@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.14A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.15A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,15 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.15 _210130
+// *    - Assigned GPIO.22 (pin 31) to Door 1
+// *    - Assigned GPIO.23 (pin 33) to Door 2
+// *    - Assigned GPIO.24 (pin 35) to Door 3
+// *    - Assigned GPIO.25 (pin 37) to Door 4
+// *    - When in Debug mode, Pin Door Pin reads will be over written.
+// *    - I've been putting this off because I don't like the risk associated to testing 
+// *        hardware. 
+// *
 // * V 0.14 _210129
 // *    - SetToEnd can now end Scheduled events.
 // *    - Pulse commands will now repeat indefinitly.
@@ -244,6 +253,7 @@
 #include <math.h>
 //#include <time.h>
 //#include <ctime>
+#include <wiringPi.h>
 #include <string>
 #include <chrono>
 #include <unistd.h>
@@ -251,6 +261,8 @@
 #include <vector>
 #include <iostream>
 #include <ncurses.h>
+
+
 
 
 // Distros: Jeremy Garff <jer @ jers.net>
@@ -315,14 +327,6 @@ static char VERSION[] = "XX.YY.ZZ";
 
 #define LED_COUNT               482
 
-/*
-// -------------------------------------------------------------------------------------
-// Arduino LED data pins to transmit on off and colors for strip s0 and s1
-
-#define DATA_PINs0    3       // 3 // A3 - Data Pin for Strip 1
-#define DATA_PINs1    4       // 4 // A4 - Data Pin for Strip 2
-*/
-
 // -------------------------------------------------------------------------------------
 // LED Strip Setup
 
@@ -346,15 +350,16 @@ static char VERSION[] = "XX.YY.ZZ";
 #define s1Be          117     // s1 B End
 
 // -------------------------------------------------------------------------------------
-// Arduino switch pin for doors and switches
+// Raspberry Pi switch pin for doors and switches. Defined as WiringPi id.
+// console: gpio -v       (check installation)
+// console: gpio readall  (check wiring pin numbers)
 
-/*
 // On off buttons, door sensors, switches.
-#define SWITCH_PINs0    8       // 8 // A8 - Hardware Open Close Door Sensor 1
-#define SWITCH_PINs1    9       // 9 // A9 - Hardware Open Close Door Sensor 2
-#define SWITCH_PINs2    10      // 9 // A9 - Hardware Open Close Door Sensor 3
-#define SWITCH_PINs3    11      // 9 // A9 - Hardware Open Close Door Sensor 3
-*/
+#define SWITCH_PINs0    22      // GPIO.22 - Pin 31 - Hardware Open Close Door Sensor 0
+#define SWITCH_PINs1    23      // GPIO.23 - Pin 33 - Hardware Open Close Door Sensor 1
+#define SWITCH_PINs2    24      // GPIO.24 - Pin 35 - Hardware Open Close Door Sensor 2
+#define SWITCH_PINs3    25      // GPIO.25 - Pin 37 - Hardware Open Close Door Sensor 3
+
 #define AUXDRLINGERFRT  15000    // How long the Front Door lights stay on after close
 #define AUXDRLINGERBCK  25000    // How long the Back Door lights stay on after close
 
@@ -4405,13 +4410,7 @@ void setup()
   // Keeping this for now to remind me of what I haven't implementd, from the preport, 
   //  yet.
 
-  /*
-  // Define Door Sensors.
-  pinMode(SWITCH_PINs0, INPUT_PULLUP);
-  pinMode(SWITCH_PINs1, INPUT_PULLUP);
-  pinMode(SWITCH_PINs2, INPUT_PULLUP);
-  pinMode(SWITCH_PINs3, INPUT_PULLUP);
-  */
+
 
 }
 
@@ -4484,6 +4483,18 @@ int loop()
   cons.printi("OK");
 
   // ---------------------------------------------------------------------------------------
+
+  // Define Door Sensors.
+  int intRet = wiringPiSetup();    // Initialize wiringPI.
+  pinMode(SWITCH_PINs0, INPUT);
+  pinMode(SWITCH_PINs1, INPUT);
+  pinMode(SWITCH_PINs2, INPUT);
+  pinMode(SWITCH_PINs3, INPUT);
+  // Set resistors in pins to Pull Up to the 3.5v rail.
+  pullUpDnControl(SWITCH_PINs0, PUD_UP);
+  pullUpDnControl(SWITCH_PINs1, PUD_UP);
+  pullUpDnControl(SWITCH_PINs2, PUD_UP);
+  pullUpDnControl(SWITCH_PINs3, PUD_UP);
 
   // Define System Data
   system_data sdSystem;
@@ -4584,18 +4595,20 @@ int loop()
     // Sensor Array (QUICK FIX)
     bool booSensors[NUM_SWITCHES];
 
-    /* TEST
     booSensors[0] = digitalRead(SWITCH_PINs0);
     booSensors[1] = digitalRead(SWITCH_PINs1);
     booSensors[2] = digitalRead(SWITCH_PINs2);
     booSensors[3] = digitalRead(SWITCH_PINs3);
-    */
-
-    // Toggle on and off the door sensors with keyboard.
-    booSensors[0] = cons.keywatch.getTF('1');
-    booSensors[1] = cons.keywatch.getTF('2');
-    booSensors[2] = cons.keywatch.getTF('3');
-    booSensors[3] = cons.keywatch.getTF('4');
+    
+    // Override the digital pins if in debugging mode.
+    if(cons.keywatch.getnoreset(KEYDEBUG) == 1)
+    {
+      // Toggle on and off the door sensors with keyboard.
+      booSensors[0] = cons.keywatch.getTF('1');
+      booSensors[1] = cons.keywatch.getTF('2');
+      booSensors[2] = cons.keywatch.getTF('3');
+      booSensors[3] = cons.keywatch.getTF('4');
+    }
 
 
     // Check the doors and start or end all animations
