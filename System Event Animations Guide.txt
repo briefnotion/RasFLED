@@ -52,7 +52,7 @@ AnEvSchedule -
 
 AnEvSetToEnd - 
     Example:
-        teEvent[0].set("IDENTITY", tmeCurrentMillis, X, X, 0, AnEvSchedule, AnEvSetToEnd, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(X, X, X), CRGB(X, X, X), 0, 0, false, false);
+        teEvent[0].set("IDENTITY", tmeCurrentMillis, X, X, 0, AnEvSchedule, AnEvSetToEnd, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(X, X, X), CRGB(X, X, X), X, X, false, false);
         If booRepeat set to true then pulse animations will continue till end of cycle.
         If not a pulse (static fade in left on) then the color will fade out over duration and speed,
             as if it was a fade on.
@@ -60,12 +60,16 @@ AnEvSetToEnd -
         Start Color 1 works as a search function. If not CRGB(0, 0, 0) then only animations with CRGB value passed will be set to end.
             The search Identity or Color 1 acts as an OR condition.  If either match then the event will be set to end.
 
+    Warning: regardless of search and end params, the event still needs to be within the range.
+
     Params:
         ""          - "" for all, or set "XXXXX" with specific text of whatever is in between the quotes, will set to end.
         StartInTime - How long to wait before starting animation.
         Duration    - How long the Pixel Animation runs.
         Start Color - CRGB(0, 0, 0) for all,  or CRGB(X,X,X) with specific color X,X,X will be set to end.
         Start Color - ????? Unknown
+        Start Pos   - Only events between Start 
+        End Pos     -   and End will end.
         Repeat      - Controls end behavior of animations that repeat.
             False:  Existing pulse animations will just end.
             True:   Existing pulse animations will continue till it gets to its end. 
