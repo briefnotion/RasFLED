@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.16A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.17A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,16 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.17 _210202
+// *    - Hazard Light placeholder created.
+// *    - End all repeating non door animations command created.
+// *    - "`" or reverse apostrophe or whatever that button left of the 1 on a US 
+// *        keyboard is, will be the end command command. Still trying to come up with a 
+// *        good command set.  Thought of the way it is now, early on, and it seems to 
+// *        be working, for the most part, well now. 
+// *    - Hazard, Pulses, and Overhead extra animation statuss are now being reported to 
+// *        to the system varibles, in case I ever want show the status on the console. 
+// *
 // * V 0.16 _210201
 // *    - Changed Debug to Diagnosis, because debug info really isn't being shown. 
 // *    - Added a DIAG indicator. 
@@ -507,6 +517,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define AnTavdPaAnimClose       61
 #define AnTaChannelPulseColor   63
 #define AnTaOverheadIllumColor  64
+#define AnTaHazard              65
 
 //  Halloween Effects
 #define AnTavdCloud             70
@@ -568,11 +579,13 @@ class system_data
   stat_data fltCYCLETIME;     // Amount of time to complete an entire cycle.
   stat_data fltPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
 
-  std::string strLEDRANGE  = "";   // Text showing what LEDs will be Displayed.
-  std::string strLEDLIMITS = "";   // Text showing what LEDd, upper or lower, displayed.
+  std::string strLEDRANGE  = "";    // Text showing what LEDs will be Displayed.
+  std::string strLEDLIMITS = "";    // Text showing what LEDd, upper or lower, displayed.
 
-  int   intDoorsOpen = 0;         // Amount of doors open.
-  bool  booPulsesRunning = false; // Are exta anims running.
+  int   intDoorsOpen = 0;           // Amount of doors open.
+  bool  booPulsesRunning = false;   // Are exta anims running.
+  bool  booOverheadRunning = false; // Are exta anims running.
+  bool  booHazardRunning = false;   // Are exta anims running.
 
   // additional time measurements.
   // LED RENDER TIME
@@ -2513,6 +2526,36 @@ void vdOverheadIllum(Console &cons, led_strip lsStrips[], int intStripID, timed_
 }
 
 
+void vdHazard(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
+// Blue Waves. Much more interesting than the old version of this.
+{
+  cons.printwait("vdHazard (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID  +1) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
+
+  // Swap sweep start and end, depending on front or back.
+  int start;
+  int end;
+
+  if (lsStrips[intStripID + 1].Cl == 0)
+  {
+    start = lsStrips[intStripID + 1].St;
+    end = lsStrips[intStripID + 1].Ed;
+  }
+  else
+  {
+    start = lsStrips[intStripID + 1].Ed;
+    end = lsStrips[intStripID + 1].St;
+  }
+  
+  // Set the background color.
+  teEvent[lsStrips[intStripID].Cl].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
+  teEvent[lsStrips[intStripID + 1].Cl].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), start, end, false, true);
+
+  // Set the hazard to timed repeat
+  teEvent[lsStrips[intStripID].Cl].set("Hazard", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaHazard, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+}
+
+
+
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
 
@@ -3621,6 +3664,13 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
                   break;
                 }
 
+                case AnTaHazard:
+                // Color Specific Illumination
+                {
+                  vdHazard(cons, lsStripList, channel *2, teEvent, tmeCurrentTime);
+                  break;
+                }
+
                 // Open Door
                 case AnTaDoorOpen:
                 {
@@ -4124,14 +4174,19 @@ void consoleprinthelp(Console &cons)
   cons.printwait("help    - Prints this help screen.");
   cons.printwait("events  - Prints all active events.");
   cons.printwait("");
+  cons.printwait("     hh - Hazard Lights");
+  cons.printwait("     `` - End All Repeating Lights");
+  cons.printwait("");
   cons.printwait("Colors:");
   cons.printwait(" r - Red    u - Purple");
   cons.printwait(" g - Green  y - Yellow");
   cons.printwait(" b - Blue   c - Cyan    e - End");
   cons.printwait("");
-  cons.printwait("pX  - Pulse X color");
-  cons.printwait("oX  - Pulse X color");
+  cons.printwait("pX  - Pulse       (X is the color)");
+  cons.printwait("oX  - Pulse       (X is the color)");
+  cons.printwait("X`  - End Command (X is the Command Ended)");
   cons.printwait("  Double animations will be White.");
+  cons.printwait("");
   cons.printwait("  Not all colors implemented for all commands.");
   cons.printwait("");
   cons.printwait("\\   - Turn on diagnosis mode.");
@@ -4162,43 +4217,68 @@ void consoleprintevents(Console &cons, timed_event teEvent[])
 // Pulses
 
 // Set To End All Pulses
-void processcommandpulseend(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
     teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
   }
+  sdSysData.booPulsesRunning = false;
 }
 
 // Pulse Color All Channels
-void processcommandpulse(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
 {
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
     teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
   }
+  sdSysData.booPulsesRunning = true;
 }
 
 // Overhead Illum
 
 // Set To End All Pulses
-void processcommandoverheadillumend(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandoverheadillumend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
     teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
   }
+  sdSysData.booOverheadRunning = false;
 }
 
 // Pulse Color All Channels
-void processcommandoverheadillum(Console &cons, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+void processcommandoverheadillum(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
 {
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
     teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaOverheadIllumColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
   }
+  sdSysData.booOverheadRunning = true;
 }
 
+// Hazard
+
+// Set To End All Hazard
+void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
+{
+  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  {
+    teEvent[channel].set("Hazard", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+  }
+  sdSysData.booHazardRunning = false;
+}
+
+// Hazard
+void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+{
+  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  {
+    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaHazard, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+  }
+  sdSysData.booHazardRunning = true;
+}
 
 
 // Process and call routines as entered on the command line.
@@ -4240,17 +4320,27 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
+    // End All Extra Repeating Lights
+    if(cons.keywatch.Command.COMMANDLINE == "``")
+    {
+      // end all pulses on all strips
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
+      cons.keywatch.cmdClear();
+    }
+
     // -------------
     // PULSES
 
     // pulse end
-    if(cons.keywatch.Command.COMMANDLINE == "pe")
+    if(cons.keywatch.Command.COMMANDLINE == "p`")
     {
       // end all pulses on all strips
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulseend(cons, tmeCurrentTime, teEvent);
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = false;
     }
 
     // pulse White
@@ -4258,9 +4348,8 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbWhite);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Red
@@ -4268,9 +4357,8 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbRed);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Green
@@ -4278,9 +4366,8 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbGreen);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Blue
@@ -4288,9 +4375,8 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbBlue);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Purple
@@ -4298,9 +4384,8 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbPurple);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Yellow
@@ -4308,9 +4393,8 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbYellow);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // pulse Cyan
@@ -4318,21 +4402,19 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, tmeCurrentTime, teEvent, crgbCyan);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
     // Overhead Illumination
     
     // pulse end overhead illum
-    if(cons.keywatch.Command.COMMANDLINE == "oe")
+    if(cons.keywatch.Command.COMMANDLINE == "o`")
     {
       // end all pulses on all strips
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandoverheadillumend(cons, tmeCurrentTime, teEvent);
+      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = false;
     }
 
     // Overhead White
@@ -4340,11 +4422,29 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandoverheadillum(cons, tmeCurrentTime, teEvent, crgbWhite);
+      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
-      sdSysData.booPulsesRunning = true;
     }
 
+    // Hazard
+    
+    // Hazard illum end
+    if(cons.keywatch.Command.COMMANDLINE == "h`")
+    {
+      // end all pulses on all strips
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
+      cons.keywatch.cmdClear();
+    }
+
+    // Hazard
+    if(cons.keywatch.Command.COMMANDLINE == "hh")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandhazard(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+      cons.keywatch.cmdClear();
+    }
     
     // -------------
 
@@ -4466,13 +4566,15 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
   }
 }
 
+// If a door is opened and DOORAWARE is on, we want to end these animations when the door
+//  has been opened.
 void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[] )
 {
   if ( (sdSysData.intDoorsOpen > 0)  && (sdSysData.booPulsesRunning == true) )
   {
     // End pulses when door is opened.
-    processcommandpulseend(cons, tmeCurrentTime, teEvent);
-    sdSysData.booPulsesRunning = false;
+    processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
+    processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
   }
 }
 
