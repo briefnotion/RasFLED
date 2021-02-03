@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.17A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.18A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,16 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.18 _210203
+// *    - Removed these items from ToDo list.  They got done.
+// *      - Set up an animation ID tag.
+// *      - Create an Better interface.
+// *      - Create specialized animations for specific alerts and hazards.
+// *    - No longer clearing all animations before starting new animations.  Instead, 
+// *        setting animations of animations being replaced to ClearOnEnd. 
+// *    - Added Orange to the pulses, for Lyft.
+// *    - Added Blue and Orange to the Overhead.
+// *
 // * V 0.17 _210202
 // *    - Hazard Light placeholder created.
 // *    - End all repeating non door animations command created.
@@ -245,7 +255,6 @@
 // ***************************************************************************************
 // *
 // *  ToDo:
-// *    - Create an Better interface.
 // *    - Get everything properly classified whith reference .h, supporting, and helper 
 // *        libraries.
 // *    - Try to decide whether I want everthing in retro c++ or classical c++.
@@ -253,8 +262,6 @@
 // *    - Clean up 90% of the code.
 // *    - Move all the main animations into their own subroutines.
 // *    - Create animations for day and night running.
-// *    - Create specialized animations for specific alerts and hazards.
-// *    - Set up an animation ID tag.
 // *    - Generate animations for shutting down animations.
 // *    - Class the Doors.
 // *    - Class the LED strips.
@@ -265,12 +272,8 @@
 // ***************************************************************************************
 
 
-//#include <FastLED.h>
-//#include <Wire.h>
 #include <stdio.h>
 #include <math.h>
-//#include <time.h>
-//#include <ctime>
 #include <wiringPi.h>
 #include <string>
 #include <chrono>
@@ -279,7 +282,6 @@
 #include <vector>
 #include <iostream>
 #include <ncurses.h>
-
 
 
 
@@ -2447,10 +2449,10 @@ void vdStripOverOff(Console &cons, led_strip lsStrips[], int intStripID, timed_e
 
 // -------------------------------------------------------------------------------------
 
-// Pulse channel Specific Color then fade out.
+// Console Called Animations 
 
 void vdChannelLightPulseColor(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
-// Turn (force) Green Pulse on Full Channel. Strip Length Aware. 
+// Turn Color Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
   cons.printwait("vdChannelLightPulseColor (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
@@ -2502,7 +2504,7 @@ void vdChannelLightPulseColor(Console &cons, led_strip lsStrips[], int intStripI
 
 
 void vdOverheadIllum(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
-// Blue Waves. Much more interesting than the old version of this.
+// An overhead light.  Called by the Overhead command from the console. 
 {
   cons.printwait("vdOverheadIllum (CL: " + std::to_string(lsStrips[intStripID  +1].Cl) + " ID:"+ std::to_string(intStripID  +1) + " S:" + std::to_string(lsStrips[intStripID  +1].St) + " E:" + std::to_string(lsStrips[intStripID  +1].Ed) + ")");
 
@@ -2527,7 +2529,8 @@ void vdOverheadIllum(Console &cons, led_strip lsStrips[], int intStripID, timed_
 
 
 void vdHazard(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Blue Waves. Much more interesting than the old version of this.
+// Hazard Lights. Called by the Hazard command from the console. 
+// Runs on entire channel. 
 {
   cons.printwait("vdHazard (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID  +1) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
@@ -2546,9 +2549,9 @@ void vdHazard(Console &cons, led_strip lsStrips[], int intStripID, timed_event t
     end = lsStrips[intStripID + 1].St;
   }
   
-  // Set the background color.
-  teEvent[lsStrips[intStripID].Cl].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
-  teEvent[lsStrips[intStripID + 1].Cl].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), start, end, false, true);
+  // Pulse Red.
+  teEvent[lsStrips[intStripID].Cl].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
+  teEvent[lsStrips[intStripID + 1].Cl].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), start, end, false, true);
 
   // Set the hazard to timed repeat
   teEvent[lsStrips[intStripID].Cl].set("Hazard", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaHazard, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
@@ -2783,13 +2786,13 @@ void vdPacificaishAnimation(Console &cons, led_strip lsStrips[], int intStripID,
 void vdEndAllAnimationsADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Run this routine on all Doors after all doors are closed to ensure no lingering animations have not been ended for whatever reason.
 {
+  // Shouldn't ever need to call this. 
   cons.printwait("vdEndAllAnimationsADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
   teEvent[lsStrips[intStripID].Cl].set("", tmeCurrentTime, 20000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
 }
 
 
 void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Door Open Stage 0
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
   cons.printwait("vdDoorOpenAnimationADV00 (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
@@ -2799,13 +2802,15 @@ void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripI
   int intSp;
 
   // Give strip a fresh start.
-  vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
+  // Clear any animations that may be running and this should replace.
+  teEvent[lsStrips[intStripID].Cl].set("Door Close Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("Door Close Active Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
 
   CRGB lead = CRGB(20, 20, 20);
   CRGB shadow = CRGB(50 ,50, 50);
 
   // Door Open Animation
-  intTm = 100; intDur = 500; intSp = 10; intCt = lsStrips[intStripID].Ct(); // was 60
+  intTm = 100; intDur = 500; intSp = 10; intCt = lsStrips[intStripID].Ct();
 
   // Clear set background to door open colors.
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(255, 64, 64), lsStrips[intStripID].St, lsStrips[intStripID].St + 4, false, false);
@@ -2850,18 +2855,16 @@ void vdDoorOpenAnimationADV00(Console &cons, led_strip lsStrips[], int intStripI
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm, 100, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St, false, true);
   
-  //intTm = intAnTmDly(intTm, intDur, intCt, intSp);
-
-  // Repeat Pulse
+  // Repeat Red Pulse
   intDur = 1500; intSp = 125; intCt = lsStrips[intStripID].Ct();
   int intMid = lsStrips[intStripID].Ct() / 2;
   int intTm2Off = (intMid * intSp + intDur) /2;
   
-  // Pulse up to mid
+  // Pulse Yellow up to mid
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed - intMid, true, true);
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed - intMid, true, true);
 
-  // Pulse down to mid
+  // Pulse Yellow down to mid
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St + intMid, true, true);
   teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].Ed, lsStrips[intStripID].St + intMid, true, true);
 }
@@ -2873,7 +2876,9 @@ void vdDoorCloseRunningADV(Console &cons, led_strip lsStrips[], int intStripID, 
   cons.printwait("vdDoorCloseRunningADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Give strip a fresh start.
-  vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
+  // Clear any animations that may be running and this should replace.
+  teEvent[lsStrips[intStripID].Cl].set("Door Close Active Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
 
   int intTm;
   int intDur;
@@ -2886,7 +2891,12 @@ void vdDoorCloseRunningADV(Console &cons, led_strip lsStrips[], int intStripID, 
   intTm = 600; intDur = 5000; intSp = 50; intCt = lsStrips[intStripID].Ct();
 
   // Clear set background colors.
-  teEvent[lsStrips[intStripID].Cl].set("Door Close Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(0, 0, 32), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
+  teEvent[lsStrips[intStripID].Cl].set("Door Close Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(0, 0, 32), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, false);
+
+  // Tell this animation to stop running on itsself after all prev animations should be done.
+  // Basicly, put itself to sleep.
+  teEvent[lsStrips[intStripID].Cl].set("Door Close Anim", tmeCurrentTime, 30000, 5000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("Sleep Anim", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(0, 0, 32), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, true);
 }
 
 
@@ -2896,7 +2906,9 @@ void vdDoorCloseActiveADV(Console &cons, led_strip lsStrips[], int intStripID, t
   cons.printwait("vdDoorCloseActiveADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Give strip a fresh start.
-  vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
+  // Clear any animations that may be running and this should replace.
+  teEvent[lsStrips[intStripID].Cl].set("Door Close Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+  teEvent[lsStrips[intStripID].Cl].set("vdOpenDoor", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
 
   int intTm;
   int intDur;
@@ -2921,8 +2933,8 @@ void vdPacificaishAnimationADV(Console &cons, led_strip lsStrips[], int intStrip
   cons.printwait("vdPacificaishAnimationADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Give strip a fresh start.
-  //vdClearAllTimedEvent(teEvent, lsStrips[intStripID].Cl, lsStrips[intStripID].St, lsStrips[intStripID].Ed);
-  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 25, 0, 0, AnEvClearRunning, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, false, false);
+  // Clear any animations that may be running and this should replace.
+  teEvent[lsStrips[intStripID].Cl].set("Overhead Close Convenience Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
   // Swap sweep start and end, depending on front or back.
   int start;
@@ -2997,14 +3009,15 @@ void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event te
   }
   
   // Background Color Fade out.
+
   // Set the background color.
   CRGB background = CRGB(40, 8, 0);
   CRGB backgroundbgone = CRGB(20, 4, 0);
   
   intTm = 500; intDur = 3000; intSp = 250;
 
-  // Set the currently running animations to fade away. (NOTE: CLEARONEND = true to end scheduled future animations end on complete, also.)
-  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 0, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
+  // Clear any animations that may be running and this should replace.
+  teEvent[lsStrips[intStripID].Cl].set("Overhead Open Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 
   //Set All the animations to end after the code 4 lines down, is finished fading away  
   bgonedly = (lsStrips[intStripID].Ct() * intSp + intDur);
@@ -3022,17 +3035,16 @@ void vdCoADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event te
   teEvent[lsStrips[intStripID].Cl].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm + (0 * bgonedly), intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), backgroundbgone, CRGB(0, 0, 0), CRGB(0, 0, 0), top, bot, true, false);
   teEvent[lsStrips[intStripID].Cl].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm + (1 * bgonedly), intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), backgroundbgone, CRGB(0, 0, 0), CRGB(0, 0, 0), top, bot, true, false);
   teEvent[lsStrips[intStripID].Cl].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm + (2 * bgonedly), intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), backgroundbgone, CRGB(0, 0, 0), CRGB(0, 0, 0), top, bot, true, false);
-  // Schedule all lights to turn ahead of time at end of cycle
+  
   // teEvent[lsStrips[intStripID].Cl].set("Overhead Close Convenience Anim", tmeCurrentTime, AUXDRLINGERBCK - 6000, 9000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, false);
   // !!! Need to get AUXDRLINGERBACK back into the code.
 }
 
 
 void vdAddOpenADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Turn (force) Additional Lights On on to show the door is open.
+// Turn Additional Lights On on to show the door is open.
 {
   cons.printwait("vdAddOpenADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
-  //teEvent[lsStrips[intStripID +1].Cl].set("Open Additional Anim", tmeCurrentTime, 1000, 1000, 80, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(125,124,16), CRGB(0, 0, 0), CRGB(0, 0, 0), top, top + lsStrips[intStripID +1].Ct() /2, false, false);
 
   int intTm, intDur, intSp, intCt; 
 
@@ -3065,8 +3077,6 @@ void vdAddCloseADV(Console &cons, led_strip lsStrips[], int intStripID, timed_ev
   cons.printwait("vdAddCloseADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
 
   // Seach the strip for light colors and set them to end after animation completes.  
-  //teEvent[lsStrips[intStripID].Cl].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(254, 254, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
-  //teEvent[lsStrips[intStripID].Cl].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(254, 254, 254), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
   teEvent[lsStrips[intStripID].Cl].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID].Ed, true, true);
 }
 
@@ -3845,7 +3855,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
               for (int eventscan = 0; eventscan < teEvent[channel].teDATA.size(); eventscan++)
               {
                 // Has the event started running yet, or do we plan on ending future scheduled events also?
-                if(teEvent[channel].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime || teEvent[channel].teDATA[eventscan].booCLEARONEND == true)   // May Have Fixed It.  IDK
+                if(teEvent[channel].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime || teEvent[channel].teDATA[event].booCLEARONEND == true)   // May Have Fixed It.  IDK
                 {
                   // is the event we are currently looking at within, or overlapping, the targeted event range.
                   if (  ((teEvent[channel].teDATA[eventscan].intSTARTPOS >= teEvent[channel].teDATA[event].intSTARTPOS)  
@@ -3916,6 +3926,9 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
                     // Only continue with setting the event to end if it passed the above criteria.
                     if (cont == true)
                     {
+                      // If the event hasn't started yet, set it to complete.
+                      // *********
+
                       // Check the event we are stopping to make sure its not the event calling the SetToEnd.
                       if (event != eventscan)
                       {
@@ -3933,16 +3946,26 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
 
                           //teEvent[channel].teDATA[eventscan].intSPEED =  teEvent[channel].teDATA[event].intSPEED;
                           teEvent[channel].teDATA[eventscan].intSPEED =  0;
-                        // The above two lines will need to be addressed at a future date. 
-                        //  Problem occurs when an event current time is before the start 
-                        //  pixel update begins. This mean that the start color will not be set until current 
-                        //  time is past start time.  Need to choose: apples or oranges during 
-                        //  the crgb_anim_color and event routine.
+                          // The above two lines will need to be addressed at a future date. 
+                          //  Problem occurs when an event current time is before the start 
+                          //  pixel update begins. This mean that the start color will not be set until current 
+                          //  time is past start time.  Need to choose: apples or oranges during 
+                          //  the crgb_anim_color and event routine.
 
-                          teEvent[channel].teDATA[eventscan].crgbCOLORSTART1 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST1;
-                          teEvent[channel].teDATA[eventscan].crgbCOLORSTART2 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST2;
-                          teEvent[channel].teDATA[eventscan].crgbCOLORDEST1 = teEvent[channel].teDATA[event].crgbCOLORDEST1;
-                          teEvent[channel].teDATA[eventscan].crgbCOLORDEST2 = teEvent[channel].teDATA[event].crgbCOLORDEST2;
+                          if (teEvent[channel].teDATA[event].booREPEAT == false)
+                          {
+                            teEvent[channel].teDATA[eventscan].crgbCOLORSTART1 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST1;
+                            teEvent[channel].teDATA[eventscan].crgbCOLORSTART2 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST2;
+                          }
+                          else
+                          {
+                            teEvent[channel].teDATA[eventscan].crgbCOLORSTART1 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST1;
+                            teEvent[channel].teDATA[eventscan].crgbCOLORSTART2 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST2;
+                            teEvent[channel].teDATA[eventscan].crgbCOLORDEST1 = teEvent[channel].teDATA[event].crgbCOLORDEST1;
+                            teEvent[channel].teDATA[eventscan].crgbCOLORDEST2 = teEvent[channel].teDATA[event].crgbCOLORDEST2;
+                            //teEvent[channel].teDATA[eventscan].crgbCOLORDEST1 = teEvent[channel].teDATA[event].crgbCOLORSTART1;
+                            //teEvent[channel].teDATA[eventscan].crgbCOLORDEST2 = teEvent[channel].teDATA[event].crgbCOLORSTART2;                             
+                          }
                         }
                         // Manage the Pulse Animations to End
                         if (  (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulse)    ||
@@ -4115,7 +4138,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
         {
           //  Guarantee all animations end in 15 seconds. This is a fall back method to
           //    make sure everythings stops in case a clear animation fails to start.
-          vdEndAllAnimationsADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
+          //vdEndAllAnimationsADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
 
           // Start the Doors Running Mode on each door.
           lsStrips[strip].AnimationStatus = StDoorCloseR;
@@ -4178,7 +4201,7 @@ void consoleprinthelp(Console &cons)
   cons.printwait("     `` - End All Repeating Lights");
   cons.printwait("");
   cons.printwait("Colors:");
-  cons.printwait(" r - Red    u - Purple");
+  cons.printwait(" r - Red    u - Purple  n - Orange");
   cons.printwait(" g - Green  y - Yellow");
   cons.printwait(" b - Blue   c - Cyan    e - End");
   cons.printwait("");
@@ -4291,9 +4314,12 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     CRGB crgbRed    = CRGB(64,0,0);
     CRGB crgbGreen  = CRGB(0,64,0);
     CRGB crgbBlue   = CRGB(0,0,64);
+
     CRGB crgbPurple = CRGB(64,0,64);
     CRGB crgbYellow = CRGB(64,64,0);
     CRGB crgbCyan   = CRGB(0,64,64);
+
+    CRGB crgbOrange = CRGB(64,16,0);
     
     // Call routines that match the info on the command line.
     
@@ -4406,6 +4432,15 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
+    // pulse Orange
+    if(cons.keywatch.Command.COMMANDLINE == "pn")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
+      cons.keywatch.cmdClear();
+    }
+
     // Overhead Illumination
     
     // pulse end overhead illum
@@ -4423,6 +4458,24 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+      cons.keywatch.cmdClear();
+    }
+
+    // Overhead Blue
+    if(cons.keywatch.Command.COMMANDLINE == "ob")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
+      cons.keywatch.cmdClear();
+    }
+
+    // Overhead Orange
+    if(cons.keywatch.Command.COMMANDLINE == "on")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
       cons.keywatch.cmdClear();
     }
 
@@ -4624,9 +4677,6 @@ void setup()
 {
   // Keeping this for now to remind me of what I haven't implementd, from the preport, 
   //  yet.
-
-
-
 }
 
 
@@ -4679,6 +4729,7 @@ int loop()
   ledstring.channel[0].invert = 0;
   ledstring.channel[0].strip_type = STRIP_TYPE;
   // I was told a second channel doesnt work.
+  // It doesn't. I checked. It's not ever going to work. 
   /*
   ledstring.channel[1].gpionum = 0;
   ledstring.channel[1].count = 0;
