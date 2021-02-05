@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.18A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.19A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,12 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.19 _210205
+// *    - Created a routine for copying over the prepared matrix to the display matrix.
+// *    - Clean up the Calculated Matrix to the Render Matrix part, somewhat.  Still 
+// *        wishing it was handled better.  At least now I have a central part for it. 
+// *    - Put the matrix fill into its own routine. 
+// *
 // * V 0.18 _210203
 // *    - Removed these items from ToDo list.  They got done.
 // *      - Set up an animation ID tag.
@@ -563,8 +569,6 @@ class system_data
   //  this class is very likely to fail if not maintained when program main is updated. 
   //  You have been warned.
 
-  //using namespace std;
-  
   private:
   
   struct stat_data
@@ -588,10 +592,6 @@ class system_data
   bool  booPulsesRunning = false;   // Are exta anims running.
   bool  booOverheadRunning = false; // Are exta anims running.
   bool  booHazardRunning = false;   // Are exta anims running.
-
-  // additional time measurements.
-  // LED RENDER TIME
-  // SCREEN OUTPUT TIME
 
   // store copies of displayed system data
   bool  boolDOORSENSORS[NUM_SWITCHES];
@@ -1408,6 +1408,7 @@ class timed_event
            char  bytAnimation, char  bytLEDAnimation, bool booInvertColor, 
            CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
            int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd)
+  
   // Prepare an animation to start at a specific time.
   {
 
@@ -1889,7 +1890,7 @@ class timed_event
                 if ((tmeCurrentTime >= tmeStartAnim))
                 {
                   // -------------------------------------------------------------------
-                  // This Routine can be applied to all animation types. Itsjust not
+                  // This Routine can be applied to all animation types. Its just not
                   //  implemented until needed.  Also kept seperate becuase it uses
                   //  a few more clock cycles. e.g. PulseDither and PulseToDither 
                   //  can be created.  But not the Twinkle.  Twinkle is passing direct
@@ -1936,7 +1937,7 @@ class timed_event
                         break;
                       } // End Case AnEvSweep
                   } // End Switch Statement
-                }
+                }  // tmeCurrentTime >= tmeStartAnim
               } // End Time Check
             } // End LED Postion Check
           } // End Expiration Check
@@ -3607,7 +3608,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
           {
             case AnEvClear:   // Clear all events, whether running or not, if event is within Start and End Position.
             {
-              cons.printwait("Event: AnEvClear");
+              //cons.printwait("Event: AnEvClear");
               teEvent[channel].teDATA[event].booCOMPLETE = true;
               teEvent[channel].ClearAll(teEvent[channel].teDATA[event].intSTARTPOS,teEvent[channel].teDATA[event].intENDPOS);
               break;
@@ -3615,7 +3616,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
             
             case AnEvClearRunning:  // Clear all active events if event is within Start and End Position.
             {                       // Possible problem if InTime is set to 0.
-              cons.printwait("Event: AnEvClearRunning");
+              //cons.printwait("Event: AnEvClearRunning");
               teEvent[channel].teDATA[event].booCOMPLETE = true;
 
               for (int eventscan = 0; eventscan < teEvent[channel].teDATA.size(); eventscan++)
@@ -3641,7 +3642,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
             case AnEvSchedule:
             //  Schedule an animation
             {  
-              cons.printwait("Event: AnEvSchedule");
+              //cons.printwait("Event: AnEvSchedule");
               // Clear the Event whether the event ran or not.
               teEvent[channel].teDATA[event].booCOMPLETE = true;
               
@@ -3847,7 +3848,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
 
             case AnEvSetToEnd:  // Schedules an animation to end. Fades out Fades and stops repeat on Pulses.
             {                   // Possible problem if InTime is set to 0.  
-              cons.printwait("Event: AnEvSetToEnd");
+              //cons.printwait("Event: AnEvSetToEnd");
               // Clear the Event whether the event ran or not.
               teEvent[channel].teDATA[event].booCOMPLETE = true;   
 
@@ -3963,6 +3964,7 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
                             teEvent[channel].teDATA[eventscan].crgbCOLORSTART2 = teEvent[channel].teDATA[eventscan].crgbCOLORDEST2;
                             teEvent[channel].teDATA[eventscan].crgbCOLORDEST1 = teEvent[channel].teDATA[event].crgbCOLORDEST1;
                             teEvent[channel].teDATA[eventscan].crgbCOLORDEST2 = teEvent[channel].teDATA[event].crgbCOLORDEST2;
+                            // Unfinished color swap.  Left as is to avoid changing animations before installation.
                             //teEvent[channel].teDATA[eventscan].crgbCOLORDEST1 = teEvent[channel].teDATA[event].crgbCOLORSTART1;
                             //teEvent[channel].teDATA[eventscan].crgbCOLORDEST2 = teEvent[channel].teDATA[event].crgbCOLORSTART2;                             
                           }
@@ -3991,13 +3993,15 @@ void teSystem(Console &cons, led_strip lsStripList[], timed_event teEvent[], uns
                             teEvent[channel].teDATA[eventscan].booCLEARONEND = true;
                           }
                         }
-                      }
-                    }
-                  }
-                }
-              }        
+
+                      } // End Event not Self 
+                    } // End If Event in Search Criteria
+                  } // End If Event in Range
+                } // End If Time Start
+              } // End For Event Check       
               break;
             } // End Case AnEvSetToEnd
+
           } // End Switch 
         } // End If time check
       } // End FOR event
@@ -4131,7 +4135,8 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
       {
         strip = (door *2); // Determine Strip from Door aka Channel
           // Strip will be the door strip
-          // Strip +1 is the door overhead strip
+          // Strip +1 is the door overhead strip // Try to avoid passing this also. 
+          //  Let the Animations handle it.
         
         // Finalize additionall animations on newley closed doors
         if (hwmDoor[door].ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
@@ -4178,9 +4183,41 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
   }
 }
 
+
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
 
+// Matrix Manipulation
+
+// -------------------------------------------------------------------------------------
+
+// Display Materix Prepare.
+//  Copy the Prepared Matrix to the Display Matrix.
+void MatrixPrepare(Console cons, CRGB crgbPrepedMatrix[], int intLEDCOUNT, int* DisplayMatrix, int &mcount)
+{
+  for (int lcount = 0; lcount < intLEDCOUNT;lcount++)
+  {
+    if(cons.keywatch.get(KEYLEDUPLW) == 0)
+      DisplayMatrix[mcount]=crgbPrepedMatrix[lcount].b + (crgbPrepedMatrix[lcount].g << 8) + (crgbPrepedMatrix[lcount].r << 16) + (0 << 24);
+    else
+      DisplayMatrix[mcount]=crgbPrepedMatrix[intLEDCOUNT - lcount].b + (crgbPrepedMatrix[intLEDCOUNT - lcount].g << 8) + (crgbPrepedMatrix[intLEDCOUNT - lcount].r << 16) + (0 << 24);
+    mcount++;
+  }
+}
+
+void MatxixFill(CRGB crgbPreparedMatix[], int intLEDCOUNT, CRGB crgbColor)
+{
+  for (int lcount = 0; lcount < intLEDCOUNT; lcount++)
+  {
+    crgbPreparedMatix[lcount] = crgbColor;
+  }
+}
+
+
+// -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+
+// Console Commands
 
 // -------------------------------------------------------------------------------------
 
@@ -4700,7 +4737,7 @@ int loop()
   nodelay(stdscr, true);
   
   cons.printi("Initializing Console");
-  cons.printi("RasFLED Loop ('x' to Exit) ...");
+  cons.printi("RasFLED Loop ('X' to Exit) ...");
   
   // Console Key Watch
   cons.keywatch.set((int)KEYEXIT,2);  // Exit the program.
@@ -4720,7 +4757,8 @@ int loop()
 
   // ---------------------------------------------------------------------------------------
   // LED Library Vars and Init
-  cons.printi("Initializing LEDS ... ");
+  cons.printi("Initializing LEDS ...");
+
   ledstring.freq = TARGET_FREQ;
   ledstring.dmanum = DMA;
   ledstring.channel[0].gpionum = GPIO_PIN;
@@ -4728,15 +4766,7 @@ int loop()
   ledstring.channel[0].brightness = 255;
   ledstring.channel[0].invert = 0;
   ledstring.channel[0].strip_type = STRIP_TYPE;
-  // I was told a second channel doesnt work.
-  // It doesn't. I checked. It's not ever going to work. 
-  /*
-  ledstring.channel[1].gpionum = 0;
-  ledstring.channel[1].count = 0;
-  ledstring.channel[1].invert = 0;
-  ledstring.channel[1].brightness = 0;
-  ledstring.channel[1].strip_type = 0;
-  */
+
   ws2811_return_t ret;
   ledprep(&ledstring);
   matrix = (int*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
@@ -4746,17 +4776,18 @@ int loop()
       fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
       return ret;
   }
-  cons.printi("OK");
+  cons.printi("     OK");
 
   // ---------------------------------------------------------------------------------------
 
   // Define Door Sensors.
+  cons.printi("Initializing Switches");
   int intRet = wiringPiSetup();    // Initialize wiringPI.
   pinMode(SWITCH_PINs0, INPUT);
   pinMode(SWITCH_PINs1, INPUT);
   pinMode(SWITCH_PINs2, INPUT);
   pinMode(SWITCH_PINs3, INPUT);
-  // Set resistors in pins to Pull Up to the 3.5v rail.
+  // Set resistors in pins to Pull Up to the 3.3v rail.
   pullUpDnControl(SWITCH_PINs0, PUD_UP);
   pullUpDnControl(SWITCH_PINs1, PUD_UP);
   pullUpDnControl(SWITCH_PINs2, PUD_UP);
@@ -4826,7 +4857,7 @@ int loop()
   unsigned long tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
 
   /*
-  // False events
+  // False events for testing.
   teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
   teEvent[lsStrips[2].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
   teEvent[lsStrips[4].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
@@ -4900,10 +4931,9 @@ int loop()
     // ---------------------------------------------------------------------------------------
     // Render all the LEDs if changes have been made.
 
-    // This part of the code needs to be clean up and consolidated, but it works for now 
-    // and I havent decided how to future handle this yet, so it stays for now.
-
     // --- Execute LED Hardware Changes If Anything Was Updated ---
+    //  For now we are working with just one big LED strip.  So, just check to see if anything
+    //    changed.  Then, Redraw the entire strip. 
     if ((booUpdates0 == true) || (booUpdates1 == true) || (booUpdates2 == true) || (booUpdates3 == true))
     {
       //  Do I need to move the whole thing or can I just move the changed pixels?
@@ -4912,78 +4942,32 @@ int loop()
 
       // If debug mode Display all lights static color are selectted, replace all generated led colors
       // with a static color
-
-      CRGB cRGBstaticdisplaycolor =  CRGB(25,25,25);
-
       if (cons.keywatch.get(KEYLEDTEST) !=0)
       {
-        for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
-        {
-          crgbMainArrays0[lcount] = cRGBstaticdisplaycolor;
-        }
-          for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
-        {
-          crgbMainArrays1[lcount] = cRGBstaticdisplaycolor;
-        }
-          for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
-        {
-          crgbMainArrays2[lcount] = cRGBstaticdisplaycolor;
-        }
-          for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
-        {
-          crgbMainArrays3[lcount] = cRGBstaticdisplaycolor;
-        }
+        MatxixFill(crgbMainArrays0, NUM_LEDSs0, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays1, NUM_LEDSs1, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays2, NUM_LEDSs0, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays3, NUM_LEDSs1, CRGB(25,25,25));
       }
 
-      // Determine and display which lights get shown.
+      // Copy the Prepared, or Calculated to the Display Matrix, before rendering.
+      //  Checking to see if the matix is to be displayed like normal or with DIAGs.
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 1)
       {
-        for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
-        {
-          if(cons.keywatch.get(KEYLEDUPLW) == 0)
-            matrix[mcount]=crgbMainArrays0[lcount].b + (crgbMainArrays0[lcount].g << 8) + (crgbMainArrays0[lcount].r << 16) + (0 << 24);
-          else
-            matrix[mcount]=crgbMainArrays0[NUM_LEDSs0 - lcount].b + (crgbMainArrays0[NUM_LEDSs0 - lcount].g << 8) + (crgbMainArrays0[NUM_LEDSs0 - lcount].r << 16) + (0 << 24);
-          mcount++;
-        }
+        MatrixPrepare(cons, crgbMainArrays0, NUM_LEDSs0, matrix, mcount);
       }
-
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 2)
       {
-        for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
-        {
-          if(cons.keywatch.get(KEYLEDUPLW) == 0)
-            matrix[mcount]=crgbMainArrays1[lcount].b + (crgbMainArrays1[lcount].g << 8) + (crgbMainArrays1[lcount].r << 16) + (0 << 24);
-          else
-            matrix[mcount]=crgbMainArrays1[NUM_LEDSs1 - lcount].b + (crgbMainArrays1[NUM_LEDSs1 - lcount].g << 8) + (crgbMainArrays1[NUM_LEDSs1 - lcount].r << 16) + (0 << 24);
-          mcount++;
-        }
+        MatrixPrepare(cons, crgbMainArrays1, NUM_LEDSs1, matrix, mcount);
       }
-
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 3)
       {
-        for (int lcount = 0; lcount < NUM_LEDSs0;lcount++)
-        {
-          if(cons.keywatch.get(KEYLEDUPLW) == 0)
-            matrix[mcount]=crgbMainArrays2[lcount].b + (crgbMainArrays2[lcount].g << 8) + (crgbMainArrays2[lcount].r << 16) + (0 << 24);
-          else
-            matrix[mcount]=crgbMainArrays2[NUM_LEDSs0 - lcount].b + (crgbMainArrays2[NUM_LEDSs0 - lcount].g << 8) + (crgbMainArrays2[NUM_LEDSs0 - lcount].r << 16) + (0 << 24);
-            mcount++;
-        }
+        MatrixPrepare(cons, crgbMainArrays2, NUM_LEDSs0, matrix, mcount);
       }
-
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 4)
       {
-        for (int lcount = 0; lcount < NUM_LEDSs1;lcount++)
-        {
-          if(cons.keywatch.get(KEYLEDUPLW) == 0)
-            matrix[mcount]=crgbMainArrays3[lcount].b + (crgbMainArrays3[lcount].g << 8) + (crgbMainArrays3[lcount].r << 16) + (0 << 24);
-          else
-            matrix[mcount]=crgbMainArrays3[NUM_LEDSs1 - lcount].b + (crgbMainArrays3[NUM_LEDSs1 - lcount].g << 8) + (crgbMainArrays3[NUM_LEDSs1 - lcount].r << 16) + (0 << 24);
-          mcount++;
-        }
+        MatrixPrepare(cons, crgbMainArrays3, NUM_LEDSs1, matrix, mcount);
       }
-
 
       // LED Library Renderer -- Recommend: DON'T TOUCH        
       matrix_render();
@@ -4993,7 +4977,6 @@ int loop()
           break;
       }
     }   // End Delayless Loop
-
 
     // ---------------------------------------------------------------------------------------
     // Now that we have done all the hard work, read hardware, computed, generated, displayed 
@@ -5023,7 +5006,6 @@ int loop()
       sdSystem.refresh();
     }
 
-
     // ---------------------------------------------------------------------------------------
     // Now that the complete cycle is over, we need figure out how much time is remaining in 
     // the cycle and go to sleep for the appropriate amount of time. 
@@ -5037,7 +5019,6 @@ int loop()
     usleep (1000 * sdSystem.getsleeptime(FRAMES_PER_SECOND));
     
   }// End MAIN CYCLE WHILE loop.
-
 
   // ---------------------------------------------------------------------------------------
   // If we are here, then we are closing the program.
