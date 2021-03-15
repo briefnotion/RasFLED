@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.19A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.21A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,23 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.21_210315
+// *    - Increased the size of the side running lights from 6 to 12.
+// *    - Running Color allows a default color for Pulse and Overhead Illumination to be
+// *        set and retained.  'pp' or '  ' and 'oo' or 'zz' commands will call pulse 
+// *        and or overhead with the set color.  Choose with 'rX' where X is the color, 
+// *        shuch as R is Red, G is Green ...
+// *    - 'zz' can now turn on overhead illumination.  This was added because the z key 
+// *      is much easier to find in the dark than the o key.
+// *    - Yes, I want to tackle the to do list items such as "code it into header files," 
+// *        and have a "configuration file" or "read the animations from a JSON file" 
+// *        but, nearly every time I'm out there, testing the system, I find the smallest 
+// *        amount of changes and additions, adds more practicallity, utility, and 
+// *        convienance to my job.  For instance, a simple 5 minute pulse that starts 
+// *        green and ends red when finished, would let people know, at a glance 
+// *        how much time is remaining before I start thinking, and have to figure out 
+// *        if its a no show or not.
+// *
 // * V 0.20_210301
 // *    - Hardware changed requiring me to change the order of pixel animations.  Some of 
 // *        animations work differently because the Door Strip is no longer door*2 and 
@@ -567,6 +584,43 @@ static char VERSION[] = "XX.YY.ZZ";
 // ***************************************************************************************
 
 // -------------------------------------------------------------------------------------
+// Color class RGB byte, byte, byte
+
+class CRGB
+// RGB varible.
+{
+public: 
+  char r = 0;
+  char g = 0;
+  char b = 0;
+
+  CRGB()
+  {
+	  char r = 0;
+	  char g = 0;
+	  char b = 0;
+  }
+  
+  // cRGB override for passing non varible to varible. 
+  CRGB(char R,char G,char B)
+  {
+	  r = R;
+	  g = G;
+	  b = B;
+  }
+  
+  //Compare two cRGB values.
+  bool operator== (CRGB color)
+  {
+    if ((r == color.r) && (g == color.g) && (b == color.b))
+      return true;
+    else
+      return false;
+  }
+};
+
+
+// -------------------------------------------------------------------------------------
 // All variables to keep track of the interface and program status.  All psssive.
 class system_data
 {
@@ -599,6 +653,9 @@ class system_data
   bool  booPulsesRunning = false;   // Are exta anims running.
   bool  booOverheadRunning = false; // Are exta anims running.
   bool  booHazardRunning = false;   // Are exta anims running.
+
+  CRGB crgbRunningColor = CRGB(0,0,0);    // Start with no running colors.
+  std::string strRunningColor = "Blank";  // 
 
   // store copies of displayed system data
   bool  boolDOORSENSORS[NUM_SWITCHES];
@@ -1290,43 +1347,6 @@ class led_strip
   }
 };
 */
-
-
-// -------------------------------------------------------------------------------------
-// Color class RGB byte, byte, byte
-
-class CRGB
-// RGB varible.
-{
-public: 
-  char r = 0;
-  char g = 0;
-  char b = 0;
-
-  CRGB()
-  {
-	  char r = 0;
-	  char g = 0;
-	  char b = 0;
-  }
-  
-  // cRGB override for passing non varible to varible. 
-  CRGB(char R,char G,char B)
-  {
-	  r = R;
-	  g = G;
-	  b = B;
-  }
-  
-  //Compare two cRGB values.
-  bool operator== (CRGB color)
-  {
-    if ((r == color.r) && (g == color.g) && (b == color.b))
-      return true;
-    else
-      return false;
-  }
-};
 
 
 // -------------------------------------------------------------------------------------
@@ -2567,7 +2587,7 @@ void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, ti
 // Turn Color Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
-  cons.printwait("vdHazard (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  cons.printwait("Pulse Color (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   int intTm;
   int intDurW;
   int intDurG;
@@ -2605,7 +2625,7 @@ void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, ti
 void vdOverheadIllum(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // An overhead light.  Called by the Overhead command from the console. 
 {
-  cons.printwait("vdHazard (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  cons.printwait("Overhead Illumination Color (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   
   // Set the background color.
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fs(0), strip_group.pstrOVERHEAD.fe(0), false, false);
@@ -2617,7 +2637,7 @@ void vdHazard(Console &cons, profile_strip_group strip_group, timed_event teEven
 // Hazard Lights. Called by the Hazard command from the console. 
 // Runs on entire channel. 
 {
-  cons.printwait("vdHazard (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  cons.printwait("Hazard (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   
   /*
   // Position Mask
@@ -2642,7 +2662,7 @@ void vdHazard(Console &cons, profile_strip_group strip_group, timed_event teEven
 void vdPacificaishAnimationADVColor(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Blue Waves. Much more interesting than the old version of this.
 {
-  cons.printwait("vdPacificaishAnimationADVColor (CL: " + std::to_string(strip_group.pstrOVERHEAD.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip_group.pstrOVERHEAD.fs(0)) + " E:" + std::to_string(strip_group.pstrOVERHEAD.fe(0)) + ")");
+  cons.printwait("Pacificaish Color (CL: " + std::to_string(strip_group.pstrOVERHEAD.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip_group.pstrOVERHEAD.fs(0)) + " E:" + std::to_string(strip_group.pstrOVERHEAD.fe(0)) + ")");
 
   
   int R = (2 * crgbColor.r) / 3;
@@ -2715,7 +2735,7 @@ void vdEndAllAnimationsADV(Console &cons, led_strip lsStrips[], int intStripID, 
 void vdDoorOpenAnimationADV00(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printwait("vdDoorOpenAnimationADV00 (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ /*std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) +*/ ")");
+  cons.printwait("Door Open Safety (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ /*std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) +*/ ")");
   int intTm;
   int intDur;
   int intCt;
@@ -2793,7 +2813,7 @@ void vdDoorOpenAnimationADV00(Console &cons, profile_strip strip, timed_event te
 void vdDoorCloseRunningADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
 {
-  cons.printwait("vdDoorCloseRunningADV (CL: " + std::to_string(strip.intCHANNEL) + " S:" + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Running Side Lights (CL: " + std::to_string(strip.intCHANNEL) + " S:" + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
@@ -2814,8 +2834,7 @@ void vdDoorCloseRunningADV(Console &cons, profile_strip strip, timed_event teEve
   //teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(0, 0, 32), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, strip.fe(0), false, false);
   
   // Side lights like big trucks should be ok.
-  teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(6), false, false);
-  //teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(38), strip.fs(40), false, false);
+  teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(12), false, false);
 
   // Tell this animation to stop running on itsself after all prev animations should be done.
   // Basicly, put itself to sleep.
@@ -2823,15 +2842,14 @@ void vdDoorCloseRunningADV(Console &cons, profile_strip strip, timed_event teEve
   teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, 29000, 5000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);
   
   // Same as above
-  teEvent[strip.intCHANNEL].set("Door Close Running Lights (non continue)", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(6), false, true);
-  //teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(38), strip.fs(40), false, true);  
+  teEvent[strip.intCHANNEL].set("Door Close Running Lights (non continue)", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(12), false, true);
 }
 
 
 void vdDoorCloseActiveADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all closed doors at least one other door is open.
 {
-  cons.printwait("vdDoorCloseActiveADV (CL: " + std::to_string(strip.intCHANNEL) + " ID:" + " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Close Safety (CL: " + std::to_string(strip.intCHANNEL) + " ID:" + " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
@@ -2858,7 +2876,7 @@ void vdDoorCloseActiveADV(Console &cons, profile_strip strip, timed_event teEven
 void vdPacificaishAnimationADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Blue Waves. Much more interesting than the old version of this.
 {
-  cons.printwait("vdPacificaishAnimationADV (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Pacificaish (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
@@ -2897,7 +2915,7 @@ void vdPacificaishAnimationADV(Console &cons, profile_strip strip, timed_event t
 void vdCloseOverADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Overhead Lights Off
 {
-  cons.printwait("vdCloseOverADV (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Overhead Lights Off (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Just set all the current over head lights to fade away.
   teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);
@@ -2906,7 +2924,7 @@ void vdCloseOverADV(Console &cons, profile_strip strip, timed_event teEvent[], u
 void vdCoADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
 {
-  cons.printwait("vdCoAD (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Conviencance Lights (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   int intTm;
   int intDur;
   int intSp;
@@ -2957,7 +2975,7 @@ void vdCoADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned
 void vdAddOpenADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn Additional Lights On on to show the door is open.
 {
-  cons.printwait("vdAddOpenADV (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Overhead Alert On(CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   int intTm, intDur, intSp, intCt; 
 
@@ -2987,7 +3005,7 @@ void vdAddOpenADV(Console &cons, profile_strip strip, timed_event teEvent[], uns
 void vdAddCloseADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
-  cons.printwait("vdAddCloseADV (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Overhead Alert Off (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Seach the strip for light colors and set them to end after animation completes.  
   teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);
@@ -4284,7 +4302,7 @@ void processcommandpacificaishcolor(Console &cons, system_data &sdSysData, unsig
   {
     teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaPacificaishColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
   }
-  sdSysData.booPulsesRunning = true;
+  sdSysData.booOverheadRunning = true;
 }
 
 // -------------------------------------------------------------------------------------
@@ -4319,16 +4337,17 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
   if(cons.keywatch.cmdPressed() == true)
   {
     // Color Palettes
-    CRGB crgbWhite  = CRGB(32,32,32);
-    CRGB crgbRed    = CRGB(64,0,0);
-    CRGB crgbGreen  = CRGB(0,64,0);
-    CRGB crgbBlue   = CRGB(0,0,64);
+    CRGB crgbWhite  = CRGB(32,32,32); // W
+    CRGB crgbRed    = CRGB(64,0,0);   // R
+    CRGB crgbGreen  = CRGB(0,64,0);   // G
+    CRGB crgbBlue   = CRGB(0,0,64);   // B
 
-    CRGB crgbPurple = CRGB(32,0,64);
-    CRGB crgbYellow = CRGB(48,48,0);
-    CRGB crgbCyan   = CRGB(0,48,48);
+    CRGB crgbPurple = CRGB(32,0,64);  // U
+    CRGB crgbYellow = CRGB(48,48,0);  // Y
+    CRGB crgbCyan   = CRGB(0,48,48);  // C
 
-    CRGB crgbOrange = CRGB(64,16,0);
+    CRGB crgbOrange = CRGB(64,16,0);  // N
+
     
     // Call routines that match the info on the command line.
     
@@ -4378,8 +4397,17 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
+    // pulse Running
+    if((cons.keywatch.Command.COMMANDLINE == "pp") || (cons.keywatch.Command.COMMANDLINE == "  "))
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.crgbRunningColor);
+      cons.keywatch.cmdClear();
+    }
+
     // pulse White
-    if(cons.keywatch.Command.COMMANDLINE == "pp")
+    if(cons.keywatch.Command.COMMANDLINE == "pw")
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
@@ -4415,7 +4443,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     }
 
     // pulse Purple
-    if((cons.keywatch.Command.COMMANDLINE == "pu") || (cons.keywatch.Command.COMMANDLINE == "  "))
+    if(cons.keywatch.Command.COMMANDLINE == "pu")
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
@@ -4462,8 +4490,17 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
+    // Overhead Running
+    if((cons.keywatch.Command.COMMANDLINE == "oo") || (cons.keywatch.Command.COMMANDLINE == "zz"))
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.crgbRunningColor);
+      cons.keywatch.cmdClear();
+    }
+
     // Overhead White
-    if(cons.keywatch.Command.COMMANDLINE == "oo")
+    if(cons.keywatch.Command.COMMANDLINE == "ow")
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
@@ -4531,6 +4568,71 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
+      cons.keywatch.cmdClear();
+    }
+
+    // Set Running Color
+    if(cons.keywatch.Command.COMMANDLINE == "rw")
+    {
+      sdSysData.strRunningColor = "White";
+      sdSysData.crgbRunningColor = crgbWhite;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+
+    if(cons.keywatch.Command.COMMANDLINE == "rr")
+    {
+      sdSysData.strRunningColor = "Red";
+      sdSysData.crgbRunningColor = crgbRed;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+    
+    if(cons.keywatch.Command.COMMANDLINE == "rg")
+    {
+      sdSysData.strRunningColor = "Green";
+      sdSysData.crgbRunningColor = crgbGreen;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+    
+    if(cons.keywatch.Command.COMMANDLINE == "rb")
+    {
+      sdSysData.strRunningColor = "Blue";
+      sdSysData.crgbRunningColor = crgbBlue;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+    
+    if(cons.keywatch.Command.COMMANDLINE == "ru")
+    {
+      sdSysData.strRunningColor = "Purple";
+      sdSysData.crgbRunningColor = crgbPurple;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+    
+    if(cons.keywatch.Command.COMMANDLINE == "ry")
+    {
+      sdSysData.strRunningColor = "Yellow";
+      sdSysData.crgbRunningColor = crgbYellow;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+    
+    if(cons.keywatch.Command.COMMANDLINE == "rc")
+    {
+      sdSysData.strRunningColor = "Cyan";
+      sdSysData.crgbRunningColor = crgbCyan;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      cons.keywatch.cmdClear();
+    }
+    
+    if(cons.keywatch.Command.COMMANDLINE == "rn")
+    {
+      sdSysData.strRunningColor = "Orange";
+      sdSysData.crgbRunningColor = crgbOrange;
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       cons.keywatch.cmdClear();
     }
 
@@ -4835,6 +4937,10 @@ int loop()
 
   // Define System Data
   system_data sdSystem;
+  
+  // Set Running Color to white.
+  sdSystem.crgbRunningColor = CRGB(32,32,32);
+  sdSystem.strRunningColor = "White";
 
   // FLED
   cons.printi("Initializing Timer");
