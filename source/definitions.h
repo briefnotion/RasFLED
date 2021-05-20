@@ -37,7 +37,7 @@
 #define BOOTEST       false       // Not Implemented - Fading Away
 
 // Default Timer
-#define DEFAULTTIMER      .2   //Minutes
+#define DEFAULTTIMER      5   //Minutes
 
 // -------------------------------------------------------------------------------------
 // LED Strip Declarations
