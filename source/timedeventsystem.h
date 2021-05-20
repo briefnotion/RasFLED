@@ -145,7 +145,11 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                   {
                     if(sdSysData.cdTIMER.is_checked() == false)
                     {
-                      sdSysData.cdTIMER.check();
+                      // Only mark it checked after the last channel is done with it
+                      if (channel == NUM_CHANNELS - 1)
+                      {
+                        sdSysData.cdTIMER.check();
+                      }
                       vdChannelLightFlashColor(cons, strip_group[channel], teEvent, tmeCurrentTime, CRGB(96,96,96));
                     }
                   }
