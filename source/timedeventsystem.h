@@ -115,6 +115,13 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                   break;
                 }
                 */
+                case AnTavdTestAnimation:
+                // Color Specific Channel Pulse
+                {
+                  //vdAdditionalOpenADV01(cons, strip_group[channel].pstrOVERHEAD, teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
+                  vdAdditionalOpenADV01(cons, strip_group[channel].pstrOVERHEAD, teEvent, tmeCurrentTime);
+                  break;
+                }    
 
                 case AnTaChannelFlashColor:
                 // Color Specific Channel Pulse
@@ -135,8 +142,13 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                 {
                   vdChannelLightPulseColorCountdown(cons, strip_group[channel], teEvent, tmeCurrentTime, sdSysData.get_countdown_color());
                   if (sdSysData.cdTIMER.is_triggered() == true)
-                    if(sdSysData.cdTIMER.just_triggered() == true)
-                      vdChannelLightFlashColor(cons, strip_group[channel], teEvent, tmeCurrentTime, CRGB(32,32,32));
+                  {
+                    if(sdSysData.cdTIMER.is_checked() == false)
+                    {
+                      sdSysData.cdTIMER.check();
+                      vdChannelLightFlashColor(cons, strip_group[channel], teEvent, tmeCurrentTime, CRGB(96,96,96));
+                    }
+                  }
                   break;
                 }
 

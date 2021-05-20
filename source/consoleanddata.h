@@ -93,6 +93,12 @@ class system_data
     {
       cdTIMER.trigger_check(tmeCurrent_Time_millis);
     }
+
+    if(cdTIMER.is_active() == true)
+    {
+      booprintbuffer = true;
+      strprintbuffer =  std::to_string(cdTIMER.elapsed_time(tmeCurrent_Time_millis)) + "  " + std::to_string(cdTIMER.is_triggered()) + "  " +  std::to_string(cdTIMER.is_checked()) + "  ";
+    }
   }
 
   // Reference to the door values
@@ -146,13 +152,10 @@ class system_data
       }
 
       // Get % Section complete
-      unsigned long section_time_removed = section * (cdTIMER.dur() * section_size);
+      unsigned long section_time_removed = section * (cdTIMER.duration() * section_size);
       unsigned long section_elaped_time = cdTIMER.elapsed_time(tmeCURRENT_FRAME_TIME) - section_time_removed;
 
-      float pwr = ComputePower(section_elaped_time, cdTIMER.dur() * section_size);
-
-      //booprintbuffer = true;
-      //strprintbuffer = std::to_string(pwr) + "       ";
+      float pwr = ComputePower(section_elaped_time, cdTIMER.duration() * section_size);
 
       // Dither Color and get results
       if (section < running_color_list.size -1)

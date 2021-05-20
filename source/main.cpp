@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.22B
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.23A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,20 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.23_210519
+// *    - Spent the day working on Twinkle and got it working as it was originally 
+// *        programmed.  Still broken though and needs a rewrite.  Works fine until 
+// *        the animation speed is anything more than 0.  All I wanted to do is refresh
+// *        the animations.
+// *    - Changed the ovehead door open animation to pulse yellow. 
+// *    - Changed the default pulses to sweep from front to back top to bottom, 
+// *        hopefully.
+// *    - Reworked and recrated many animations.  Everthing now as a Glitch theme to 
+// *        constantly remind me I need to finish twinkle.
+// *    - Flash needs plenty of work.  It looks garbage enough to catch my attention 
+// *        when the countdown timer runs out
+// *    - Oh, Countdown timer works.  It was an to correct.
+// *
 // * V 0.22_210517
 // *    - Duplicated Pulse Animation to Pulse Animation Running.
 // *    - Introduced a Countdown Timer.
@@ -425,7 +439,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
 
           // Turn on additional lights overhead
           cons.printwait("  Add On Strip:" + std::to_string(-1 + 1));
-          vdAddOpenADV(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
+          vdAdditionalOpenADV01(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
         }
       }
       else
@@ -438,11 +452,11 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
           // Replace Open or Current door animation to closed door animation
           cons.printwait("  Door " + std::to_string(door) + " Close ... ");
           pstrgDoor[door].pstrDOOR.Status = "StDoorCloseA";        
-          vdDoorCloseActiveADV(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
+          vdDoorCloseActiveADV00(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
 
           // Turn off additional lights overhead
           cons.printwait("  Add Off Strtip:" + std::to_string(-1));
-          vdAddCloseADV(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
+          vdAdditionalCloseADV00(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
         }
       }
     }
@@ -480,7 +494,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
 
             // Closed Active Doors animation
             pstrgDoor[door].pstrDOOR.Status = "StDoorCloseA";
-            vdDoorCloseActiveADV(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
+            vdDoorCloseActiveADV00(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
           }
 
           // If  a door is open
@@ -534,7 +548,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
               
               // Turn on Convienance Lights 
               pstrgDoor[door].pstrOVERHEAD.Status = "StOverCloseCon";
-              vdCoADV(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
+              vdCoADV01(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
             }
             else
             {
@@ -652,7 +666,7 @@ void consoleprinthelp(Console &cons)
   //cons.printwait("  Not all colors implemented for all commands.");
   //cons.printwait("");
   cons.printwait("\\   - Turn on and off diagnosis mode.");
-  cons.printwait("a - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs");
+  cons.printwait("t - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs");
   cons.printwait("");
 }
 
@@ -674,6 +688,18 @@ void consoleprintevents(Console &cons, timed_event teEvent[])
       }
     }
   }
+}
+
+// -------------------------------------------------------------------------------------
+// Test Animation
+
+void processtestanimation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+{
+  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  {
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdTestAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+  }
+  sdSysData.booPulsesRunning = true;
 }
 
 // -------------------------------------------------------------------------------------
@@ -1147,6 +1173,14 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // Only accept debug keys if debug is on.
     if (cons.keywatch.getnoreset(KEYDEBUG) == 1)
     {
+      // Run Test Animation
+      if(cons.keywatch.Command.COMMANDLINE[0] == KEYTESTANIM)
+      {
+        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+        processtestanimation(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+        cons.keywatch.cmdClear();
+      }
+
       // LED DOOR CYCLE
       if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDDRCYCL)
       {

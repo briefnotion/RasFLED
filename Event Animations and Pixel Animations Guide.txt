@@ -148,6 +148,45 @@ AnPiPulseTo - Pulses to Color then back back to Color 2
     For Repeat Puslse set ClearOnEnd = True, Repeat = True                    
 
 
+AnPiTwinkle - Pulses to Color then back back to Color 2
+    strIdentity - Animation text identifier for reference.
+    
+    Start 1     - Twinkle Color 1
+    Dest 1      - Twinkle Color 2
+    Start 2     - Twinkle Color 3
+    Dest 2      - Broken up as 3 parameters
+            R   - Chance that the light will twinkle.
+                    1 means 1 of every 1 light gets twinkle.
+                    10 means 1 of every 10 lights get twinkle.
+
+            G   - Percentage of Time Duration Light is Off.
+                  Or, Percentage of Reduced Time Duration Light is On.
+                    1 - 100 Percent
+                    50 means that the light will turn on somewher between
+                        the first half of its light cycle and off before 
+                        the end of its cycle.
+                        Or, its on 50% of its light cycle defined by its
+                        duration.
+                    5 means the light will be on 95% of its cycle
+
+            B   - Amount of colors passed through the Event.
+                    3 colors can be passed. A random color will be picked.
+                    from these  3.
+
+    ClearOnEnd:
+        False   - Keeps the animation running past its expired
+            time so that no animations will overwrite its
+            Destination Color.
+        True    - ?????? Event is cleared. Color will stay until 
+            overwritten by another animation event. 
+
+    Repeat: 
+        False   - Pulse will continously not repeat
+        True    - Pulse will continously repeat. 
+                    !!!!! Colors will mismatch on repeat pass.
+
+    For Repeat Puslse set ClearOnEnd = True, Repeat = True     
+
 Note:
 ??????  - I don't know if this is working right.
           This is untested.

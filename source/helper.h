@@ -75,7 +75,7 @@ class countdown_timer
   private:
   bool ACTIVE = false;
   bool TRIGGERED = false;
-  bool JUST_TRIGGERED = false;
+  bool CHECKED = false;
 
   unsigned long TIME_START;
   unsigned long TIME_END;
@@ -89,7 +89,7 @@ class countdown_timer
     TIME_END = Current_Time_millis + DURATION;
 
     TRIGGERED = false;
-    JUST_TRIGGERED = false;
+    CHECKED = false;
 
     ACTIVE = true;
   }
@@ -106,7 +106,6 @@ class countdown_timer
       if (TRIGGERED == false)
       {
         TRIGGERED = true;
-        JUST_TRIGGERED = true;
       }
     }
   }
@@ -116,30 +115,27 @@ class countdown_timer
     return TRIGGERED;
   }
 
-  bool just_triggered()
+  void check()
   {
-    if (JUST_TRIGGERED == true)
-    {
-      JUST_TRIGGERED = false;
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    CHECKED = true;
+  }
+
+  bool is_checked()
+  {
+    return CHECKED;
   }
 
   void end()
   {
     ACTIVE = false;
     TRIGGERED = false;
-    JUST_TRIGGERED = false;
+    CHECKED = false;
     TIME_START = 0;
     TIME_END = 0;
     DURATION = 0;
   }
 
-  unsigned long dur()
+  unsigned long duration()
   {
     return DURATION;
   }

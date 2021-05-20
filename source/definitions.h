@@ -31,12 +31,13 @@
 #define KEYLEDTEST        'c' // Turn all LEDs on
 #define KEYLEDDRCYCL      't' // Cycle through the doors
 #define KEYLEDUPLW        'l' // Cycle Upper or Lower limits of LEDs
+#define KEYTESTANIM       'a' // Cycle Upper or Lower limits of LEDs
 
 // Testing and Debugging
 #define BOOTEST       false       // Not Implemented - Fading Away
 
 // Default Timer
-#define DEFAULTTIMER      5   //Minutes
+#define DEFAULTTIMER      .2   //Minutes
 
 // -------------------------------------------------------------------------------------
 // LED Strip Declarations
@@ -203,6 +204,9 @@
 
 // -------------------------------------------------------------------------------------
 // Effects
+
+//  Test Animation  
+#define AnTavdTestAnimation     50
 
 //  Normal Effects  
 #define AnTavdPacificaish       60

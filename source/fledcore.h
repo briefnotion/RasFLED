@@ -526,7 +526,6 @@ class timed_event
       case AnPiTwinkle:
         // Random Sparkling Twinkly Lights 
         {
-
           if (tmeCurrentTime >= tmeAnimTime + EventInfo.intDURATION)
           {
             tmpColor.complete = true;
@@ -545,7 +544,9 @@ class timed_event
 
             // We will need a signed Elapsed time.  Half as small, but we need to 
             //  subtract things from it. 
-            int NewElapsedTime = tmeElapsed;
+            unsigned long NewTimeStart = 0;
+            unsigned long NewElapsedTime = tmeElapsed;
+            int NewDuration = EventInfo.intDURATION;
 
             // Generate Random Number Seed.  The random numbers generated from 
             //  the picked position is sequential from the start. Also, the generated 
@@ -555,7 +556,8 @@ class timed_event
             //  randomSeed(tmeAnimTime + intEvent + intLED);
 
             // Pick 1 of 3 colors and determine if we will turn on the light.
-            unsigned long seed = tmeAnimTime + intLED + intEvent;
+            // unsigned long seed = tmeAnimTime + intLED + intEvent;
+            unsigned long seed = (unsigned long)(intLED) + tmeAnimTime;
             char  Odds = sRND.getB(seed, intOdds);
 
             // Determine if the light was lucky enough to be turned on then assign it 
@@ -563,20 +565,20 @@ class timed_event
             if (Odds == 0)
             {
 
-              // If the light will not be illuminated during its entire duration cycle, 
+              // If the light will not be illuminated during its "entire" duration cycle, 
               // then pick a random time it is to start its illumination. 
               if (intTimeReduce != 0)
               {
                 // Pick a random delay. 
-                long NewTimeStart = sRND.getUL(seed, floor(EventInfo.intDURATION * (float)intTimeReduce / 100)); 
+                NewTimeStart = sRND.getUL(seed, floor(EventInfo.intDURATION * (float)intTimeReduce / 100)); 
 
                 // Calculate how much long the light will on from the percentage of 
                 //  of the duration. 
                 intTimeReduce = 100 - intTimeReduce;
-                EventInfo.intDURATION = EventInfo.intDURATION * (float)(intTimeReduce) / 100;
+                NewDuration = (int)(float)(EventInfo.intDURATION) * (float)(intTimeReduce) / 100;
 
                 // Figure out the new time to turn on the light.
-                NewElapsedTime = NewElapsedTime - NewTimeStart;
+                NewElapsedTime = tmeCurrentTime - tmeAnimTime - NewTimeStart;
               }
 
 
@@ -598,18 +600,16 @@ class timed_event
 
               // Continue with the lights illumination if it was lucky enough to be 
               //  turned on and if it was lucky enough to fall within the time to be turned on.
-              if ((NewElapsedTime >= 0) && (NewElapsedTime <= NewElapsedTime + EventInfo.intDURATION))
+              if ((NewElapsedTime >= 0) && (NewElapsedTime <= NewElapsedTime + NewDuration))
               {
                 // Modified Pulse Routine ----  Pulse routine used offten.  I should function it. 
-                if ((NewElapsedTime * 2) <= (EventInfo.intDURATION))
+                if ((NewElapsedTime * 2) <= (NewDuration))
                 { 
-                  // Not working with ComputePower function.              
-                  fltPower = (float)(NewElapsedTime) * 2 / ((float)EventInfo.intDURATION);
+                  fltPower = ComputePowerHalfBot(NewElapsedTime,NewDuration);
                 }
                 else
                 {
-                  // Not working with ComputePower function.
-                  fltPower = 1 - (((float)((NewElapsedTime * 2) - EventInfo.intDURATION) / (float)EventInfo.intDURATION));
+                  fltPower = ComputePowerHalfTop(NewElapsedTime,NewDuration);
                 }
 
                 // No Negative Colors
