@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.23A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.24A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,11 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.24_210514
+// *    - A few days of testing done. 
+// *    - Modified a few of the animations.
+// *    - Flash color flash animation can be called with 'f' command.
+// *
 // * V 0.23_210519
 // *    - Spent the day working on Twinkle and got it working as it was originally 
 // *        programmed.  Still broken though and needs a rewrite.  Works fine until 
@@ -660,13 +665,14 @@ void consoleprinthelp(Console &cons)
   cons.printwait("");
   cons.printwait("pX  - Pulse Anim         (X is the color)");
   cons.printwait("oX  - Overhead Anim      (X is the color)");
+  cons.printwait("fX  - Flash Anim      (X is the color)");
   cons.printwait("X`  - End Command (X is the Animation)");
   cons.printwait("  Double animations will be with Running Color.");
   cons.printwait("");
   //cons.printwait("  Not all colors implemented for all commands.");
   //cons.printwait("");
   cons.printwait("\\   - Turn on and off diagnosis mode.");
-  cons.printwait("t - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs");
+  cons.printwait("t - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs   a - not spec");
   cons.printwait("");
 }
 
@@ -864,13 +870,85 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
     // -------------------------------------------------------------------------------------
     // FLASH
-    // flash White
 
+    // flash Running
+    if(cons.keywatch.Command.COMMANDLINE == "ff")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
+      cons.keywatch.cmdClear();
+    }
+
+    // flash White
     if(cons.keywatch.Command.COMMANDLINE == "fw")
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+      cons.keywatch.cmdClear();
+    }
+
+    // flash Red
+    if(cons.keywatch.Command.COMMANDLINE == "fr")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
+      cons.keywatch.cmdClear();
+    }
+
+    // flash Green
+    if(cons.keywatch.Command.COMMANDLINE == "fg")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
+      cons.keywatch.cmdClear();
+    }
+
+    // flash Blue
+    if(cons.keywatch.Command.COMMANDLINE == "fb")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
+      cons.keywatch.cmdClear();
+    }
+
+    // flash Purple
+    if(cons.keywatch.Command.COMMANDLINE == "fu")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
+      cons.keywatch.cmdClear();
+    }
+  
+    // flash Yellow
+    if(cons.keywatch.Command.COMMANDLINE == "fy")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
+      cons.keywatch.cmdClear();
+    }
+    
+    // flash Cyan
+    if(cons.keywatch.Command.COMMANDLINE == "fc")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
+      cons.keywatch.cmdClear();
+    }
+
+    // flash Orange
+    if(cons.keywatch.Command.COMMANDLINE == "fn")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
       cons.keywatch.cmdClear();
     }
 

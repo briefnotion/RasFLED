@@ -126,7 +126,7 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                 case AnTaChannelFlashColor:
                 // Color Specific Channel Pulse
                 {
-                  vdChannelLightFlashColor(cons, strip_group[channel], teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
+                  vdChannelLightFlashColor00(cons, strip_group[channel], teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
                   break;
                 }
 
@@ -150,7 +150,7 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                       {
                         sdSysData.cdTIMER.check();
                       }
-                      vdChannelLightFlashColor(cons, strip_group[channel], teEvent, tmeCurrentTime, CRGB(96,96,96));
+                      vdChannelLightFlashColor00(cons, strip_group[channel], teEvent, tmeCurrentTime, CRGB(96,96,96));
                     }
                   }
                   break;

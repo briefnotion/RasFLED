@@ -346,7 +346,7 @@ void vdStripOverOff(Console &cons, profile_strip_group strip_group, timed_event 
 
 // Console Called Animations 
 
-void vdChannelLightFlashColor(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+void vdChannelLightFlashColor00(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Turn Color Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
@@ -355,7 +355,6 @@ void vdChannelLightFlashColor(Console &cons, profile_strip_group strip_group, ti
   int intDurW;
   int intDurG;
   int intCt;
-  int intSp;
 
   int intDelay;
 
@@ -366,96 +365,45 @@ void vdChannelLightFlashColor(Console &cons, profile_strip_group strip_group, ti
   crgbColor4.b = crgbColor.b / 3;
 
   // Clear and Pulse colors background to bright then param color, starting with the center.
-  intTm = 50; intDurW = 10000; intDurG = 5000; intSp = 0; intCt = 36;
-  intDelay = intAnTmDly(intTm, 0, strip_group.pstrDOOR.intSIZE, intSp);
+  intTm = 50; intDurW = 2000; intDurG = 5000; 
+  
+  int intSpBack = 0; 
+  int intSpAntiPuls = 15; 
+  int intDurAnti = 150;
+  
+  intCt = 36;
+  //intDelay = intAnTmDly(intTm, 0, strip_group.pstrDOOR.intSIZE, intSp);
 
   // 1
   // Door Color with White
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50, intDurW, 0, AnEvSweep, AnPiTwinkle, false, crgbColor, CRGB(0, 200, 0), CRGB(0, 0, 200), CRGB(1, 90, 1), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50, intDurW, 0, AnEvSweep, AnPiTwinkle, false, crgbColor, CRGB(0, 200, 0), CRGB(0, 0, 200), CRGB(1, 90, 1), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50, intDurW, intSpBack, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50, intDurW, intSpBack, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
 
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 52, intDurW, 0, AnEvSweep, AnPiTwinkle, true, crgbColor, CRGB(0, 200, 0), CRGB(0, 0, 200), CRGB(1, 90, 1), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 52, intDurW, 0, AnEvSweep, AnPiTwinkle, true, crgbColor, CRGB(0, 200, 0), CRGB(0, 0, 200), CRGB(1, 90, 1), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
-  
+  // Forward ---
+  // Anti Red
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (1*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(0, 128, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (1*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(0, 128, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
 
-  // Disrupt
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fs(0), strip_group.pstrOVERHEAD.fe(0), false, true);
-  
-  intTm = intTm + 4000;
+  // Anti Green
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (2*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 0, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (2*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 0, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
 
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fs(0), strip_group.pstrOVERHEAD.fe(0), false, true);
-  
+  // Anti Blue
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (3*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (3*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
 
-  intTm = intTm + 4000;
+  // Backward ---
+  // Anti Red
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (1*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(0, 128, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (1*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(0, 128, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fb(0), strip_group.pstrOVERHEAD.ft(0), false, true);
 
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fs(0), strip_group.pstrOVERHEAD.fe(0), false, true);
+  // Anti Green
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (2*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 0, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (2*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 0, 128), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fb(0), strip_group.pstrOVERHEAD.ft(0), false, true);
 
-
-  intTm = intTm + 4000;
-
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fs(0), strip_group.pstrOVERHEAD.fe(0), false, true);
-
-
-  intTm = intTm + 4000;
-
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, 2000, 100, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fs(0), strip_group.pstrOVERHEAD.fe(0), false, true);  
-
-  intTm = intTm + 4000;
-
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fs(0), strip_group.pstrDOOR.fe(0), false, true);
-  // Overhead Color with White
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
- 
-  // Door Color Fadeout
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fs(0), strip_group.pstrDOOR.fe(0), false, true);
-  // Overhead Color Fadeout
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
-
-  // 2
-  // Door Color with White
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 4 * intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fs(0), strip_group.pstrDOOR.fe(0), false, true);
-  // Overhead Color with White
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime,  4 * intTm + intDelay, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
- 
-  // Door Color Fadeout
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime,  6 * intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fs(0), strip_group.pstrDOOR.fe(0), false, true);
-  // Overhead Color Fadeout
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime,  6 * intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
-
-  // 3
-  // Door Color with White
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 12 * intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fs(0), strip_group.pstrDOOR.fe(0), false, true);
-  // Overhead Color with White
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime,  12 * intTm + intDelay, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
- 
-  // Door Color Fadeout
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime,  12 * intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fs(0), strip_group.pstrDOOR.fe(0), false, true);
-  // Overhead Color Fadeout
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime,  12 * intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
-
-
-  // Set the pulse to timed repeat
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+  // Anti Blue
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (3*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.fb(0), strip_group.pstrDOOR.ft(0), false, true);
+  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50 + (3*intDurAnti), intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fb(0), strip_group.pstrOVERHEAD.ft(0), false, true);
 }
 
 void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
@@ -469,6 +417,7 @@ void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, ti
   int intSp;
 
   int intDelay;
+  int intDelayGlitchAnti;
 
   // Set the fadeout color 
   CRGB crgbColor4;
@@ -480,6 +429,7 @@ void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, ti
   intTm = 100; intDurW = 500; intDurG = 1500; intSp = 30; 
 
   intDelay = intAnTmDly(intTm, 0, strip_group.pstrDOOR.intSIZE, intSp);
+  intDelayGlitchAnti = intAnTmDly(intTm + intDelay, intDurW/8, strip_group.pstrOVERHEAD.intSIZE, intSp/4);
 
   // Door Color with White and Trail Color
   teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
@@ -487,7 +437,7 @@ void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, ti
   // Glitch
   teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 20, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(96, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
   teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 40, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 96), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW/8, intSp/4, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intDelayGlitchAnti, intDurW/8, intSp/4, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
 
   // Overhead Color with White and Trail Color
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
@@ -514,6 +464,7 @@ void vdChannelLightPulseColorCountdown(Console &cons, profile_strip_group strip_
   int intDurW;
   int intDurG;
   int intSp;
+  int intDelayGlitchAnti;
 
   int intDelay;
 
@@ -527,6 +478,7 @@ void vdChannelLightPulseColorCountdown(Console &cons, profile_strip_group strip_
   intTm = 100; intDurW = 500; intDurG = 1500; intSp = 30; 
 
   intDelay = intAnTmDly(intTm, 0, strip_group.pstrDOOR.intSIZE, intSp);
+  intDelayGlitchAnti = intAnTmDly(intTm + intDelay, intDurW/8, strip_group.pstrOVERHEAD.intSIZE, intSp/4);
 
   // Door Color with White and Trail Color
   teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
@@ -534,7 +486,7 @@ void vdChannelLightPulseColorCountdown(Console &cons, profile_strip_group strip_
   // Glitch
   teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 20, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(96, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
   teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 40, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 96), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW/8, intSp/4, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intDelayGlitchAnti, intDurW/8, intSp/4, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
 
   // Overhead Color with White and Trail Color
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
@@ -934,6 +886,9 @@ void vdCoADV01(Console &cons, profile_strip strip, timed_event teEvent[], unsign
   int counterdur = 50;
   int countersp  = 20;
 
+  int intSpAntiPuls = 15; 
+  int intDurAnti = 150;
+
   // Repeat Pulse
   intTm = 50; intDur = 500; intSp = 0; intCt = strip.intSIZE;
   int intMid = strip.intSIZE / 2;
@@ -944,19 +899,19 @@ void vdCoADV01(Console &cons, profile_strip strip, timed_event teEvent[], unsign
   intTm = intAnTmDly(intTm, intDur, strip.intSIZE, intSp);
   intDur = 500; intSp = 0;
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbRed, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbRed, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
   teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true);
 
   intTm = intAnTmDly(intTm, intDur, strip.intSIZE, intSp);
   intDur = 500; intSp = 0;
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbGreen, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbGreen, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
   teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true);
 
   intTm = intAnTmDly(intTm, intDur, strip.intSIZE, intSp);
   intDur = 500; intSp = 0;
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbBlue, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbBlue, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
   teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true);
 
   intDur = 4000; intSp = 0;
@@ -965,9 +920,11 @@ void vdCoADV01(Console &cons, profile_strip strip, timed_event teEvent[], unsign
   
   //intTm = intAnTmDly(intTm, intDur, strip.intSIZE, intSp);
   intDur = 17000; intSp = 0;
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbOrange, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp + 1, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbOrange, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
   teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true);
   teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true);
 }
 
 

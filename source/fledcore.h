@@ -724,12 +724,13 @@ class timed_event
                   //  a few more clock cycles. e.g. PulseDither and PulseToDither 
                   //  can be created.  But not the Twinkle.  Twinkle is passing direct
                   //  colors. 
-
+                  /*
                   // Preprocess Dest 2 for dynamic DEST2 on Pixel Fade.
                   if (teDATA[event].bytLEDANIMATION == AnPiFadeDith)
                   {
-
-                  }
+                    // Yep, still thinking about this.  
+                    // Not here anymore, but still here.  In Limbo.
+                  }*/
                   // -------------------------------------------------------------------
 
                   switch (teDATA[event].bytANIMATION)
@@ -776,7 +777,7 @@ class timed_event
         // But only if it changed.
         if (booPixelColorChanged == true)
         {
-          // Calclulate the color of LED by adding the colors togegher.
+          // Calclulate the color of LED by adding the colors together.
 
           // If the lights are out range, either put them at full on or full off.
           if (bigcrgbNewColor.r > 255)
