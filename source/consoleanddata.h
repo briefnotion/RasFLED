@@ -86,6 +86,9 @@ class system_data
   bool  boolDOORSENSORS[NUM_SWITCHES];
   int   intEVENTCOUNTS[NUM_SWITCHES];
 
+  // Files
+  bool booRunning_State_File_Dirty = false;
+
   void store_Current_Frame_Time(unsigned long tmeCurrent_Time_millis)
   {
     tmeCURRENT_FRAME_TIME = tmeCurrent_Time_millis;
@@ -180,6 +183,7 @@ class system_data
   {
     running_color_list.color[0] = Running_Color;
     running_color_list.strRunningColor = strColor;
+    booRunning_State_File_Dirty = true;
   }
 
   void start_timer(int Seconds)

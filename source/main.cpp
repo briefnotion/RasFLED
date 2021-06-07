@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.24A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.25A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -17,7 +17,7 @@
 // *
 // *            Coder:  Robert Lebowski
 // *    Support Coder:  None
-// *  --- Apnd:
+// *  --- And:
 // *    Other Sources:  None
 // *
 // *  Description:
@@ -56,6 +56,16 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.25_210607
+// *    - Starting implementing the files system.  At the moment, the system will only 
+// *        remember the running colors through a reset.  It's only groundwork.
+// *    - Made the flash more visible.
+// *    - Added some randomness to the pulse animation.
+// *    - changed "pp" command to run pulses on running colors.
+// *    - Adjusted the start time of animation end to hopefully correct a problem 
+// *        causing the countdown timer pulse not to completely end when a door was
+// *        opened.
+// *
 // * V 0.24_210514
 // *    - A few days of testing done. 
 // *    - Modified a few of the animations.
@@ -339,6 +349,8 @@
 // *    - Trace Flicker that occurs when sleep = 0 and doors are closing.
 // *    - Timed pulse lights.
 // *    - Phase out all tmeCurrentTime call towards sdSysData.tmeCURRENT_FRAME_TIME.
+// *    - Revisit previous implementation of vectors.  "pop_back"s, "first", "last"s 
+// *        and queues exist.  Had no idea.
 // *
 // ***************************************************************************************
 
@@ -384,6 +396,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // RASFled related header files
 #include "definitions.h"
 #include "helper.h"
+#include "files.h"
 #include "consoleanddata.h"
 #include "fledcore.h"
 #include "timedeventsystem.h"
@@ -716,7 +729,7 @@ void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long
 {
   for (int channel = 0; channel < NUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 300, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
   }
   sdSysData.booPulsesRunning = false;
 }
@@ -965,12 +978,21 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     }
 
     // pulse Running
-    if((cons.keywatch.Command.COMMANDLINE == "pp") || (cons.keywatch.Command.COMMANDLINE == "  "))
+    if(cons.keywatch.Command.COMMANDLINE == "  ")
     {
       // Keep values below 128
       sdSysData.start_timer(DEFAULTTIMER * 60);
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, teEvent);
+      cons.keywatch.cmdClear();
+    }
+
+    // pulse Running Color
+    if(cons.keywatch.Command.COMMANDLINE == "pp")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
       cons.keywatch.cmdClear();
     }
 
@@ -1504,24 +1526,34 @@ int loop()
   pullUpDnControl(SWITCH_PINs2, PUD_UP);
   pullUpDnControl(SWITCH_PINs3, PUD_UP);
 
-  // Define System Data
+  // ---------------------------------------------------------------------------------------
+  // Define System Data and Console
   system_data sdSystem;
   
   // Set Running Color to white.
   sdSystem.init_running_color_list();
   sdSystem.set_running_color(CRGB(32,32,32),"White");
 
+  // Loading Running State
+  string strRunning_State_Filename = "./runningstate.cfg";
+  cons.printi("Loading running state ...");
+  bool booload = false;
+  // yes, it resaves the file.  as is for now.
+  booload = load_saved_running_state(cons, sdSystem, strRunning_State_Filename);
+
+  // ---------------------------------------------------------------------------------------
   // FLED
   cons.printi("Initializing Timer");
   FledTime tmeFled;
   tmeFled.set();
   
+  // ---------------------------------------------------------------------------------------
   // Light Strip Event System
-  cons.printi("Initializing Channels");
+  cons.printi("Initializing System Event Channels");
   timed_event teEvent[NUM_CHANNELS];
 
 
-
+  // ---------------------------------------------------------------------------------------
   // Define the Supid Random Numbers
   cons.printi("Initializing Random Number Generator");
   stupid_random sRND;
@@ -1741,6 +1773,15 @@ int loop()
       cons.output(sdSystem);
       cons.update_displayed_time(tmeCurrentMillis);
       sdSystem.refresh();
+
+      // Also delayed, File maintenance.
+      if (sdSystem.booRunning_State_File_Dirty == true)
+      {
+        save_running_state(cons, sdSystem, strRunning_State_Filename);
+
+        // set false even if there was a save error to avoid repeats.
+        sdSystem.booRunning_State_File_Dirty = false;
+      }
     }
 
     // ---------------------------------------------------------------------------------------

@@ -51,6 +51,31 @@ public:
     else
       return false;
   }
+
+  std::string CRGBtoString()
+  {
+    return (std::to_string(r) + "," + std::to_string(g) + "," + std::to_string(b));
+  }
+
+  CRGB StringtoCRGB(std::string strCRGB)
+  {
+    // Expected input: string with 3 numbers seperated by commas.
+    int c1, c2;
+    int r, g, b = 0;
+
+    c1 = strCRGB.find(",");
+    if (c1!=std::string::npos)
+    {
+      c2 = strCRGB.find(",",c1+1);
+      if (c2!=std::string::npos);
+      {
+        r = atoi(strCRGB.substr(0,c1).c_str()); 
+        g = atoi(strCRGB.substr(c1+1,c2-c1-1).c_str());
+        b = atoi(strCRGB.substr(c2+1,strCRGB.length()-1).c_str());
+      }
+    }
+    return CRGB(r,g,b);
+  }
 };
 
 class bigCRGB
