@@ -24,6 +24,64 @@
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
 // ***************************************************************************************
+//sdSystem.CONFIG.i
+class configuration
+{
+  public:
+  // -------------------------------------------------------------------------------------
+  // LED Strip Setup - LED Size (count)
+  int iNUM_LEDSs0    = 122;
+  int iNUM_LEDSs1    = 118;
+
+  int iLED_Size_Test_Strip                = 63;
+
+  int iLED_Size_Door_Back_Driver          = 70;
+  int iLED_Size_Door_Back_Passenger       = 70;
+  int iLED_Size_Door_Front_Driver         = 66;
+  int iLED_Size_Door_Front_Passenger      = 66;
+
+  int iLED_Size_Overhead_Back_Driver      = 52;
+  int iLED_Size_Overhead_Back_Passenger   = 52;
+  int iLED_Size_Overhead_Front_Driver     = 52;
+  int iLED_Size_Overhead_Front_Passenger  = 52;
+
+  // -------------------------------------------------------------------------------------
+  // Hardware to Software definitions
+  // -------------------------------------------------------------------------------------
+  
+  // -------------------------------------------------------------------------------------
+  // Raspberry Pi switch pin for doors and switches. Defined as WiringPi id.
+  // console: gpio -v       (check installation)
+  // console: gpio readall  (check wiring pin numbers)
+
+  // On off buttons, door sensors, switches.
+  int iSWITCH_PINs0       = 22;      // GPIO.22 - Pin 31 - Hardware Open Close Door Sensor 0
+  int iSWITCH_PINs1       = 23;      // GPIO.23 - Pin 33 - Hardware Open Close Door Sensor 1
+  int iSWITCH_PINs2       = 24;      // GPIO.24 - Pin 35 - Hardware Open Close Door Sensor 2
+  int iSWITCH_PINs3       = 25;      // GPIO.25 - Pin 37 - Hardware Open Close Door Sensor 3
+
+  int iAUXDRLINGERFRT     = 15000;    // How long the Front Door lights stay on after close
+  int iAUXDRLINGERBCK     = 25000;    // How long the Back Door lights stay on after close
+
+  // -------------------------------------------------------------------------------------
+  // Door Switch Reference
+  int iNUM_CHANNELS       = 4;   // Amount of LED strips we will be controlling.
+  int iNUM_TIMED_EVENTS   = 50;  // Untill I can remember how LL, this is being
+  //  Also, total number of this will be multiplied by the
+  //  amount of LED strips you have setup.  Watch your memory.
+  int iNUM_SWITCHES       = 4;   
+
+  int iBRIGHTNESS         = 96;  //96  Using Example Code.  Max unknown
+  int iFRAMES_PER_SECOND  = 50; // Will not be necessary, but keeping, for now, just in 
+  //  case.
+
+  // -------------------------------------------------------------------------------------
+  // Door Switch Reference
+  int iDoor_Back    = 0; // Back Door Switch
+  int iDoor_Front   = 1; // Front Door Switch
+  int iDoor_Aux     = 2; // Aux Door Switch 
+};
+
 
 // -------------------------------------------------------------------------------------
 // All variables to keep track of the interface and program status.  All psssive.
@@ -56,6 +114,8 @@ class system_data
   public:
   unsigned long tmeCURRENT_FRAME_TIME = 0;
 
+  configuration CONFIG;
+
   stat_data fltCOMPUTETIME;   // Loop time spent while only proceessing.
   stat_data fltSLEEPTIME;     // Calculated time needed to sleep.
   stat_data fltCYCLETIME;     // Amount of time to complete an entire cycle.
@@ -83,8 +143,8 @@ class system_data
   running_colors running_color_list;
 
   // store copies of displayed system data
-  bool  boolDOORSENSORS[NUM_SWITCHES];
-  int   intEVENTCOUNTS[NUM_SWITCHES];
+  bool *boolDOORSENSORS = (bool*) malloc(CONFIG.iNUM_SWITCHES * sizeof(bool));;
+  int  *intEVENTCOUNTS = (int*) malloc(CONFIG.iNUM_SWITCHES * sizeof(int));;
 
   // Files
   bool booRunning_State_File_Dirty = false;
@@ -107,7 +167,7 @@ class system_data
   // Reference to the door values
   void store_door_switch_states(bool switches[])
   {
-    for(int x=0; x < NUM_SWITCHES; x++)
+    for(int x=0; x < CONFIG.iNUM_SWITCHES; x++)
     {
       boolDOORSENSORS[x] = switches[x];
     }
@@ -125,6 +185,11 @@ class system_data
   CRGB get_running_color()
   {
     return running_color_list.color[0];
+  }
+
+  string get_running_color_str()
+  {
+    return running_color_list.strRunningColor;
   }
 
   CRGB get_countdown_color()

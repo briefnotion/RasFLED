@@ -17,10 +17,13 @@
 #include <iostream>
 #include <string.h>
 #include <queue>
+#include <vector>
 
 
 // RASFled related header files
 #include "helper.h"
+#include "stringthings.h"
+
 #include "consoleanddata.h"
 
 
@@ -124,6 +127,112 @@ class QUEUE_TO_FILE
     }
 };
 
+class SETTING
+{
+    private:
+    
+    string ID = "";
+    vector<string> Value;
+
+    public:
+
+    void set(string strSetting, vector<string> &strValue)
+    {
+        ID = strSetting;
+        Value = strValue;
+    }
+
+    string id()
+    {
+        return ID;
+    }
+
+    
+    string value(int at)
+    {
+        if(at < Value.size())
+        {
+            return Value.at(at);
+        }
+        else
+        {
+            return ("");
+        }
+    }
+    
+
+    bool check(string strSetting)
+    {
+        if(ID == strSetting)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+};
+
+class SETTINGS
+{
+    private:
+    vector<SETTING> Settings;
+
+    public:
+
+    void set(string strSetting, vector<string> &strValues)
+    {
+        SETTING setNewSetting;
+        setNewSetting.set(strSetting, strValues);
+        Settings.push_back(setNewSetting);
+    }
+
+    string value_at(int at, int intIndex)
+    {
+        return Settings.at(at).value(intIndex);
+    }
+
+    int exits_at(string strSetting)
+    {
+        int at = -1;
+        for (int x=0; x<Settings.size(); x++)
+        {
+            if(Settings.at(x).check(strSetting) == true)
+            {
+                at = x;
+            }
+        }
+        return at;
+    }
+
+    void store(SETTING &NewSetting)
+    {   
+        Settings.push_back(NewSetting);
+    }
+    
+    
+    void parse_and_save_setting(string strSettingLine)
+    {
+        WORDLINE wlLine;
+        SETTING setting;
+        string strsetting = "";
+        vector<string> values;
+
+        wlLine.storeline(strSettingLine);
+
+        strsetting = wlLine.pop();
+
+        while(wlLine.size() > 0)
+        {
+            values.push_back(wlLine.pop());
+        }
+
+        setting.set(strsetting, values);
+        Settings.push_back(setting);
+    }
+};
+
 // -------------------------------------------------------------------------------------
 
 void dump_qfile(Console &cons, queue<string> &qFile)
@@ -142,15 +251,35 @@ bool load_saved_running_state(Console &cons, system_data &sdSysData, string strF
     FILE_TO_QUEUE ftqFile;
     queue<string> qFile;
 
+    // !!! NEED TO KICK OUT BLANK LINES !!!
+
+    SETTINGS tmpSettings;
+
     if (ftqFile.booRead_File(strFilename , qFile) == true)
     {
         CRGB color;
         cons.printi("  " + strFilename + " read suceesss");
 
-        color = color.StringtoCRGB(qFile.front());
+        while(qFile.empty()==false)
+        {
+            tmpSettings.parse_and_save_setting(qFile.front());
+            qFile.pop();
+        }
 
-        cons.printi("  Setting running color to CRGB(" + to_string(color.r) + "," + to_string(color.g) + "," + to_string(color.b) + "), Unknown");
-        sdSysData.set_running_color(color , "Unknown");   
+        int loc = tmpSettings.exits_at("runningcolor");
+        if(loc >= 0)
+        {
+            color = color.StringtoCRGB(tmpSettings.value_at(loc,0));
+            cons.printi("  Setting running color to CRGB(" + to_string(color.r) + "," + to_string(color.g) + "," + to_string(color.b) + "), " + tmpSettings.value_at(loc,1));
+            sdSysData.set_running_color(color , tmpSettings.value_at(loc,1));   
+        }
+        else
+        {
+            color = CRGB(32,32,32);
+            cons.printi("  Creating setting running color to CRGB(" + to_string(color.r) + "," + to_string(color.g) + "," + to_string(color.b) + "), " + "White");
+            sdSysData.set_running_color(color , "White");   
+        }
+        
     }
     else
     {
@@ -168,7 +297,7 @@ bool save_running_state(Console &cons, system_data &sdSysData, string strFilenam
     queue<string> qFile;
 
     // build qFile.
-    qFile.push(sdSysData.get_running_color().CRGBtoString());
+    qFile.push("runningcolor " + sdSysData.get_running_color().CRGBtoString() + " " + sdSysData.get_running_color_str());
 
     if(qtfFile.booSave_File(strFilename, qFile) == true)
     {

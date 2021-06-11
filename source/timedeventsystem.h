@@ -48,7 +48,7 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
 // Guide: (tmeCurrentTime, tmeStartInTime, intDuration, intSpeed, bytAnimation, bytLEDAnimation, crgbStart1, crgbDest1, crgbStart2, crgbDest2, intStartPos, intEndPos, booRepeat, booClearOnEnd)
 {
 
-  for (int channel = 0; channel < NUM_CHANNELS; channel++)
+  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
     if (teEvent[channel].teDATA.size() > 0)
     {
@@ -146,7 +146,7 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                     if(sdSysData.cdTIMER.is_checked() == false)
                     {
                       // Only mark it checked after the last channel is done with it
-                      if (channel == NUM_CHANNELS - 1)
+                      if (channel == sdSysData.CONFIG.iNUM_CHANNELS - 1)
                       {
                         sdSysData.cdTIMER.check();
                       }
