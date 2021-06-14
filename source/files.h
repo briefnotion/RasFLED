@@ -235,6 +235,15 @@ class SETTINGS
 
 // -------------------------------------------------------------------------------------
 
+
+void check_create_working_dir(Console &cons)
+{
+    cons.printi("Checking File System");
+    cons.printi("  CHECK NOT IMPLEMENTED");
+    string dir = FILES_DIRECTORY;
+    cons.printi("    You must manually create " + dir + " if first time run.");
+}
+
 void dump_qfile(Console &cons, queue<string> &qFile)
 // As the name implies.  Clears it out also.  For testing.
 {
@@ -305,7 +314,7 @@ bool save_running_state(Console &cons, system_data &sdSysData, string strFilenam
     }
     else
     {
-        cons.printi("  " + strFilename + " write unknown");
+        cons.printi("  " + strFilename + " write failed.");
     }
 
     return true;

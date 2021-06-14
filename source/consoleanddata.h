@@ -29,10 +29,6 @@ class configuration
 {
   public:
   // -------------------------------------------------------------------------------------
-  // LED Strip Setup - LED Size (count)
-  int iNUM_LEDSs0    = 122;
-  int iNUM_LEDSs1    = 118;
-
   int iLED_Size_Test_Strip                = 63;
 
   int iLED_Size_Door_Back_Driver          = 70;
@@ -45,6 +41,13 @@ class configuration
   int iLED_Size_Overhead_Front_Driver     = 52;
   int iLED_Size_Overhead_Front_Passenger  = 52;
 
+  // Computed LED Count
+  int iLED_Count_Back_Driver = 0;
+  int iLED_Count_Front_Driver = 0;
+  int iLED_Count_Back_Passenger = 0;
+  int iLED_Count_Front_Passenger = 0;
+
+  
   // -------------------------------------------------------------------------------------
   // Hardware to Software definitions
   // -------------------------------------------------------------------------------------

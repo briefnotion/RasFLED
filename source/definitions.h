@@ -22,6 +22,11 @@
 #define SCREENUPDATEDELAY 100
 #define CONSOLESPLITSIZE  6
 
+// Files
+#define FILES_DIRECTORY           "/etc/RasFLED/"
+//#define FILES_DIRECTORY           "./"
+#define FILES_RUNNING_STATE_SAVE  "runningstate.cfg"
+
 // Key Mapping
 #define KEYEXIT           'X'
 #define KEYRESIZE         '*' // Key Resize
@@ -49,7 +54,7 @@
 #define STRIP_TYPE              WS2812_STRIP		// WS2812/SK6812RGB integrated chip+leds
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
-#define LED_COUNT               482
+//#define LED_COUNT            482
 
 // -------------------------------------------------------------------------------------
 // Event Animations

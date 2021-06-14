@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.25A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.27A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,18 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.27_210614
+// *    - Program files are now stored in "/etc/RasFLED/"
+// *        Note: The program cannot create the directory.  "/etc/RasFLED/" will need to 
+// *        be created manually before RasFLED is ran for the first time.
+// *    - LED Count is now calculated and not hard coded.
+// *    - Further reduction of static variables to facilitate migration towards loadable 
+// *        configuration.  Also, necessary for future implementation of dynamic 
+// *        classification of objects, such as doors, and sub objects, such as overhead 
+// *        lights, door lights, and switches.
+// *    - Still haven't traced the END_ANIMATION bug.  To think, I was only setting out 
+// *        to remove one static, rarely used definition (LED_COUNT).
+// *        
 // * V 0.26_210609
 // *    - More work has been done for loading files and settings
 // *    - Started working on a loadable, from file, hardware configuration.  This is a 
@@ -740,7 +752,7 @@ void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 300, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 5, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
   }
   sdSysData.booPulsesRunning = false;
 }
@@ -1418,15 +1430,14 @@ void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned lon
 // lights on and off or whatever.  Will not pretend to understand it.  Instead, will 
 // squish it down as much as possible so that I can pretend its not there.
 // ***************************************************************************************
-int led_count = LED_COUNT;
 ws2811_t ledstring;
 int *matrix;
 static char running = 1;
-void matrix_render(void)
+void matrix_render(int led_count)
 {
     int x;
 
-    for (x = 0; x < LED_COUNT; x++)
+    for (x = 0; x < led_count; x++)
     {
 		ledstring.channel[0].leds[x] = matrix[x];
     }
@@ -1444,9 +1455,9 @@ static void setup_handlers(void)
     sigaction(SIGINT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
 }
-void ledprep(ws2811_t *ws2811)
+void ledprep(ws2811_t *ws2811, int led_count)
 {
-	ws2811->channel[0].count = LED_COUNT;
+	ws2811->channel[0].count = led_count;
 }
 
 // ***************************************************************************************
@@ -1525,36 +1536,50 @@ int loop()
   sdSystem.init_running_color_list();
   sdSystem.set_running_color(CRGB(32,32,32),"White");
 
+  // File System
+  string Working_Directory = FILES_DIRECTORY;
+  check_create_working_dir(cons);
+
+  // Create Filenames as Variables
+  string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
 
   // Loading Running State
-  string strRunning_State_Filename = "./runningstate.cfg";
   cons.printi("Loading running state ...");
   bool booload = false;
   // yes, it resaves the file.  as is for now.
-  booload = load_saved_running_state(cons, sdSystem, strRunning_State_Filename);
+  booload = load_saved_running_state(cons, sdSystem, Running_State_Filename);
 
   // ---------------------------------------------------------------------------------------
   // LED Library Vars and Init
   cons.printi("Initializing LEDS ...");
 
+  int led_count = sdSystem.CONFIG.iLED_Size_Door_Back_Driver + sdSystem.CONFIG.iLED_Size_Door_Back_Passenger + 
+                sdSystem.CONFIG.iLED_Size_Door_Front_Driver + sdSystem.CONFIG.iLED_Size_Door_Front_Passenger + 
+                sdSystem.CONFIG.iLED_Size_Overhead_Back_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Passenger + 
+                sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Front_Passenger;
+
   ledstring.freq = TARGET_FREQ;
   ledstring.dmanum = DMA;
   ledstring.channel[0].gpionum = GPIO_PIN;
-  ledstring.channel[0].count = LED_COUNT;
+  ledstring.channel[0].count = led_count;
   ledstring.channel[0].brightness = 255;
   ledstring.channel[0].invert = 0;
   ledstring.channel[0].strip_type = STRIP_TYPE;
 
   ws2811_return_t ret;
-  ledprep(&ledstring);
-  matrix = (int*)malloc(sizeof(ws2811_led_t) * LED_COUNT);
+  ledprep(&ledstring, led_count);
+  matrix = (int*)malloc(sizeof(ws2811_led_t) * led_count);
   setup_handlers();
   if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS)
   {
-      fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
-      return ret;
+    fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
+    return ret;
   }
-  cons.printi("     OK");
+  else
+  {
+    cons.printi("  LED count: " + to_string(led_count));
+    cons.printi("  OK");
+  }
 
   // ---------------------------------------------------------------------------------------
 
@@ -1610,16 +1635,21 @@ int loop()
   // -------------------------------------------------------------------------------------
   // FLED LED Array
   cons.printi("Initializing LED Arrays");
-  CRGB crgbMainArrays0[sdSystem.CONFIG.iNUM_LEDSs0];
-  CRGB crgbMainArrays1[sdSystem.CONFIG.iNUM_LEDSs1];
-  CRGB crgbMainArrays2[sdSystem.CONFIG.iNUM_LEDSs0];
-  CRGB crgbMainArrays3[sdSystem.CONFIG.iNUM_LEDSs1];
+  sdSystem.CONFIG.iLED_Count_Back_Driver = sdSystem.CONFIG.iLED_Size_Door_Back_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Driver;
+  sdSystem.CONFIG.iLED_Count_Front_Driver = sdSystem.CONFIG.iLED_Size_Door_Front_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Passenger;
+  sdSystem.CONFIG.iLED_Count_Back_Passenger = sdSystem.CONFIG.iLED_Size_Door_Back_Passenger + sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver;
+  sdSystem.CONFIG.iLED_Count_Front_Passenger = sdSystem.CONFIG.iLED_Size_Door_Front_Passenger + sdSystem.CONFIG.iLED_Size_Overhead_Front_Passenger;
+
+  CRGB crgbMainArrays0[sdSystem.CONFIG.iLED_Count_Back_Driver];
+  CRGB crgbMainArrays1[sdSystem.CONFIG.iLED_Count_Front_Driver];
+  CRGB crgbMainArrays2[sdSystem.CONFIG.iLED_Count_Back_Passenger];
+  CRGB crgbMainArrays3[sdSystem.CONFIG.iLED_Count_Front_Passenger];
   
   cons.printi("Initializing Event System");
-  teEvent[0].create(sdSystem.CONFIG.iNUM_LEDSs0);
-  teEvent[1].create(sdSystem.CONFIG.iNUM_LEDSs1);
-  teEvent[2].create(sdSystem.CONFIG.iNUM_LEDSs0);
-  teEvent[3].create(sdSystem.CONFIG.iNUM_LEDSs1);
+  teEvent[0].create(sdSystem.CONFIG.iLED_Count_Back_Driver);
+  teEvent[1].create(sdSystem.CONFIG.iLED_Count_Front_Driver);
+  teEvent[2].create(sdSystem.CONFIG.iLED_Count_Back_Passenger);
+  teEvent[3].create(sdSystem.CONFIG.iLED_Count_Front_Passenger);
 
   // Door Sensor
   cons.printi("Initializing Sensors");
@@ -1760,33 +1790,33 @@ int loop()
       // with a static color
       if (cons.keywatch.get(KEYLEDTEST) !=0)
       {
-        MatxixFill(crgbMainArrays0, sdSystem.CONFIG.iNUM_LEDSs0, CRGB(25,25,25));
-        MatxixFill(crgbMainArrays1, sdSystem.CONFIG.iNUM_LEDSs1, CRGB(25,25,25));
-        MatxixFill(crgbMainArrays2, sdSystem.CONFIG.iNUM_LEDSs0, CRGB(25,25,25));
-        MatxixFill(crgbMainArrays3, sdSystem.CONFIG.iNUM_LEDSs1, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays0, sdSystem.CONFIG.iLED_Count_Back_Driver, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays1, sdSystem.CONFIG.iLED_Count_Front_Driver, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays2, sdSystem.CONFIG.iLED_Count_Back_Passenger, CRGB(25,25,25));
+        MatxixFill(crgbMainArrays3, sdSystem.CONFIG.iLED_Count_Front_Passenger, CRGB(25,25,25));
       }
 
       // Copy the Prepared, or Calculated to the Display Matrix, before rendering.
       //  Checking to see if the matix is to be displayed like normal or with DIAGs.
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 1)
       {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays0, sdSystem.CONFIG.iNUM_LEDSs0, matrix, mcount);
+        MatrixPrepare(cons, sdSystem, crgbMainArrays0, sdSystem.CONFIG.iLED_Count_Back_Driver, matrix, mcount);
       }
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 2)
       {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays1, sdSystem.CONFIG.iNUM_LEDSs1, matrix, mcount);
+        MatrixPrepare(cons, sdSystem, crgbMainArrays1, sdSystem.CONFIG.iLED_Count_Front_Driver, matrix, mcount);
       }
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 3)
       {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays2, sdSystem.CONFIG.iNUM_LEDSs0, matrix, mcount);
+        MatrixPrepare(cons, sdSystem, crgbMainArrays2, sdSystem.CONFIG.iLED_Count_Back_Passenger, matrix, mcount);
       }
       if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 4)
       {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays3, sdSystem.CONFIG.iNUM_LEDSs1, matrix, mcount);
+        MatrixPrepare(cons, sdSystem, crgbMainArrays3, sdSystem.CONFIG.iLED_Count_Front_Passenger, matrix, mcount);
       }
 
       // LED Library Renderer -- Recommend: DON'T TOUCH        
-      matrix_render();
+      matrix_render(led_count);
       if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
       {
           fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
@@ -1824,7 +1854,7 @@ int loop()
       // Also delayed, File maintenance.
       if (sdSystem.booRunning_State_File_Dirty == true)
       {
-        save_running_state(cons, sdSystem, strRunning_State_Filename);
+        save_running_state(cons, sdSystem, Running_State_Filename);
 
         // set false even if there was a save error to avoid repeats.
         sdSystem.booRunning_State_File_Dirty = false;
