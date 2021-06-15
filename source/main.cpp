@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.27A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.28A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,20 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.28_210615
+// *    - "AnEvSetToEnd" event now works as expected and properly ends sheduled events 
+// *        also.  This squishes the bug causing Pulse Animations to, seemingly, randomly 
+// *        not end.  The problem was a scheduled event would get reactivated during 
+// *        PostCheck if it the ScheduleEvent was a passing Repeat=true parameter, and 
+// *        the event was able to repeat itself before the the SetToEnd event completed.  
+// *        There may be a reason to do this.  I don't know, But, never the less, the 
+// *        event now stops, cold turkey, when asked to.
+// *      Ok, its complecated.  Just went back and looked at it.  It may be realated to 
+// *        the code not setting the completion value to true, because it was lumped into
+// *        a part of code that actually needed to check for repeats.  
+// *      Just checked, "AnEvSchedule" aren't coded to be able to be repeated.  Could 
+// *        be with just one line of code.  But, isn't.
+// *
 // * V 0.27_210614
 // *    - Program files are now stored in "/etc/RasFLED/"
 // *        Note: The program cannot create the directory.  "/etc/RasFLED/" will need to 

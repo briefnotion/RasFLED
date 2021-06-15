@@ -516,7 +516,7 @@ void vdChannelLightPulseColorCountdown(Console &cons, profile_strip_group strip_
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intRandomHD(2000), (int)(intDurW/8), (int)(intSp/4), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
 
   // -------- Call Pulse Countdown Timer Again
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, false);  
 }
 
 // -------------------------------------------------------------------------------------

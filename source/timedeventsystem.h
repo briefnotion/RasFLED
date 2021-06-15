@@ -344,7 +344,7 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
               break;
             } // End Case AnEvSchedule
 
-            case AnEvSetToEnd:  // Schedules an animation to end. Fades out Fades and stops repeat on Pulses.
+            case AnEvSetToEnd:  // Schedules an animation to end. Fades out and stops repeat on Pulses.
             {                   // Possible problem if InTime is set to 0.  
               //cons.printwait("Event: AnEvSetToEnd");
               // Clear the Event whether the event ran or not.
@@ -354,7 +354,8 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
               for (int eventscan = 0; eventscan < teEvent[channel].teDATA.size(); eventscan++)
               {
                 // Has the event started running yet, or do we plan on ending future scheduled events also?
-                if(teEvent[channel].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime || teEvent[channel].teDATA[event].booCLEARONEND == true)   // May Have Fixed It.  IDK
+                //  Continue with event removal if (event is active) or (clear on end is true)
+                if((teEvent[channel].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime) || (teEvent[channel].teDATA[event].booCLEARONEND == true))
                 {
                   // is the event we are currently looking at within, or overlapping, the targeted event range.
                   if (  ((teEvent[channel].teDATA[eventscan].intSTARTPOS >= teEvent[channel].teDATA[event].intSTARTPOS)  
@@ -363,15 +364,15 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                         ((teEvent[channel].teDATA[eventscan].intENDPOS >= teEvent[channel].teDATA[event].intSTARTPOS)  
                         && (teEvent[channel].teDATA[eventscan].intENDPOS <= teEvent[channel].teDATA[event].intENDPOS))  )
                   {
-                    // Are we targeting only specific events to end or all events.
-                    bool cont = false;
+                    bool cont = false;  // Continue with the event removal process.
 
                     bool booCheckColor = true;
                     bool booCheckIdent = true;
-                    // Trying not to complicate the code too much.
+
+                    // Are we targeting only specific events to end or all events.
 
                     // Check for specific Targeted Color or Targeted Identifier.  
-                    // We are targeting events with any color by passing CRGB(0,0,0), and any I dentifier by passing "" 
+                    // We are targeting events with any color by passing CRGB(0,0,0), and any Identifier by passing "" 
                     // continue on.
 
                     // Warning: This is not an AND condition, even though it probably should be. Not needed at this time 
@@ -431,10 +432,12 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                       // Check the event we are stopping to make sure its not the event calling the SetToEnd.
                       if (event != eventscan)
                       {
+
+                        // End Animations
+
                         // Manage the Fade Animations to End.
                         if (  (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFade)     ||
-                              (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFadeDith) ||
-                              (teEvent[channel].teDATA[eventscan].bytANIMATION == AnEvSchedule) )
+                              (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiFadeDith)  )
                         {
                           // Stop the event.
                           teEvent[channel].teDATA[eventscan].booREPEAT = false;
@@ -467,6 +470,10 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                             //teEvent[channel].teDATA[eventscan].crgbCOLORDEST2 = teEvent[channel].teDATA[event].crgbCOLORSTART2;                             
                           }
                         }
+
+                        // and
+                        // End Pusles
+
                         // Manage the Pulse Animations to End
                         if (  (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulse)    ||
                               (teEvent[channel].teDATA[eventscan].bytLEDANIMATION == AnPiPulseTo)  )
@@ -490,6 +497,18 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                             teEvent[channel].teDATA[eventscan].booREPEAT = false;
                             teEvent[channel].teDATA[eventscan].booCLEARONEND = true;
                           }
+                        }
+
+                        // and
+                        // End Scheduled Events
+
+                        if (teEvent[channel].teDATA[eventscan].bytANIMATION == AnEvSchedule)
+                        {
+                          // Stop the event.
+                          teEvent[channel].teDATA[eventscan].booREPEAT = false;
+                          teEvent[channel].teDATA[eventscan].booCLEARONEND = true;
+
+                          teEvent[channel].teDATA[eventscan].booCOMPLETE = true;
                         }
 
                       } // End Event not Self 
