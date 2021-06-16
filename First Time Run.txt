@@ -1,0 +1,34 @@
+- You must manually create the direcory
+    /etc/RasFLED/   
+  before running RasFLED for the first time.
+
+- A simple, editable, configuration file is generated when ran for the first 
+    time.  It will look like this:
+      ______________________________________
+      |Size_Test_Strip 63
+      |
+      |Size_Door_Back_Driver 70
+      |Size_Door_Back_Passenger 70
+      |Size_Door_Front_Driver 66
+      |Size_Door_Front_Passenger 66
+      |
+      |Size_Overhead_Back_Driver 52
+      |Size_Overhead_Back_Passenger 52
+      |Size_Overhead_Front_Driver 52
+      |Size_Overhead_Front_Passenger 52
+      |______________________________________
+
+    This file can then be edited to match your LED count setup.  
+    
+    The string path is still propritary and is one long string
+      in this order:
+  
+      Size_Door_Back_Driver --> Size_Overhead_Back_Driver --> 
+      Size_Overhead_Front_Driver --> Size_Door_Front_Driver --> 
+      Size_Door_Back_Passenger --> Size_Overhead_Back_Passenger --> 
+      Size_Overhead_Front_Passenger --> Size_Door_Front_Passenger
+  
+    This much of the configuration file only allows easy change of the LED count 
+      in each segment.  
+    Remaining work:  Number of segments, Number of sub segments, Segment names, 
+      Segment order, Segment orientation...
