@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.28A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.29A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,38 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.29_210616
+// *    - A simple, editable, configuration file is generated when ran for the first 
+// *        time.  It will look like this:
+// *          ______________________________________
+// *          |Size_Test_Strip 63
+// *          |
+// *          |Size_Door_Back_Driver 70
+// *          |Size_Door_Back_Passenger 70
+// *          |Size_Door_Front_Driver 66
+// *          |Size_Door_Front_Passenger 66
+// *          |
+// *          |Size_Overhead_Back_Driver 52
+// *          |Size_Overhead_Back_Passenger 52
+// *          |Size_Overhead_Front_Driver 52
+// *          |Size_Overhead_Front_Passenger 52
+// *          |______________________________________
+// *
+// *        This file can then be edited to match your LED count setup.  
+// *        
+// *        The string path is still propritary and is one long string
+// *          in this order:
+// *      
+// *          Size_Door_Back_Driver --> Size_Overhead_Back_Driver --> 
+// *          Size_Overhead_Front_Driver --> Size_Door_Front_Driver --> 
+// *          Size_Door_Back_Passenger --> Size_Overhead_Back_Passenger --> 
+// *          Size_Overhead_Front_Passenger --> Size_Door_Front_Passenger
+// *      
+// *        This much of the configuration file only allows easy change of the LED count 
+// *          in each segment.  
+// *        Remaining work:  Number of segments, Number of sub segments, Segment names, 
+// *          Segment order, Segment orientation...
+// *
 // * V 0.28_210615
 // *    - "AnEvSetToEnd" event now works as expected and properly ends sheduled events 
 // *        also.  This squishes the bug causing Pulse Animations to, seemingly, randomly 
@@ -1555,13 +1587,33 @@ int loop()
   check_create_working_dir(cons);
 
   // Create Filenames as Variables
+  string Configuration_Filename = Working_Directory + FILES_CONFIGURATION;
   string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
+
+  // Loading Configuration
+  cons.printi("Loading configuration ...");
+  // yes, it resaves the file.  as is for now.
+  if (load_configuration(cons, sdSystem, Configuration_Filename) != true)
+  {
+    // generate a configuration file to be edited from static defaults
+    cons.printi("  Configuration file not loaded.  Generating Configuration File.");
+    if (save_configuration(cons, sdSystem, Configuration_Filename) == true)
+    {
+      cons.printi("  Configuration file created.");
+    }
+    else
+    {
+      cons.printi("  Configuration file not created.");
+    }
+  }
 
   // Loading Running State
   cons.printi("Loading running state ...");
-  bool booload = false;
   // yes, it resaves the file.  as is for now.
-  booload = load_saved_running_state(cons, sdSystem, Running_State_Filename);
+  if (load_saved_running_state(cons, sdSystem, Running_State_Filename) != true)
+  {
+    cons.printi("  Running state file not loaded.");
+  }
 
   // ---------------------------------------------------------------------------------------
   // LED Library Vars and Init

@@ -116,6 +116,7 @@ class QUEUE_TO_FILE
             while(qFile.empty() == false)
             {
                 fsFile << qFile.front();
+                fsFile << endl;
                 qFile.pop();
             }
             fsFile << endl;
@@ -235,7 +236,6 @@ class SETTINGS
 
 // -------------------------------------------------------------------------------------
 
-
 void check_create_working_dir(Console &cons)
 {
     cons.printi("Checking File System");
@@ -254,11 +254,16 @@ void dump_qfile(Console &cons, queue<string> &qFile)
     }
 }
 
+// -------------------------------------------------------------------------------------
+//  Running State
+
 // Load Saved State
 bool load_saved_running_state(Console &cons, system_data &sdSysData, string strFilename)
 {
     FILE_TO_QUEUE ftqFile;
     queue<string> qFile;
+
+    bool sucess = false;
 
     // !!! NEED TO KICK OUT BLANK LINES !!!
 
@@ -269,13 +274,18 @@ bool load_saved_running_state(Console &cons, system_data &sdSysData, string strF
         CRGB color;
         cons.printi("  " + strFilename + " read suceesss");
 
+        // Parse the settings
         while(qFile.empty()==false)
         {
             tmpSettings.parse_and_save_setting(qFile.front());
             qFile.pop();
         }
 
-        int loc = tmpSettings.exits_at("runningcolor");
+        // Find and load the settings
+        int loc = 0;
+        // ----
+
+        loc = tmpSettings.exits_at("runningcolor");
         if(loc >= 0)
         {
             color = color.StringtoCRGB(tmpSettings.value_at(loc,0));
@@ -289,21 +299,30 @@ bool load_saved_running_state(Console &cons, system_data &sdSysData, string strF
             sdSysData.set_running_color(color , "White");   
         }
         
+        // ----
+
+        sucess = true;
     }
     else
     {
         cons.printi("  " + strFilename + " read error");
         cons.printi("  Setting running color to CRGB(32,32,32), White");
         sdSysData.set_running_color(CRGB(32,32,32), "White");
+
+        sucess = false;
     }
 
-    return true;
+    return sucess;
 }
 
+
+// Save Saved State
 bool save_running_state(Console &cons, system_data &sdSysData, string strFilename)
 {
     QUEUE_TO_FILE qtfFile;
     queue<string> qFile;
+
+    bool sucess = false;
 
     // build qFile.
     qFile.push("runningcolor " + sdSysData.get_running_color().CRGBtoString() + " " + sdSysData.get_running_color_str());
@@ -311,13 +330,153 @@ bool save_running_state(Console &cons, system_data &sdSysData, string strFilenam
     if(qtfFile.booSave_File(strFilename, qFile) == true)
     {
         cons.printi("  " + strFilename + " write sucess");
+        sucess = true;
     }
     else
     {
         cons.printi("  " + strFilename + " write failed.");
+        sucess = false;
     }
 
-    return true;
+    return sucess;
+}
+
+// -------------------------------------------------------------------------------------
+//  Configuration
+
+// Load Configuration
+bool load_configuration(Console &cons, system_data &sdSysData, string strFilename)
+{
+    FILE_TO_QUEUE ftqFile;
+    queue<string> qFile;
+
+    bool sucess = false;
+
+    // !!! NEED TO KICK OUT BLANK LINES !!!
+
+    SETTINGS tmpSettings;
+
+    if (ftqFile.booRead_File(strFilename , qFile) == true)
+    {
+        CRGB color;
+        cons.printi("  " + strFilename + " read suceesss");
+
+        // Parse the settings
+        while(qFile.empty()==false)
+        {
+            tmpSettings.parse_and_save_setting(qFile.front());
+            qFile.pop();
+        }
+
+        // Find and load the settings
+        int loc = 0;
+        // ----
+
+        loc = tmpSettings.exits_at("Size_Test_Strip");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Test_Strip = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+
+        // ----
+
+        loc = tmpSettings.exits_at("Size_Door_Back_Driver");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Door_Back_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        loc = tmpSettings.exits_at("Size_Door_Back_Passenger");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Door_Back_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        loc = tmpSettings.exits_at("Size_Door_Front_Driver");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Door_Front_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        loc = tmpSettings.exits_at("Size_Door_Front_Passenger");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Door_Front_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        // ----
+
+        loc = tmpSettings.exits_at("Size_Overhead_Back_Driver");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Overhead_Back_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        loc = tmpSettings.exits_at("Size_Overhead_Back_Passenger");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Overhead_Back_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        loc = tmpSettings.exits_at("Size_Overhead_Front_Driver");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Overhead_Front_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+        
+        loc = tmpSettings.exits_at("Size_Overhead_Front_Passenger");
+        if(loc >= 0)
+        {
+            sdSysData.CONFIG.iLED_Size_Overhead_Front_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
+        }
+
+        // ----
+
+        sucess = true;
+    }
+    else
+    {
+        sucess = false;
+    }
+
+    return sucess;
+}
+
+// Save Configuration
+bool save_configuration(Console &cons, system_data &sdSysData, string strFilename)
+{
+    QUEUE_TO_FILE qtfFile;
+    queue<string> qFile;
+
+    bool sucess = false;
+
+    // build qFile.
+    qFile.push("Size_Test_Strip " + to_string(sdSysData.CONFIG.iLED_Size_Test_Strip));
+    qFile.push("");
+
+    qFile.push("Size_Door_Back_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Driver));
+    qFile.push("Size_Door_Back_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Passenger));
+    qFile.push("Size_Door_Front_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Driver));
+    qFile.push("Size_Door_Front_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Passenger));
+    qFile.push("");
+
+    qFile.push("Size_Overhead_Back_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Driver));
+    qFile.push("Size_Overhead_Back_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Passenger));
+    qFile.push("Size_Overhead_Front_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Driver));
+    qFile.push("Size_Overhead_Front_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Passenger));
+
+    if(qtfFile.booSave_File(strFilename, qFile) == true)
+    {
+        cons.printi("  " + strFilename + " write sucess");
+        sucess = true;
+    }
+    else
+    {
+        cons.printi("  " + strFilename + " write failed.");
+        sucess = false;
+    }
+
+    return sucess;
 }
 
 

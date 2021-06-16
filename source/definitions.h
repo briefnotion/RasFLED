@@ -25,6 +25,7 @@
 // Files
 #define FILES_DIRECTORY           "/etc/RasFLED/"
 //#define FILES_DIRECTORY           "./"
+#define FILES_CONFIGURATION       "configuration.cfg"
 #define FILES_RUNNING_STATE_SAVE  "runningstate.cfg"
 
 // Key Mapping
