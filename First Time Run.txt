@@ -16,6 +16,14 @@
       |Size_Overhead_Back_Passenger 52
       |Size_Overhead_Front_Driver 52
       |Size_Overhead_Front_Passenger 52
+      |
+      |Channel_Count 4
+      |
+      |Switch_Count 4
+      |Switch 0 22
+      |Switch 1 23
+      |Switch 2 24
+      |Switch 3 25
       |______________________________________
 
     This file can then be edited to match your LED count setup.  

@@ -151,11 +151,12 @@
 #define AnTavdPacificaish       60
 #define AnTavdPaAnimClose       61
 #define AnTaChannelFlashColor   63
-#define AnTaChannelPulseColor   64
-#define AnTaChannelPulseColorCountdown   65
-#define AnTaOverheadIllumColor  66
-#define AnTaHazard              67
-#define AnTaPacificaishColor    68
+#define AnTaChannelPulseSimple  64
+#define AnTaChannelPulseColor   65
+#define AnTaChannelPulseColorCountdown   66
+#define AnTaOverheadIllumColor  67
+#define AnTaHazard              68
+#define AnTaPacificaishColor    69
 
 //  Halloween Effects
 #define AnTavdCloud             70

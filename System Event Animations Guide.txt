@@ -47,10 +47,17 @@ AnEvSchedule - Schedules a stored system event to be called at a specific time. 
 
     Params:
         StartInTime - How long to wait before starting animation.
+        Duration    - When Repeat is true, this is the amount of time delayed 
+                        between each repeat. 
         PARAM6      - Event anmation to call.
         Start Pos   - ????? Unknown
         End Pos     - ????? Unknown
-        Repeat      - No Need For It.
+        Repeat      - Controls end behavior of the Event Repeat.
+            False:  Event will clear as it is called
+            True:   Event will wait for the value of the Duration and will 
+                        call itself again, indefinitely or untill the event 
+                        is set to end by another event.
+
 
 
 AnEvSetToEnd - Sets a current animation or sheduled event to end.  Useful for stopping repeating animations.

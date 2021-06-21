@@ -322,7 +322,6 @@ class timed_event
     teDATA.push_back(newteDATA);
 
     booCreated = true;
-    //printf("Event create: Anim:%d LED:%d P1:%d P2:%d\n", bytAnimation, bytLEDAnimation, intStartPos, intEndPos);
   }
 
   // -------------------------------------------------------------------------------------
@@ -834,7 +833,6 @@ class timed_event
       {
         if (teDATA[e].booCOMPLETE == true)
         {
-          //printf("Removing Event %d\n", e);
           teDATA.erase(teDATA.begin() + e);
         }
         else

@@ -346,6 +346,10 @@ void vdStripOverOff(Console &cons, profile_strip_group strip_group, timed_event 
 
 // Console Called Animations 
 
+// -------------------------------------------------------------------------------------
+// Advanced Animations
+// -------------------------------------------------------------------------------------
+
 void vdChannelLightFlashColor00(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Turn Color Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
@@ -421,11 +425,13 @@ void vdChannelLightFlashColor00(Console &cons, profile_strip_group strip_group, 
 
 }
 
-void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+// -------------------------------------------------------------------------------------
+
+void vdChannelLightPulseSimple00(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Turn Color Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
-  cons.printwait("Pulse Color (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  cons.printwait("Pulse Color 00 (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   int intTm;
   int intDurW;
   int intDurG;
@@ -463,60 +469,124 @@ void vdChannelLightPulseColor(Console &cons, profile_strip_group strip_group, ti
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 40 + intDelay, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 96), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, (int)(intDurW/8), (int)(intSp/4), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intRandomHD(2000), (int)(intDurW/8), (int)(intSp/4), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-
-  // Set the pulse to timed repeat
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-
-  // for later
-  //teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 50, intDurG, 0, AnEvSweep, AnPiTwinkle, false, CRGB(200, 0, 0), CRGB(0, 200, 0), CRGB(0, 0, 200), CRGB(8, 0, 3), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
 }
 
-// ---- NEEDS CONSOLIDATION ----
-void vdChannelLightPulseColorCountdown(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
-// Turn Color Pulse on Full Channel. Strip Length Aware. 
+void vdChannelLightPulseColor00(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+// Turn Color Pulse on Full Channel.
 // AnTaChannelPulseColor
 {
-  cons.printwait("Pulse Countdown Timer Color (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  cons.printwait("Pulse Color Repeat 00 (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  // Set the pulse to timed repeat
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 1500, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true);
+}
+
+void vdChannelLightPulseColorCountdown00(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+// Turn Color Pulse on Full Channel.
+// AnTaChannelPulseColor
+{
+  cons.printwait("Pulse Countdown Timer Color Repeat 00 (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
+}
+
+// -------------------------------------------------------------------------------------
+
+void vdChannelLightPulseSimple01(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+// Multiple small pulses forward and backward. Strip Length Aware. 
+// AnTaChannelPulseColor
+{
+  cons.printwait("Pulse Color 01 (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   int intTm;
   int intDurW;
   int intDurG;
   int intSp;
-  int intDelayGlitchAnti;
 
   int intDelay;
+  int intDelayGlitchAnti;
 
   // Set the fadeout color 
   CRGB crgbColor4;
-  crgbColor4.r = crgbColor.r + 128;
-  crgbColor4.g = crgbColor.g + 128;
-  crgbColor4.b = crgbColor.b + 128;
+  crgbColor4.r = crgbColor.r + 64;
+  crgbColor4.g = crgbColor.g + 64;
+  crgbColor4.b = crgbColor.b + 64;
 
   // Clear and Pulse colors background to bright then param color, starting with the center.
-  intTm = 100; intDurW = 500; intDurG = 1500; intSp = 30; 
+  intTm = 100; intDurW = 500; intDurG = 3000; intSp = 100; 
 
-  intDelay = intAnTmDly(intTm, 0, strip_group.pstrDOOR.intSIZE, intSp);
-  intDelayGlitchAnti = intAnTmDly(intTm + intDelay, intDurW/8, strip_group.pstrOVERHEAD.intSIZE, intSp/4);
+  int amount = 4;
+  int pos[amount];
 
-  // Door Color with White and Trail Color
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  // Glitch
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 20, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(96, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 40, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 96), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intDelayGlitchAnti, (int)intDurW/8, (int)intSp/4, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intRandomHD(2000), (int)intDurW/8, (int)intSp/4, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrDOOR.ft(0), strip_group.pstrDOOR.fb(0), false, true);
+  // Door
+  int sd = strip_group.pstrDOOR.intSIZE / amount;
 
-  // Overhead Color with White and Trail Color
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  // Glitch
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 20 + intDelay, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(96, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm - 40 + intDelay, 50, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 96), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intDelay, (int)(intDurW/8), (int)(intSp/4), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
-  teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + intRandomHD(2000), (int)(intDurW/8), (int)(intSp/4), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), false, true);
+  int stad, endd = 0;
+  int stadf, enddf = 0;
+  int stadb, enddb = 0;
 
-  // -------- Call Pulse Countdown Timer Again
-  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, false);  
+  int switchdelaydoor = 0;
+
+  // Overhead
+  int so = strip_group.pstrOVERHEAD.intSIZE / amount;
+
+  int stao, endo = 0;
+  int staof, endof = 0;
+  int staob, endob = 0;
+
+
+  for(int x = 0; x < amount; x++)
+  {
+    // Door numbers
+    stad = (sd * x);
+    endd = (sd * x) + sd;
+
+    stadf = strip_group.pstrDOOR.fs(0) + stad;
+    enddf = strip_group.pstrDOOR.fs(0) + endd;
+    switchdelaydoor = intAnTmDly(intTm, 0, sd, intSp)  * 2;
+    stadb = strip_group.pstrDOOR.fe(0) - stad;
+    enddb = strip_group.pstrDOOR.fe(0) - endd;
+
+    // Overhead numbers
+    stao = (so * x);
+    endo = (so * x) + so;
+
+    staof = strip_group.pstrOVERHEAD.fs(0) + stao;
+    endof = strip_group.pstrOVERHEAD.fs(0) + endo;
+    
+    staob = strip_group.pstrOVERHEAD.fe(0) - stao;
+    endob = strip_group.pstrOVERHEAD.fe(0) - endo;
+
+    // Door Animations
+    teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+    teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+
+    teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
+    teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
+
+    // Overhead Animations
+    teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), staof, endof, false, true);
+    teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), staof, endof, false, true);
+
+    teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), staob, endob, false, true);
+    teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), staob, endob, false, true);
+  }
+}
+
+void vdChannelLightPulseColor01(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+// Turn Color Pulse on Full Channel.
+// AnTaChannelPulseColor
+{
+  cons.printwait("Pulse Color Repeat 01 (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  // Set the pulse to timed repeat
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 7200, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true);
+}
+
+void vdChannelLightPulseColorCountdown01(Console &cons, profile_strip_group strip_group, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+// Turn Color Pulse on Full Channel.
+// AnTaChannelPulseColor
+{
+  cons.printwait("Pulse Countdown Timer Color Repeat 01 (CL: " + std::to_string(strip_group.pstrDOOR.intCHANNEL));
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
+  teEvent[strip_group.pstrDOOR.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 7200, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
 }
 
 // -------------------------------------------------------------------------------------
@@ -614,27 +684,12 @@ void vdPacificaishAnimationADVColor(Console &cons, profile_strip_group strip_gro
   teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.fe(0), strip_group.pstrOVERHEAD.fs(0), true, true);
 }
 
-
-
 // -------------------------------------------------------------------------------------
-// Advanced Animations
-// -------------------------------------------------------------------------------------
-
-/*
-void vdEndAllAnimationsADV(Console &cons, led_strip lsStrips[], int intStripID, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Run this routine on all Doors after all doors are closed to ensure no lingering animations have not been ended for whatever reason.
-{
-  // Shouldn't ever need to call this. 
-  cons.printwait("vdEndAllAnimationsADV (CL: " + std::to_string(lsStrips[intStripID].Cl) + " ID:"+ std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) + ")");
-  teEvent[lsStrips[intStripID].Cl].set("", tmeCurrentTime, 20000, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, lsStrips[intStripID + 1].Ed, true, true);
-}
-*/
-
 
 void vdDoorOpenAnimationADV00(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  cons.printwait("Door Open Safety (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ /*std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) +*/ ")");
+  cons.printwait("Door Open Safety 00 (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ /*std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) +*/ ")");
   int intTm;
   int intDur;
   int intCt;
@@ -708,6 +763,7 @@ void vdDoorOpenAnimationADV00(Console &cons, profile_strip strip, timed_event te
   teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(intMid), true, true);
 }
 
+// -------------------------------------------------------------------------------------
 
 void vdDoorCloseRunningADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
@@ -744,11 +800,12 @@ void vdDoorCloseRunningADV(Console &cons, profile_strip strip, timed_event teEve
   teEvent[strip.intCHANNEL].set("Door Close Running Lights (non continue)", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(12), false, true);
 }
 
+// -------------------------------------------------------------------------------------
 
 void vdDoorCloseActiveADV00(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all closed doors at least one other door is open.
 {
-  cons.printwait("Door Close Safety (CL: " + std::to_string(strip.intCHANNEL) + " ID:" + " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Close Safety 00 (CL: " + std::to_string(strip.intCHANNEL) + " ID:" + " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
@@ -771,6 +828,7 @@ void vdDoorCloseActiveADV00(Console &cons, profile_strip strip, timed_event teEv
   teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(30, 62, 70) , CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false);
 }
 
+// -------------------------------------------------------------------------------------
 
 void vdPacificaishAnimationADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Blue Waves. Much more interesting than the old version of this.
@@ -810,6 +868,7 @@ void vdPacificaishAnimationADV(Console &cons, profile_strip strip, timed_event t
   teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true);
 }
 
+// -------------------------------------------------------------------------------------
 
 void vdCloseOverADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Overhead Lights Off
@@ -819,6 +878,8 @@ void vdCloseOverADV(Console &cons, profile_strip strip, timed_event teEvent[], u
   // Just set all the current over head lights to fade away.
   teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);
 }
+
+// -------------------------------------------------------------------------------------
 
 void vdCoADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
@@ -870,10 +931,12 @@ void vdCoADV(Console &cons, profile_strip strip, timed_event teEvent[], unsigned
   // !!! Need to get AUXDRLINGERBACK back into the code.
 }
 
+// -------------------------------------------------------------------------------------
+
 void vdCoADV01(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
 {
-  cons.printwait("Conviencance Lights (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Conviencance Lights 01 (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Clear any animations that may be running and this should replace.
   teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);
@@ -946,12 +1009,13 @@ void vdCoADV01(Console &cons, profile_strip strip, timed_event teEvent[], unsign
   teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true);
 }
 
+// -------------------------------------------------------------------------------------
 
 void vdAdditionalOpenADV00(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn Additional Lights On on to show the door is open.
 // Pulse multiple yellow lights, followed by black lights, from center to end.
 {
-  cons.printwait("Door Overhead Alert On(CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Overhead Alert On 00 (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   int intTm, intDur, intSp, intCt; 
 
@@ -976,11 +1040,13 @@ void vdAdditionalOpenADV00(Console &cons, profile_strip strip, timed_event teEve
   teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm + intTm2Off + IntTrlDly, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(254, 254, 254), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(intMid), true, true); 
 }
 
+// -------------------------------------------------------------------------------------
+
 void vdAdditionalOpenADV01(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn Additional Lights On on to show the door is open.
 // Pulseating yellow light, brightest at center.
 {
-  cons.printwait("Door Overhead Alert On(CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Overhead Alert On 01 (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   int intTm, intDur, intSp, intCt; 
 
@@ -999,11 +1065,61 @@ void vdAdditionalOpenADV01(Console &cons, profile_strip strip, timed_event teEve
   teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);
 }
 
+// -------------------------------------------------------------------------------------
+
+void vdAdditionalOpenADV02(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
+// Turn Additional Lights On on to show the door is open.
+// Slow Walking Yellow Lights.
+{
+  cons.printwait("Door Overhead Alert On(CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+
+  int intTm, intDur, intSp, intCt; 
+
+  CRGB crgbPulseColor         = CRGB(128, 128, 0);
+  CRGB crgbCounterPulseColor  = CRGB(0, 0, 255);
+
+  // Repeat Pulse
+  intTm = 50; intDur = 4500; intSp = 1000; intCt = strip.intSIZE;
+
+  //int intTm2Off = (intMid * intSp + intDur) /2;
+  //int IntTrlDly = intDur*2/3;
+
+  int amount = 3;
+  int intMid = strip.intSIZE / 2;
+  int s = intMid / amount;
+
+  int pos[amount];
+
+  int sta, end = 0;
+
+  int stas, ends = 0;
+  int stae, ende = 0;
+
+  for(int x = 0; x < amount; x++)
+  {
+    sta = (s * x);
+    end = (s * x) + s;
+
+    stas = strip.fs(0) + sta;
+    ends = strip.fs(0) + end;
+    stae = strip.fe(0) - sta;
+    ende = strip.fe(0) - end;
+
+    // Yellow Pulse and Counter Pulse
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stas, ends, true, true);
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stas, ends, true, true);
+
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stae, ende, true, true);
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stae, ende, true, true);
+  }
+}
+
+// -------------------------------------------------------------------------------------
 
 void vdAdditionalCloseADV00(Console &cons, profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
-  cons.printwait("Door Overhead Alert Off (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
+  cons.printwait("Door Overhead Alert Off 00 (CL: " + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
 
   // Seach the strip for light colors and set them to end after animation completes.  
   teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true);

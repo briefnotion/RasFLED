@@ -99,7 +99,14 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
             {  
               //cons.printwait("Event: AnEvSchedule");
               // Clear the Event whether the event ran or not.
-              teEvent[channel].teDATA[event].booCOMPLETE = true;
+              if(teEvent[channel].teDATA[event].booREPEAT == false)
+              {
+                teEvent[channel].teDATA[event].booCOMPLETE = true;
+              }
+              else
+              {
+                teEvent[channel].teDATA[event].tmeSTARTTIME = tmeCurrentTime + teEvent[channel].teDATA[event].intDURATION;
+              }
               
               switch (teEvent[channel].teDATA[event].bytLEDANIMATION)
               // Activate an Animation Set
@@ -118,7 +125,6 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                 case AnTavdTestAnimation:
                 // Color Specific Channel Pulse
                 {
-                  //vdAdditionalOpenADV01(cons, strip_group[channel].pstrOVERHEAD, teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
                   vdAdditionalOpenADV01(cons, strip_group[channel].pstrOVERHEAD, teEvent, tmeCurrentTime);
                   break;
                 }    
@@ -130,17 +136,24 @@ void teSystem(Console &cons, system_data &sdSysData, profile_strip_group strip_g
                   break;
                 }
 
+                case AnTaChannelPulseSimple:
+                // Color Specific Channel Pulse
+                {
+                  vdChannelLightPulseSimple01(cons, strip_group[channel], teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
+                  break;
+                }
+
                 case AnTaChannelPulseColor:
                 // Color Specific Channel Pulse
                 {
-                  vdChannelLightPulseColor(cons, strip_group[channel], teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
+                  vdChannelLightPulseColor01(cons, strip_group[channel], teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
                   break;
                 }
 
                 case AnTaChannelPulseColorCountdown:
                 // Color Specific Channel Pulse
                 {
-                  vdChannelLightPulseColorCountdown(cons, strip_group[channel], teEvent, tmeCurrentTime, sdSysData.get_countdown_color());
+                  vdChannelLightPulseColorCountdown01(cons, strip_group[channel], teEvent, tmeCurrentTime, sdSysData.get_countdown_color());
                   if (sdSysData.cdTIMER.is_triggered() == true)
                   {
                     if(sdSysData.cdTIMER.is_checked() == false)

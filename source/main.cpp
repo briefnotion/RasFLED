@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.29A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.30A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,36 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.30_210619
+// *    - Delete the old configuration file before running.  Things have changed.
+// *    - Got tired of looking at the same old animations.  
+// *        Redid the Door open spotlight animation.
+// *        Redid the Pulse animation.  Easier on the eyes.
+// *    - Scheduled Events (AnEvSchedule) are now repeatable by setting repeat = true and
+// *        duration.
+// *    - Pulse animation and Pulse Countdown now call the same single simple pulse
+// *        animation repeatedly.  No need to double up on the same animation to do two 
+// *        seperate versions of the same thing.
+// *    - Started the trek of configurable and numeralable strip types and sizes.  I am 
+// *        not going to need to traverse any mountains, but there are a number of not so 
+// *        small hills on the way.  I had the foresight during the designing and the 
+// *        seemingly novel days of the Arduino Nano, to design the system so Fled could 
+// *        handle an array type of LED strips.  Back then, though, I had no idea about 
+// *        how it could be implemented. A fair amount of code will need to be rewritten.
+// *    - Added a new command (config) to see if files loaded properly.  Probably have 
+// *        more function in the futuer.
+// *    - The Door Sensor Hardware Interface is now upgraded to the new Configurable 
+// *        system.  Sure, much of the system cant take advantage of the varible amount  
+// *        of switches, yet, and things like the console is hardcoded for, no less than
+// *        4 switches.  However, a first step towards a fully configurable system has 
+// *        been made.  The only steps remaining is:  modifying the strip classes to 
+// *        be something more generic.  Writing the code to load those generic strips 
+// *        with custom classifications.  Mapping the Hardware Map to the strips, and 
+// *        hardware reactions through configuration files.  And, rewriting all the 
+// *        animations.  I'm making it sound much more difficult than it actually is. 
+// *        Like I said before, the groundwork has already been laid out. 
+// *    - Taking the system out for a test before making any more changes. 
+// *
 // * V 0.29_210616
 // *    - A simple, editable, configuration file is generated when ran for the first 
 // *        time.  It will look like this:
@@ -314,7 +344,7 @@
 // *            time because the 90% of the clock cycles taken by this program is just 
 // *            timing and pushing the LED values to the LED strips through that DMA 
 // *            channel.  Also, I would get DMA 10 back so I could get my audio back. 
-// *          Although I was sucessful, I stopped progress on this because I was limited 
+// *          Although I was successful, I stopped progress on this because I was limited 
 // *            by the serial bus, which ran, at best, 14400 bytes per second.  Or, at 
 // *            best, 14 kbs.  And thats, with errors.  LED strips run at about 800 kbs. 
 // *            My best results yeilded at about 30 FPS with 130 LEDs without error 
@@ -409,17 +439,19 @@
 // *
 // *  ToDo:
 // *    - Update everything properly classified with reference .h, supporting, and helper 
-// *        libraries.
-// *    - Create a way to import all animations from an animations file.
-// *    - Clean up 90% of the code.
+// *        libraries. (in progress)
+// *    - Create a way to import all animations from an animations file. (finish 
+//*         configuration files first)
+// *    - Clean up 90% of the code. (recursive)
 // *    - Move all the main animations into their own subroutines.
 // *    - Create animations for day and night running.
 // *    - Generate animations for shutting down animations.
 // *    - Trace Flicker that occurs when sleep = 0 and doors are closing.
-// *    - Phase out all tmeCurrentTime call towards sdSysData.tmeCURRENT_FRAME_TIME.
 // *    - Revisit previous implementation of vectors.  "pop_back"s, "first", "last"s 
-// *        and queues exist.  Had no idea.
+// *        and queues exist.  Had no idea.  Correction: vectors are so "3 months ago." 
+// *        If ever RasFLED goes throgh a polish, replace vectors with deques.
 // *    - Continue refining animations into an event language that can be ported. 
+// *    - Configuration files. (in progress)
 // *
 // ***************************************************************************************
 
@@ -486,7 +518,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // -------------------------------------------------------------------------------------
 //  AuxLightControlModule
 
-void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData, profile_strip_group pstrgDoor[], timed_event teEvent[], bool booSensors[], unsigned long tmeCurrentTime)
+void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData, profile_strip_group pstrgDoor[], timed_event teEvent[], unsigned long tmeCurrentTime)
 // This routine is designed to scan all the doors or switches.  If anthing is open, opened 
 //  closed or closed (odd twist of english there) then set the appropriate or maintain
 //  animations.  
@@ -508,7 +540,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
   // Check for newly opened and run animation on them.
   for (int door=0; door < sdSysData.CONFIG.iNUM_SWITCHES; door++)
   {
-    if (pstrgDoor[door].hwSWITCH.changed(booSensors[door], tmeCurrentTime) == true)
+    if (pstrgDoor[door].hwSWITCH.changed(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(door).value, tmeCurrentTime) == true)
     {
       changedetected = true; 
       if (pstrgDoor[door].hwSWITCH.booVALUE)
@@ -526,7 +558,7 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
 
           // Turn on additional lights overhead
           cons.printwait("  Add On Strip:" + std::to_string(-1 + 1));
-          vdAdditionalOpenADV01(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
+          vdAdditionalOpenADV02(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
         }
       }
       else
@@ -730,13 +762,16 @@ void consoleprinthelp(Console &cons)
   cons.printwait("");
   cons.printwait("HELP SCREEN ------------");
   cons.printwait("");
-  cons.printwait("x or exit - Safely exits the RasFLED.");
+  cons.printwait("'x' or 'exit' - Safely exits the RasFLED.");
   cons.printwait("");
-  cons.printwait("help    - Prints this help screen.");
-  cons.printwait("events  - Prints all active events.");
+  cons.printwait("'help'    - Prints this help screen.");
+  cons.printwait("' events' - Prints all active events.");
+  cons.printwait("' config' - Prints some configuration data.");
   cons.printwait("");
   cons.printwait("     hh - Hazard Lights");
-  cons.printwait("     `` - End All Repeating Lights");
+  cons.printwait("     h` - Hazard Lights Off");
+  cons.printwait("");
+  cons.printwait("     `` - End Most Repeating Lights");
   cons.printwait("");
   cons.printwait("Colors:");
   cons.printwait(" r - Red    u - Purple  n - Orange");
@@ -775,6 +810,31 @@ void consoleprintevents(Console &cons, system_data &sdSysData, timed_event teEve
         cons.printwait(" ID:\"" + teEvent[channel].teDATA[event].strIdent + "\" Anim:" + std::to_string(teEvent[channel].teDATA[event].bytANIMATION)  + " LEDanim:" + std::to_string(teEvent[channel].teDATA[event].bytLEDANIMATION)  + " Strt:" + std::to_string(teEvent[channel].teDATA[event].intSTARTPOS) + " End:" + std::to_string(teEvent[channel].teDATA[event].intENDPOS));
       }
     }
+  }
+}
+
+// Display all running events.
+void consoleprintconfig(Console &cons, system_data &sdSysData, timed_event teEvent[])
+{
+  cons.printwait("Configuration");
+  cons.printwait("");
+
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Test_Strip) + " - iLED_Size_Test_Strip");
+  cons.printwait("");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Driver) + " - iLED_Size_Door_Back_Driver");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Passenger) + " - iLED_Size_Door_Back_Passenger");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Driver) + " - iLED_Size_Door_Front_Driver");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Passenger) + " - iLED_Size_Door_Front_Passenger");
+  cons.printwait("");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Driver) + " - iLED_Size_Overhead_Back_Driver");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Passenger) + " - iLED_Size_Overhead_Back_Passenger");
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Driver) + " - iLED_Size_Overhead_Front_Driver"); 
+  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Passenger) + " - iLED_Size_Overhead_Front_Passenger");
+  cons.printwait("");
+  cons.printwait("Switch Pin Numbers");
+  for(int x=0; x<sdSysData.CONFIG.iNUM_SWITCHES; x++)
+  {
+    cons.printwait("Switch Id (" + to_string(x) + ") - " + to_string(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(x).pin));
   }
 }
 
@@ -920,7 +980,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
-    // help
+    // print help
     if(cons.keywatch.Command.COMMANDLINE == "help")
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
@@ -928,11 +988,19 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
-    // events
-    if(cons.keywatch.Command.COMMANDLINE == "events")
+    // print event list
+    if(cons.keywatch.Command.COMMANDLINE == " events")
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       consoleprintevents(cons, sdSysData, teEvent);
+      cons.keywatch.cmdClear();
+    }
+
+    // print configuration data
+    if(cons.keywatch.Command.COMMANDLINE == " config")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      consoleprintconfig(cons, sdSysData, teEvent);
       cons.keywatch.cmdClear();
     }
 
@@ -1328,7 +1396,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       processcommandhazard(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
     }
-    
+  
     // -------------------------------------------------------------------------------------
     // Debug Characters only active when debug mode is on
     // debug
@@ -1549,6 +1617,7 @@ int loop()
   // Define System Data and Console
   Console cons;
   system_data sdSystem;
+  int intRet = wiringPiSetup(); 
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console
@@ -1556,8 +1625,12 @@ int loop()
   cons.set(CONSOLESPLITSIZE);
   nodelay(stdscr, true);
   
-  cons.printi("Initializing Console");
-  cons.printi("RasFLED Loop ('X' to Exit) ...");
+  cons.printi("Initializing Console ...");
+  cons.printi("");
+  cons.printi("RasFLED");
+  cons.printi("  'X'    - Exit");
+  cons.printi("  'help' - Command List)");
+  cons.printi("");
   
   // Console Key Watch
   cons.keywatch.set((int)KEYEXIT,2);  // Exit the program.
@@ -1576,8 +1649,24 @@ int loop()
   cons.keywatch.set(KEYRESIZE,2);
 
   // ---------------------------------------------------------------------------------------
+  // System Init
+
+  cons.printi("Initializing Timer ...");
+  FledTime tmeFled;
+  tmeFled.set();
+
+  // Sleeping Loop Variables
+  tmeFled.setframetime();
+  
+  double tmeStartTime = tmeFled.tmeFrameMillis;
+  unsigned long tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
+  sdSystem.store_Current_Frame_Time(tmeCurrentMillis);
+
+  // ---------------------------------------------------------------------------------------
   // Load system configuration and set data
   
+  cons.printi("Loading configuration ...");
+
   // Set Running Color to white.
   sdSystem.init_running_color_list();
   sdSystem.set_running_color(CRGB(32,32,32),"White");
@@ -1590,8 +1679,7 @@ int loop()
   string Configuration_Filename = Working_Directory + FILES_CONFIGURATION;
   string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
 
-  // Loading Configuration
-  cons.printi("Loading configuration ...");
+  // Loading Configuration from files
   // yes, it resaves the file.  as is for now.
   if (load_configuration(cons, sdSystem, Configuration_Filename) != true)
   {
@@ -1599,20 +1687,20 @@ int loop()
     cons.printi("  Configuration file not loaded.  Generating Configuration File.");
     if (save_configuration(cons, sdSystem, Configuration_Filename) == true)
     {
-      cons.printi("  Configuration file created.");
+      cons.printi("    Configuration file created.");
     }
     else
     {
-      cons.printi("  Configuration file not created.");
+      cons.printi("    Configuration file not created.");
     }
   }
 
   // Loading Running State
-  cons.printi("Loading running state ...");
+  cons.printi("  Loading running state ...");
   // yes, it resaves the file.  as is for now.
   if (load_saved_running_state(cons, sdSystem, Running_State_Filename) != true)
   {
-    cons.printi("  Running state file not loaded.");
+    cons.printi("    Running state file not loaded.");
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1644,24 +1732,29 @@ int loop()
   else
   {
     cons.printi("  LED count: " + to_string(led_count));
-    cons.printi("  OK");
   }
 
   // ---------------------------------------------------------------------------------------
 
   // Define Door Sensors.
-  cons.printi("Initializing Switches");
-  int intRet = wiringPiSetup();    // Initialize wiringPI.
-  pinMode(sdSystem.CONFIG.iSWITCH_PINs0, INPUT);
-  pinMode(sdSystem.CONFIG.iSWITCH_PINs1, INPUT);
-  pinMode(sdSystem.CONFIG.iSWITCH_PINs2, INPUT);
-  pinMode(sdSystem.CONFIG.iSWITCH_PINs3, INPUT);
-  // Set resistors in pins to Pull Up to the 3.3v rail.
-  pullUpDnControl(sdSystem.CONFIG.iSWITCH_PINs0, PUD_UP);
-  pullUpDnControl(sdSystem.CONFIG.iSWITCH_PINs1, PUD_UP);
-  pullUpDnControl(sdSystem.CONFIG.iSWITCH_PINs2, PUD_UP);
-  pullUpDnControl(sdSystem.CONFIG.iSWITCH_PINs3, PUD_UP);
+  cons.printi("Initializing Hardware Sensors ...");
+  for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+  {
+    pinMode(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin, INPUT);
+    pullUpDnControl(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin, PUD_UP);
+  }
 
+  // -------------------------------------------------------------------------------------
+  // Door Sensor
+  cons.printi("Initializing Hardware Sensor Interface ...");
+
+  // Initialize Switches
+  hardware_monitor tmpSwitch;
+  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, 50, true);
+  for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+  {
+    sdSystem.CONFIG.vhwDOORS.push_back(tmpSwitch);
+  }
 
   // ---------------------------------------------------------------------------------------
   // TEST AREA
@@ -1680,27 +1773,21 @@ int loop()
   */
 
   // ---------------------------------------------------------------------------------------
-  // FLED
-  cons.printi("Initializing Timer");
-  FledTime tmeFled;
-  tmeFled.set();
-  
-  // ---------------------------------------------------------------------------------------
   // Light Strip Event System
-  cons.printi("Initializing System Event Channels");
+  cons.printi("Initializing System Event Channels ...");
   timed_event teEvent[sdSystem.CONFIG.iNUM_CHANNELS];
 
 
   // ---------------------------------------------------------------------------------------
   // Define the Supid Random Numbers
-  cons.printi("Initializing Random Number Generator");
+  cons.printi("Initializing Random Number Generator ...");
   stupid_random sRND;
   // Initialize the Stupid Random Numbers
   sRND.set();
 
   // -------------------------------------------------------------------------------------
   // FLED LED Array
-  cons.printi("Initializing LED Arrays");
+  cons.printi("Initializing LED Arrays ...");
   sdSystem.CONFIG.iLED_Count_Back_Driver = sdSystem.CONFIG.iLED_Size_Door_Back_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Driver;
   sdSystem.CONFIG.iLED_Count_Front_Driver = sdSystem.CONFIG.iLED_Size_Door_Front_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Passenger;
   sdSystem.CONFIG.iLED_Count_Back_Passenger = sdSystem.CONFIG.iLED_Size_Door_Back_Passenger + sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver;
@@ -1711,22 +1798,17 @@ int loop()
   CRGB crgbMainArrays2[sdSystem.CONFIG.iLED_Count_Back_Passenger];
   CRGB crgbMainArrays3[sdSystem.CONFIG.iLED_Count_Front_Passenger];
   
-  cons.printi("Initializing Event System");
+  cons.printi("Initializing Event System ...");
   teEvent[0].create(sdSystem.CONFIG.iLED_Count_Back_Driver);
   teEvent[1].create(sdSystem.CONFIG.iLED_Count_Front_Driver);
   teEvent[2].create(sdSystem.CONFIG.iLED_Count_Back_Passenger);
   teEvent[3].create(sdSystem.CONFIG.iLED_Count_Front_Passenger);
 
-  // Door Sensor
-  cons.printi("Initializing Sensors");
-  hardware_monitor hwDoors[sdSystem.CONFIG.iNUM_SWITCHES];
-  bool boAuxLightsIsOn = false;
-
   // -------------------------------------------------------------------------------------
   // FLED LED Array
   
   // Define Led Strips
-  cons.printi("Initializing LED Strips");
+  cons.printi("Initializing LED Strips ...");
 
   profile_strip_group pstrgDoor[4];
 
@@ -1759,14 +1841,6 @@ int loop()
 
   // -------------------------------------------------------------------------------------
   
-  cons.printi("Starting System");
-  // Sleeping Loop Variables
-  tmeFled.setframetime();
-  
-  double tmeStartTime = tmeFled.tmeFrameMillis;
-  unsigned long tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
-   sdSystem.store_Current_Frame_Time(tmeCurrentMillis);
-
   /*
   // False events for testing.
   teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
@@ -1778,6 +1852,9 @@ int loop()
   // ---------------------------------------------------------------------------------------
   //  Repeating Sleeping Loop until eXit is triggered.
   // ---------------------------------------------------------------------------------------
+  
+  cons.printi("Starting System ...");
+
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
     // --- Prpare the Loop ---
@@ -1801,27 +1878,24 @@ int loop()
     bool booUpdates2 = false;
     bool booUpdates3 = false;
 
-    // Sensor Array (QUICK FIX)
-    bool booSensors[sdSystem.CONFIG.iNUM_SWITCHES];
-
-    booSensors[0] = digitalRead(sdSystem.CONFIG.iSWITCH_PINs0);
-    booSensors[1] = digitalRead(sdSystem.CONFIG.iSWITCH_PINs1);
-    booSensors[2] = digitalRead(sdSystem.CONFIG.iSWITCH_PINs2);
-    booSensors[3] = digitalRead(sdSystem.CONFIG.iSWITCH_PINs3);
+    for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+    {
+      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
+    }
     
     // Override the digital pins if in debugging mode.
     if(cons.keywatch.getnoreset(KEYDEBUG) == 1)
     {
       // Toggle on and off the door sensors with keyboard.
-      booSensors[0] = cons.keywatch.getTF('1');
-      booSensors[1] = cons.keywatch.getTF('2');
-      booSensors[2] = cons.keywatch.getTF('3');
-      booSensors[3] = cons.keywatch.getTF('4');
+      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(0).value = cons.keywatch.getTF('1');
+      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(1).value = cons.keywatch.getTF('2');
+      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(2).value = cons.keywatch.getTF('3');
+      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(3).value = cons.keywatch.getTF('4');
     }
 
 
     // Check the doors and start or end all animations
-    DoorMonitorAndAnimationControlModule(cons, sdSystem, pstrgDoor, teEvent, booSensors, tmeCurrentMillis);
+    DoorMonitorAndAnimationControlModule(cons, sdSystem, pstrgDoor, teEvent, tmeCurrentMillis);
 
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
@@ -1910,7 +1984,7 @@ int loop()
       extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvent);
       // Refresh console data storeage from main program. This will be a pass through buffer. 
       // so the console will not have to access any real data. 
-      sdSystem.store_door_switch_states(booSensors);
+      sdSystem.store_door_switch_states();
       sdSystem.store_event_counts(teEvent[0].teDATA.size(),teEvent[1].teDATA.size(),teEvent[2].teDATA.size(),teEvent[3].teDATA.size());
 
       cons.output(sdSystem);

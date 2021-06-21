@@ -15,6 +15,7 @@
 // Standard Header Files
 #include <stdio.h>
 #include <ncurses.h>
+#include <deque>
 
 // RASFled related header files
 #include "definitions.h"
@@ -24,7 +25,6 @@
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
 // ***************************************************************************************
-//sdSystem.CONFIG.i
 class configuration
 {
   public:
@@ -57,32 +57,22 @@ class configuration
   // console: gpio -v       (check installation)
   // console: gpio readall  (check wiring pin numbers)
 
-  // On off buttons, door sensors, switches.
-  int iSWITCH_PINs0       = 22;      // GPIO.22 - Pin 31 - Hardware Open Close Door Sensor 0
-  int iSWITCH_PINs1       = 23;      // GPIO.23 - Pin 33 - Hardware Open Close Door Sensor 1
-  int iSWITCH_PINs2       = 24;      // GPIO.24 - Pin 35 - Hardware Open Close Door Sensor 2
-  int iSWITCH_PINs3       = 25;      // GPIO.25 - Pin 37 - Hardware Open Close Door Sensor 3
-
   int iAUXDRLINGERFRT     = 15000;    // How long the Front Door lights stay on after close
   int iAUXDRLINGERBCK     = 25000;    // How long the Back Door lights stay on after close
 
   // -------------------------------------------------------------------------------------
   // Door Switch Reference
   int iNUM_CHANNELS       = 4;   // Amount of LED strips we will be controlling.
-  int iNUM_TIMED_EVENTS   = 50;  // Untill I can remember how LL, this is being
-  //  Also, total number of this will be multiplied by the
-  //  amount of LED strips you have setup.  Watch your memory.
-  int iNUM_SWITCHES       = 4;   
 
   int iBRIGHTNESS         = 96;  //96  Using Example Code.  Max unknown
   int iFRAMES_PER_SECOND  = 50; // Will not be necessary, but keeping, for now, just in 
-  //  case.
+                                //  case.
 
   // -------------------------------------------------------------------------------------
-  // Door Switch Reference
-  int iDoor_Back    = 0; // Back Door Switch
-  int iDoor_Front   = 1; // Front Door Switch
-  int iDoor_Aux     = 2; // Aux Door Switch 
+  // New Door Switch Reference
+  int iNUM_SWITCHES       = 4;
+  deque<hardware_monitor> vhwDOORS;
+  deque<switch_map>       vSWITCH_PIN_MAP;
 };
 
 
@@ -146,6 +136,7 @@ class system_data
   running_colors running_color_list;
 
   // store copies of displayed system data
+  // REWRITE TO HANDLE VARIABLE SIZE !!! 
   bool *boolDOORSENSORS = (bool*) malloc(CONFIG.iNUM_SWITCHES * sizeof(bool));;
   int  *intEVENTCOUNTS = (int*) malloc(CONFIG.iNUM_SWITCHES * sizeof(int));;
 
@@ -168,11 +159,11 @@ class system_data
   }
 
   // Reference to the door values
-  void store_door_switch_states(bool switches[])
+  void store_door_switch_states()
   {
     for(int x=0; x < CONFIG.iNUM_SWITCHES; x++)
     {
-      boolDOORSENSORS[x] = switches[x];
+      boolDOORSENSORS[x] = CONFIG.vSWITCH_PIN_MAP.at(x).value;
     }
   }
 

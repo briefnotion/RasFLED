@@ -335,6 +335,16 @@ return tmpColor;
 // ---------------------------------------------------------------------------------------
 // Hardware Monitor Class
 
+class switch_map
+// A simple switch to pin reference map
+{
+  // Referenced only by position in list.
+  public:
+
+  int   pin = 0;
+  bool  value = false;
+};
+
 class hardware_monitor
 // Create a hardware switch or button varable type.
 {

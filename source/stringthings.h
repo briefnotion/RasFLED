@@ -14,14 +14,14 @@
 
 // Standard Header Files
 #include <string.h>
-#include <queue>
+#include <deque>
 
 using namespace std;
 
 class WORDLINE
 {
   private:
-  queue<string> words;
+  deque<string> words;
 
   public:
   bool empty()
@@ -40,7 +40,7 @@ class WORDLINE
     if(words.empty() == false)
     {
       word = words.front();
-      words.pop();
+      words.pop_front();
     }
     return word;
   }
@@ -68,7 +68,7 @@ class WORDLINE
         
         if(word.length()>0)
         {
-          words.push(word);
+          words.push_back(word);
         }
       }
 
