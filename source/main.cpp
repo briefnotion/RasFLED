@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.30A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.31A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,41 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.31_210622
+// *    - Current version will be more of a "get it working in any kind of way" update for 
+// *        the configurable system.  Plenty of routines need an overhaul.  
+// *        - Current Restrictions for current test version:
+// *            - Switches are directly tied to groups of strips.
+// *            - Animations are directly tied to groups of strips (mostly).
+// *            - Only one switch per group.
+// *            - There is no direct mapping for switch to strip group.
+// *            - Console Display could use plenty of work.  Holding off until I get 
+// *                a display because never needed in live environement and not a system 
+// *                dependent component.
+// *    - Sucesses:
+// *        - No Hardcoded strip sizes or switch sizes should exist anywhere in the 
+// *            system.
+// *        - Any Array within the system is dynamicly allocated on startup or whenever 
+// *            needed.
+// *        - Every part of the system that relied on hardcoded sizes has been rewritten 
+// *            to handle dynamic sizes or allocations. 
+// *        - Portions of the console has been rewitten to handle dynamic sizes.
+// *        - Test funcions have been modified to handle dynamic sizes.
+// *        - All in all, a bunch of things changed.
+// *    - I am not certain everythings is working as was before, so running everything 
+// *        through some live test to find out.  
+// *    - Cut out a bunch of old animations.  Structure of the animation classes changed 
+// *        so much, probably couldnt get them running without a rewrite anyway. 
+// *    - Added things to the ToDo list.  Good things.
+// *    - I would totally love a Cesna 152 and the ability to continuously affor its 
+// *        upkeep and minor trips.  I think I could handle a Cesna 152 as long as  
+// *        everything worked.  Do you really need to go to a flight school to get 
+// *        a pilots license.  Really need to get rid of people in my life who keep 
+// *        tieing me down.
+// *    - Large portions of code are out of place, not needed, or just in the wrong 
+// *        order.  Doesn't really affect the program compile or running, but, tidying 
+// *        up will make the program easier to read. 
+// *
 // * V 0.30_210619
 // *    - Delete the old configuration file before running.  Things have changed.
 // *    - Got tired of looking at the same old animations.  
@@ -452,6 +487,17 @@
 // *        If ever RasFLED goes throgh a polish, replace vectors with deques.
 // *    - Continue refining animations into an event language that can be ported. 
 // *    - Configuration files. (in progress)
+// *    - Add descriptions in the configuration.cfg file.
+// *    - Thow in some code to allow switchs to groups to respond to multiple "Overhead" 
+// *        and "Door"s within the group.
+// *    - Tie Switches to groups through ID in configuration. 
+// *    - Build a seperate config file for the Door control module so any additional 
+// *        control modules created can be differentiated. 
+// *    - Create an animation profile system to change all animations to another set of 
+// *        animations.  For instance, change from normal animations to prebuilt holiday
+// *        animations. 
+// *    - There were a few more things to list here.  I'll write them down later as 
+// *        needed.
 // *
 // ***************************************************************************************
 
@@ -499,9 +545,12 @@ static char VERSION[] = "XX.YY.ZZ";
 #include "helper.h"
 #include "files.h"
 #include "consoleanddata.h"
+#include "LEDstuff.h"
 #include "fledcore.h"
 #include "timedeventsystem.h"
 #include "animations.h"
+#include "hardware_module_door.h"
+#include "interface.h"
 
 
 
@@ -515,177 +564,6 @@ static char VERSION[] = "XX.YY.ZZ";
 // FUNCTION AND PROCEDURES
 // ***************************************************************************************
 
-// -------------------------------------------------------------------------------------
-//  AuxLightControlModule
-
-void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData, profile_strip_group pstrgDoor[], timed_event teEvent[], unsigned long tmeCurrentTime)
-// This routine is designed to scan all the doors or switches.  If anthing is open, opened 
-//  closed or closed (odd twist of english there) then set the appropriate or maintain
-//  animations.  
-// Works like this.  If any door is open then make sure the overhead lights are on.  
-//  If all the doors are closed, turn all the lights off.  Run door animations like 
-//  normal.
-{
-   using namespace std;
-
-  int opencount = 0;
-  //int strip;
-  bool changedetected = false;
-
-  // Scan Through Doors and Check for Changes
-
-  // DO NOT CLEAR ANIMATIONS HERE!  CLEAR ANIMATIONS IN ANIMATION SCRIPT!
-  //              (easier to track and debug that way)
-
-  // Check for newly opened and run animation on them.
-  for (int door=0; door < sdSysData.CONFIG.iNUM_SWITCHES; door++)
-  {
-    if (pstrgDoor[door].hwSWITCH.changed(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(door).value, tmeCurrentTime) == true)
-    {
-      changedetected = true; 
-      if (pstrgDoor[door].hwSWITCH.booVALUE)
-      {
-        // Door Just Opened
-        // Start Open Door Animation on This Door
-        if (pstrgDoor[door].hwSWITCH.ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
-        {
-          //strip = door *2;
-          
-          // Door Animation
-          cons.printwait("  Door " + std::to_string(door) + " Open ... ");
-          pstrgDoor[door].pstrDOOR.Status = "StDoorOpen";
-          vdDoorOpenAnimationADV00(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
-
-          // Turn on additional lights overhead
-          cons.printwait("  Add On Strip:" + std::to_string(-1 + 1));
-          vdAdditionalOpenADV02(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
-        }
-      }
-      else
-      {
-        // Door Just Closed
-        if (pstrgDoor[door].hwSWITCH.ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
-        {
-          //strip = door *2;
-          
-          // Replace Open or Current door animation to closed door animation
-          cons.printwait("  Door " + std::to_string(door) + " Close ... ");
-          pstrgDoor[door].pstrDOOR.Status = "StDoorCloseA";        
-          vdDoorCloseActiveADV00(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
-
-          // Turn off additional lights overhead
-          cons.printwait("  Add Off Strtip:" + std::to_string(-1));
-          vdAdditionalCloseADV00(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
-        }
-      }
-    }
-  }
-
-  // Check To See If Any Door Opened or Closed.
-  if (changedetected == true)
-  {
-    // Count the amount of open doors
-    for (int door=0; door < sdSysData.CONFIG.iNUM_SWITCHES; door++)
-    {
-      if (pstrgDoor[door].hwSWITCH.booVALUE  == true)
-      {
-        opencount = opencount  + 1;
-      }
-    }
-    cons.printwait("Open Door Count: " + std::to_string(opencount));
-    sdSysData.intDoorsOpen = opencount;
-    // -----
-
-    if (opencount > 0)
-    {
-      // There are open Doors
-      for (int door=0; door < sdSysData.CONFIG.iNUM_SWITCHES; door++)
-      {
-        //strip = (door *2); // Determine Strip from Door aka Channel
-        if (pstrgDoor[door].hwSWITCH.ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
-        {
-
-          // If a door is open
-          if (pstrgDoor[door].pstrDOOR.Status != "StDoorOpen" && pstrgDoor[door].pstrDOOR.Status != "StDoorCloseA")
-          {
-            // If this door is not open then make sure the closed door animation is running on it.
-            cons.printwait("  Door " + std::to_string(door) + " Running Active Closed: ");
-
-            // Closed Active Doors animation
-            pstrgDoor[door].pstrDOOR.Status = "StDoorCloseA";
-            vdDoorCloseActiveADV00(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
-          }
-
-          // If  a door is open
-          if (pstrgDoor[door].pstrOVERHEAD.Status != "stOverOpen")
-          {
-            // Make sure this door has the overhead animation running on it.
-            cons.printwait("  Door " + std::to_string(door) + " Running Overhead: ");
-
-            // Normal Overhead Animation 
-            pstrgDoor[door].pstrOVERHEAD.Status = "stOverOpen";
-            vdPacificaishAnimationADV(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
-          }
-        }
-      }      
-    }
-    else 
-      {
-      // All doors are closed.
-      cons.printwait("  All Doors Closed: ");
-
-      for (int door=0; door < sdSysData.CONFIG.iNUM_SWITCHES; door++)
-      {
-        //strip = (door *2); // Determine Strip from Door aka Channel
-          // Strip will be the door strip
-          // Strip +1 is the door overhead strip // Try to avoid passing this also. 
-          //  Let the Animations handle it.
-        
-        // Finalize additionall animations on newley closed doors
-        if (pstrgDoor[door].hwSWITCH.ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
-        {
-          //  Guarantee all animations end in 15 seconds. This is a fall back method to
-          //    make sure everythings stops in case a clear animation fails to start.
-          //vdEndAllAnimationsADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
-
-          // Start the Doors Running Mode on each door.
-          pstrgDoor[door].pstrDOOR.Status = "StDoorCloseR";
-          vdDoorCloseRunningADV(cons, pstrgDoor[door].pstrDOOR, teEvent, tmeCurrentTime);
-
-          //cons.printwait("All Doors Closed HWLVL: D%d AS%d" + std::to_string(door) + std::to_string(lsStrips[strip + 1].AnimationStatus));
-          
-          // Make sure lights are off or turning off and Amber Up the newly closded doors.
-          if (pstrgDoor[door].pstrOVERHEAD.Status == "stOverOpen")
-          {
-            // Start Overhead Turn On Convenience Animation.
-            // See when the door was closed
-            // cons.printwait("Door Toggle Time (current time - toggle time): %d - %dms < 1500", tmeCurrentTime, hwmDoor[door].tmeTOGGLEDTIME);
-            if ((tmeCurrentTime - pstrgDoor[door].hwSWITCH.tmeTOGGLEDTIME) < 15000)
-            {
-              // The door was recently closed. Run the Convienance lights on it.
-              cons.printwait("  Door " + std::to_string(door) + " Conviencance Lights On: ");
-              
-              // Turn on Convienance Lights 
-              pstrgDoor[door].pstrOVERHEAD.Status = "StOverCloseCon";
-              vdCoADV01(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
-            }
-            else
-            {
-              // The door was closed for a while, just turn off the lights.
-              // Start the Close Door Overhead Animation
-              cons.printwait("  Door " + std::to_string(door) + " Conviencance Lights Off: ");
-
-              // Just turn off the lights.
-              pstrgDoor[door].pstrOVERHEAD.Status = "stOverClose";
-              vdCloseOverADV(cons, pstrgDoor[door].pstrOVERHEAD, teEvent, tmeCurrentTime);
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
@@ -697,23 +575,11 @@ void DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysData,
 //  Copy the Prepared Matrix to the Display Matrix.
 void MatrixPrepare(Console cons, system_data &sdSysData, CRGB crgbPrepedMatrix[], int intLEDCOUNT, int* DisplayMatrix, int &mcount)
 {
-  if(cons.keywatch.get(KEYLEDUPLW) == 0)
+  for (int lcount = 0; lcount < intLEDCOUNT; lcount++)
   {
-    for (int lcount = 0; lcount < intLEDCOUNT; lcount++)
-    {
-      // Normal Display
-      DisplayMatrix[mcount]=crgbPrepedMatrix[lcount].b + (crgbPrepedMatrix[lcount].g << 8) + (crgbPrepedMatrix[lcount].r << 16) + (0 << 24);
-      mcount++;
-    }
-  }
-  else
-  {
-    for (int lcount = intLEDCOUNT - sdSysData.CONFIG.iLED_Size_Test_Strip; lcount < intLEDCOUNT; lcount++)
-    {
-      // Top Only Test Display
-      DisplayMatrix[mcount]=crgbPrepedMatrix[lcount].b + (crgbPrepedMatrix[lcount].g << 8) + (crgbPrepedMatrix[lcount].r << 16) + (0 << 24);
-      mcount++;
-    }
+    // Normal Display
+    DisplayMatrix[mcount]=crgbPrepedMatrix[lcount].b + (crgbPrepedMatrix[lcount].g << 8) + (crgbPrepedMatrix[lcount].r << 16) + (0 << 24);
+    mcount++;
   }
 }
 
@@ -749,792 +615,28 @@ void MatxixFill(CRGB crgbPreparedMatix[], int intLEDCOUNT, CRGB crgbColor)
 }
 
 
-// -------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------
-// Console Commands
 
 // -------------------------------------------------------------------------------------
-// Procedures related to the Command Line.
+// Console Update
 
-// Display the help screen.
-void consoleprinthelp(Console &cons)
+// Reference for the amount for events running.
+void store_event_counts(system_data &sdSysData, timed_event teEvent[])
 {
-  cons.printwait("");
-  cons.printwait("HELP SCREEN ------------");
-  cons.printwait("");
-  cons.printwait("'x' or 'exit' - Safely exits the RasFLED.");
-  cons.printwait("");
-  cons.printwait("'help'    - Prints this help screen.");
-  cons.printwait("' events' - Prints all active events.");
-  cons.printwait("' config' - Prints some configuration data.");
-  cons.printwait("");
-  cons.printwait("     hh - Hazard Lights");
-  cons.printwait("     h` - Hazard Lights Off");
-  cons.printwait("");
-  cons.printwait("     `` - End Most Repeating Lights");
-  cons.printwait("");
-  cons.printwait("Colors:");
-  cons.printwait(" r - Red    u - Purple  n - Orange");
-  cons.printwait(" g - Green  y - Yellow");
-  cons.printwait(" b - Blue   c - Cyan    ` - End");
-  cons.printwait("");
-  cons.printwait("rX  - Set Running Color  (X is the color)");
-  cons.printwait("");
-  cons.printwait("pX  - Pulse Anim         (X is the color)");
-  cons.printwait("oX  - Overhead Anim      (X is the color)");
-  cons.printwait("fX  - Flash Anim      (X is the color)");
-  cons.printwait("X`  - End Command (X is the Animation)");
-  cons.printwait("  Double animations will be with Running Color.");
-  cons.printwait("");
-  //cons.printwait("  Not all colors implemented for all commands.");
-  //cons.printwait("");
-  cons.printwait("\\   - Turn on and off diagnosis mode.");
-  cons.printwait("t - Cycle Doors  l - Cycle Upper Lower  c - Test LEDs   a - not spec");
-  cons.printwait("");
-}
-
-// Display all running events.
-void consoleprintevents(Console &cons, system_data &sdSysData, timed_event teEvent[])
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
+  for(int channel=0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    cons.printwait("Channel " + std::to_string(channel));
-    if (teEvent[channel].teDATA.size() == 0)
-    {
-      cons.printwait("No Events");
-    }
-    else
-    {
-      for (int event = 0; event < teEvent[channel].teDATA.size(); event++)
-      {
-        cons.printwait(" ID:\"" + teEvent[channel].teDATA[event].strIdent + "\" Anim:" + std::to_string(teEvent[channel].teDATA[event].bytANIMATION)  + " LEDanim:" + std::to_string(teEvent[channel].teDATA[event].bytLEDANIMATION)  + " Strt:" + std::to_string(teEvent[channel].teDATA[event].intSTARTPOS) + " End:" + std::to_string(teEvent[channel].teDATA[event].intENDPOS));
-      }
-    }
+    sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(channel) = 0;
   }
-}
 
-// Display all running events.
-void consoleprintconfig(Console &cons, system_data &sdSysData, timed_event teEvent[])
-{
-  cons.printwait("Configuration");
-  cons.printwait("");
-
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Test_Strip) + " - iLED_Size_Test_Strip");
-  cons.printwait("");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Driver) + " - iLED_Size_Door_Back_Driver");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Passenger) + " - iLED_Size_Door_Back_Passenger");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Driver) + " - iLED_Size_Door_Front_Driver");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Passenger) + " - iLED_Size_Door_Front_Passenger");
-  cons.printwait("");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Driver) + " - iLED_Size_Overhead_Back_Driver");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Passenger) + " - iLED_Size_Overhead_Back_Passenger");
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Driver) + " - iLED_Size_Overhead_Front_Driver"); 
-  cons.printwait(to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Passenger) + " - iLED_Size_Overhead_Front_Passenger");
-  cons.printwait("");
-  cons.printwait("Switch Pin Numbers");
-  for(int x=0; x<sdSysData.CONFIG.iNUM_SWITCHES; x++)
+  for(int group=0; group<sdSysData.CONFIG.LED_MAIN.at(0).g_size(); group++)
   {
-    cons.printwait("Switch Id (" + to_string(x) + ") - " + to_string(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(x).pin));
-  }
-}
-
-// -------------------------------------------------------------------------------------
-// Test Animation
-
-void processtestanimation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdTestAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  sdSysData.booPulsesRunning = true;
-}
-
-// -------------------------------------------------------------------------------------
-// Pulses
-
-// Set To End All Pulses
-void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 5, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
-  }
-  sdSysData.booPulsesRunning = false;
-}
-
-// Flash Color All Channels
-void processcommandflash(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBflashcolor)
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelFlashColor, false, cRGBflashcolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  //sdSysData.booPulsesRunning = true;
-}
-
-// Pulse Color All Channels
-void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  sdSysData.booPulsesRunning = true;
-}
-
-// Pulse Color All Channels
-void processcommandpulsecountdown(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  sdSysData.booPulsesRunning = true;
-}
-
-// -------------------------------------------------------------------------------------
-// Overhead Illum
-
-// Set To End All Overhead Illumination
-void processcommandoverheadillumend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
-  }
-  sdSysData.booOverheadRunning = false;
-}
-
-// -------------------------------------------------------------------------------------
-// Overhead Illumination Color
-void processcommandoverheadillum(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaOverheadIllumColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  sdSysData.booOverheadRunning = true;
-}
-
-//  Overhead Illumination Pacificaish Color
-void processcommandpacificaishcolor(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaPacificaishColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  sdSysData.booOverheadRunning = true;
-}
-
-// -------------------------------------------------------------------------------------
-// Hazard
-
-// Set To End All Hazard
-void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Hazard", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true);
-  }
-  sdSysData.booHazardRunning = false;
-}
-
-// Hazard
-void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
-{
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaHazard, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  
-  }
-  sdSysData.booHazardRunning = true;
-}
-
-// -------------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------------
-
-// Process and call routines as entered on the command line.
-void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
-{
-  if(cons.keywatch.cmdPressed() == true)
-  {
-    // Color Palettes
-    CRGB crgbWhite  = CRGB(32,32,32); // W
-    CRGB crgbRed    = CRGB(64,0,0);   // R
-    CRGB crgbGreen  = CRGB(0,64,0);   // G
-    CRGB crgbBlue   = CRGB(0,0,64);   // B
-
-    CRGB crgbPurple = CRGB(32,0,64);  // U
-    CRGB crgbYellow = CRGB(48,48,0);  // Y
-    CRGB crgbCyan   = CRGB(0,48,48);  // C
-
-    CRGB crgbOrange = CRGB(64,16,0);  // N
-
-    
-    // Call routines that match the info on the command line.
-    
-    // Program Exit
-    if((cons.keywatch.Command.COMMANDLINE[0] == KEYEXIT) || (cons.keywatch.Command.COMMANDLINE == "exit"))
+    for(int strip=0; strip<sdSysData.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
     {
-      cons.keywatch.in(KEYEXIT);
-      cons.keywatch.cmdClear();
+      int channel = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+
+      sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) 
+        = sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) 
+        + (teEvent[channel].teDATA.size());
     }
-
-    // print help
-    if(cons.keywatch.Command.COMMANDLINE == "help")
-    {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      consoleprinthelp(cons);
-      cons.keywatch.cmdClear();
-    }
-
-    // print event list
-    if(cons.keywatch.Command.COMMANDLINE == " events")
-    {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      consoleprintevents(cons, sdSysData, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // print configuration data
-    if(cons.keywatch.Command.COMMANDLINE == " config")
-    {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      consoleprintconfig(cons, sdSysData, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // End All Extra Repeating Lights and Countdown Timer
-    if(cons.keywatch.Command.COMMANDLINE == "``")
-    {
-      // end Countdown Timer
-      sdSysData.cdTIMER.end();
-
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
-      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
-      processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // -------------------------------------------------------------------------------------
-    // FLASH
-
-    // flash Running
-    if(cons.keywatch.Command.COMMANDLINE == "ff")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
-      cons.keywatch.cmdClear();
-    }
-
-    // flash White
-    if(cons.keywatch.Command.COMMANDLINE == "fw")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
-    }
-
-    // flash Red
-    if(cons.keywatch.Command.COMMANDLINE == "fr")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
-      cons.keywatch.cmdClear();
-    }
-
-    // flash Green
-    if(cons.keywatch.Command.COMMANDLINE == "fg")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
-      cons.keywatch.cmdClear();
-    }
-
-    // flash Blue
-    if(cons.keywatch.Command.COMMANDLINE == "fb")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
-    }
-
-    // flash Purple
-    if(cons.keywatch.Command.COMMANDLINE == "fu")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
-      cons.keywatch.cmdClear();
-    }
-  
-    // flash Yellow
-    if(cons.keywatch.Command.COMMANDLINE == "fy")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
-      cons.keywatch.cmdClear();
-    }
-    
-    // flash Cyan
-    if(cons.keywatch.Command.COMMANDLINE == "fc")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
-      cons.keywatch.cmdClear();
-    }
-
-    // flash Orange
-    if(cons.keywatch.Command.COMMANDLINE == "fn")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
-      cons.keywatch.cmdClear();
-    }
-
-    // -------------------------------------------------------------------------------------
-    // PULSES
-
-    // pulse end
-    if(cons.keywatch.Command.COMMANDLINE == "p`")
-    {
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Running
-    if(cons.keywatch.Command.COMMANDLINE == "  ")
-    {
-      // Keep values below 128
-      sdSysData.start_timer(DEFAULTTIMER * 60);
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Running Color
-    if(cons.keywatch.Command.COMMANDLINE == "pp")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse White
-    if(cons.keywatch.Command.COMMANDLINE == "pw")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Red
-    if(cons.keywatch.Command.COMMANDLINE == "pr")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Green
-    if(cons.keywatch.Command.COMMANDLINE == "pg")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Blue
-    if(cons.keywatch.Command.COMMANDLINE == "pb")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Purple
-    if(cons.keywatch.Command.COMMANDLINE == "pu")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Yellow
-    if(cons.keywatch.Command.COMMANDLINE == "py")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Cyan
-    if(cons.keywatch.Command.COMMANDLINE == "pc")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
-      cons.keywatch.cmdClear();
-    }
-
-    // pulse Orange
-    if(cons.keywatch.Command.COMMANDLINE == "pn")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
-      cons.keywatch.cmdClear();
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Overhead Illumination
-    
-    // pulse end overhead illum
-    if(cons.keywatch.Command.COMMANDLINE == "o`")
-    {
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Running
-    if((cons.keywatch.Command.COMMANDLINE == "oo") || (cons.keywatch.Command.COMMANDLINE == "zz"))
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead White
-    if(cons.keywatch.Command.COMMANDLINE == "ow")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Red
-    if(cons.keywatch.Command.COMMANDLINE == "or")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Green
-    if(cons.keywatch.Command.COMMANDLINE == "og")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Blue
-    if(cons.keywatch.Command.COMMANDLINE == "ob")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Purple
-    if(cons.keywatch.Command.COMMANDLINE == "ou")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Yellow
-    if(cons.keywatch.Command.COMMANDLINE == "oy")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Cyan
-    if(cons.keywatch.Command.COMMANDLINE == "oc")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Orange
-    if(cons.keywatch.Command.COMMANDLINE == "on")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
-      cons.keywatch.cmdClear();
-    }
-
-    // Set Running Color
-    if(cons.keywatch.Command.COMMANDLINE == "rw")
-    {
-      sdSysData.set_running_color(crgbWhite, "White");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-
-    if(cons.keywatch.Command.COMMANDLINE == "rr")
-    {
-      sdSysData.set_running_color(crgbRed, "Red");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rg")
-    {
-      sdSysData.set_running_color(crgbGreen, "Green");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rb")
-    {
-      sdSysData.set_running_color(crgbBlue, "Blue");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "ru")
-    {
-      sdSysData.set_running_color(crgbPurple, "Purple");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "ry")
-    {
-      sdSysData.set_running_color(crgbYellow, "Yellow");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rc")
-    {
-      sdSysData.set_running_color(crgbCyan, "Cyan");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rn")
-    {
-      sdSysData.set_running_color(crgbOrange, "Orange");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.cmdClear();
-    }
-
-    /*
-    // -------------------------------------------------------------------------------------
-    // Overhead Pacificaish White
-    if(cons.keywatch.Command.COMMANDLINE == "ott")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
-    }
-
-    // Overhead Pacificaish Blue
-    if(cons.keywatch.Command.COMMANDLINE == "otb")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
-    }
-    */
-
-    // -------------------------------------------------------------------------------------
-    // Hazard
-    
-    // Hazard illum end
-    if(cons.keywatch.Command.COMMANDLINE == "h`")
-    {
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
-    }
-
-    // Hazard
-    if(cons.keywatch.Command.COMMANDLINE == "hh")
-    {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      processcommandhazard(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
-    }
-  
-    // -------------------------------------------------------------------------------------
-    // Debug Characters only active when debug mode is on
-    // debug
-    if(cons.keywatch.Command.COMMANDLINE[0] == KEYDEBUG)
-    {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      cons.keywatch.in(KEYDEBUG);
-      cons.keywatch.cmdClear();
-    }
-
-    // Only accept debug keys if debug is on.
-    if (cons.keywatch.getnoreset(KEYDEBUG) == 1)
-    {
-      // Run Test Animation
-      if(cons.keywatch.Command.COMMANDLINE[0] == KEYTESTANIM)
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        processtestanimation(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-        cons.keywatch.cmdClear();
-      }
-
-      // LED DOOR CYCLE
-      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDDRCYCL)
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in(KEYLEDDRCYCL);
-        cons.keywatch.cmdClear();
-      }
-
-      // LED RANGE UPer or LOWer.
-      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDUPLW)
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in(KEYLEDUPLW);
-        cons.keywatch.cmdClear();
-      }
-
-      // LED TEST toggle all lights on to static value.
-      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDTEST)
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in(KEYLEDTEST);
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '1')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('1');
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '2')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('2');
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '3')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('3');
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '4')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('4');
-        cons.keywatch.cmdClear();
-      }
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Turn on and off debug. Deactivate debug keys when off.
-    // Store behavior values for debug info.
-    if (cons.keywatch.pressed(KEYDEBUG) == true)
-    {
-      if (cons.keywatch.getnoreset(KEYDEBUG) == 0)
-      {
-        // Draw values for debug LED CYCLE through displayed range (all, Door #)
-        cons.keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
-        cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
-        
-        // Draw values for debug LED RANGE UPer or LOWer.
-        cons.keywatch.Chars[KEYLEDUPLW].VALUE = 0;
-        cons.keywatch.Chars[KEYLEDUPLW].ACTIVE = false;
-
-        // Draw values for debug LED TEST toggle all lights on to static value.
-        cons.keywatch.Chars[KEYLEDTEST].VALUE = 0;
-        cons.keywatch.Chars[KEYLEDTEST].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['1'].VALUE = 0;
-        cons.keywatch.Chars['1'].ACTIVE = false;
-        
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['2'].VALUE = 0;
-        cons.keywatch.Chars['2'].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['3'].VALUE = 0;
-        cons.keywatch.Chars['3'].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['4'].VALUE = 0;
-        cons.keywatch.Chars['4'].ACTIVE = false;
-      }
-      else
-      {
-        // Reset console debug values to default values if debug turned off.
-        cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
-        cons.keywatch.Chars[KEYLEDUPLW].ACTIVE = true;
-        cons.keywatch.Chars[KEYLEDTEST].ACTIVE = true;
-        cons.keywatch.Chars['1'].ACTIVE = true;
-        cons.keywatch.Chars['2'].ACTIVE = true;
-        cons.keywatch.Chars['3'].ACTIVE = true;
-        cons.keywatch.Chars['4'].ACTIVE = true;
-      }
-    }
-  }
-}
-
-// If a door is opened and DOORAWARE is on, we want to end these animations when the door
-//  has been opened.
-void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[] )
-{
-  if ( (sdSysData.intDoorsOpen > 0)  && ((sdSysData.booPulsesRunning == true) || (sdSysData.booOverheadRunning == true)) )
-  {
-    // End pulses when door is opened and end countdown timer.
-    sdSysData.cdTIMER.end();
-    processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
-    processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
   }
 }
 
@@ -1615,9 +717,13 @@ int loop()
 
   // ---------------------------------------------------------------------------------------
   // Define System Data and Console
+  int return_code = 0;
   Console cons;
   system_data sdSystem;
   int intRet = wiringPiSetup(); 
+
+  // Disposable Variables
+  int count  = 0;
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console
@@ -1637,8 +743,6 @@ int loop()
 
   // Debugging keys
   cons.keywatch.set((int)KEYDEBUG,2);  // Testing Mode Toggle
-  cons.keywatch.set((int)KEYLEDDRCYCL,5);  // Test Doors
-  cons.keywatch.set((int)KEYLEDUPLW,2);   // Swap LED limits
   cons.keywatch.set((int)KEYLEDTEST,2);  // Test LEDs.  Turn all on low level white.
   cons.keywatch.set((int)'1',2);  // Door Toggles
   cons.keywatch.set((int)'2',2);  // 
@@ -1707,10 +811,7 @@ int loop()
   // LED Library Vars and Init
   cons.printi("Initializing LEDS ...");
 
-  int led_count = sdSystem.CONFIG.iLED_Size_Door_Back_Driver + sdSystem.CONFIG.iLED_Size_Door_Back_Passenger + 
-                sdSystem.CONFIG.iLED_Size_Door_Front_Driver + sdSystem.CONFIG.iLED_Size_Door_Front_Passenger + 
-                sdSystem.CONFIG.iLED_Size_Overhead_Back_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Passenger + 
-                sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Front_Passenger;
+  int led_count = sdSystem.CONFIG.LED_MAIN.at(0).led_count();
 
   ledstring.freq = TARGET_FREQ;
   ledstring.dmanum = DMA;
@@ -1727,7 +828,9 @@ int loop()
   if ((ret = ws2811_init(&ledstring)) != WS2811_SUCCESS)
   {
     fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
-    return ret;
+    //return ret;
+    //cons.printi("ws2811_init failed: " + ws2811_get_return_t_str(ret))
+    return_code = (int)ret;
   }
   else
   {
@@ -1772,10 +875,6 @@ int loop()
   }
   */
 
-  // ---------------------------------------------------------------------------------------
-  // Light Strip Event System
-  cons.printi("Initializing System Event Channels ...");
-  timed_event teEvent[sdSystem.CONFIG.iNUM_CHANNELS];
 
 
   // ---------------------------------------------------------------------------------------
@@ -1788,21 +887,41 @@ int loop()
   // -------------------------------------------------------------------------------------
   // FLED LED Array
   cons.printi("Initializing LED Arrays ...");
-  sdSystem.CONFIG.iLED_Count_Back_Driver = sdSystem.CONFIG.iLED_Size_Door_Back_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Driver;
-  sdSystem.CONFIG.iLED_Count_Front_Driver = sdSystem.CONFIG.iLED_Size_Door_Front_Driver + sdSystem.CONFIG.iLED_Size_Overhead_Back_Passenger;
-  sdSystem.CONFIG.iLED_Count_Back_Passenger = sdSystem.CONFIG.iLED_Size_Door_Back_Passenger + sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver;
-  sdSystem.CONFIG.iLED_Count_Front_Passenger = sdSystem.CONFIG.iLED_Size_Door_Front_Passenger + sdSystem.CONFIG.iLED_Size_Overhead_Front_Passenger;
 
-  CRGB crgbMainArrays0[sdSystem.CONFIG.iLED_Count_Back_Driver];
-  CRGB crgbMainArrays1[sdSystem.CONFIG.iLED_Count_Front_Driver];
-  CRGB crgbMainArrays2[sdSystem.CONFIG.iLED_Count_Back_Passenger];
-  CRGB crgbMainArrays3[sdSystem.CONFIG.iLED_Count_Front_Passenger];
-  
+  // ---------------------------------------------------------------------------------------
+  // Light Strip Event System
   cons.printi("Initializing Event System ...");
-  teEvent[0].create(sdSystem.CONFIG.iLED_Count_Back_Driver);
-  teEvent[1].create(sdSystem.CONFIG.iLED_Count_Front_Driver);
-  teEvent[2].create(sdSystem.CONFIG.iLED_Count_Back_Passenger);
-  teEvent[3].create(sdSystem.CONFIG.iLED_Count_Front_Passenger);
+
+  // count number of strips
+  // Count the amount of events needed
+  count = 0;
+  for(int x=0; x<sdSystem.CONFIG.LED_MAIN.at(0).g_size(); x++)
+  {
+    for(int y=0; y<sdSystem.CONFIG.LED_MAIN.at(0).s_size(x); y++)
+    {
+      count++;
+    }
+  }
+  sdSystem.CONFIG.iNUM_CHANNELS = count;
+
+  // Create event array
+  timed_event teEvents[sdSystem.CONFIG.iNUM_CHANNELS];
+
+  // Create and initialize each event (may not be needed anymore)
+  // Tell each strip whitch event is associated to it.
+  int channel = 0;
+  for(int x=0; x<sdSystem.CONFIG.LED_MAIN.at(0).g_size(); x++)
+  {
+    for(int y=0; y<sdSystem.CONFIG.LED_MAIN.at(0).s_size(x); y++)
+    {
+      teEvents[channel].create(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).vLED_STRIPS.at(y).led_count());
+      sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).vLED_STRIPS.at(y).intCHANNEL = channel;
+      channel++;
+    }
+  }
+
+  // Set a few variables in sdSystem for the console display,
+  sdSystem.init();
 
   // -------------------------------------------------------------------------------------
   // FLED LED Array
@@ -1810,37 +929,9 @@ int loop()
   // Define Led Strips
   cons.printi("Initializing LED Strips ...");
 
-  profile_strip_group pstrgDoor[4];
-
-  hardware_monitor hwTempDoor;
-  profile_strip pstrTempDoor;
-  profile_strip pstrTempOverhead;
-
-  hwTempDoor.set(true, (unsigned long)tmeFled.now(), 50, true);
-
-  // Back Driver Door
-  pstrTempDoor.set(0, 0, sdSystem.CONFIG.iLED_Size_Door_Back_Driver, true, true, "Back");
-  pstrTempOverhead.set(0, sdSystem.CONFIG.iLED_Size_Door_Back_Driver, sdSystem.CONFIG.iLED_Size_Overhead_Back_Driver, true, true, "Back");
-  pstrgDoor[0].set(pstrTempDoor, pstrTempOverhead, hwTempDoor);
-
-  // Front Driver Door
-  pstrTempDoor.set(1, sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver, sdSystem.CONFIG.iLED_Size_Door_Front_Driver, true, true, "Front");
-  pstrTempOverhead.set(1, 0, sdSystem.CONFIG.iLED_Size_Overhead_Front_Driver, true, false, "Front");
-  pstrgDoor[1].set(pstrTempDoor, pstrTempOverhead, hwTempDoor);
-
-  // Back Passenger Door
-  pstrTempDoor.set(2, 0, sdSystem.CONFIG.iLED_Size_Door_Back_Passenger, true, true, "Back");
-  pstrTempOverhead.set(2, sdSystem.CONFIG.iLED_Size_Door_Back_Passenger, sdSystem.CONFIG.iLED_Size_Overhead_Back_Passenger, true, true, "Back");
-  pstrgDoor[2].set(pstrTempDoor, pstrTempOverhead, hwTempDoor);
-
-  // Front Passenger Door
-  pstrTempDoor.set(3, sdSystem.CONFIG.iLED_Size_Overhead_Front_Passenger, sdSystem.CONFIG.iLED_Size_Door_Front_Passenger, true, true, "Front");
-  pstrTempOverhead.set(3, 0, sdSystem.CONFIG.iLED_Size_Overhead_Front_Passenger, true, false, "Front");
-  pstrgDoor[3].set(pstrTempDoor, pstrTempOverhead, hwTempDoor);
-
-
   // -------------------------------------------------------------------------------------
-  
+  // Aditional DEBUG
+  cons.keywatch.set((int)KEYLEDDRCYCL,sdSystem.CONFIG.iNUM_CHANNELS + 1);  // Test Doors
   /*
   // False events for testing.
   teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);
@@ -1852,7 +943,7 @@ int loop()
   // ---------------------------------------------------------------------------------------
   //  Repeating Sleeping Loop until eXit is triggered.
   // ---------------------------------------------------------------------------------------
-  
+
   cons.printi("Starting System ...");
 
   while( cons.keywatch.get(KEYEXIT) == 0 )
@@ -1873,16 +964,14 @@ int loop()
     //    the loop will just walk on past any hardware updates that would otherwise be
     //    sent.
 
-    bool booUpdates0 = false;
-    bool booUpdates1 = false;
-    bool booUpdates2 = false;
-    bool booUpdates3 = false;
+    // MOVE RENAME ELIMINATE ??? !!!
+    bool booUpdate = false;
 
     for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
     {
       sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
     }
-    
+
     // Override the digital pins if in debugging mode.
     if(cons.keywatch.getnoreset(KEYDEBUG) == 1)
     {
@@ -1893,25 +982,24 @@ int loop()
       sdSystem.CONFIG.vSWITCH_PIN_MAP.at(3).value = cons.keywatch.getTF('4');
     }
 
-
     // Check the doors and start or end all animations
-    DoorMonitorAndAnimationControlModule(cons, sdSystem, pstrgDoor, teEvent, tmeCurrentMillis);
+    v_DoorMonitorAndAnimationControlModule(cons, sdSystem, teEvents, tmeCurrentMillis);
 
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
 
     //  Run ALL GLOBAL Timed Events
-    teSystem(cons, sdSystem, pstrgDoor, teEvent, tmeCurrentMillis);
-
-    //  Run ANIMATION EVENT ON LEDS - 0
-    booUpdates0 = teEvent[0].execute(cons, sRND, crgbMainArrays0, tmeCurrentMillis);
-    //  Run ANIMATION EVENT ON LEDS - 1
-    booUpdates1 = teEvent[1].execute(cons, sRND, crgbMainArrays1, tmeCurrentMillis);
-    //  Run ANIMATION EVENT ON LEDS - 2
-    booUpdates2 = teEvent[2].execute(cons, sRND, crgbMainArrays2, tmeCurrentMillis);
-    //  Run ANIMATION EVENT ON LEDS - 3
-    booUpdates3 = teEvent[3].execute(cons, sRND, crgbMainArrays3, tmeCurrentMillis);
-
+    teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
+  
+    for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+    {
+      for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+      {
+        int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+        sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
+          = teEvents[channel].execute(cons, sRND, sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, tmeCurrentMillis);
+      }
+    }
 
 
     // ---------------------------------------------------------------------------------------
@@ -1920,7 +1008,21 @@ int loop()
     // --- Execute LED Hardware Changes If Anything Was Updated ---
     //  For now we are working with just one big LED strip.  So, just check to see if anything
     //    changed.  Then, Redraw the entire strip. 
-    if ((booUpdates0 == true) || (booUpdates1 == true) || (booUpdates2 == true) || (booUpdates3 == true))
+
+    // Update?
+    for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+    {
+      for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+      {
+        if (sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED == true)
+        {
+          booUpdate = true;
+        }
+      }
+    }
+
+
+    if (booUpdate == true)
     {
       //  Do I need to move the whole thing or can I just move the changed pixels?
 
@@ -1928,31 +1030,65 @@ int loop()
 
       // If debug mode Display all lights static color are selectted, replace all generated led colors
       // with a static color
-      if (cons.keywatch.get(KEYLEDTEST) !=0)
+      if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
       {
-        MatxixFill(crgbMainArrays0, sdSystem.CONFIG.iLED_Count_Back_Driver, CRGB(25,25,25));
-        MatxixFill(crgbMainArrays1, sdSystem.CONFIG.iLED_Count_Front_Driver, CRGB(25,25,25));
-        MatxixFill(crgbMainArrays2, sdSystem.CONFIG.iLED_Count_Back_Passenger, CRGB(25,25,25));
-        MatxixFill(crgbMainArrays3, sdSystem.CONFIG.iLED_Count_Front_Passenger, CRGB(25,25,25));
+        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+        {
+          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+          {
+            MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+            CRGB(25,25,25));
+          }
+        }
       }
+      
+      // Copy the prepaird Matrixes to the display matrix
+      if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
+      {
+        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+        {
+          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+          {
+            // Build LED Array to display
+            // FUTER !!! - Only update portions of LED array that has changed. First, group. Second individual LEDs.
+                // Probably not needed because I'v only seen .5ms time needed for full matrix copy.
+            MatrixPrepare(cons, sdSystem, 
+                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+                  matrix, mcount);
+          }
+        }
+      }
+      else
+      {
+        // Build TEST array to display
+        int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
+        int pos = 0;
+        int g = 0; 
+        int s = 0;
 
-      // Copy the Prepared, or Calculated to the Display Matrix, before rendering.
-      //  Checking to see if the matix is to be displayed like normal or with DIAGs.
-      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 1)
-      {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays0, sdSystem.CONFIG.iLED_Count_Back_Driver, matrix, mcount);
-      }
-      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 2)
-      {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays1, sdSystem.CONFIG.iLED_Count_Front_Driver, matrix, mcount);
-      }
-      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 3)
-      {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays2, sdSystem.CONFIG.iLED_Count_Back_Passenger, matrix, mcount);
-      }
-      if (cons.keywatch.get(KEYLEDDRCYCL) == 0 || cons.keywatch.get(KEYLEDDRCYCL) == 4)
-      {
-        MatrixPrepare(cons, sdSystem, crgbMainArrays3, sdSystem.CONFIG.iLED_Count_Front_Passenger, matrix, mcount);
+        // Find Strip
+        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+        {
+          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+          {
+            if (selected_test_array == pos)
+            {
+              g = group;
+              s = strip;
+              sdSystem.t_group = group;
+              sdSystem.t_strip = strip;
+            }
+            pos++;
+          }
+        }
+
+        // Draw fround strip
+        MatrixPrepare(cons, sdSystem, 
+                          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
+                          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
+                          matrix, mcount);
       }
 
       // LED Library Renderer -- Recommend: DON'T TOUCH        
@@ -1960,6 +1096,9 @@ int loop()
       if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
       {
           fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
+          //break;    // boop - i touched
+          //cons.printi("ws2811_render failed: " + ws2811_get_return_t_str(ret));
+          return_code = (int)ret;
           break;
       }
     }   // End Delayless Loop
@@ -1980,12 +1119,12 @@ int loop()
       // Process keyboard info before displaying the screen.
       // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput();
-      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvent);
-      extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvent);
+      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
+      extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
       // Refresh console data storeage from main program. This will be a pass through buffer. 
       // so the console will not have to access any real data. 
       sdSystem.store_door_switch_states();
-      sdSystem.store_event_counts(teEvent[0].teDATA.size(),teEvent[1].teDATA.size(),teEvent[2].teDATA.size(),teEvent[3].teDATA.size());
+      store_event_counts(sdSystem, teEvents);
 
       cons.output(sdSystem);
       cons.update_displayed_time(tmeCurrentMillis);
@@ -2012,7 +1151,7 @@ int loop()
     
     // Determine how long to sleep and then sleep.
     usleep (1000 * sdSystem.getsleeptime(sdSystem.CONFIG.iFRAMES_PER_SECOND));
-    
+
   }// End MAIN CYCLE WHILE loop.
 
   // ---------------------------------------------------------------------------------------
@@ -2021,16 +1160,25 @@ int loop()
   // Shutdown.
   shutdown();
 
-  // Just print we have ended the program.
-  printf ("\nRasFLED Loop ... Exit\n");
+  if(sdSystem.booREBOOT == false)
+  {
+    // Just print we have ended the program.
+    printf ("\nRasFLED Loop ... Exit\n");
+  }
+  else
+  {
+    // Just print we have ended the program.
+    printf ("\nRasFLED Loop ... Rebooting\n");
+    return_code = 9999;
+  }
 
-  return ret;
+  return return_code;
 }
 
 // ---------------------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  int ret = 0;
+  int ret = 1;  // Run
 
   printf("RasFLED Start ... \n");
 
@@ -2038,7 +1186,16 @@ int main(int argc, char *argv[])
   setup();
 
   // Start the main loop.
-  ret = loop();
+  while (ret == 1)
+  {
+    ret = loop();
+
+    // Reboot?
+    if(ret == 9999)
+    {
+      ret = 1;
+    }
+  }
 
   // Exit the program.
   printf("RasFLED ... Exit(%d)\n", ret);

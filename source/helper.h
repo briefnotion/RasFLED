@@ -12,84 +12,48 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include <deque>
+
+using namespace std;
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
 // ***************************************************************************************
 
 // -------------------------------------------------------------------------------------
-// Color class RGB byte, byte, byte
+// Simple 2D Ref Map
 
-class CRGB
-// RGB varible.
+class stupid_2d
+// does nothing but keep track of x with y value.
+// x cant change.  just increases everytime an add of y is put into it.
+// this thing is just easier to mananage than a mallaloced x,y dimed array.
 {
-public: 
-  char r = 0;
-  char g = 0;
-  char b = 0;
+  private:
+  deque<int> X;
 
-  CRGB()
-  {
-	  char r = 0;
-	  char g = 0;
-	  char b = 0;
-  }
-  
-  // cRGB override for passing non varible to varible. 
-  CRGB(char R,char G,char B)
-  {
-	  r = R;
-	  g = G;
-	  b = B;
-  }
-  
-  //Compare two cRGB values.
-  bool operator== (CRGB color)
-  {
-    if ((r == color.r) && (g == color.g) && (b == color.b))
-      return true;
-    else
-      return false;
-  }
-
-  std::string CRGBtoString()
-  {
-    return (std::to_string(r) + "," + std::to_string(g) + "," + std::to_string(b));
-  }
-
-  CRGB StringtoCRGB(std::string strCRGB)
-  {
-    // Expected input: string with 3 numbers seperated by commas.
-    int c1, c2;
-    int r, g, b = 0;
-
-    c1 = strCRGB.find(",");
-    if (c1!=std::string::npos)
-    {
-      c2 = strCRGB.find(",",c1+1);
-      if (c2!=std::string::npos);
-      {
-        r = atoi(strCRGB.substr(0,c1).c_str()); 
-        g = atoi(strCRGB.substr(c1+1,c2-c1-1).c_str());
-        b = atoi(strCRGB.substr(c2+1,strCRGB.length()-1).c_str());
-      }
-    }
-    return CRGB(r,g,b);
-  }
-};
-
-class bigCRGB
-// Color class RGB int, int, int
-
-// This color class is used for preprocessing byte RGB values so computation can be 
-// negative or more than 256.  Not displayable but useful in calculations.
-{
   public:
-  int r = 0;
-  int g = 0;
-  int b = 0;
-  bool complete = true;
+
+  void add(int y)
+  {
+    X.push_back(y);
+  }
+
+  int x_size()
+  {
+    return X.size();
+  }
+
+  int y(int x)
+  {
+    return X.at(x);
+  }
+
+  void clear()
+  {
+    X.clear();
+  }
 };
+
 
 
 // -------------------------------------------------------------------------------------
@@ -281,56 +245,6 @@ int intRandomHD(int intBase)
 }
 
 
-// -------------------------------------------------------------------------------------
-// Common routines to find pixel color values from 2 seperate pixel colors.
-
-// Compute from Power of pixel with from time start to time end.
-float ComputePower(float fltElapsed, float FltDuration)
-{
-return (fltElapsed / FltDuration);
-}
-
-// Compute from Power of pixel with from time start to time end.
-//  For pixels that are split to behave differently on first half of time.
-//  Compute First half or Bottom half value.
-float ComputePowerHalfBot(float fltElapsed, float FltDuration)
-{
-return (fltElapsed * 2 / FltDuration);
-}
-
-// Compute from Power of pixel with from time start to time end.
-//  For pixels that are split to behave differently on first half of time.
-//  Compute Second half or Top half value.
-float ComputePowerHalfTop(float fltElapsed, float FltDuration)
-{
-//1 - (((float)((tmeElapsed * 2) - EventInfo.intDURATION) / (float)EventInfo.intDURATION));
-return (1 - (((fltElapsed *2 ) - FltDuration) / FltDuration));
-}
-
-// Merge two pixel colors based on Power.  Returns the bigCRGB value from CRGB.
-bigCRGB Dither(float fltPower, CRGB crgbColor1, CRGB crgbColor2)
-{
-bigCRGB tmpColor;
-
-tmpColor.r = (fltPower * crgbColor2.r) + ((1 - fltPower) * crgbColor1.r);
-tmpColor.g = (fltPower * crgbColor2.g) + ((1 - fltPower) * crgbColor1.g);
-tmpColor.b = (fltPower * crgbColor2.b) + ((1 - fltPower) * crgbColor1.b);
-
-return tmpColor;
-}            
-
-// Merge two pixel colors based on Power.  Returns the bigCRGB value from CRGB.
-CRGB DitherSmall(float fltPower, CRGB crgbColor1, CRGB crgbColor2)
-{
-CRGB tmpColor;
-
-tmpColor.r = (fltPower * crgbColor2.r) + ((1 - fltPower) * crgbColor1.r);
-tmpColor.g = (fltPower * crgbColor2.g) + ((1 - fltPower) * crgbColor1.g);
-tmpColor.b = (fltPower * crgbColor2.b) + ((1 - fltPower) * crgbColor1.b);
-
-return tmpColor;
-}      
-
 
 // ---------------------------------------------------------------------------------------
 // Hardware Monitor Class
@@ -341,8 +255,9 @@ class switch_map
   // Referenced only by position in list.
   public:
 
-  int   pin = 0;
-  bool  value = false;
+  int     pin = 0;          // Hardware PIN Number
+  string  SWITCH_NAME = ""; // Switch Name
+  bool    value = false;    // 
 };
 
 class hardware_monitor

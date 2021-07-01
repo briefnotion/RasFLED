@@ -36,7 +36,6 @@
 #define KEYDEBUG          '/' // Enter, Exit debug mode.
 #define KEYLEDTEST        'c' // Turn all LEDs on
 #define KEYLEDDRCYCL      't' // Cycle through the doors
-#define KEYLEDUPLW        'l' // Cycle Upper or Lower limits of LEDs
 #define KEYTESTANIM       'a' // Cycle Upper or Lower limits of LEDs
 
 // Testing and Debugging

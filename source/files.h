@@ -21,10 +21,10 @@
 
 // RASFled related header files
 #include "helper.h"
+#include "LEDstuff.h"
 #include "stringthings.h"
 
 #include "consoleanddata.h"
-
 
 using namespace std;
 
@@ -219,6 +219,19 @@ class SETTINGS
         return at;
     }
 
+    int exits_id_2_at(string strSetting, string strId1, string strId2)
+    {
+        int at = -1;
+        for (int x=0; x<Settings.size(); x++)
+        {
+            if((Settings.at(x).check(strSetting) == true) && (Settings.at(x).value(0) == strId1) && (Settings.at(x).value(1) == strId2))
+            {
+                at = x;
+            }
+        }
+        return at;
+    }
+
     void store(SETTING &NewSetting)
     {   
         Settings.push_back(NewSetting);
@@ -277,7 +290,7 @@ bool load_saved_running_state(Console &cons, system_data &sdSysData, string strF
 
     bool success = false;
 
-    // !!! NEED TO KICK OUT BLANK LINES !!!
+    // REVISE !!! NEED TO KICK OUT BLANK LINES
 
     SETTINGS tmpSettings;
 
@@ -364,7 +377,7 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
 
     bool success = false;
 
-    // !!! NEED TO KICK OUT BLANK LINES !!!
+    // !!! REVISE NEED TO KICK OUT BLANK LINES
 
     SETTINGS tmpSettings;
 
@@ -382,73 +395,6 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
 
         // Find and load the settings
         int loc = 0;
-        // ----
-
-        loc = tmpSettings.exits_at("Size_Test_Strip");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Test_Strip = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-
-        // ----
-
-        loc = tmpSettings.exits_at("Size_Door_Back_Driver");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Door_Back_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        loc = tmpSettings.exits_at("Size_Door_Back_Passenger");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Door_Back_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        loc = tmpSettings.exits_at("Size_Door_Front_Driver");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Door_Front_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        loc = tmpSettings.exits_at("Size_Door_Front_Passenger");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Door_Front_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        // ----
-
-        loc = tmpSettings.exits_at("Size_Overhead_Back_Driver");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Overhead_Back_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        loc = tmpSettings.exits_at("Size_Overhead_Back_Passenger");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Overhead_Back_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        loc = tmpSettings.exits_at("Size_Overhead_Front_Driver");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Overhead_Front_Driver = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-        
-        loc = tmpSettings.exits_at("Size_Overhead_Front_Passenger");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iLED_Size_Overhead_Front_Passenger = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
-
-        // ----
-
-        loc = tmpSettings.exits_at("Channel_Count");
-        if(loc >= 0)
-        {
-            sdSysData.CONFIG.iNUM_CHANNELS = atoi(tmpSettings.value_at(loc,0).c_str());
-        }
 
         // ----
         // Load Pin Switches
@@ -471,6 +417,78 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
             }
         }
 
+        // ----
+        // Load LED Strip Configuration
+        loc = tmpSettings.exits_at("LED_Main");
+        if(loc >0)
+        {
+            int mid = 0;
+            string mname = tmpSettings.value_at(loc,1);
+
+            v_profile_strip_main tmainstripprofile;
+            
+            tmainstripprofile.set(mid, mname);
+            sdSysData.CONFIG.LED_MAIN.push_back(tmainstripprofile);
+            
+            loc = tmpSettings.exits_at("LED_Group_Count");
+            if(loc >= 0)
+            {
+                int group_count = atoi(tmpSettings.value_at(loc,0).c_str());
+                for(int x=0; x<group_count; x++)
+                {
+                    loc = tmpSettings.exits_id_at("LED_Group_ID", to_string(x));
+                    if(loc >0)
+                    {
+                        int gid = x;
+                        string gname = tmpSettings.value_at(loc,1);
+
+                        sdSysData.CONFIG.LED_MAIN.at(0).add_group(gid, gname);
+
+                        loc = tmpSettings.exits_id_at("LED_Strip_Count", to_string(x));
+                        if(loc >0)
+                        {   
+                            int strip_count = atoi(tmpSettings.value_at(loc,1).c_str());
+                            for(int y=0; y<strip_count; y++)
+                            {
+                                loc = tmpSettings.exits_id_2_at("LED_Strip_ID", to_string(x), to_string(y));
+                                if(loc >0)
+                                {
+                                    int sid = y;
+                                    string sname = tmpSettings.value_at(loc,2);
+                                    string sposition = tmpSettings.value_at(loc,3);
+                                    int sledcount = atoi(tmpSettings.value_at(loc,4).c_str());
+
+                                    bool sforward = false;
+                                    bool sbot_at_start = false;
+
+                                    if (tmpSettings.value_at(loc,5) == "Forward")
+                                    {
+                                        sforward = true;
+                                    }
+                                    else
+                                    {
+                                        sforward = false;
+                                    }
+                                    
+                                    if (tmpSettings.value_at(loc,6) == "Standing")
+                                    {
+                                        sbot_at_start = true;
+                                    }
+                                    else
+                                    {
+                                        sbot_at_start = false;
+                                    }
+
+                                    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).add_strip(sid, sname, sposition, sledcount, sforward, sbot_at_start);
+                                
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            sdSysData.CONFIG.LED_MAIN.at(0).update_start_positions();
+        }  
 
         success = true;
     }
@@ -506,31 +524,115 @@ bool save_configuration(Console &cons, system_data &sdSysData, string strFilenam
     PINs.pin    = 25;      // GPIO.25 - Pin 37 - Hardware Open Close Door Sensor 3
     sdSysData.CONFIG.vSWITCH_PIN_MAP.push_back(PINs);
 
+    // build led main, groups, and strips
+    // build led main
+    v_profile_strip_main tmp_led_main;
+    tmp_led_main.set(0, "Car");
+    sdSysData.CONFIG.LED_MAIN.push_back(tmp_led_main);
+
+    // build led groups
+    sdSysData.CONFIG.LED_MAIN.at(0).add_group(0, "Back_Driver");
+    sdSysData.CONFIG.LED_MAIN.at(0).add_group(1, "Front_Driver");
+    sdSysData.CONFIG.LED_MAIN.at(0).add_group(2, "Back_Passenger");
+    sdSysData.CONFIG.LED_MAIN.at(0).add_group(3, "Front_Passenger");
+
+    // build led strips
+
+        // Quick Build Reference
+    int iLED_Size_Door_Back_Driver          = 70;
+    int iLED_Size_Door_Back_Passenger       = 70;
+    int iLED_Size_Door_Front_Driver         = 66;
+    int iLED_Size_Door_Front_Passenger      = 66;
+
+    int iLED_Size_Overhead_Back_Driver      = 52;
+    int iLED_Size_Overhead_Back_Passenger   = 52;
+    int iLED_Size_Overhead_Front_Driver     = 52;
+    int iLED_Size_Overhead_Front_Passenger  = 52;
+
+        // Back Driver
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(0).add_strip(0,"Door", "Back", iLED_Size_Door_Back_Driver, true, true);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(0).add_strip(1,"Overhead", "Back", iLED_Size_Overhead_Back_Driver, true, true);
+
+        // Front Driver
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Driver, true, true);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Driver, true, false);
+    
+        // Back Passenger
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(2).add_strip(0,"Door", "Back", iLED_Size_Door_Back_Passenger, true, true);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(2).add_strip(1,"Overhead", "Back", iLED_Size_Overhead_Back_Passenger, true, true);
+
+        // Front Passenger
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Passenger, true, true);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Passenger, true, false);
+    
+    sdSysData.CONFIG.LED_MAIN.at(0).update_start_positions();
+
+
+    
+
   
     // -------------------------------------------------------------------------------------
     // build qFile.
-    qFile.push_back("Size_Test_Strip " + to_string(sdSysData.CONFIG.iLED_Size_Test_Strip));
+    
     qFile.push_back("");
-
-    qFile.push_back("Size_Door_Back_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Driver));
-    qFile.push_back("Size_Door_Back_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Door_Back_Passenger));
-    qFile.push_back("Size_Door_Front_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Driver));
-    qFile.push_back("Size_Door_Front_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Door_Front_Passenger));
-    qFile.push_back("");
-
-    qFile.push_back("Size_Overhead_Back_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Driver));
-    qFile.push_back("Size_Overhead_Back_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Back_Passenger));
-    qFile.push_back("Size_Overhead_Front_Driver " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Driver));
-    qFile.push_back("Size_Overhead_Front_Passenger " + to_string(sdSysData.CONFIG.iLED_Size_Overhead_Front_Passenger));
-    qFile.push_back("");
-
-    qFile.push_back("Channel_Count " + to_string(sdSysData.CONFIG.iNUM_CHANNELS));
-
-    qFile.push_back("");
+    qFile.push_back("* ------------------------------");
+    qFile.push_back("* Switch Configuration");
+    qFile.push_back("*   - Switch ID PIN");
     qFile.push_back("Switch_Count " + to_string(sdSysData.CONFIG.iNUM_SWITCHES));
     for (int x=0; x < sdSysData.CONFIG.iNUM_SWITCHES; x++)
     {
         qFile.push_back("Switch " + to_string(x) + " " + to_string(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(x).pin));
+    }
+
+    qFile.push_back("");
+    qFile.push_back("* ------------------------------");
+    qFile.push_back("* Strip Configuration");
+
+    qFile.push_back("LED_Main " + to_string(sdSysData.CONFIG.LED_MAIN.at(0).intID) + " " + sdSysData.CONFIG.LED_MAIN.at(0).strNAME);
+    qFile.push_back("");
+
+    qFile.push_back("LED_Group_Count " + to_string(sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.size()));
+    for(int x=0; x<sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.size(); x++)
+    {
+        qFile.push_back("  LED_Group_ID " + to_string(sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).intID)+ " " + 
+                            sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).strNAME);
+
+        qFile.push_back("    LED_Strip_Count " + to_string(x) + " " +
+                            to_string(sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).vLED_STRIPS.size()));
+        for(int y=0; y<sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(x).vLED_STRIPS.size(); y++)
+        {
+                    //set(int intId, string strName, string strPosition, int intStart_Pos, bool forward, bool bot_at_start)
+                    v_profile_strip strip;
+                    string write;
+                    strip = sdSysData.CONFIG.LED_MAIN.at(0).strip_info(x,y);
+
+                    write = "      LED_Strip_ID " + to_string(x) + " " + to_string(strip.intID);
+                    write = write + " " + strip.strNAME + " " + strip.strPOSITION;
+                    write = write + " " + to_string(strip.led_count());
+
+                    // Forward or Backward
+                    if(strip.booFORWARD == true )
+                    {
+                        write = write + " Forward";
+                    }
+                    else
+                    {
+                        write = write + " Backward";
+                    }
+
+                    // Standing or Hanging
+                    if(strip.booBOT_AT_START == true )
+                    {
+                        write = write + " Standing";
+                    }
+                    else
+                    {
+                        write = write + " Hanging";
+                    }
+
+
+                    qFile.push_back(write);
+        }
     }
 
 

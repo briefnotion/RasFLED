@@ -14,121 +14,12 @@
 
 // Standard Header Files
 #include <chrono>
+#include "LEDstuff.h"
 
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
 // ***************************************************************************************
-
-// -------------------------------------------------------------------------------------
-//  Contains info on strip behavior
-class profile_strip
-{
-  private:
-  int intBOTTOM_OFFSET  =0;
-  int intTOP_OFFSET     =0;
-
-  bool booFORWARD       = true;
-  bool booBOT_AT_START  = true;
-
-  std::string           strPOSITION = "";
-
-  public:
-  //CRGB*                 crgbARRAY;
-  std::string           Status = "";
-  int intCHANNEL        = -1;
-
-  int intSTARTPOS       = 0;
-  int intSIZE           = 0;
-
-  void set(int channel, int start_pos, int size, bool forward, bool bot_at_start, std::string strPosition)
-  {
-    //crgbARRAY       = new CRGB[size];
-    intCHANNEL      = channel;
-    intSIZE         = size;
-    booFORWARD      = forward;
-    booBOT_AT_START = bot_at_start;
-
-    intBOTTOM_OFFSET  = start_pos;
-    intTOP_OFFSET     = start_pos + intSIZE - 1;
-
-    strPOSITION = strPosition;
-  }
-
-  int fs(int pos)
-  // From Start
-  {
-    return pos + intBOTTOM_OFFSET;
-  }
-  
-  int fe(int pos)
-  // From End
-  {
-    return intTOP_OFFSET - pos;
-  }
-
-  int fb(int pos)
-  // From Bottom
-  {
-    if (booBOT_AT_START == true)
-    {
-      return pos + intBOTTOM_OFFSET;
-    }
-    else
-    {
-      return intTOP_OFFSET - pos;
-    }
-  }
-
-  int ft(int pos)
-  // From Bottom
-  {
-    if (booBOT_AT_START == true)
-    {
-      return intTOP_OFFSET - pos;
-    }
-    else
-    {
-      return pos + intBOTTOM_OFFSET;
-    }
-  }
-
-  bool position(std::string position)
-  {
-    if (strPOSITION == position)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-    
-  }
-  
-};
-
-//  Contains info on strip group
-//    (I would like this class to be more dytnamicly configurable in the future for a more
-//      dynamic setup purposes.)
-class profile_strip_group
-{
-  public:
-  profile_strip     pstrDOOR;
-  profile_strip     pstrOVERHEAD;
-  hardware_monitor  hwSWITCH;
-
-  void set(profile_strip door, profile_strip overhead, hardware_monitor hwswitch)
-  {
-    // Store Strip Groups
-    pstrDOOR      = door;
-    pstrOVERHEAD  = overhead;
-
-    // Door Switch
-    hwSWITCH      = hwswitch;
-  }
-};
-
 
 // -------------------------------------------------------------------------------------
 // Keeps track of timing variables

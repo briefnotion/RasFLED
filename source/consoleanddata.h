@@ -21,6 +21,7 @@
 #include "definitions.h"
 #include "helper.h"
 
+using namespace std;
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
@@ -28,26 +29,7 @@
 class configuration
 {
   public:
-  // -------------------------------------------------------------------------------------
-  int iLED_Size_Test_Strip                = 63;
 
-  int iLED_Size_Door_Back_Driver          = 70;
-  int iLED_Size_Door_Back_Passenger       = 70;
-  int iLED_Size_Door_Front_Driver         = 66;
-  int iLED_Size_Door_Front_Passenger      = 66;
-
-  int iLED_Size_Overhead_Back_Driver      = 52;
-  int iLED_Size_Overhead_Back_Passenger   = 52;
-  int iLED_Size_Overhead_Front_Driver     = 52;
-  int iLED_Size_Overhead_Front_Passenger  = 52;
-
-  // Computed LED Count
-  int iLED_Count_Back_Driver = 0;
-  int iLED_Count_Front_Driver = 0;
-  int iLED_Count_Back_Passenger = 0;
-  int iLED_Count_Front_Passenger = 0;
-
-  
   // -------------------------------------------------------------------------------------
   // Hardware to Software definitions
   // -------------------------------------------------------------------------------------
@@ -61,18 +43,25 @@ class configuration
   int iAUXDRLINGERBCK     = 25000;    // How long the Back Door lights stay on after close
 
   // -------------------------------------------------------------------------------------
-  // Door Switch Reference
-  int iNUM_CHANNELS       = 4;   // Amount of LED strips we will be controlling.
-
+  // LED rpi_ws281x Variables
   int iBRIGHTNESS         = 96;  //96  Using Example Code.  Max unknown
   int iFRAMES_PER_SECOND  = 50; // Will not be necessary, but keeping, for now, just in 
                                 //  case.
 
   // -------------------------------------------------------------------------------------
+  // Events
+  int iNUM_CHANNELS       = 0;   // Amount of Event Channels we will be controlling.
+
+  // -------------------------------------------------------------------------------------
+  // LED Group List
+  deque<v_profile_strip_main> LED_MAIN; // Main LED Profile of Groups
+
+  // -------------------------------------------------------------------------------------
   // New Door Switch Reference
-  int iNUM_SWITCHES       = 4;
-  deque<hardware_monitor> vhwDOORS;
-  deque<switch_map>       vSWITCH_PIN_MAP;
+  int iNUM_SWITCHES       = 4;              // Amount of HW switches
+  deque<hardware_monitor> vhwDOORS;         // List of HW Monitors
+  deque<switch_map>       vSWITCH_PIN_MAP;  // Map of Hardware Circuit Pin ID to 
+                                            //  software Pin ID
 };
 
 
@@ -100,48 +89,73 @@ class system_data
     public:
     // array for now. ll in future if necessary.
     int size = 4;
-    std::string strRunningColor = "";  // 
+    string strRunningColor = "";  // 
     CRGB color[4];
   };
 
   public:
+
+  // Primary Variables
   unsigned long tmeCURRENT_FRAME_TIME = 0;
 
+  // Main Reset
+  bool booREBOOT = false;
+
+  // System
   configuration CONFIG;
 
+  // System Timing
   stat_data fltCOMPUTETIME;   // Loop time spent while only proceessing.
   stat_data fltSLEEPTIME;     // Calculated time needed to sleep.
   stat_data fltCYCLETIME;     // Amount of time to complete an entire cycle.
   stat_data fltPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
 
-  std::string strLEDRANGE  = "";    // Text showing what LEDs will be Displayed.
-  std::string strLEDLIMITS = "";    // Text showing what LEDd, upper or lower, displayed.
+  // Door Module Support
+  deque<bool> boolDOOR_SENSOR_STATUS;
 
   int   intDoorsOpen = 0;           // Amount of doors open.
   bool  booPulsesRunning = false;   // Are exta anims running.
   bool  booOverheadRunning = false; // Are exta anims running.
   bool  booHazardRunning = false;   // Are exta anims running.
+  
 
-  // PrintBufferData - temparory fix to print things when the console cant be accessed.
-  bool        booprintbuffer = false;
-  std::string strprintbuffer = "";
-  /* Usage:
-      booprintbuffer = true;
-      strprintbuffer = std::to_string(section_elaped_time) + "       ";
-    Does not clean up after itself */
-
-  // Timer and Running Colors
+  // Timer and Color Schemes
   countdown_timer cdTIMER;
-
   running_colors running_color_list;
-
-  // store copies of displayed system data
-  // REWRITE TO HANDLE VARIABLE SIZE !!! 
-  bool *boolDOORSENSORS = (bool*) malloc(CONFIG.iNUM_SWITCHES * sizeof(bool));;
-  int  *intEVENTCOUNTS = (int*) malloc(CONFIG.iNUM_SWITCHES * sizeof(int));;
 
   // Files
   bool booRunning_State_File_Dirty = false;
+
+  // Event System
+  deque<int> intCHANNEL_GROUP_EVENTS_COUNTS;
+
+  // Console Display Variables from other
+
+  // Test Mode
+  int t_group = 0;
+  int t_strip = 0;
+
+  // PrintBufferData - temparory fix to print things when the console cant be accessed.
+  bool booprintbuffer   = false;
+  string strprintbuffer = "";
+  /* Usage:
+      booprintbuffer = true;
+      strprintbuffer = to_string(section_elaped_time) + "       ";
+    Does not clean up after itself */
+
+  // -------------------------------------------------------------------------------------
+  void init()
+  {
+    for(int x=0; x<CONFIG.iNUM_SWITCHES; x++)
+    {
+      boolDOOR_SENSOR_STATUS.push_back(false);
+    }
+
+    for(int x=0; x<CONFIG.iNUM_CHANNELS; x++)
+    {
+      intCHANNEL_GROUP_EVENTS_COUNTS.push_back(0);
+    }
+  }
 
   void store_Current_Frame_Time(unsigned long tmeCurrent_Time_millis)
   {
@@ -154,7 +168,7 @@ class system_data
     if(cdTIMER.is_active() == true)
     {
       booprintbuffer = true;
-      strprintbuffer =  std::to_string(cdTIMER.elapsed_time(tmeCurrent_Time_millis)) + "  " + std::to_string(cdTIMER.is_triggered()) + "  " +  std::to_string(cdTIMER.is_checked()) + "  ";
+      strprintbuffer =  to_string(cdTIMER.elapsed_time(tmeCurrent_Time_millis)) + "  " + to_string(cdTIMER.is_triggered()) + "  " +  to_string(cdTIMER.is_checked()) + "  ";
     }
   }
 
@@ -163,7 +177,7 @@ class system_data
   {
     for(int x=0; x < CONFIG.iNUM_SWITCHES; x++)
     {
-      boolDOORSENSORS[x] = CONFIG.vSWITCH_PIN_MAP.at(x).value;
+      boolDOOR_SENSOR_STATUS.at(x) = CONFIG.vSWITCH_PIN_MAP.at(x).value;
     }
   }
 
@@ -238,7 +252,7 @@ class system_data
     }
   }
 
-  void set_running_color(CRGB Running_Color, std::string strColor)
+  void set_running_color(CRGB Running_Color, string strColor)
   {
     running_color_list.color[0] = Running_Color;
     running_color_list.strRunningColor = strColor;
@@ -250,14 +264,7 @@ class system_data
     cdTIMER.set_timer(tmeCURRENT_FRAME_TIME, Seconds);
   }
 
-  // Reference for the amount for events running.
-  void store_event_counts(int EventCount0, int EventCount1, int EventCount2, int EventCount3)
-  {
-    intEVENTCOUNTS[0] = EventCount0;
-    intEVENTCOUNTS[1] = EventCount1;
-    intEVENTCOUNTS[2] = EventCount2;
-    intEVENTCOUNTS[3] = EventCount3;
-  }
+
 
   // Reference for the time (elapsed) since program start.
   void store_compute_time(float fltComputeTime)
@@ -323,7 +330,7 @@ class Keys
   // Full Command Line value(as is)
   struct CommandLine
   {
-    std::string COMMANDLINE = "";
+    string COMMANDLINE = "";
     bool PRESSED = true;
     bool CLEARED = true;
   };
@@ -360,7 +367,7 @@ class Keys
     }
   }
 
-  std::string cmdRead()
+  string cmdRead()
   // Read Command Line and sets recently changed to false (no longer dirty)
   {
     Command.PRESSED = false;
@@ -461,9 +468,9 @@ class Console
   
   WINDOW * winTop;
   WINDOW * winBot;
-  std::vector<std::string> ou;
+  vector<string> ou;
 
-  std::string strBotLine;
+  string strBotLine;
 
   // Display Variables
   int YSeperator = 0;
@@ -507,7 +514,7 @@ class Console
   void printout()
   // Print out console.
   {
-    std::string strTemp;
+    string strTemp;
 
     while(ou.size() > 0)
     {
@@ -531,14 +538,19 @@ class Console
     }
   }
 
-  void printi (std::string in)
+  void printi (string in)
   // Print to console immediatly to console without waiting for refresh.
   {
     ou.push_back(in);
     printout();
   }
 
-  void printwait (std::string in)
+  void deb(string strPrintI)
+  {
+    printi("DEBUG: " + strPrintI);
+  }
+
+  void printwait (string in)
   // Print out a line to console during next refresh.
   {
     ou.push_back(in);
@@ -636,48 +648,24 @@ class Console
     if(keywatch.get(KEYDEBUG) == 1)
     {
       // Display LED range selected to display.
-      std::string strRange;
-      std::string strLevel;
+      string strRange;
+      string strLevel;
 
       // Displaying LEDs selected to be displayed CYCLE selected.
-      switch (keywatch.get(KEYLEDDRCYCL))
+      if (keywatch.get(KEYLEDTEST) == 1)
       {
-        case 0:   // Show all lights.  This is normal.
-        {
-          strRange = "A ";
-          break;
-        }
-        case 1:   // Show only Light Set 1
-        {
-          strRange = "D1";
-          break;
-        }
-        case 2:   // Show only Light Set 2
-        {
-          strRange = "D2";
-          break;
-        }
-        case 3:   // Show only Light Set 3
-        {
-          strRange = "D3";
-          break;
-        }
-        case 4:   // Show only Light Set 4
-        {
-          strRange = "D4";
-          break;
-        }
-
-      }    
-
-      // Check for Upper or Lower Range
-      if (keywatch.get(KEYLEDUPLW) == 0)
+        strRange = "Fi";
+        strLevel = "ll";
+      }
+      else if (keywatch.get(KEYLEDDRCYCL) == 0)
       {
-        strLevel = "L";
+        strRange = "EA";
+        strLevel = "  ";
       }
       else
       {
-        strLevel = "U";
+        strRange = "E" + to_string(keywatch.get(KEYLEDDRCYCL)-1);
+        strLevel = to_string(sdSysData.t_group) + to_string(sdSysData.t_strip);
       }
 
       // Draw RANGE and UPPER OR LOWER VALUES selected.
@@ -693,30 +681,30 @@ class Console
     // ------
 
     //Display Door Statuses, highlighting values that are on (doors open)
-    if (sdSysData.boolDOORSENSORS[0] == true) {wattron(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattron(winTop, A_REVERSE);}
     mvwprintw(winTop, 3, 7, "D1");
-    if (sdSysData.boolDOORSENSORS[0] == true) {wattroff(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattroff(winTop, A_REVERSE);}
     
-    if (sdSysData.boolDOORSENSORS[1] == true) {wattron(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattron(winTop, A_REVERSE);}
     mvwprintw(winTop, 2, 7, "D2");
-    if (sdSysData.boolDOORSENSORS[1] == true) {wattroff(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattroff(winTop, A_REVERSE);}
     
-    if (sdSysData.boolDOORSENSORS[2] == true) {wattron(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattron(winTop, A_REVERSE);}
     mvwprintw(winTop, 3, 10, "D3");
-    if (sdSysData.boolDOORSENSORS[2] == true) {wattroff(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattroff(winTop, A_REVERSE);}
 
-    if (sdSysData.boolDOORSENSORS[3] == true) {wattron(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattron(winTop, A_REVERSE);}
     mvwprintw(winTop, 2, 10, "D4");
-    if (sdSysData.boolDOORSENSORS[3] == true) {wattroff(winTop, A_REVERSE);}
+    if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winTop, A_REVERSE);}
 
 
     // Debug stuff: Display the amount of events, assoicated to each door, runnng .
     if (keywatch.get(KEYDEBUG) == 1)
     {
-      mvwprintw(winTop, 3, 1, "%03d:E", sdSysData.intEVENTCOUNTS[0]);
-      mvwprintw(winTop, 2, 1, "%03d:E", sdSysData.intEVENTCOUNTS[1]);
-      mvwprintw(winTop, 3, 13, "E:%03d", sdSysData.intEVENTCOUNTS[2]);
-      mvwprintw(winTop, 2, 13, "E:%03d", sdSysData.intEVENTCOUNTS[3]);
+      mvwprintw(winTop, 3, 1, "%03d:E", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
+      mvwprintw(winTop, 2, 1, "%03d:E", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
+      mvwprintw(winTop, 3, 13, "E:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
+      mvwprintw(winTop, 2, 13, "E:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
     }
     else if ( RedrawTestParts == true )
     // If exiting debug mode, clean out what was printed in when in debug mode.
