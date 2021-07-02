@@ -69,7 +69,6 @@ void vdChannelLightFlashColor00(Console &cons, v_profile_strip strip, timed_even
 // Turn Color Pulse on Full Channel. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
-  //cons.printwait("Flash Color (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   show_anim_info(cons, strip, "Flash Color");
 
   int intTm;
@@ -134,7 +133,6 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
 // Multiple small pulses forward and backward. Strip Length Aware. 
 // AnTaChannelPulseColor
 {
-  //cons.printwait("Pulse Color 01 (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   show_anim_info(cons, strip, "Pulse Color 01");
 
   int intTm;
@@ -201,7 +199,6 @@ void vdChannelLightPulseColor01(Console &cons, v_profile_strip strip, timed_even
 // Turn Color Pulse on Full Channel.
 // AnTaChannelPulseColor
 {
-  //cons.printwait("Pulse Color Repeat 01 (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   show_anim_info(cons, strip, "Pulse Color Repeat 01");
 
   // Set the pulse to timed repeat
@@ -214,7 +211,7 @@ void vdChannelLightPulseColorCountdown01(Console &cons, v_profile_strip strip, t
 {
   cons.printwait("Pulse Countdown Timer Color Repeat 01 (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 7000, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 6000, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);
 }
 
 // -------------------------------------------------------------------------------------
@@ -222,7 +219,6 @@ void vdChannelLightPulseColorCountdown01(Console &cons, v_profile_strip strip, t
 void vdOverheadIllum(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // An overhead light.  Called by the Overhead command from the console. 
 {
-  //cons.printwait("Overhead Illumination Color (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   show_anim_info(cons, strip, "Overhead Illumination Color");
 
   // Set the background color.
@@ -235,7 +231,6 @@ void vdHazard(Console &cons, v_profile_strip strip, timed_event teEvent[], unsig
 // Hazard Lights. Called by the Hazard command from the console. 
 // Runs on entire channel. 
 {
-  //cons.printwait("Hazard (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
   show_anim_info(cons, strip, "Hazard");
 
   // Position Mask
@@ -260,7 +255,6 @@ void vdHazard(Console &cons, v_profile_strip strip, timed_event teEvent[], unsig
 void vdPacificaishAnimationADVColor(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Blue Waves. Much more interesting than the old version of this.
 {
-  //cons.printwait("Pacificaish Color (CL: "); // + std::to_string(strip_group.pstrOVERHEAD.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip_group.pstrOVERHEAD.fs(0)) + " E:" + std::to_string(strip_group.pstrOVERHEAD.fe(0)) + ")");
   show_anim_info(cons, strip, "Pacificaish Color");
   
   int R = (2 * crgbColor.r) / 3;
@@ -318,7 +312,6 @@ void vdPacificaishAnimationADVColor(Console &cons, v_profile_strip strip, timed_
 void vdDoorOpenAnimationADV00(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Prepare red backgrounds and puddle lights for the caution lights, and start shimmer effect.
 {
-  //cons.printwait("Door Open Safety 00 (CL:"); // + std::to_string(strip.intCHANNEL) + " ID:"+ /*std::to_string(intStripID) + " S:" + std::to_string(lsStrips[intStripID].St) + " E:" + std::to_string(lsStrips[intStripID].Ed) +*/ ")");
   show_anim_info(cons, strip, "Door Open Safety 00");
 
   int intTm;
@@ -399,7 +392,6 @@ void vdDoorOpenAnimationADV00(Console &cons, v_profile_strip strip, timed_event 
 void vdDoorCloseRunningADV(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all doors are closed. Animation will start then end, leaving lights in final state without proceessing anything else.
 {
-  //cons.printwait("Running Side Lights (CL: "); // + std::to_string(strip.intCHANNEL) + " S:" + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Running Side Lights");
 
   // Give strip a fresh start.
@@ -437,7 +429,6 @@ void vdDoorCloseRunningADV(Console &cons, v_profile_strip strip, timed_event teE
 void vdDoorCloseActiveADV00(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Effect to run on doors when all closed doors at least one other door is open.
 {
-  //cons.printwait("Door Close Safety 00 (CL: "); // + std::to_string(strip.intCHANNEL) + " ID:" + " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Door Close Safety 00");
 
   // Give strip a fresh start.
@@ -466,7 +457,6 @@ void vdDoorCloseActiveADV00(Console &cons, v_profile_strip strip, timed_event te
 void vdPacificaishAnimationADV(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Blue Waves. Much more interesting than the old version of this.
 {
-  //cons.printwait("Pacificaish (CL: "); //+  std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Pacificaish");
 
   // Give strip a fresh start.
@@ -507,7 +497,6 @@ void vdPacificaishAnimationADV(Console &cons, v_profile_strip strip, timed_event
 void vdCloseOverADV(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Overhead Lights Off
 {
-  //cons.printwait("Overhead Lights Off (CL: "); // + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Overhead Lights Off");
 
   // Just set all the current over head lights to fade away.
@@ -519,7 +508,6 @@ void vdCloseOverADV(Console &cons, v_profile_strip strip, timed_event teEvent[],
 void vdCoADV01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Conviencance Lights On then Off.
 {
-  //cons.printwait("Conviencance Lights 01 (CL: "); // + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Conviencance Lights 01");
 
   // Clear any animations that may be running and this should replace.
@@ -599,7 +587,6 @@ void vdAdditionalOpenADV01(Console &cons, v_profile_strip strip, timed_event teE
 // Turn Additional Lights On on to show the door is open.
 // Pulseating yellow light, brightest at center.
 {
-  //cons.printwait("Door Overhead Alert On 01 (CL: "); // + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Door Overhead Alert On 01");
 
   int intTm, intDur, intSp, intCt; 
@@ -625,7 +612,6 @@ void vdAdditionalOpenADV02(Console &cons, v_profile_strip strip, timed_event teE
 // Turn Additional Lights On on to show the door is open.
 // Slow Walking Yellow Lights.
 {
-  //cons.printwait("Door Overhead Alert On(CL: "); // + std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Door Overhead Alert On");
 
   int intTm, intDur, intSp, intCt; 
@@ -674,7 +660,6 @@ void vdAdditionalOpenADV02(Console &cons, v_profile_strip strip, timed_event teE
 void vdAdditionalCloseADV00(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn (force) Additional Lights Off on a Strip
 {
-  //cons.printwait("Door Overhead Alert Off 00 (CL: "); //+ std::to_string(strip.intCHANNEL) + " ID:"+ " S:" + std::to_string(strip.fs(0)) + " E:" + std::to_string(strip.fe(0)) + ")");
   show_anim_info(cons, strip, "Door Overhead Alert Off 00");
 
   // Seach the strip for light colors and set them to end after animation completes.  

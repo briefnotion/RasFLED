@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.31A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.32A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,78 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.32_210701
+// *    - MAKE NO MISTAKE:
+// *        I have no disillusionment about this software.  At the time of this writing 
+// *        RasFLED has always been free to use, as per the GNU GENERAL PUBLIC LICENSE.
+// *        
+// *        I can honestly say, literally, I have never been paid, by anybody or anyone, 
+// *        in any way, shape or form, for writing this software.  Nor, has anybody or 
+// *        anyone contributed in any way for its development. I have, literally, not  
+// *        recieved any feedback at all that ever helped contribute to RasFLEDs future 
+// *        developement.  The only comments ever recieved by first hand experience from 
+// *        passerbys was the generic "thats nice."
+// *
+// *        If you paid or given up anything to send or suggest anything, regarding these
+// *        lights, or anything else, for that matter, then, I am sorry, but you have been
+// *        scammed.  Your message was never delivered.  If you paid anyone for a feature 
+// *        to be placed into this software, you have been scammed.  Any and all features 
+// *        of RasFLED were by my design, and the only driving force behind my desire to 
+// *        change, delete, or add to the program, has always been, "because I wanted to."
+// *        I promise to tell you, in the unlikely event the program gets any type of 
+// *        sponser or paid for feature added, I will disclose it with a statement in 
+// *        these comments, along with any relevant information. 
+// *
+// *        Literally, this app has no followers or comments or support.  Metaphorically, 
+// *        well, if you didn't help make the bread, then you are not going to help eat 
+// *        the bread.
+// *
+// *    - Door module can handle multiple strips.  Groups triggered by switches will run
+// *        preset animations on strips with the grouple with name "Door" and "Overhead".
+// *
+//*                 To Demonstrate, here is an example config file.
+//*                 ______________________________________
+//*                |
+//*                |* ------------------------------
+//*                |* Switch Configuration
+//*                |*   - Switch ID PIN
+//*                |Switch_Count 4
+//*                |Switch 0 22
+//*                |Switch 1 23
+//*                |Switch 2 24
+//*                |Switch 3 25
+//*                |
+//*                |* ------------------------------
+//*                |* Strip Configuration
+//*                |LED_Main 0 Car
+//*                |
+//*                |
+//*                |
+//*                |LED_Group_Count 4
+//*                |  LED_Group_ID 0 Back_Driver
+//*                |    LED_Strip_Count 0 2
+//*                |      LED_Strip_ID 0 0 Door Back 70 Forward Standing
+//*                |      LED_Strip_ID 0 1 Overhead Back 52 Forward Standing
+//*                |  LED_Group_ID 1 Front_Driver
+//*                |    LED_Strip_Count 1 4
+//*                |      LED_Strip_ID 1 0 Overhead Front 52 Forward Standing
+//*                |      LED_Strip_ID 1 1 Door Front 66 Forward Hanging
+//*                |      LED_Strip_ID 1 2 Overhead Front 52 Forward Standing
+//*                |      LED_Strip_ID 1 3 Door Front 66 Forward Hanging
+//*                |  LED_Group_ID 2 Back_Passenger
+//*                |    LED_Strip_Count 2 3
+//*                |      LED_Strip_ID 2 0 Overhead Back 52 Forward Standing
+//*                |      LED_Strip_ID 2 1 Door Back 70 Forward Standing
+//*                |      LED_Strip_ID 2 2 Overhead Back 52 Forward Standing
+//*                |  LED_Group_ID 3 Front_Passenger
+//*                |   LED_Strip_Count 3 2
+//*                |      LED_Strip_ID 3 0 Overhead Front 52 Forward Standing
+//*                |      LED_Strip_ID 3 1 Door Front 66 Forward Hanging
+//*                |______________________________________
+//*
+// *        - Made some changes to the pulse repeat timer.  Its still not right, but 
+// *           I know whats wrong.
+// *
 // * V 0.31_210622
 // *    - Current version will be more of a "get it working in any kind of way" update for 
 // *        the configurable system.  Plenty of routines need an overhaul.  
@@ -66,7 +138,7 @@
 // *            - There is no direct mapping for switch to strip group.
 // *            - Console Display could use plenty of work.  Holding off until I get 
 // *                a display because never needed in live environement and not a system 
-// *                dependent component.
+// *                dependent component. 
 // *    - Sucesses:
 // *        - No Hardcoded strip sizes or switch sizes should exist anywhere in the 
 // *            system.
@@ -498,6 +570,11 @@
 // *        animations. 
 // *    - There were a few more things to list here.  I'll write them down later as 
 // *        needed.
+// *    - Virtual LED Strips, for lack of a better name.  A way for the single LED strip
+// *        to be a composit of two or more other strip, and act as one.  The overhead
+// *        lights can be combined together so that animations can flow from one, to the 
+// *        other, even if the LEDs are in differant portions of the LED strip, or in a 
+// *        differant type of order or orientation.
 // *
 // ***************************************************************************************
 
@@ -769,7 +846,7 @@ int loop()
   // ---------------------------------------------------------------------------------------
   // Load system configuration and set data
   
-  cons.printi("Loading configuration ...");
+  cons.printi("Loading Configuration and Initializing LED Arrays ...");
 
   // Set Running Color to white.
   sdSystem.init_running_color_list();
@@ -884,10 +961,6 @@ int loop()
   // Initialize the Stupid Random Numbers
   sRND.set();
 
-  // -------------------------------------------------------------------------------------
-  // FLED LED Array
-  cons.printi("Initializing LED Arrays ...");
-
   // ---------------------------------------------------------------------------------------
   // Light Strip Event System
   cons.printi("Initializing Event System ...");
@@ -924,14 +997,11 @@ int loop()
   sdSystem.init();
 
   // -------------------------------------------------------------------------------------
-  // FLED LED Array
-  
-  // Define Led Strips
-  cons.printi("Initializing LED Strips ...");
+  // Aditional DEBUG line that could only be set after the channels were created.
+
+  cons.keywatch.set((int)KEYLEDDRCYCL,sdSystem.CONFIG.iNUM_CHANNELS + 1);  // Test Doors
 
   // -------------------------------------------------------------------------------------
-  // Aditional DEBUG
-  cons.keywatch.set((int)KEYLEDDRCYCL,sdSystem.CONFIG.iNUM_CHANNELS + 1);  // Test Doors
   /*
   // False events for testing.
   teEvent[lsStrips[0].Cl].set(tmeCurrentMillis, 50, 50, 20, AnEvSweep, AnPiPulse, false, CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), CRGB(255, 0, 0), 0, 10, false, false);

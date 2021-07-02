@@ -14,6 +14,7 @@
 
 // Standard Header Files
 #include <string>
+#include <deque>
 
 // RASFled related header files
 #include "consoleanddata.h"
@@ -50,8 +51,6 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
 
   // Switch value of true = open
 
-  int sfind = 0;
-
   // Check for newly opened and run animation on them.
   for (int door=0; door < sdSysData.CONFIG.vhwDOORS.size(); door++)
   {
@@ -65,17 +64,27 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
         if (sdSysData.CONFIG.vhwDOORS.at(door).ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
         {
           // Door Animation
-          cons.printwait("  Door " + std::to_string(door) + " Open ... ");
-          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "StDoorOpen");
+          cons.printwait("  Door " + to_string(door) + " Open ... ");
+          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "Opened Door");
 
-          sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Door");
-          cons.printwait("  G" + std::to_string(door) + " S" + std::to_string(sfind) + " :Door Open");
-          vdDoorOpenAnimationADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+          for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+          {
+            if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Door")
+            {
+              cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Door Open");
+              vdDoorOpenAnimationADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+            }
+          }
 
           // Turn on additional lights overhead
-          sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Overhead");
-          cons.printwait("  G" + std::to_string(door) + " S" + std::to_string(sfind) + " :Additional Open");
-          vdAdditionalOpenADV02(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+          for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+          {
+            if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Overhead")
+            {
+              cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Additional Open");
+              vdAdditionalOpenADV02(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+            }
+          }
         }
       }
       else
@@ -84,19 +93,29 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
         if (sdSysData.CONFIG.vhwDOORS.at(door).ISHARDWARE == true)  // Only if its real switch (with lights attached to it)
         {
           // Replace Open or Current door animation to closed door animation
-          cons.printwait("  Door " + std::to_string(door) + " Close ... ");
-          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "StDoorCloseA");
+          cons.printwait("  Door " + to_string(door) + " Close ... ");
+          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "Closed Door");
 
-          sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Door");
-          cons.printwait("  G" + std::to_string(door) + " S" + std::to_string(sfind) + " :Door Close Active");
-          vdDoorCloseActiveADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+          for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+          {
+            if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Door")
+            {
+              cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Door Close Active");
+              vdDoorCloseActiveADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+            }
+          }
 
           // Turn off additional lights overhead
-          cons.printwait("  Add Off Strtip:" + std::to_string(door));
+          cons.printwait("  Add Off Strtip:" + to_string(door));
 
-          sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Overhead");
-          cons.printwait("  G" + std::to_string(door) + " S" + std::to_string(sfind) + " :Additional Close");
-          vdAdditionalCloseADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+          for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+          {
+            if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Overhead")
+            {
+              cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Additional Close");
+              vdAdditionalCloseADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+            }
+          }
         }
       }
     }
@@ -113,7 +132,7 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
         opencount = opencount  + 1;
       }
     }
-    cons.printwait("Open Door Count: " + std::to_string(opencount));
+    cons.printwait("Open Door Count: " + to_string(opencount));
     sdSysData.intDoorsOpen = opencount;
     // -----
 
@@ -127,32 +146,42 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
         {
 
           // If a door is open
-          if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Door") != "StDoorOpen" 
-              && sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Door") != "StDoorCloseA")
+          if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Door") != "Opened Door" 
+              && sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Door") != "Closed Door")
           {
             // If this door is not open then make sure the closed door animation is running on it.
-            cons.printwait("  Door " + std::to_string(door) + " Running Active Closed: ");
+            cons.printwait("  Door " + to_string(door) + " Running Active Closed: ");
 
             // Closed Active Doors animation
-            sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "StDoorCloseA");
+            sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "Closed Door");
 
-            sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Door");
-            cons.printwait("  G" + std::to_string(door) + " S" + std::to_string(sfind) + " :Close Active on Strip");
-            vdDoorCloseActiveADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+            for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++) // There has got to be a better way.
+            {
+              if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Door")
+              {
+                cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Close Active on Strip");
+                vdDoorCloseActiveADV00(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+              }
+            }
           }
 
           // If  a door is open
-          if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Overhead") != "stOverOpen")
+          if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Overhead") != "Open Overhead")
           {
             // Make sure this door has the overhead animation running on it.
-            cons.printwait("  Door " + std::to_string(door) + " Running Overhead: ");
+            cons.printwait("  Door " + to_string(door) + " Running Overhead: ");
 
             // Normal Overhead Animation 
-            sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Overhead", "stOverOpen");
+            sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Overhead", "Open Overhead");
 
-            sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Overhead");
-            cons.printwait("  G" + std::to_string(door) + " S" + std::to_string(sfind) + " :Overhead Animation");
-            vdPacificaishAnimationADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+            for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+            {
+              if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Overhead")
+              {
+                cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Overhead Animation");
+                vdPacificaishAnimationADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+              }
+            }
           }
         }
       }      
@@ -177,15 +206,20 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
           //vdEndAllAnimationsADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
 
           // Start the Doors Running Mode on each door.
-          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "StDoorCloseR");
+          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "Closeed Door Active");
 
-          sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Door");
-          vdDoorCloseRunningADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+          for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+          {
+            if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Door")
+            {
+              vdDoorCloseRunningADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+            }
+          }
 
-          //cons.printwait("All Doors Closed HWLVL: D%d AS%d" + std::to_string(door) + std::to_string(lsStrips[strip + 1].AnimationStatus));
+          //cons.printwait("All Doors Closed HWLVL: D%d AS%d" + to_string(door) + to_string(lsStrips[strip + 1].AnimationStatus));
           
           // Make sure lights are off or turning off and Amber Up the newly closded doors.
-          if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Overhead") == "stOverOpen")
+          if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status("Overhead") == "Open Overhead")
           {
             // Start Overhead Turn On Convenience Animation.
             // See when the door was closed
@@ -193,25 +227,35 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
             if ((tmeCurrentTime - sdSysData.CONFIG.vhwDOORS.at(door).tmeTOGGLEDTIME) < 15000)
             {
               // The door was recently closed. Run the Convienance lights on it.
-              cons.printwait("  Door " + std::to_string(door) + " Conviencance Lights On: ");
+              cons.printwait("  Door " + to_string(door) + " Conviencance Lights On: ");
               
               // Turn on Convienance Lights 
-              sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Overhead", "StOverCloseCon");
+              sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Overhead", "Closed Overhead Convenince");
 
-              sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Overhead");
-              vdCoADV01(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+              for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+              {
+                if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Overhead")
+                {
+                  vdCoADV01(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+                }
+              }
             }
             else
             {
               // The door was closed for a while, just turn off the lights.
               // Start the Close Door Overhead Animation
-              cons.printwait("  Door " + std::to_string(door) + " Overhead Lights Off: ");
+              cons.printwait("  Door " + to_string(door) + " Overhead Lights Off: ");
 
               // Just turn off the lights.
-              sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Overhead", "stOverClose");
+              sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Overhead", "Closed Overhead");
 
-              sfind = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).find("Overhead");
-              vdCloseOverADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(sfind), teEvents, tmeCurrentTime);
+              for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
+              {
+                if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Overhead")
+                {
+                  vdCloseOverADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+                }
+              }
             }
           }
         }

@@ -241,7 +241,13 @@ class v_profile_strip_group
 
   void status_set(string strName, string strStatus)
   {
-    vLED_STRIPS.at(find(strName)).Status = strStatus;
+    for (int s=0; s < vLED_STRIPS.size(); s++)
+    {
+      if(vLED_STRIPS.at(s).strNAME == strName)
+      {
+        vLED_STRIPS.at(s).Status = strStatus;
+      }
+    }
   }
 
   void set(int intId, string strName, int intStart_Pos)
@@ -344,7 +350,6 @@ class v_profile_strip_main
       for(int y=0; y<vLED_GROUPS.at(x).vLED_STRIPS.size(); y++)
       {
         vLED_GROUPS.at(x).vLED_STRIPS.at(y).intLED_START_POS = pos;
-        //vLED_GROUPS.at(x).vLED_STRIPS.at(y).update_offset();
         pos = pos + vLED_GROUPS.at(x).vLED_STRIPS.at(y).led_count();
       }
     }
