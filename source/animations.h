@@ -63,7 +63,34 @@ void show_anim_info(Console &cons, v_profile_strip strip, string strDescription)
 
 // -------------------------------------------------------------------------------------
 // Advanced Animations
+
+void vdTestPattern(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
+// Turn Additional Lights On on to show the door is open.
+// Pulseating yellow light, brightest at center.
+{
+  show_anim_info(cons, strip, "Test Pattern");
+
+  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), strip.fs(0), strip.fe(0), false, false);
+}
+
 // -------------------------------------------------------------------------------------
+// Front Door Mask
+void vdFront_Overhead_Mask(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, string strIdentity)
+// Turn Additional Lights On on to show the door is open.
+// Pulseating yellow light, brightest at center.
+{
+  if ((strip.strNAME == "Overhead") && (strip.strPOSITION == "Front"))
+  {
+    show_anim_info(cons, strip, "Front Door Mask");
+
+    CRGB Color_M = CRGB(128,128,128); 
+
+    teEvent[strip.intCHANNEL].set(strIdentity, tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(20), false, false);
+  }
+}
+
+// -------------------------------------------------------------------------------------
+// Advanced Animations
 
 void vdChannelLightFlashColor00(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
 // Turn Color Pulse on Full Channel. Strip Length Aware. 
@@ -173,6 +200,8 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
   int staob, endob = 0;
   */
 
+  int counter_symetry = 300;
+
 
   for(int x = 0; x < amount; x++)
   {
@@ -182,16 +211,17 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
 
     stadf = strip.fs(0) + stad;
     enddf = strip.fs(0) + endd;
-    switchdelaydoor = intAnTmDly(intTm, 0, sd, intSp)  * 2;
+    // switchdelaydoor = intAnTmDly(intTm, 0, sd, intSp)  * 2;
+    switchdelaydoor = intDurG;
     stadb = strip.fe(0) - stad;
     enddb = strip.fe(0) - endd;
 
     // Door Animations
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry * x), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry * x), intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
 
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor, intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor, intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry * x), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry * x), intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
   }
 }
 
@@ -202,7 +232,7 @@ void vdChannelLightPulseColor01(Console &cons, v_profile_strip strip, timed_even
   show_anim_info(cons, strip, "Pulse Color Repeat 01");
 
   // Set the pulse to timed repeat
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 7200, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 6000, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true);
 }
 
 void vdChannelLightPulseColorCountdown01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
@@ -233,18 +263,8 @@ void vdHazard(Console &cons, v_profile_strip strip, timed_event teEvent[], unsig
 {
   show_anim_info(cons, strip, "Hazard");
 
-  // Position Mask
-  if (strip.position("Front"))
-  {
-    // Mask
-    CRGB Color_M = CRGB(128,128,128); 
-    teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false);
-  }
-  
-
   // Pulse Red.
   teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true);
-  //teEvent[strip_group.pstrOVERHEAD.intCHANNEL].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip_group.pstrOVERHEAD.ft(0), strip_group.pstrOVERHEAD.fb(0), false, true);
 
   // Set the hazard to timed repeat
   teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaHazard, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true);  

@@ -57,10 +57,6 @@ void teSystem(Console &cons, system_data &sdSysData, timed_event teEvent[], unsi
     {
       channel = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
 
-
-
-
-    
       if (teEvent[channel].teDATA.size() > 0)
       {
         for (int event = 0; event < teEvent[channel].teDATA.size(); event++)
@@ -136,7 +132,15 @@ void teSystem(Console &cons, system_data &sdSysData, timed_event teEvent[], unsi
                   case AnTavdTestAnimation:
                   // Color Specific Channel Pulse
                   {
-                    //vdAdditionalOpenADV01(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(sfind), teEvent, tmeCurrentTime);
+                    vdTestPattern(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(sfind), teEvent, tmeCurrentTime);
+                    //vdFront_Overhead_Mask(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(sfind), teEvent, tmeCurrentTime);
+                    break;
+                  }    
+
+                  case AnTavdOverhead_Mask:
+                  // Color Specific Channel Pulse
+                  {
+                    vdFront_Overhead_Mask(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip), teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].strIdent);
                     break;
                   }    
 

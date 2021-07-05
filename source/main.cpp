@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.33A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.34A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,25 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.34_210705
+// *    - The configurable system testing, at the current stage is coming to an end. 
+// *        The system seems to be working ok and the known bugs have been addressed. 
+// *      Although I only wrote the configurability system for myself, as sort of a proof 
+// *        of concept, I have to say I am very disappointetd.  The system works just as 
+// *        before, and the only thing I felt I got out of it was a hand full of coffee 
+// *        beans, multiple consistant kicks in the face, and counciling for multiple 
+// *        kicks in the face.  
+// *      Perhaps in the future, if I ever add door lights to the hatch back, under 
+// *        carrage, or front hood, then the configuration system would be useful. 
+// *        I had no plans to do that anyway, so it was really just a waste of my time. 
+// *    - Corrected the Overhead Front Door Mask for the Hazard Lights. 
+// *    - Corrected the pulse timing issue that was related to the second half of the 
+// *        pulse starting time being tied directly to the length of the LED strip.  
+// *        Corrected by coding its start time of the second pulse to be the same amount 
+// *        of time as the pulse fade out color.
+// *      Also, added some counter symetry to liven it up.  Not much but better than 
+// *        the robotic look.
+// *
 // * V 0.33_210702 
 // *    - MAKE NO MISTAKE: 
 // *        I have no disillusionment about this software.  At the time of this writing  

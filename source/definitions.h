@@ -146,6 +146,9 @@
 //  Test Animation  
 #define AnTavdTestAnimation     50
 
+// Other Effects and Animations
+#define AnTavdOverhead_Mask     51
+
 //  Normal Effects  
 #define AnTavdPacificaish       60
 #define AnTavdPaAnimClose       61

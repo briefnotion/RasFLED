@@ -174,7 +174,7 @@ class timed_event
     intLEDCOUNT = intLedCount;
   }
 
-  void set(std::string strIedntity, unsigned long tmeCurrentTime,
+  void set(std::string strIdentity, unsigned long tmeCurrentTime,
            int tmeStartInTime, int intDuration, int intSpeed, 
            char  bytAnimation, char  bytLEDAnimation, bool booInvertColor, 
            CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
@@ -189,7 +189,7 @@ class timed_event
 
     timed_event_data newteDATA;
 
-    newteDATA.strIdent = strIedntity;
+    newteDATA.strIdent = strIdentity;
     newteDATA.tmeSTARTTIME = tmeStartTime;
     newteDATA.intDURATION = intDuration;
     newteDATA.intSPEED = intSpeed;

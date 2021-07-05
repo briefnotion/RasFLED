@@ -206,7 +206,7 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
           //vdEndAllAnimationsADV(cons, lsStrips,strip,teEvent,tmeCurrentTime);
 
           // Start the Doors Running Mode on each door.
-          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "Closeed Door Active");
+          sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).status_set("Door", "Closed Door Active");
 
           for(int s=0; s < sdSysData.CONFIG.LED_MAIN.at(0).s_size(door); s++)
           {
