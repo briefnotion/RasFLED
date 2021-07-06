@@ -85,7 +85,7 @@ void vdFront_Overhead_Mask(Console &cons, v_profile_strip strip, timed_event teE
 
     CRGB Color_M = CRGB(128,128,128); 
 
-    teEvent[strip.intCHANNEL].set(strIdentity, tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(20), false, false);
+    teEvent[strip.intCHANNEL].set(strIdentity, tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fe(20), false, false);
   }
 }
 
@@ -200,7 +200,7 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
   int staob, endob = 0;
   */
 
-  int counter_symetry = 300;
+  int counter_symetry = 0;
 
 
   for(int x = 0; x < amount; x++)
@@ -216,12 +216,15 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
     stadb = strip.fe(0) - stad;
     enddb = strip.fe(0) - endd;
 
-    // Door Animations
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry * x), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry * x), intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+    // Counter Symetry
+    counter_symetry = 300 * (amount - x - 1); 
 
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry * x), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry * x), intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
+    // Door Animations
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true);
+
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurG, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true);
   }
 }
 

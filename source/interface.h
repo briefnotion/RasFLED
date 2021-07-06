@@ -29,6 +29,12 @@
 // FUNCTION AND PROCEDURES
 // ***************************************************************************************
 
+void command_desc(Console &cons, string strDescription)
+{
+  cons.printwait("__________________________");
+  cons.printwait(strDescription);
+}
+
 // -------------------------------------------------------------------------------------
 // Console Commands
 
@@ -286,6 +292,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     if((cons.keywatch.Command.COMMANDLINE[0] == KEYEXIT) || (cons.keywatch.Command.COMMANDLINE == "exit"))
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Program Exit");
       cons.keywatch.in(KEYEXIT);
       cons.keywatch.cmdClear();
     }
@@ -294,6 +301,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     if(cons.keywatch.Command.COMMANDLINE == " restart")
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Restart Program");
       sdSysData.booREBOOT = true;
       cons.keywatch.in(KEYEXIT);
       cons.keywatch.cmdClear();
@@ -303,6 +311,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     if(cons.keywatch.Command.COMMANDLINE == "help")
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Help and Instructions");
       consoleprinthelp(cons);
       cons.keywatch.cmdClear();
     }
@@ -311,6 +320,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     if(cons.keywatch.Command.COMMANDLINE == " events")
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "All Currently Running Events");
       consoleprintevents(cons, sdSysData, teEvent);
       cons.keywatch.cmdClear();
     }
@@ -319,6 +329,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     if(cons.keywatch.Command.COMMANDLINE == " config")
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Current Configuration and Settings");
       consoleprintconfig(cons, sdSysData, teEvent);
       cons.keywatch.cmdClear();
     }
@@ -331,6 +342,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
       // end all pulses on all strips
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "End Most Pulse Animations");
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
@@ -345,6 +357,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash All LEDs with Running Color");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
       cons.keywatch.cmdClear();
     }
@@ -354,6 +367,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash White All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
     }
@@ -363,6 +377,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Red All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
       cons.keywatch.cmdClear();
     }
@@ -372,6 +387,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Green All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
       cons.keywatch.cmdClear();
     }
@@ -381,6 +397,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Blue All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
       cons.keywatch.cmdClear();
     }
@@ -390,6 +407,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Purple All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
       cons.keywatch.cmdClear();
     }
@@ -399,6 +417,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Yellow All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
       cons.keywatch.cmdClear();
     }
@@ -408,6 +427,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Cyan All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
       cons.keywatch.cmdClear();
     }
@@ -417,6 +437,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Flash Orange All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
       cons.keywatch.cmdClear();
     }
@@ -429,6 +450,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // end all pulses on all strips
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "End Most Pulse Animations");
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
       cons.keywatch.cmdClear();
     }
@@ -439,6 +461,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // Keep values below 128
       sdSysData.start_timer(DEFAULTTIMER * 60);
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "5 minute Pulse Timer Started with Running Color");
       processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, teEvent);
       cons.keywatch.cmdClear();
     }
@@ -448,6 +471,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Running Color All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
       cons.keywatch.cmdClear();
     }
@@ -457,6 +481,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse White All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
     }
@@ -466,6 +491,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Red All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
       cons.keywatch.cmdClear();
     }
@@ -475,6 +501,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Green All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
       cons.keywatch.cmdClear();
     }
@@ -484,6 +511,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Blue All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
       cons.keywatch.cmdClear();
     }
@@ -493,6 +521,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Purple All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
       cons.keywatch.cmdClear();
     }
@@ -502,6 +531,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Yellow All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
       cons.keywatch.cmdClear();
     }
@@ -511,6 +541,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Cyan All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
       cons.keywatch.cmdClear();
     }
@@ -520,6 +551,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Pulse Orange All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
       cons.keywatch.cmdClear();
     }
@@ -532,6 +564,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // end all pulses on all strips
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn Off Overhead Illumination Lights");
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
       cons.keywatch.cmdClear();
     }
@@ -541,6 +574,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Overhead Illumination Lights with Running Color");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
       cons.keywatch.cmdClear();
     }
@@ -550,6 +584,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On White Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
     }
@@ -559,6 +594,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Red Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
       cons.keywatch.cmdClear();
     }
@@ -568,6 +604,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Green Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
       cons.keywatch.cmdClear();
     }
@@ -577,6 +614,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Blue Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
       cons.keywatch.cmdClear();
     }
@@ -586,6 +624,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Purple Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
       cons.keywatch.cmdClear();
     }
@@ -595,6 +634,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Yellow Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
       cons.keywatch.cmdClear();
     }
@@ -604,6 +644,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Cyan Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
       cons.keywatch.cmdClear();
     }
@@ -613,6 +654,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Turn On Orange Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
       cons.keywatch.cmdClear();
     }
@@ -622,6 +664,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbWhite, "White");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to White");
       cons.keywatch.cmdClear();
     }
 
@@ -629,6 +672,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbRed, "Red");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Red");
       cons.keywatch.cmdClear();
     }
     
@@ -636,6 +680,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbGreen, "Green");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Green");
       cons.keywatch.cmdClear();
     }
     
@@ -643,6 +688,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbBlue, "Blue");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Blue");
       cons.keywatch.cmdClear();
     }
     
@@ -650,6 +696,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbPurple, "Purple");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Purple");
       cons.keywatch.cmdClear();
     }
     
@@ -657,6 +704,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbYellow, "Yellow");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Yellow");
       cons.keywatch.cmdClear();
     }
     
@@ -664,6 +712,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbCyan, "Cyan");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Cyan");
       cons.keywatch.cmdClear();
     }
     
@@ -671,6 +720,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       sdSysData.set_running_color(crgbOrange, "Orange");
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Set Running Color to Orange");
       cons.keywatch.cmdClear();
     }
 
@@ -703,6 +753,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // end all pulses on all strips
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "HAZARD LIGHTS ON ('h`' to turn off");
       processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
       cons.keywatch.cmdClear();
     }
@@ -712,6 +763,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "HAZARD LIGHTS OFF");
       processcommandhazard(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
       cons.keywatch.cmdClear();
     }
@@ -722,6 +774,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     if(cons.keywatch.Command.COMMANDLINE[0] == KEYDEBUG)
     {
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      command_desc(cons, "Debug mode On/Off Toggle");
       cons.keywatch.in(KEYDEBUG);
       cons.keywatch.cmdClear();
     }

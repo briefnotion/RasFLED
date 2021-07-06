@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.34A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.35A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,33 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.35_210706
+// *    - Found a few more little random inconsistant bugs.
+// *    - Default generated config file corrected to place hanging lights on the 
+// *        front overheads instead of the front doors.  Backup, modify, or let the 
+// *        system recreate a new configuration file, because,
+// *    - Hazard ligts now properly generate its mask from the bottom (front) after 
+// *        another minor correction.
+// *    - Countered the anti-symetry in the Pulse lights so that the spaces in the 
+// *        pulses could be further apart.  Keep in mind, this is a counter anti- 
+// *        symetry, not an anti-anti-symetry, which would amount to no changes.  
+// *        Nor is it a counter counter symetry.  Maybe I should have just labled it 
+// *        a reverse counter sysmetry.  Really, nothing seems right here.
+// *    - I did already plan out the next animations.  They will be ditherable versions
+// *        of all the current animations. I'm sure I'll get a kick out of programming 
+// *        all that also. 
+// *    - Added descriptor to display after a command is entered. 
+// *    - Side Note:  Completed the prototype test design of my cyber arm.  :D
+// *        Of course, it will still take some time to put together the components. 
+// *        Not saying whats needed.  Also, the Test Alpha version will not have a 
+// *        dynamic torque clutch either, may not even be strong enough to lift itself
+// *        however, the design is there and the most difficult part, the hand (grapple)
+// *        has been thought out.  
+// *      When I say it may take a while, I really mean "a long time."  Honestly, It took
+// *        5 days for the genius in me to write down "I completed the design for my 
+// *        cyber arm." into my book of poetry.  I'll just throw it together in time 
+// *        like everything else.
+// *        
 // * V 0.34_210705
 // *    - The configurable system testing, at the current stage is coming to an end. 
 // *        The system seems to be working ok and the known bugs have been addressed. 

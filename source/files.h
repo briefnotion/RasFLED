@@ -554,16 +554,16 @@ bool save_configuration(Console &cons, system_data &sdSysData, string strFilenam
     sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(0).add_strip(1,"Overhead", "Back", iLED_Size_Overhead_Back_Driver, true, true);
 
         // Front Driver
-    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Driver, true, true);
-    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Driver, true, false);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Driver, true, false);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Driver, true, true);
     
         // Back Passenger
     sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(2).add_strip(0,"Door", "Back", iLED_Size_Door_Back_Passenger, true, true);
     sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(2).add_strip(1,"Overhead", "Back", iLED_Size_Overhead_Back_Passenger, true, true);
 
         // Front Passenger
-    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Passenger, true, true);
-    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Passenger, true, false);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Passenger, true, false);
+    sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Passenger, true, true);
     
     sdSysData.CONFIG.LED_MAIN.at(0).update_start_positions();
 
