@@ -1,0 +1,35 @@
+RasFLED Build
+
+I supose its time to create BUILD instructions.  Considering I know very little about how much of this works, I am able to get RasFLED up and running without problems.  And, if you knew much more than I did, you would've been able to get the program running also.  That being said, I am "hodgepodging" together these instructions to help anyone who may know less than me.  Included in these instructions will also be notes on why or what is right or wrong.
+
+RasFLED requires 3 libraries.  
+
+	1.	WiringPI (http://wiringpi.com/)
+			WiringPI has been depreciated and is no longer istallable via apt-get, which is unfortunate because it is required by rpi-ws281x-master library.
+			Fortunately a clone exist on GitHub at https://github.com/WiringPi/WiringPi	Follow the instructions there(https://github.com/WiringPi/WiringPi/blob/master/INSTALL)	and the library should be availble.
+	
+	2.	NCurses
+			There is a newer version and an older version.  Appearantly, I wrote my code with the older version, so "sudo apt-get install ncurses-dev" was needed for me to install the library.  
+			If that doesn't work, you can try "sudo apt-get install libncurses5-dev libncursesw5-dev"
+			Or, try both.  I can't tell you the difference between the two packages, but both are installed on my system and RasFLED compiles.
+	
+	3.	rpi_281x
+			RPI_281X is also depreciated, from what I see, but it is still availble at (https://github.com/jgarff/rpi_ws281x)  I've included a working copy of it with my source code, because I couldn't get the program installed otherwise.  Likly, due to my misunderstanding of part of it.  The library can be installed by cd ing into its directory, running command "cmake ." then "make install"  Yet, even though the WS2811 library is found during RasFLED's make process, the ws2811.h file isn't.
+	
+Compilation:
+
+	I've included a working CMakeList.txt file within the source directory.  Being far from perfect, it will create executables.
+	
+	To compile:
+	
+	1.  cd into the "source/rpi-ws281x-master" directory.
+	2.	run "cmake ."  This should create a version history file.  A compile 
+			will not be necessary.
+	3.	cd into the "build" directory.
+	4.	"chmod +x cmak.sh" if it isn't already an executable.
+	5.	run "./cmak.sh" to crate the makefile.
+	6.	run "sudo make" to create the executable "RasFLED"
+			I am not certain why this make needs root command for me.  Chances are
+			I messed something up.  Maybe just try "make" first.
+	7	run "sudo ./RasFLED"  If the compile was sucessful, through and through, 
+			you should see the interface.  "X" to exit.
