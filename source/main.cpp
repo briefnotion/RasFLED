@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.35A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.36A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,18 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.36_220214
+// *    - Returning to RasFLED development.
+// *    - Added Day and Night mode so certain animations will not display during the day.
+// *        Day mode is also a good stand in for night silent mode, for when I don't want
+// *          to shine.
+// *        I wanted to get my feet wet before redesigning the console.
+// *    - Puddle animations will not display during day mode.
+// *    - Side running lights will not display during day mode.
+// *    - fledcore could stand a rewrite, but the milk hasn't spilt.  And, if ever the 
+// *        networked version of RasFLED ever gets built, there is still an advantage 
+// *        to processing each light color 1 by 1.
+// *
 // * V 0.35_210706
 // *    - Found a few more little random inconsistant bugs.
 // *    - Default generated config file corrected to place hanging lights on the 
@@ -682,7 +694,6 @@ static char VERSION[] = "XX.YY.ZZ";
 // ***************************************************************************************
 
 
-
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES
 // ***************************************************************************************
@@ -1113,7 +1124,7 @@ int loop()
       {
         int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
         sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
-          = teEvents[channel].execute(cons, sRND, sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, tmeCurrentMillis);
+          = teEvents[channel].execute(cons, sdSystem, sRND, sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, tmeCurrentMillis);
       }
     }
 

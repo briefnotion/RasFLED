@@ -118,10 +118,12 @@ class system_data
   bool  booOverheadRunning = false; // Are exta anims running.
   bool  booHazardRunning = false;   // Are exta anims running.
   
-
   // Timer and Color Schemes
   countdown_timer cdTIMER;
   running_colors running_color_list;
+
+  // Day Mode Active
+  bool booDay_On = false;
 
   // Files
   bool booRunning_State_File_Dirty = false;
@@ -732,6 +734,16 @@ class Console
 
     mvwprintw(winTop, 0, 18, "REPEAT");
     mvwprintw(winTop, 0, 26, "DOORAWARE");
+    
+    if(sdSysData.booDay_On == true)
+    {
+    mvwprintw(winTop, 0, 37, "DAY  ");
+    }
+    else
+    {
+    mvwprintw(winTop, 0, 37, "NIGHT");      
+    }
+
 
     // ----------------------------
     // Display Command Line

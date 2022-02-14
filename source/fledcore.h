@@ -128,6 +128,7 @@ class timed_event_data
   bool booINVERTCOLOR = false;
   bool booREPEAT = false;
   bool booCLEARONEND = true;
+  bool booOFFDURINGDAY = false;
 
   bool booCOMPLETE = true;
 
@@ -178,7 +179,8 @@ class timed_event
            int tmeStartInTime, int intDuration, int intSpeed, 
            char  bytAnimation, char  bytLEDAnimation, bool booInvertColor, 
            CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
-           int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd)
+           int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd,
+           bool booOffDuringDay)
   
   // Prepare an animation to start at a specific time.
   {
@@ -207,6 +209,7 @@ class timed_event
     newteDATA.intENDPOS = intEndPos;
     newteDATA.booREPEAT = booRepeat;
     newteDATA.booCLEARONEND = booClearOnEnd;
+    newteDATA.booOFFDURINGDAY = booOffDuringDay;
 
     newteDATA.booCOMPLETE = false;
 
@@ -524,7 +527,7 @@ class timed_event
 
   // -------------------------------------------------------------------------------------
 
-  bool execute(Console &cons, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
+  bool execute(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
   //  Sets all requested light paths, start to end position, to begin their animation
   //    at a future time.
 
@@ -586,6 +589,7 @@ class timed_event
           tempColor.b = 0;
 
           // Only continue processing the event if the event hasnt been completed.
+          // or if the event shouldnt be skipped because of display in day is off.
           if (teDATA[event].booCOMPLETE == false)
           {
             // Is the LED we are processing within the event?
@@ -630,8 +634,17 @@ class timed_event
                         // Calculate how much this Event will chaange the pixel.
                         //  Breaking the norm, but also passing the led ID and
                         //  original 4 colors to ... (consider rewrite)
-                        tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
-                                                    led, event, teDATA[event]);
+                        if(teDATA[event].booOFFDURINGDAY == true && sdSysData.booDay_On == true)
+                        {
+                          tempColor.r=0;
+                          tempColor.g=0;
+                          tempColor.b=0;
+                        }
+                        else
+                        {
+                          tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
+                                                      led, event, teDATA[event]);
+                        }
 
                         //  Update the events completeness if its still active.
                         if (tempColor.complete == false)

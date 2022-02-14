@@ -52,3 +52,4 @@ source/rpi_ws281x-master/CMakeFiles/3.18.4/CompilerIdC/CMakeCCompilerId.c
 source/rpi_ws281x-master/CMakeCache.txt
 build/CMakeFiles/3.18.4/CompilerIdCXX/CMakeCXXCompilerId.cpp
 build/CMakeFiles/3.18.4/CompilerIdC/CMakeCCompilerId.c
+*.json
