@@ -357,7 +357,7 @@ void vdDoorOpenAnimationADV00(Console &cons, v_profile_strip strip, timed_event 
   // Clear set background to door open colors.
   teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(255, 64, 64), strip.fs(0), strip.fs(4), false, false, true);
   teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 64, 64), CRGB(0, 0, 0), CRGB(25, 0, 0), strip.fs(5), strip.fs(10), false, false, true);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + 500, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(11), strip.fe(0), false, false, true);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + 500, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(11), strip.fe(0), false, false, false);
 
   // Shimmer
   teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 10000, 500, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(15, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, false);
@@ -473,7 +473,7 @@ void vdDoorCloseActiveADV00(Console &cons, v_profile_strip strip, timed_event te
   teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(40, 8, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, false, false);
 
   // Pulse to white (accumulation of prev color and this color = CRGP(70, 70, 70) then back to original color.
-  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(30, 62, 70) , CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, false);
+  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(30, 62, 70) , CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, true);
 }
 
 // -------------------------------------------------------------------------------------

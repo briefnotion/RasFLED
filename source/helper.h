@@ -341,5 +341,21 @@ class hardware_monitor
 };
 
 
+// -------------------------------------------------------------------------------------
+// Screen Status Variables
+class ScreenStatus
+{
+  public:
+  bool Refresh = false;
+  bool Debug = false;
+  bool Debug_Refresh = false;
+
+  void clear()
+  {
+    Refresh       = false;
+    Debug_Refresh = false;
+  }
+};
+
 
 #endif

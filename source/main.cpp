@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.36A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.37A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,14 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.37_220218
+// *    - Started adding mouse/touchscreen support
+// *    - Retooled console to help determine what will be needed for new panel.
+// *    - Debug screen will now show mouse info.
+// *    - Adjusted some animations to not display during day.
+// *    - Reworked the console line screen to scroll, like a normal (classical) command 
+// *        line screen.  No page scroll up supported.
+// *
 // * V 0.36_220214
 // *    - Returning to RasFLED development.
 // *    - Added Day and Night mode so certain animations will not display during the day.
@@ -862,10 +870,10 @@ int loop()
   // ---------------------------------------------------------------------------------------
   // Initialize the console
   initscr();
-  cons.set(CONSOLESPLITSIZE);
-  nodelay(stdscr, true);
+  cons.Screen.init();   // Prepare console.
+  cons.Screen.set(CONSOLESPLITSIZE);
   
-  cons.printi("Initializing Console ...");
+  cons.printi("Console Initialized ...  OK");
   cons.printi("");
   cons.printi("RasFLED");
   cons.printi("  'X'    - Exit");
@@ -1124,7 +1132,9 @@ int loop()
       {
         int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
         sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
-          = teEvents[channel].execute(cons, sdSystem, sRND, sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, tmeCurrentMillis);
+          = teEvents[channel].execute(cons, sdSystem, sRND, 
+              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+              tmeCurrentMillis);
       }
     }
 
@@ -1237,7 +1247,8 @@ int loop()
 
 
     // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
-    cons.readkeyboardinput();
+    //cons.readkeyboardinput();
+    cons.readkeyboardinput2();
 
     // Displaying and updating the screen, but only when its ready.  
     //  This will be every SCREENUPDATEDELAY ms.
@@ -1286,6 +1297,8 @@ int loop()
   
   // Shutdown.
   shutdown();
+
+  printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
   if(sdSystem.booREBOOT == false)
   {
