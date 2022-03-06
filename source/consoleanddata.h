@@ -22,7 +22,7 @@
 #include "definitions.h"
 #include "helper.h"
 #include "system.h"
-#include "screen2.h"
+#include "screen3.h"
 
 using namespace std;
 
@@ -49,19 +49,29 @@ class Console
 
   public:
 
-  Screen2 Screen;
+  Screen3 Screen;
 
   Keys keywatch;
 
   ScreenStatus ScrStat;
 
-  void printi (string in)
+  void set_screen(system_data &sdSysData)
+  {
+    ScrStat.Window_Status_On();
+    ScrStat.Window_Buttons_On();
+    ScrStat.Window_Debug_Off();
+    ScrStat.Window_Console_On();
+
+    Screen.set(sdSysData, ScrStat);
+  }
+
+  void printi(string in)
   // Print to console immediately to console without waiting for refresh.
   {
     // console line time is inaccurate.  Will only refect previous console update time
     //  and not actual time printed.  Current time is not global.  This is a filler.
     clou.add(Update_Time,in);         // Add line to console line list.
-    Screen.printout(clou);  // Immediately display the line onto the screen.
+    Screen.printout(clou, ScrStat);  // Immediately display the line onto the screen.
   }
 
   void deb(string strPrintI)
@@ -69,7 +79,7 @@ class Console
     printi("DEBUG: " + strPrintI);
   }
 
-  void printwait (string in)
+  void printwait(string in)
   // Print out a line to console during next refresh.
   {
     // console line time is inaccurate.  Will only refect previous console update time
@@ -136,13 +146,241 @@ class Console
     // Check for screen resize.
     if (keywatch.get(KEYRESIZE) == 1)
     {
-      printwait("RESIZING SCREEN");
+      //printwait("RESIZING SCREEN");
       keywatch.Chars[KEYRESIZE].VALUE = 0;
+      clou.RefreshConsole = true;
+      ScrStat.Needs_Refresh = true;
 
-      //set(CONSOLESPLITSIZE);
-      Screen.set(CONSOLESPLITSIZE);
+      Screen.reset(ScrStat);
     }
   }
+
+  void processmouseinput(system_data &sdSysData)
+  {
+    if (mouse.Clicked() == true)
+    {
+      // Get Clicked Button Name and Value
+      int id = -1;
+      string name = "";
+      int value = 0;
+
+      if (Screen.bzButtons.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+      // Check for any clicked buttons or if it was just empty space.
+      //  If anything was clicked, the list in the bzButtons will be updated.
+      {
+        // Go through all the buttons in the screen and update their values, 
+        //  this will also update their values in the bzButtons list.
+
+        Screen.update_buttons();
+
+        // If a Main Button is clicked, dont need the Color Picker
+        //  Close it if it was opened.
+        ScrStat.Window_CPicker_Off();
+
+        // Next time the screen is refreshed, redraw the button.
+        //ScrStat.Buttons_Refresh = true;
+
+        // Get name and value of button in list that was clicked, then set it 
+        //  as unclicked.
+        string name = "empty";
+        int value = 0;
+        name = Screen.bzButtons.get_clicked_name();
+        value = Screen.bzButtons.get_clicked_value(name);
+
+        // ---debug
+        // Print Returned Value
+        //printi("");
+        //printi("returned " + to_string(value) + " " + name);
+
+        /* ---debug
+        // Print Zones
+        printi("");
+        for(int pos=0; pos < Screen.bzButtons.size(); pos++)
+        {
+          printi(Screen.bzButtons.name(pos));
+        }
+        printi("");
+        */
+        
+        if (name.compare("MENUCONTROL") == 0)
+        // Load System Buttons
+        {
+          Screen.buttons_menu_control(sdSysData);
+        }
+
+        if (name.compare("MENUSYSTEM") == 0)
+        // Load System Buttons
+        {
+          Screen.buttons_menu_system(sdSysData);
+        }
+        
+        else if (name.compare("MENUHOME") == 0)
+        // Load Home Buttons
+        {
+          Screen.buttons_menu_home(sdSysData);
+        }
+
+        else if (name.compare("MENUOVERHEAD") == 0)
+        // Load Home Buttons
+        {
+          Screen.buttons_menu_overhead_color(sdSysData);
+          keywatch.cmdIn('o');
+        }
+
+        else if(name.compare("EXIT") == 0)
+        // Exit RasFLED
+        {
+          keywatch.cmdInString("X");
+        }
+
+        else if (name.compare("DAYNIGHT") == 0)
+        // Day Night Mode
+        {
+          if (value == 1)
+          {
+            keywatch.cmdInString("dayon");
+            Screen.bzButtons.change_label("DAYNIGHT", "%%Day");
+          }
+          else
+          {
+            keywatch.cmdInString("dayoff");
+            Screen.bzButtons.change_label("DAYNIGHT", "%%Night");
+          }
+        }
+
+        else if(name.compare("TIMER") == 0)
+        // Start Timer
+        {
+          keywatch.cmdInString("  ");
+        }
+
+        else if(name.compare("OVERHEAD") == 0)
+        // Start Overhead Lights
+        {
+          keywatch.cmdInString("oo");
+          Screen.buttons_menu_home(sdSysData);
+        }
+
+        else if(name.compare("FLASH") == 0)
+        // Flash Lights
+        {
+          keywatch.cmdInString("ff");
+        }
+
+        else if(name.compare("CLEARANIMS") == 0)
+        // Clear Most Animations
+        {
+          keywatch.cmdInString("``");
+        }
+
+        else if(name.compare("HAZARD") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdInString("hh");
+        }
+
+        else if(name.compare("DEBUG") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdInString("/");
+        }
+
+        else if(name.compare("RUNNINGCOLOR") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('r');
+          ScrStat.Window_CPicker_On();
+        }
+
+        else if(name.compare("CHOSECOLOR") == 0)
+        {
+          ScrStat.Window_CPicker_On();
+        }
+
+        // Update changes to buttons
+        Screen.update_buttons();
+
+      }
+
+      // -----------------------------------
+
+      if (Screen.bzCPicker.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+      // Check for any clicked buttons or if it was just empty space.
+      //  If anything was clicked, the list in the bzButtons will be updated.
+      {
+        string name = "empty";
+        int value = 0;
+        name = Screen.bzCPicker.get_clicked_name();
+        value = Screen.bzCPicker.get_clicked_value(name);
+      
+        //Color Picker Window
+        if(name.compare("EXITCOLOR") == 0)
+        // Start Hazard Lights
+        {
+          ScrStat.Window_CPicker_Off();
+        }
+        else if(name.compare("RED") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('r');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("GREEN") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('g');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("BLUE") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('b');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("PURPLE") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('u');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("YELLOW") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('y');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("CYAN") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('c');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("ORANGE") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('n');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+        else if(name.compare("WHITE") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdIn('w');
+          ScrStat.Window_CPicker_Off();
+          Screen.buttons_menu_home(sdSysData);
+        }
+      }
+
+    }
+  }
+
+  
 
   void update_displayed_time(unsigned long time)
   // Set the consoles last redraw time, a now should be passed in.
@@ -150,24 +388,20 @@ class Console
     Update_Time = time;
   }
   
-  void output(system_data sdSysData)
+  void output(system_data &sdSysData)
   // Screen Update
   {
     // Check screen redraw variables.
     //  Set Debug
     if (keywatch.get(KEYDEBUG) == 1)
     {
-      ScrStat.Debug = true;
+      ScrStat.Window_Debug_On();
+      //ScrStat.Needs_Refresh = true;
     }
     else 
     {
-      ScrStat.Debug = false;
-    }
-
-    //  Set Debug Refresh
-    if (keywatch.get(KEYDEBUG) == true)
-    {
-      ScrStat.Debug_Refresh = true;
+      ScrStat.Window_Debug_Off();
+      //ScrStat.Needs_Refresh = true;
     }
 
     // Screen Update

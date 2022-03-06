@@ -15,6 +15,7 @@ find_library(WS2811_LIBRARIES NAMES ws2811)
 
 add_executable(
   RasFLED
+  main.cpp
   animations.h
   consoleanddata.h
   definitions.h
@@ -26,7 +27,8 @@ add_executable(
   LEDstuff.h
   stringthings.h
   timedeventsystem.h
-  main.cpp
+  screen2.h
+  screen3.h
 )
 
 target_link_libraries(RasFLED ${WIRINGPI_LIBRARIES} ${WS2811_LIBRARIES} ${CURSES_LIBRARIES})

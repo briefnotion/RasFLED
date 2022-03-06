@@ -63,7 +63,7 @@ void consoleprinthelp(Console &cons)
   cons.printwait("");
   cons.printwait("Colors:");
   cons.printwait(" r - Red    u - Purple  n - Orange");
-  cons.printwait(" g - Green  y - Yellow");
+  cons.printwait(" g - Green  y - Yellow  w - White");
   cons.printwait(" b - Blue   c - Cyan    ` - End");
   cons.printwait("");
   cons.printwait("rX  - Set Running Color  (X is the color)");
@@ -351,17 +351,44 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
-    // Toggle Day Night Mode
+    // -------------------------------------------------------------------------------------
+    // DAY NIGHT MODE
+
+    // Toggle Day Night
     if(cons.keywatch.Command.COMMANDLINE == "dd")
     {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+
       if (sdSysData.booDay_On == true)
       {
+        command_desc(cons, "Toggle DAY mode OFF.");
         sdSysData.booDay_On = false;
       }
       else
       {
+        command_desc(cons, "Toggle DAY mode ON.");
         sdSysData.booDay_On = true;
       }
+      cons.keywatch.cmdClear();
+    }
+
+    // Toggle Day Mode On
+    if(cons.keywatch.Command.COMMANDLINE == "dayon")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+
+      command_desc(cons, "DAY mode ON.");
+      sdSysData.booDay_On = true;
+      cons.keywatch.cmdClear();
+    }
+
+    // Toggle Day Mode Off
+    if(cons.keywatch.Command.COMMANDLINE == "dayoff")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      
+      command_desc(cons, "DAY mode OFF.");
+      sdSysData.booDay_On = false;
       cons.keywatch.cmdClear();
     }
 

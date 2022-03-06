@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.37A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.38A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,7 +56,26 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
-// * V 0.37_220218
+// * V 0.38_220305
+// *    - Everything works as before.  Keyboard command input still accepts the same 
+// *        commands.
+// *    - Added to and changed the inteface.
+// *    - Added buttons on right side of screen to control main functions.
+// *    - Status bar changed to blue and made smaller because, 
+// *        diagnostic, or debug, will hide when not on.  Debug window is red.
+// *    - Timer window appears when on with countdown status and progress bar.
+// *    - Screen remains resizable, but artifacts can appear.
+// *    - Buttons work best with touchscreen. Not sure I mentioned it.
+// *    - Colors only limited to 10, including black and white. Probably compatible
+// *        for most tty terminals built above the 1960's. I think it was called 
+// *        CGA.
+// *    - Live testing for this build could not be done. Car broke down and 
+// *        the transmission control module for it can not be found anywhere. 
+// *        Probably a result of chip shortage or pandemic or whatever, I don't 
+// *        know.  Just means I cant fix the car because I cant get a replacement 
+// *        part.  And I cant test the program for hours on end without a car. 
+// *
+// *    -// * V 0.37_220218
 // *    - Started adding mouse/touchscreen support
 // *    - Retooled console to help determine what will be needed for new panel.
 // *    - Debug screen will now show mouse info.
@@ -871,7 +890,8 @@ int loop()
   // Initialize the console
   initscr();
   cons.Screen.init();   // Prepare console.
-  cons.Screen.set(CONSOLESPLITSIZE);
+  //cons.Screen.set(CONSOLESPLITSIZE);
+  cons.set_screen(sdSystem);
   
   cons.printi("Console Initialized ...  OK");
   cons.printi("");
@@ -1257,6 +1277,7 @@ int loop()
       // Process keyboard info before displaying the screen.
       // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput();
+      cons.processmouseinput(sdSystem);
       processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
       extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
       // Refresh console data storeage from main program. This will be a pass through buffer. 

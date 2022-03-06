@@ -161,8 +161,9 @@ class system_data
     if (cdTIMER.is_active())
     {
       cdTIMER.trigger_check(tmeCurrent_Time_millis);
+      
+    // Check for Timer Window
     }
-
     if(cdTIMER.is_active() == true)
     {
       booprintbuffer = true;
@@ -397,6 +398,18 @@ class Keys
     }
   }
 
+  void cmdInString(string cmd)
+  // Add another character to the command line.
+  {
+    Command.COMMANDLINE = cmd;
+    Command.PRESSED = true;
+
+    if (Command.COMMANDLINE.size() > 10)
+    {
+      cmdClear();
+    }
+  }
+
   void set(int letter, int size)
   // Set behavior of letter to be watched.
   {
@@ -562,7 +575,13 @@ class ConsoleLineList
 
   deque<ConsoleLine> LINES;  // stored console line 
 
+  public: 
   
+  bool RefreshConsole = false;
+
+  private:
+  
+  /*
   bool check_availability()
   // A routine that will check to see if any line has ever been
   //  unprinted.  Not sure if I will ever need it, but its here.
@@ -584,6 +603,7 @@ class ConsoleLineList
       return true;
     }
   }
+  */
 
   void clear_outside_max()
   // Remove old line, printed or unprint, that are outside the 
@@ -622,7 +642,12 @@ class ConsoleLineList
   //  More specificly, will return the value of the printed status
   //  of the most recent line added to the console line list. 
   {
-    if (LINES.empty() == false)
+    if (RefreshConsole == true)
+    {
+      RefreshConsole = false;
+      return true;
+    }
+    else if (LINES.empty() == false)
     {
       if (LINES[0].printed == false)
       {
@@ -673,5 +698,148 @@ class ConsoleLineList
     }
   }
 };
+
+
+// -------------------------------------------------------------------------------------
+// Screen Status Variables
+class ScreenStatus
+{
+  public:
+  // Main Refresh Indicator
+  bool Needs_Refresh = false;
+  //bool Needs_Redraw = false;
+
+  // Windows - Controls to say if a window should be displayed.
+  bool Window_Status = false;
+  bool Window_Buttons = false;
+  bool Window_Debug = false;
+  bool Window_Timer = false;
+  bool Window_CPicker = false;
+  bool Window_Console = false;
+  
+  void Window_Status_On()
+  {
+    if (Window_Status == false)
+    {
+      Window_Status = true;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Status_Off()
+  {
+    if (Window_Status == true)
+    {
+      Window_Status = false;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+    void Window_Buttons_On()
+  {
+    if (Window_Buttons == false)
+    {
+      Window_Buttons = true;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Buttons_Off()
+  {
+    if (Window_Buttons == true)
+    {
+      Window_Buttons = false;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Debug_On()
+  {
+    if (Window_Debug == false)
+    {
+      Window_Debug = true;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Debug_Off()
+  {
+    if (Window_Debug == true)
+    {
+      Window_Debug = false;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Timer_On()
+  {
+    if (Window_Timer == false)
+    {
+      Window_Timer = true;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Timer_Off()
+  {
+    if (Window_Timer == true)
+    {
+      Window_Timer = false;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+    void Window_CPicker_On()
+  {
+    if (Window_CPicker == false)
+    {
+      Window_CPicker = true;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_CPicker_Off()
+  {
+    if (Window_CPicker == true)
+    {
+      Window_CPicker = false;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+  
+  void Window_Console_On()
+  {
+    if (Window_Console == false)
+    {
+      Window_Console = true;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+
+  void Window_Console_Off()
+  {
+    if (Window_Console == true)
+    {
+      Window_Console = false;
+      Needs_Refresh = true;
+      //Needs_Redraw = true;
+    }
+  }
+};
+
+
+
+
 
 #endif

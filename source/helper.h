@@ -13,6 +13,7 @@
 #define HELPER_H
 
 #include <deque>
+#include <string.h>
 
 using namespace std;
 
@@ -341,21 +342,52 @@ class hardware_monitor
 };
 
 
-// -------------------------------------------------------------------------------------
-// Screen Status Variables
-class ScreenStatus
+// Some time display type things
+int millis_to_time_minutes(long millis_time)
+// Returns minutes portion of time.
 {
-  public:
-  bool Refresh = false;
-  bool Debug = false;
-  bool Debug_Refresh = false;
+  return abs(millis_time/60000);
+}
 
-  void clear()
+int millis_to_time_seconds(long millis_time)
+// Returns seconds portion of time.
+{
+  return abs((millis_time % 60000)/1000);
+}
+
+
+// Drawing a progress bar
+string progress_bar(int size, int max_value, int value)
+{
+  string bar = "";
+  string fill = "";
+  int bar_size = 0;
+
+  // create empty bar
+  bar = bar.append(size,' ');
+
+  // calculate the fill portion size
+  //bar_size =   (100*value/max_value) * ( size/ 100);
+  value = abs(value);
+
+  if (value > max_value)
   {
-    Refresh       = false;
-    Debug_Refresh = false;
+    value = max_value;
   }
-};
 
+  bar_size =   size*value/max_value;
+
+  // create fill bar
+  fill = fill.append(  bar_size , '|'   );
+
+  // put bar in empty bar
+  bar.replace(0, bar_size, fill);
+
+  // return bar with number.
+  //bar.replace(0, 3, to_string(bar_size));
+
+  return bar;
+
+}
 
 #endif
