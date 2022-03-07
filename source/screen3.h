@@ -380,7 +380,6 @@ class Button_Zone_Manager
 
   public:
 
-
   int size()
   // return the size
   {
@@ -485,9 +484,6 @@ class Button_Zone_Manager
           button.PROP.SIZEY = ZONES[pos].SIZEY;
           button.PROP.SIZEX = ZONES[pos].SIZEX;
 
-          //button.PROP.CLICKED = ZONES[pos].CLICKED;
-          //button.PROP.CHANGED = ZONES[pos].CHANGED;
-
           ZONES[pos].CHANGED = false;
           button.CHANGED = true;
         }
@@ -553,8 +549,16 @@ class Button_Zone_Manager
   }
 
 };
+// ---------------------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------------------
 class Screen3
+// Color tty interface with main touch control buttons on right side. Large so they can be 
+//  accessed in moving vehicle without difficulty.  Limited access to main program and 
+//  communicates through the command line to avoid confusion if a more advanced interface 
+//  is created in the futer.
+//  Button Control is managed by consoleanddata mouse input.
+//  Current screen status is manage through system
 {
   private:
   // Keyboard input variable
@@ -625,16 +629,6 @@ class Screen3
   int YConsoleSize = -1;
   int XConsoleSize = -1;
 
-
-  // Screen Configuration Variables
-  //bool Configuration_Changed = false;
-
-  //bool Panel_Status = true;
-  //bool Panel_Buttons = true;
-  //bool Panel_Debug = true;
-  //bool Panel_Console = true;
-
-
   // NCurses Window Variables
   string strBotLine;
   
@@ -673,6 +667,8 @@ class Screen3
   Button_Zone_Manager bzCPicker;
 
   void update_buttons()
+  // Scan a button for changes and update its duplicate in the 
+  //  button zone manager.
   {
     bzButtons.update_change_process(btnButton1);
     bzButtons.update_change_process(btnButton2);
@@ -682,6 +678,8 @@ class Screen3
   }
 
   void buttons_CPicker(system_data &sdSysData)
+  // Define Color Picker buttons and load them to the 
+  //  color picker button zone.
   {
     btnCPicker_Red.modify(1, "RED", "%r", 0, 1, C_WHITE_RED, 0);
     btnCPicker_Green.modify(2, "GREEN", "%g", 0, 1, C_WHITE_GREEN, 0);
@@ -691,7 +689,6 @@ class Screen3
     btnCPicker_Cyan.modify(6, "CYAN", "%c", 0, 1, C_WHITE_CYAN, 0);
     btnCPicker_Orange.modify(7, "ORANGE", "%n", 0, 1, C_WHITE_YELLOW, 0);
     btnCPicker_Blank1.modify(8, "WHITE", "%w", 0, 1, C_BLACK_WHITE, 0);
-    //btnCPicker_Blank2.modify(44, "DOOR1", "D4", 0, 1, 6, 0);
     
     bzCPicker.clear();
     bzCPicker.scan(btnCPicker_Red);
@@ -702,26 +699,12 @@ class Screen3
     bzCPicker.scan(btnCPicker_Cyan);
     bzCPicker.scan(btnCPicker_Orange);
     bzCPicker.scan(btnCPicker_Blank1);
-    //bzCPicker.scan(btnCPicker_Blank2);
   }
-
-  /*
-  void buttons_Static_Buttons(system_data &sdSysData)
-  {
-    btnDoor1.modify(41, "DOOR1", "D1", 0, 1, 6, 0);
-    btnDoor2.modify(42, "DOOR1", "D2", 0, 1, 6, 0);
-    btnDoor3.modify(43, "DOOR1", "D3", 0, 1, 6, 0);
-    btnDoor4.modify(44, "DOOR1", "D4", 0, 1, 6, 0);
-    
-    bzStatic_Buttons.clear();
-    bzStatic_Buttons.scan(btnDoor1);
-    bzStatic_Buttons.scan(btnDoor2);
-    bzStatic_Buttons.scan(btnDoor3);
-    bzStatic_Buttons.scan(btnDoor4);
-  }
-  */
 
   void buttons_menu_home(system_data &sdSysData)
+  // Define control buttons and load them to the 
+  //  color picker button zone.
+  // Main Buttons (Top)
   {
     btnButton1.modify(1, "TIMER", "%Start%Timer", 0, 0, 6, COLOR_YELLOW);
     btnButton2.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, 7, COLOR_GREEN);
@@ -738,6 +721,9 @@ class Screen3
   }
 
   void buttons_menu_control(system_data &sdSysData)
+  // Define control buttons and load them to the 
+  //  color picker button zone.
+  // RasFLED settings
   {
     btnButton1.modify(1, "MENUSYSTEM","%SYSTEM", 0, 0, 8, COLOR_BLUE);
     btnButton2.modify(2, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, COLOR_BLUE);
@@ -754,6 +740,9 @@ class Screen3
   }
 
   void buttons_menu_system(system_data &sdSysData)
+  // Define control buttons and load them to the 
+  //  color picker button zone.
+  // RasFLED advanced settings
   {
     btnButton1.modify(1, "EXIT", "%EXIT", 0, 0, 5, COLOR_RED);
     btnButton2.modify(2, "", "", 0, -1, 8, COLOR_BLUE);
@@ -770,6 +759,9 @@ class Screen3
   }
 
   void buttons_menu_overhead_color(system_data &sdSysData)
+  // Define control buttons and load them to the 
+  //  color picker button zone.
+  // Overhead activation and color picker.
   {
     btnButton1.modify(1, "", "", 0, -1, 5, COLOR_RED);
     btnButton2.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, 7, COLOR_GREEN);
@@ -787,6 +779,7 @@ class Screen3
 
 
   void init()
+  // Initialize the main screen for first start.  
   {
     cbreak();   // do not buffer input until cr.
     noecho();   // do not echo back pressed characters
@@ -819,8 +812,10 @@ class Screen3
   }
 
   void set(system_data &sdSysData, ScreenStatus &ScrStat)
+  // Set the screen and defines its contents for first run. 
+  // Call after the screen init.
   {
-    // Prep Buttons for program start.
+    // Prep Control Buttons for program start.
     btnButton1.create(0, "", "", 0, 0, 0, 0);
     btnButton2.create(0, "", "", 0, 0, 0, 0);
     btnButton3.create(0, "", "", 0, 0, 0, 0);
@@ -828,14 +823,8 @@ class Screen3
     btnButton5.create(0, "", "", 0, 0, 0, 0);
     buttons_menu_home(sdSysData);
 
-    /*
-    btnDoor1.create(0, "", "", 0, 0, 0, 0);
-    btnDoor2.create(0, "", "", 0, 0, 0, 0);
-    btnDoor3.create(0, "", "", 0, 0, 0, 0);
-    btnDoor4.create(0, "", "", 0, 0, 0, 0);
-    buttons_static(sdSysData);
-    */
-
+    // Prep Color Picker Buttons, even thought they 
+    //  aren't displayed at start.
     btnCPicker_Red.create(0, "", "", 0, 0, 0, 0);
     btnCPicker_Green.create(0, "", "", 0, 0, 0, 0);
     btnCPicker_Blue.create(0, "", "", 0, 0, 0, 0);
@@ -844,10 +833,10 @@ class Screen3
     btnCPicker_Cyan.create(0, "", "", 0, 0, 0, 0);
     btnCPicker_Orange.create(0, "", "", 0, 0, 0, 0);
     btnCPicker_Blank1.create(0, "", "", 0, 0, 0, 0);
-    //btnCPicker_Blank2.create(0, "", "", 0, 0, 0, 0);
     buttons_CPicker(sdSysData);
 
-    // Draw screen as if resized.
+    // Draw screen the entire screen.  reset is also 
+    //  called when the screen is resized.  
     reset(ScrStat);
   }
 
@@ -855,15 +844,14 @@ class Screen3
   void reset(ScreenStatus &ScrStat)
   // Creates all windows on panel and sets all positions.
   //  To be called if panel sized changes or if windows are 
-  //  opened or closed.
+  //  opened or closed. 
   {
     // Get Screen Size
     getmaxyx(stdscr, YMax, XMax);
 
-    // Button Size
-
     // Panel Setup
-    //  Calculate Window Sizes and Start Positions
+    //  Calculate Window Sizes and Start Positions progressively
+    //  as the screen is drawn.
 
     // Screen split variables
     int YSplit = 0;
@@ -872,6 +860,7 @@ class Screen3
     // Start first split at X button size
     XSplit = XMax - XButtonSize;
 
+    // ---------------------------------------------------------------------------------------
     // Status Panel
     if (ScrStat.Window_Status == true)
     // Main Status Panel
@@ -914,6 +903,7 @@ class Screen3
       bzStatic_Buttons.scan(btnDoor4);
     }
 
+    // ---------------------------------------------------------------------------------------
     // Buttons
     if (ScrStat.Window_Buttons == true)
     // Control Buttons
@@ -936,6 +926,7 @@ class Screen3
       bzButtons.scan(btnButton5);
     }
 
+    // ---------------------------------------------------------------------------------------
     // Debug Panel
     if (ScrStat.Window_Debug == true)
     {
@@ -961,7 +952,7 @@ class Screen3
       wbkgd(winDebug, COLOR_PAIR(5));
     }
 
-
+    // ---------------------------------------------------------------------------------------
     // Color Picker Panel
     if (ScrStat.Window_CPicker == true)
     {
@@ -993,7 +984,7 @@ class Screen3
       bzCPicker.scan(btnCPicker_Blank1);
     }
 
-
+    // ---------------------------------------------------------------------------------------
     // Timer Panel
     if (ScrStat.Window_Timer == true)
     {
@@ -1019,6 +1010,7 @@ class Screen3
       // wbkgd(winTimer, COLOR_PAIR(5));  //  Set color in window.
     }
 
+    // ---------------------------------------------------------------------------------------
     // Console Panel
     if (ScrStat.Window_Console == true)
     // Main Console Screen
@@ -1053,57 +1045,11 @@ class Screen3
     //  commented it when i reseached and wrote it.
     nodelay(stdscr, true);
   }
+  // ---------------------------------------------------------------------------------------
 
-
-  void printout(ConsoleLineList &clou, ScreenStatus &ScrStat)
-  // Print out to console.  (Classic Style)
-  //  If console is on another tty through tty over ethernet or serial then a low 
-  //    bandwith version will need to created.  Or, I put the console into its own 
-  //    thread.  Whichever is necessary to develop or learn first.
-  {
-    // Figurout the size of the console.
-    ConsoleLine line;
-
-    int yCurPos = 0;
-
-    if(clou.avail() == true || ScrStat.Needs_Refresh == true)
-    {
-      for( int y=0; y < YConsoleSize; y++ )
-      {
-        /*
-        Ywincurpos = YConsoleSize - y;
-        Linecurpos =  YConsoleSize - Ywincurpos;
-        */
-
-        yCurPos = YConsoleSize -y -1;
-
-        //  get next line to print.
-        line = clou.get_line_to_print(y);
-
-        // Print console Line
-        wmove(winConsole, yCurPos, 0);  //move cursor to next line to print or clear.
-        wclrtoeol(winConsole);            // clear line befor printing to it.
-        mvwprintw(winConsole, yCurPos, 0, "%s", line.strLine.c_str());  //print line.       
-      }
-        
-      /*
-      // Print bottom line to prevent spill over.
-      //wmove(winBot, Ysize +1,0);  // move cursor to last line +1 to print
-      //wclrtoeol(winBot);
-      mvwprintw(winConsole, YConsoleSize +1 , 0, "%s", strBotLine.c_str()); // fill line with chars.
-      */
-
-      // Screen Title
-      wattron(winConsole, A_REVERSE);
-      mvwprintw(winConsole, 0, XConsoleSize - 7, "CONSOLE");
-      wattroff(winConsole, A_REVERSE);
-
-      // Refresh the window.
-      wrefresh(winConsole);
-    }
-  }
-
+  // ---------------------------------------------------------------------------------------
   void output_status(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  // Displays command line input, status and door indicators
   {
     // Display Command Line
     if (keywatch.cmdPressed() == true || ScrStat.Needs_Refresh == true)
@@ -1112,7 +1058,6 @@ class Screen3
       {
         // Blank out the line before redraw.
         wmove(winStatus, 0, 1);
-        //wclrtoeol(winTop);
         mvwprintw(winStatus, 0, 1, "CMD: __________");
       }
       mvwprintw(winStatus, 0, 1, "CMD: %s", keywatch.cmdRead().c_str());
@@ -1135,23 +1080,23 @@ class Screen3
     mvwprintw(winStatus, 0, 50, " D4 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winStatus, A_REVERSE);}
 
+    // Display Repeat Animations Enabled.  (Not Yet Implemented)
     mvwprintw(winStatus, 0, 18, "REPEAT");
-    mvwprintw(winStatus, 0, 26, "DOORAWARE");
-    
-    //btnDoor1.draw(true);
 
+    // Display Door Aware Toggle Enabled. (Not Yet Implemented)
+    wattron(winStatus, A_REVERSE);
+    mvwprintw(winStatus, 0, 26, "DOORAWARE");
+    wattroff(winStatus, A_REVERSE);
+
+    // Display Day or Night mode toggle.
     if(sdSysData.booDay_On == true)
     {
-      
       //init_pair(1, COLOR_WHITE, COLOR_BLUE);
       //wattron(winStatus, COLOR_PAIR(1));
-
       wattron(winStatus, A_REVERSE);
       mvwprintw(winStatus, 0, 37, " DAY ");
       wattroff(winStatus, A_REVERSE);
-
       //wattroff(winStatus, COLOR_PAIR(1));
-
     }
     else
     {
@@ -1165,16 +1110,14 @@ class Screen3
 
     // Commit all our changes to the status portion of the screen (winTop)
     wrefresh(winStatus);
-    
   }
 
+  // ---------------------------------------------------------------------------------------
   void output_debug2(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  // Displays clock timings, event count, and mouse info.
   {
     string strRange = "";
     string strLevel = "";
-
-    //mvwprintw(winDebug, 2, 0, "test");
-    // Commit all our changes to the status portion of the screen (winTop)
 
     // Print Timings
     mvwprintw(winDebug, 0, 7, "Compute: %fms", sdSysData.fltCOMPUTETIME.data);
@@ -1182,7 +1125,7 @@ class Screen3
     mvwprintw(winDebug, 2, 7, "  Cycle: %fms", sdSysData.fltCYCLETIME.data);
     // Not Very Usefule: mvwprintw(winDebug, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
 
-    /*  -- Needs Rework
+    /*  -- Needs Removal
     if (sdSysData.booprintbuffer == true)
     {
       mvwprintw(winStatus, 4, 1, ":%s", sdSysData.strprintbuffer.c_str());
@@ -1232,7 +1175,9 @@ class Screen3
     wrefresh(winDebug);
   }
 
+  // ---------------------------------------------------------------------------------------
   void output_timer(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  // Displays first countdown timer.
   {
     long elaped_time = 0;
     unsigned long duration_time = 0;
@@ -1241,11 +1186,12 @@ class Screen3
     // Set window color
     wbkgd(winTimer, COLOR_PAIR(7));
 
-
+    // Calculate
     duration_time = sdSysData.cdTIMER.duration();
     elaped_time = sdSysData.cdTIMER.elapsed_time(sdSysData.tmeCURRENT_FRAME_TIME);
     remaining_time = duration_time - elaped_time;
 
+    // Display
     mvwprintw(winTimer, 1, 2, "Timer: %02d:%02d", millis_to_time_minutes(remaining_time), millis_to_time_seconds(remaining_time));
     mvwprintw(winTimer, 1, 15, "[%s]", progress_bar(15, duration_time, duration_time-elaped_time).c_str());
 
@@ -1258,9 +1204,48 @@ class Screen3
     wrefresh(winTimer);
   }
   
+  // ---------------------------------------------------------------------------------------
+  void printout(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  // Displays console of commands ran, events starting and stoping, and other info.
+  //  If console is on another tty through tty over ethernet or serial then a low 
+  //    bandwith version will need to created.  Or, I put the console into its own 
+  //    thread.  Whichever is necessary to develop or learn first.
+  {
+    // Figurout the size of the console.
+    ConsoleLine line;
 
-  // Draw and manage button window.
+    int yCurPos = 0;
+
+    if(clou.avail() == true || ScrStat.Needs_Refresh == true)
+    {
+      for( int y=0; y < YConsoleSize; y++ )
+      {
+        // line position on screen or window
+        yCurPos = YConsoleSize -y -1;
+
+        // get next line to print from the line history
+        line = clou.get_line_to_print(y);
+
+        // print the line to the screen
+        wmove(winConsole, yCurPos, 0);  //move cursor to next line to print or clear.
+        wclrtoeol(winConsole);            // clear line befor printing to it.
+        mvwprintw(winConsole, yCurPos, 0, "%s", line.strLine.c_str());  //print line.       
+      }
+
+      // Screen Title
+      wattron(winConsole, A_REVERSE);
+      mvwprintw(winConsole, 0, XConsoleSize - 7, "CONSOLE");
+      wattroff(winConsole, A_REVERSE);
+
+      // Refresh the window.
+      wrefresh(winConsole);
+    }
+  }
+  // ---------------------------------------------------------------------------------------
+
+  // ---------------------------------------------------------------------------------------
   void buttons(system_data &sdSysData, ScreenStatus &ScrStat, Button_Zone_Manager &button_manager)
+  // Draw and manage button window.
   {
     btnButton1.draw(ScrStat.Needs_Refresh);
     btnButton2.draw(ScrStat.Needs_Refresh);
@@ -1269,9 +1254,8 @@ class Screen3
     btnButton5.draw(ScrStat.Needs_Refresh);
   }
 
-
-  // Draw and manage Color Picker window.
   void cpicker(system_data &sdSysData, ScreenStatus &ScrStat, Button_Zone_Manager &button_manager)
+  // Draw and manage Color Picker window.
   {
     btnCPicker_Red.draw(ScrStat.Needs_Refresh);
     btnCPicker_Green.draw(ScrStat.Needs_Refresh);
@@ -1282,12 +1266,16 @@ class Screen3
     btnCPicker_Orange.draw(ScrStat.Needs_Refresh);
     btnCPicker_Blank1.draw(ScrStat.Needs_Refresh);
   }
+  // ---------------------------------------------------------------------------------------
   
+  // ---------------------------------------------------------------------------------------
+  // Main screen routine.
+  // Draw the console, starting with status window, then whatever windows set to true.
 
-  // Draw the console, starting with status window, then update console with pending
-  // console prints.
   void output(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
   {
+    // Run any routines that may cause the screen to need to be refreshed.
+
     if (sdSysData.cdTIMER.is_active() == true)
     // Check for Timer Window
     {
@@ -1298,11 +1286,15 @@ class Screen3
       ScrStat.Window_Timer_Off();
     }
 
+    // ---------------------------------------------------------------------------------------
     // Check to see if the screen need to be rebuilt
     if (ScrStat.Needs_Refresh == true)
     {
       reset(ScrStat);
     }
+
+    // ---------------------------------------------------------------------------------------
+    // Draw the windows on the screen
 
     // Draw Status window.
     if (ScrStat.Window_Status == true)
@@ -1340,13 +1332,11 @@ class Screen3
       printout(clou, ScrStat);
     }
 
-    // ----------------------------
-    
+    // ---------------------------------------------------------------------------------------
     // Draw all changes to the screen.
     // Clear Refresh varibles.
     refresh();
     ScrStat.Needs_Refresh = false;
-
   }
 };
 

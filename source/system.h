@@ -62,7 +62,9 @@ class configuration
   deque<switch_map>       vSWITCH_PIN_MAP;  // Map of Hardware Circuit Pin ID to 
                                             //  software Pin ID
 };
+// -------------------------------------------------------------------------------------
 
+// -------------------------------------------------------------------------------------
 class system_data
 {
   // This is just a repository of data that the program will be accessing and storing 
@@ -263,8 +265,6 @@ class system_data
     cdTIMER.set_timer(tmeCURRENT_FRAME_TIME, Seconds);
   }
 
-
-
   // Reference for the time (elapsed) since program start.
   void store_compute_time(float fltComputeTime)
   {
@@ -308,6 +308,7 @@ class system_data
   }
 
 };
+// -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 // Tacks all key presses and remembers data associated to whatever key is pressed.
@@ -460,7 +461,7 @@ class Keys
     return (Chars[c].PRESSED);
   }
 };
-
+// -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 // Keeps track of mouse stuff.
@@ -508,7 +509,7 @@ class TheMouse
   }
 
   void check_click()
-  // Doo stuff on click down and click up.
+  // Do stuff on click down and click up.
   {
     if (B == 1 || B == 4)
     // Mouse Button Down and Up.
@@ -550,7 +551,7 @@ class TheMouse
     }
   }
 };
-
+// -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 // ConsoleLine
@@ -562,7 +563,7 @@ class ConsoleLine
   string strLine              = "";     // Text value of console line
   bool printed                = false;  // If ever line was displayed, set to true.
 };
-
+// -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 // ConsoleLineList
@@ -581,30 +582,6 @@ class ConsoleLineList
 
   private:
   
-  /*
-  bool check_availability()
-  // A routine that will check to see if any line has ever been
-  //  unprinted.  Not sure if I will ever need it, but its here.
-  {
-    int count =0;
-    for(int x=0; x<LINES.size(); x++)
-    {
-      if (LINES[x].printed == false)
-      {
-        count++;
-      }
-    }
-    if (count == 0)
-    {
-      return false;
-    }
-    else
-    {
-      return true;
-    }
-  }
-  */
-
   void clear_outside_max()
   // Remove old line, printed or unprint, that are outside the 
   //  max_lines range/
@@ -664,24 +641,6 @@ class ConsoleLineList
     }
   }
 
-  /*
-  int first_unprinted_pos()
-  // Will return the oldest unprinted line.
-  //  There is no point of this routine as of yet, but may have 
-  //  a purpose in the future if ever a routine for non displayed
-  //  or non printed lines needs to be implemented.
-  {
-    for(int x=0; x<LINE.size(); x++)
-    {
-      if (LINE[x].printed == true)
-      {
-        return x-1;
-      }
-    }
-    return maxsize - 1;
-  }
-  */
-
   ConsoleLine get_line_to_print(int pos)
   // Will return the console line requested from the pos. 
   //  pos 0 is the most recent line added to the console line list.
@@ -698,7 +657,7 @@ class ConsoleLineList
     }
   }
 };
-
+// -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 // Screen Status Variables
@@ -717,13 +676,15 @@ class ScreenStatus
   bool Window_CPicker = false;
   bool Window_Console = false;
   
+  // Refresh is set to true only if the value 
+  //  of displaying the window has changed. 
+  //  Yes, too much code for something so redudantly simple. Later.
   void Window_Status_On()
   {
     if (Window_Status == false)
     {
       Window_Status = true;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -733,7 +694,6 @@ class ScreenStatus
     {
       Window_Status = false;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -743,7 +703,6 @@ class ScreenStatus
     {
       Window_Buttons = true;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -753,7 +712,6 @@ class ScreenStatus
     {
       Window_Buttons = false;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -763,7 +721,6 @@ class ScreenStatus
     {
       Window_Debug = true;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -773,7 +730,6 @@ class ScreenStatus
     {
       Window_Debug = false;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -783,7 +739,6 @@ class ScreenStatus
     {
       Window_Timer = true;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -793,7 +748,6 @@ class ScreenStatus
     {
       Window_Timer = false;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -803,7 +757,6 @@ class ScreenStatus
     {
       Window_CPicker = true;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -813,7 +766,6 @@ class ScreenStatus
     {
       Window_CPicker = false;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
   
@@ -823,7 +775,6 @@ class ScreenStatus
     {
       Window_Console = true;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 
@@ -833,12 +784,10 @@ class ScreenStatus
     {
       Window_Console = false;
       Needs_Refresh = true;
-      //Needs_Redraw = true;
     }
   }
 };
-
-
+// -------------------------------------------------------------------------------------
 
 
 

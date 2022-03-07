@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.38A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.39A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,13 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.39_220306
+// *    - No significant changes to the program.
+// *    - Added comment to source code.
+// *    - Removed chunks of commented out source code.
+// *    - Rearanged some of the source code.
+// *    - Updated the todo list.
+// *
 // * V 0.38_220305
 // *    - Everything works as before.  Keyboard command input still accepts the same 
 // *        commands.
@@ -630,18 +637,19 @@
 // ***************************************************************************************
 // *
 // *  ToDo:
+// *    - Combine Button class with Button Zone Manager class to simplify the buttons 
+// *        and greatly reduce the amount of code.  The button zones class was originally
+// *        designed with the buttons as being part of its queue list, but there was a
+// *        problem with the window pointers.
 // *    - Update everything properly classified with reference .h, supporting, and helper 
 // *        libraries. (in progress)
 // *    - Create a way to import all animations from an animations file. (finish 
 //*         configuration files first)
 // *    - Clean up 90% of the code. (recursive)
 // *    - Move all the main animations into their own subroutines.
-// *    - Create animations for day and night running.
 // *    - Generate animations for shutting down animations.
 // *    - Trace Flicker that occurs when sleep = 0 and doors are closing.
-// *    - Revisit previous implementation of vectors.  "pop_back"s, "first", "last"s 
-// *        and queues exist.  Had no idea.  Correction: vectors are so "3 months ago." 
-// *        If ever RasFLED goes throgh a polish, replace vectors with deques.
+// *    - Replace vectors with deques.
 // *    - Continue refining animations into an event language that can be ported. 
 // *    - Configuration files. (in progress)
 // *    - Add descriptions in the configuration.cfg file.
@@ -660,6 +668,12 @@
 // *        lights can be combined together so that animations can flow from one, to the 
 // *        other, even if the LEDs are in differant portions of the LED strip, or in a 
 // *        differant type of order or orientation.
+// *    - Create alternatives to the console screen.
+// *    - Create a "YOUR ADS HERE" screen.
+// *    - Create an "ENGINE STATUS" screen: speed, temperature, pressure, errors, fuel
+// *        health, and other vehicle stuff.
+// *        - Combine vehicle related info to new animations, and animation events.
+// *    - Create other types of screens. 
 // *
 // ***************************************************************************************
 

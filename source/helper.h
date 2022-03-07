@@ -358,6 +358,10 @@ int millis_to_time_seconds(long millis_time)
 
 // Drawing a progress bar
 string progress_bar(int size, int max_value, int value)
+// Creates a simple progress bar of 0 to 100 percent.
+//  Returns a string of size.
+//  Of size, the percentage of value to max_value will be filled
+//  with characters.
 {
   string bar = "";
   string fill = "";
@@ -366,28 +370,25 @@ string progress_bar(int size, int max_value, int value)
   // create empty bar
   bar = bar.append(size,' ');
 
-  // calculate the fill portion size
-  //bar_size =   (100*value/max_value) * ( size/ 100);
+  // stay positive
   value = abs(value);
 
+  // stay within size
   if (value > max_value)
   {
     value = max_value;
   }
 
-  bar_size =   size*value/max_value;
+  // calculate the size of the fill bar with respects to full bar size.
+  bar_size = size*value/max_value;
 
   // create fill bar
-  fill = fill.append(  bar_size , '|'   );
+  fill = fill.append(bar_size , '|'   );
 
   // put bar in empty bar
   bar.replace(0, bar_size, fill);
 
-  // return bar with number.
-  //bar.replace(0, 3, to_string(bar_size));
-
   return bar;
-
 }
 
 #endif

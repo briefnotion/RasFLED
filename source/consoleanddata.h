@@ -117,14 +117,6 @@ class Console
         if (getmouse(&event) ==OK)
         {
           mouse.store(event.x, event.y, event.bstate);
-          
-          // -------- Remove    Debug routine to print mouse position int the console. 
-          //printi(to_string(mouse.x()) + " " + to_string(mouse.y()) + " " + to_string(mouse.b()));
-          //if (mouse.Clicked() == true)
-          //{
-          //  printi("Clicked at " + to_string(mouse.x_clicked()) + " " + to_string(mouse.y_clicked()));
-          //}
-          // ----------
         }
       }
       // Check for Resize Screen.
@@ -164,6 +156,8 @@ class Console
       string name = "";
       int value = 0;
 
+      // -----------------------------------
+      // Check to see if any main buttons are clicked.
       if (Screen.bzButtons.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
       // Check for any clicked buttons or if it was just empty space.
       //  If anything was clicked, the list in the bzButtons will be updated.
@@ -303,7 +297,7 @@ class Console
       }
 
       // -----------------------------------
-
+      // Check to see if any color picker buttons are clicked.
       if (Screen.bzCPicker.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
       // Check for any clicked buttons or if it was just empty space.
       //  If anything was clicked, the list in the bzButtons will be updated.
@@ -380,8 +374,6 @@ class Console
     }
   }
 
-  
-
   void update_displayed_time(unsigned long time)
   // Set the consoles last redraw time, a now should be passed in.
   {
@@ -415,8 +407,8 @@ class Console
     */
 
   }
-
 };
+// -------------------------------------------------------------------------------------
 
 
 
