@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.39A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.40A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,57 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.40_220318
+// *    - Created Tabs.
+// *    - Tabs now cycle between main windows.
+// *    - Created a Blank Screen tab - because I get tired of looking at 
+// *        the console.
+// *    - Created a player tab.
+// *
+// *        How it works:
+// *          1. When RasFLED loads, it will look for a file with this name and in this 
+// *              location "/etc/RasFLED/playlist.cfg"
+// *                The file should be formatted like:
+// *                 ______________________________________
+// *                |
+// *                |* ------------------------------
+// *                |* RasFLED Playlist
+// *                |*   This file belongs in the "/etc/RasFLED" dirctory
+// *                |* ------------------------------
+// *                |
+// *                |playlist
+// *                |/etc/RasFLED/movies/loading.txt
+// *                |/etc/RasFLED/movies/advert.txt
+// *                |
+// *
+// *          2. A playlist will be built from that file in the order given.
+// *              files in the playlist can be repeated. The playlist is simple.
+// *
+// *              The text files is like a slide show. 
+// *                First line contains how long a frame will hold.
+// *                  1 means 1/15 of a second and 15 means 1 second.
+// *                The next 13 lines contain the frame drawn to the screen.
+// *                  The lines are 67 characters in lenght.
+// *                The next, and all following frames are just the same, just added 
+// *                  like the film of a movie.
+// *
+// *                I went with the format given by Mr Simon Jansen because I thought 
+// *                  what he made was interesting.
+// *                  Link to what he made here: https://www.asciimation.co.nz/index.php
+// *                  Link to the FAQ here: https://www.asciimation.co.nz/asciimation/ascii_faq.html
+// *                  His FAQ contains more information on the file format.
+// *
+// *          3. The file plays when on the Player tab and stops when it isn't
+// *
+// *          4. A " playlist" command was also added to see the currently loaded playlist.
+// *
+// *    - A "SHUTDOWN SYSTEM" button was added to the System menu to "sudo shutdown now" the
+// *        entire system in a hurry.
+// *    - Not sure, did I add color to this version?
+// *    - I'll try to add a new directory to git hub page to contain what should be in the 
+// *        etc/RasFLED directory.
+// *    - The code still needs much commenting and optimization.
+// *
 // * V 0.39_220306
 // *    - No significant changes to the program.
 // *    - Added comment to source code.
@@ -1036,6 +1087,43 @@ int loop()
   }
 
   // ---------------------------------------------------------------------------------------
+  // The Player
+  fstream fsPlayer;
+  bool sucess = false;
+
+  string Playlist_Filename = Working_Directory + FILES_PLAYLIST;
+
+  cons.printi("Initializing Player ...");
+  if (load_playlist(cons, sdSystem, Playlist_Filename) == true)
+  {
+    if (cons.play_next_movie(fsPlayer) == true)
+    {
+      cons.printi("  Loading Reel");
+      
+    }
+    else
+    { 
+      cons.the_player.booDisable = true;
+      cons.printi("FAILED - (Initializing Player)");
+    }
+  }
+
+  /*
+  if (cons.load_movie_playlist() == true)
+  {
+    if (cons.play_next_movie(fsPlayer) == true)
+    {
+      cons.printi("Initializing Player, Loading Reel");
+    }
+    else
+    { 
+      cons.printi("FAILED - (Initializing Player, Loading Reel)");
+    }
+  }
+  */
+
+
+  // ---------------------------------------------------------------------------------------
   // TEST AREA
 
   /*  
@@ -1299,8 +1387,11 @@ int loop()
       sdSystem.store_door_switch_states();
       store_event_counts(sdSystem, teEvents);
 
+      // Update display screen.
       cons.output(sdSystem);
+
       cons.update_displayed_time(tmeCurrentMillis);
+
       sdSystem.refresh();
 
       // Also delayed, File maintenance.
@@ -1312,6 +1403,9 @@ int loop()
         sdSystem.booRunning_State_File_Dirty = false;
       }
     }
+
+    // Player
+    cons.print_movie_frame(fsPlayer, tmeCurrentMillis);
 
     // ---------------------------------------------------------------------------------------
     // Now that the complete cycle is over, we need figure out how much time is remaining in 

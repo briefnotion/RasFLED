@@ -23,6 +23,7 @@
 #include "helper.h"
 #include "system.h"
 #include "screen3.h"
+#include "player.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 // NCurses Console.  Responsible for all screen and user interfaces.
-class Console  
+class Console
 {
   private:
 
@@ -55,12 +56,88 @@ class Console
 
   ScreenStatus ScrStat;
 
+  PLAYER the_player;
+
+  bool load_movie_playlist()
+  {
+    the_player.Play_List.add_to_list("/home/pi/movies/loading.txt");
+    the_player.Play_List.add_to_list("/home/pi/movies/UBERtandc.txt");
+    the_player.Play_List.add_to_list("/home/pi/movies/advert.txt");
+    the_player.Play_List.add_to_list("/home/pi/movies/loading.txt");
+    the_player.Play_List.add_to_list("/home/pi/movies/asciimation.txt");
+    return true;
+  }
+
+  bool load_reel(fstream &fsPlayer, string filename)
+  {
+    bool success = false;
+    success = the_player.load_reel(fsPlayer, filename);
+    return success;
+  }
+
+  bool play_next_movie(fstream &fsPlayer)
+  {
+    bool success = false;
+
+    if (the_player.Play_List.size() <= 0)
+    {
+      the_player.booDisable = true;
+      the_player.booPlay = false;
+      success = false;
+    }
+    else
+    {
+      success = load_reel(fsPlayer, the_player.Play_List.get_next_movie());
+      if (success == true)
+      {
+        the_player.booDisable = false;
+        the_player.booPlay = true;
+      }
+      else
+      {
+        the_player.Play_List.remove_current_movie();
+        play_next_movie(fsPlayer);
+      }
+    }
+    return success;
+  }
+
+  bool print_movie_frame(fstream &fsPlayer, unsigned long tmeCurrent_Time_millis)
+  {
+    if ((the_player.booPlay == true) && (the_player.booDisable == false))
+    {
+      if (the_player.ftqFilm.booEOF == true)
+      {
+        play_next_movie(fsPlayer);
+      }
+
+      if (the_player.booSucess == true)
+      {
+        if (ScrStat.Window_Player == true)
+        {
+          if(tmeCurrent_Time_millis >= the_player.tmeNEXT_FRAME_DRAW_TIME)
+          {
+            the_player.get_frame(fsPlayer, tmeCurrent_Time_millis);
+            Screen.window_player_draw_frame(the_player.qFrame);
+          }
+        }
+      }
+      return the_player.booSucess;
+    }
+    else
+    {
+      return true;
+    }
+  }
+
   void set_screen(system_data &sdSysData)
   {
     ScrStat.Window_Status_On();
     ScrStat.Window_Buttons_On();
     ScrStat.Window_Debug_Off();
     ScrStat.Window_Console_On();
+    ScrStat.Window_CPicker_Off();
+    ScrStat.Window_Tabs_On();
 
     Screen.set(sdSysData, ScrStat);
   }
@@ -70,8 +147,16 @@ class Console
   {
     // console line time is inaccurate.  Will only refect previous console update time
     //  and not actual time printed.  Current time is not global.  This is a filler.
-    clou.add(Update_Time,in);         // Add line to console line list.
-    Screen.printout(clou, ScrStat);  // Immediately display the line onto the screen.
+
+    if (ScrStat.Window_Console == true)
+    {
+      clou.add(Update_Time,in);         // Add line to console line list.      
+      Screen.printout(clou, ScrStat);  // Immediately display the line onto the screen.
+    }
+    else
+    {
+      printwait(in);
+    }
   }
 
   void deb(string strPrintI)
@@ -164,7 +249,6 @@ class Console
       {
         // Go through all the buttons in the screen and update their values, 
         //  this will also update their values in the bzButtons list.
-
         Screen.update_buttons();
 
         // If a Main Button is clicked, dont need the Color Picker
@@ -176,7 +260,7 @@ class Console
 
         // Get name and value of button in list that was clicked, then set it 
         //  as unclicked.
-        string name = "empty";
+        string name = "";
         int value = 0;
         name = Screen.bzButtons.get_clicked_name();
         value = Screen.bzButtons.get_clicked_value(name);
@@ -225,6 +309,12 @@ class Console
         // Exit RasFLED
         {
           keywatch.cmdInString("X");
+        }
+
+        else if(name.compare("SHUTDOWN_NOW") == 0)
+        // Shutdown the entire system
+        {
+          keywatch.cmdInString(" comshutd");
         }
 
         else if (name.compare("DAYNIGHT") == 0)
@@ -293,6 +383,76 @@ class Console
 
         // Update changes to buttons
         Screen.update_buttons();
+
+      }
+
+      // Check to see if any Tab buttons are clicked.
+      if (Screen.bzTabs.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+      // Check for any clicked buttons or if it was just empty space.
+      //  If anything was clicked, the list in the bzTabs will be updated.
+      {
+
+        // Go through all the buttons in the screen and update their values, 
+        //  this will also update their values in the bzButtons list.
+        Screen.update_tabs();
+
+        string name = "";
+        int value = 0;
+        name = Screen.bzTabs.get_clicked_name();
+        value = Screen.bzTabs.get_clicked_value(name);
+
+        /* DEBUG STUFFS
+        printi("");
+        for(int pos=0; pos < Screen.bzTabs.size(); pos++)
+        {
+          printi(Screen.bzTabs.name(pos));
+          printi(to_string(Screen.bzTabs.value(pos)));
+        }
+        printi("");
+        */
+
+        if(name.compare("TABCONSOLE") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Console");
+          ScrStat.Window_Console_On();
+          ScrStat.Window_Player_Off();
+          the_player.pause();
+        }
+
+        if(name.compare("TABBLANKSCREEN") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Blank Screen");
+          ScrStat.Window_Console_Off();
+          ScrStat.Window_Player_Off();
+          the_player.pause();
+        }
+
+        if(name.compare("TABPLAYER") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Player");
+          ScrStat.Window_Console_Off();
+          ScrStat.Window_Player_On();
+          the_player.play();
+        }
+
+
+ 
+        // Update changes to buttons
+        //Screen.update_tabs();
+
+
+        /* DEBUG STUFFS
+        printi("");
+        for(int pos=0; pos < Screen.bzTabs.size(); pos++)
+        {
+          printi(Screen.bzTabs.name(pos));
+          printi(to_string(Screen.bzTabs.value(pos)));
+        }
+        printi("");
+        */
 
       }
 

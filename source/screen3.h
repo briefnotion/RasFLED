@@ -35,6 +35,7 @@
 
 #include "system.h"
 #include "consoleanddata.h"
+#include "player.h"
 
 using namespace std;
 
@@ -80,6 +81,7 @@ class Button
   // -1 - dont show
   //  0 - click
   //  1 - toggle
+  //  2 - radio (for the zone) (Not Implemented)
 
   string linefill(int size, string text)
   {
@@ -216,7 +218,7 @@ class Button
     }
     if (PROP.TYPE == 1)  // Toggle Type
     {
-      if (PROP.VALUE ==0)
+      if (PROP.VALUE == 0)
       {
         PROP.VALUE = 1;
       }
@@ -224,6 +226,10 @@ class Button
       {
         PROP.VALUE = 0;
       }
+    }
+    if (PROP.TYPE == 2)  // Radio Type
+    {
+      // Let the zone manager handle its value.
     }
 
     CHANGED = true;
@@ -277,7 +283,7 @@ class Button
       */
 
       //Set Color, Set Reverse if On, Draw Sencils for Buttons
-      if (PROP.TYPE == 0 || PROP.TYPE == 1)
+      if (PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2)
       {
 
         // Start by setting button color.
@@ -392,6 +398,12 @@ class Button_Zone_Manager
     return ZONES[pos].NAME;
   }
 
+  int value(int pos)
+  // return the value at the pos
+  {
+    return ZONES[pos].VALUE;
+  }
+
   void clear()
   // erase the button list.
   {
@@ -405,6 +417,18 @@ class Button_Zone_Manager
       if (ZONES[pos].NAME.compare(name) == 0)
       {
         ZONES[pos].LABEL = label;
+        ZONES[pos].CHANGED = true;
+      }
+    }
+  }
+
+  void change_value(string name, int value)
+  {
+    for(int pos=0; pos<ZONES.size(); pos++)
+    {
+      if (ZONES[pos].NAME.compare(name) == 0)
+      {
+        ZONES[pos].VALUE = value;
         ZONES[pos].CHANGED = true;
       }
     }
@@ -461,10 +485,14 @@ class Button_Zone_Manager
   }
 
   void update_change_process(Button &button)
+  // UPDATE THE BUTTONS FROM LIST
   // search button list for passed button, then 
-  //  update properties if changed. 
+  //  update properties of button if list items changed.
   //  process or advance if clicked.
   {
+    // Regurlar buttons behave differantly than radio buttons.
+    // For now, just checking the first button in the list.
+
     for(int pos=0; pos<ZONES.size(); pos++)
     {
       if (ZONES[pos].NAME.compare(button.PROP.NAME) == 0)
@@ -488,12 +516,71 @@ class Button_Zone_Manager
           button.CHANGED = true;
         }
 
+
         if (ZONES[pos].CLICKED == true)
         {
-          button.advance();
-          ZONES[pos].VALUE = button.PROP.VALUE;
+          if (button.PROP.TYPE == 0 || button.PROP.TYPE == 1)
+          {
+            button.advance();
+            ZONES[pos].VALUE = button.PROP.VALUE;
+          }
+
+          if (button.PROP.TYPE == 2)
+          // For radio buttons, follow up with setting the values.
+          //  But only when the button that was clicked was found.
+          {
+            for(int pos_radio = 0; pos_radio < ZONES.size(); pos_radio++)
+            {
+              ZONES[pos_radio].VALUE = 0;
+              ZONES[pos_radio].CHANGED = false;
+            }
+
+            ZONES[pos].VALUE = 1;
+            button.PROP.VALUE = 1;
+            button.CHANGED = true;
+          }
+
+        }
+
+        if (ZONES[pos].CLICKED == false)
+        {
+          if (button.PROP.TYPE == 2)
+          {
+            button.PROP.VALUE = 0;
+            button.CHANGED = true;
+          }
         }
       }
+    }
+  }
+
+  void advance_radio_buttons()
+  // Radio Buttons
+  //  Update all radio buttons if one was pressed.
+  {
+    if (ZONES[0].TYPE == 2)
+    // check to see if the first button is a radio before continuing.
+    {
+      int pos_clicked = 0;
+
+      // Find the first button in the list that has been 
+      //  marked clicked.
+      for(int pos = 0; pos < ZONES.size(); pos++)
+      {
+        if (ZONES[pos].CLICKED == true)
+        {
+          pos_clicked = pos;
+        }
+      }
+
+      // Set value of all buttons to off, except the clicked 
+      //  button.
+      for(int pos = 0; pos < ZONES.size(); pos++)
+      {
+        ZONES[pos].VALUE = 0;
+        ZONES[pos].CHANGED = false;
+      }
+      ZONES[pos_clicked].VALUE = 1;
     }
   }
 
@@ -623,11 +710,26 @@ class Screen3
   int YCPickerSize = 3;
   int XCPickerSize = 6;
 
+  // Tabs
+  int YTabPos = -1;
+  int XTabPos = 0;
+  int YTabSize = 2;
+  int XTabSize = 12;
+
   // Console
   int YConsolePos = -1;
   int XConsolePos = 0;
   int YConsoleSize = -1;
   int XConsoleSize = -1;
+
+  // Player
+  int YPlayerPos = -1;
+  int XPlayerPos = 0;
+  int YPlayerSize = -1;
+  int XPlayerSize = -1;
+  
+  bool Player_Frame_Counter = false;
+  int Player_Frame_Count = 0;
 
   // NCurses Window Variables
   string strBotLine;
@@ -637,13 +739,9 @@ class Screen3
   WINDOW * winTimer;
   WINDOW * winCPicker;
   WINDOW * winConsole;
+  WINDOW * winPlayer;
 
   // Buttons
-  Button btnDoor1;
-  Button btnDoor2;
-  Button btnDoor3;
-  Button btnDoor4;
-
   Button btnButton1;
   Button btnButton2;
   Button btnButton3;
@@ -658,13 +756,16 @@ class Screen3
   Button btnCPicker_Cyan;
   Button btnCPicker_Orange;
   Button btnCPicker_Blank1;
-  //Button btnCPicker_Blank2;
+
+  Button btnTab1;
+  Button btnTab2;
+  Button btnTab3;
 
   public:
 
   Button_Zone_Manager bzButtons;
-  Button_Zone_Manager bzStatic_Buttons;
   Button_Zone_Manager bzCPicker;
+  Button_Zone_Manager bzTabs;
 
   void update_buttons()
   // Scan a button for changes and update its duplicate in the 
@@ -675,6 +776,15 @@ class Screen3
     bzButtons.update_change_process(btnButton3);
     bzButtons.update_change_process(btnButton4);
     bzButtons.update_change_process(btnButton5);
+  }
+
+  void update_tabs()
+  // Scan a button for changes and update its duplicate in the 
+  //  button zone manager.
+  {
+    bzTabs.update_change_process(btnTab1);
+    bzTabs.update_change_process(btnTab2);
+    bzTabs.update_change_process(btnTab3);
   }
 
   void buttons_CPicker(system_data &sdSysData)
@@ -701,16 +811,31 @@ class Screen3
     bzCPicker.scan(btnCPicker_Blank1);
   }
 
+  void buttons_Tabs(system_data &sdSysData)
+  // Define Tab buttons and load them to the 
+  //  button zone.
+  // Console Tab Buttons 
+  {
+    btnTab1.modify(1, "TABCONSOLE", "Console", 1, 2, C_WHITE_BLUE, 0);
+    btnTab2.modify(2, "TABBLANKSCREEN", "Blank%Screen", 0, 2, C_WHITE_BLUE, 0);
+    btnTab3.modify(3, "TABPLAYER", "Player", 0, 2, C_WHITE_BLUE, 0);
+    
+    bzTabs.clear();
+    bzTabs.scan(btnTab1);
+    bzTabs.scan(btnTab2);
+    bzTabs.scan(btnTab3);
+  }
+
   void buttons_menu_home(system_data &sdSysData)
   // Define control buttons and load them to the 
-  //  color picker button zone.
+  //  button zone.
   // Main Buttons (Top)
   {
-    btnButton1.modify(1, "TIMER", "%Start%Timer", 0, 0, 6, COLOR_YELLOW);
-    btnButton2.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, 7, COLOR_GREEN);
-    btnButton3.modify(3, "FLASH", "%Flash", 0, 0, 7, COLOR_GREEN);
-    btnButton4.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, 7, COLOR_GREEN);
-    btnButton5.modify(5, "MENUCONTROL", "%...", 0, 0, 8, COLOR_BLUE);
+    btnButton1.modify(1, "TIMER", "%Start%Timer", 0, 0, C_WHITE_YELLOW, 0);
+    btnButton2.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_GREEN, 0);
+    btnButton3.modify(3, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
+    btnButton4.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
+    btnButton5.modify(5, "MENUCONTROL", "%...", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -722,14 +847,14 @@ class Screen3
 
   void buttons_menu_control(system_data &sdSysData)
   // Define control buttons and load them to the 
-  //  color picker button zone.
+  //  button zone.
   // RasFLED settings
   {
-    btnButton1.modify(1, "MENUSYSTEM","%SYSTEM", 0, 0, 8, COLOR_BLUE);
-    btnButton2.modify(2, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, COLOR_BLUE);
-    btnButton3.modify(3, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, 6, COLOR_YELLOW);
-    btnButton4.modify(4, "HAZARD","%HAZARD", 0, 0, 5, COLOR_RED);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, 8, COLOR_BLUE);
+    btnButton1.modify(1, "MENUSYSTEM","%SYSTEM", 0, 0, C_WHITE_BLUE, 0);
+    btnButton2.modify(2, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, 0);
+    btnButton3.modify(3, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_WHITE_YELLOW, 0);
+    btnButton4.modify(4, "HAZARD","%HAZARD", 0, 0, C_WHITE_RED, 0);
+    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -741,14 +866,14 @@ class Screen3
 
   void buttons_menu_system(system_data &sdSysData)
   // Define control buttons and load them to the 
-  //  color picker button zone.
+  //  button zone.
   // RasFLED advanced settings
   {
-    btnButton1.modify(1, "EXIT", "%EXIT", 0, 0, 5, COLOR_RED);
-    btnButton2.modify(2, "", "", 0, -1, 8, COLOR_BLUE);
-    btnButton3.modify(3, "DEBUG", "%DEBUG", 0, 0, 6, COLOR_YELLOW);
-    btnButton4.modify(4, "", "", 0, -1, 6, COLOR_BLUE);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, 8, COLOR_BLUE);
+    btnButton1.modify(1, "EXIT", "%EXIT", 0, 0, C_WHITE_RED, 0);
+    btnButton2.modify(2, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, C_WHITE_RED, 0);
+    btnButton4.modify(3, "", "", 0, -1, 6, 0);
+    btnButton3.modify(4, "DEBUG", "%DEBUG", 0, 0, C_WHITE_YELLOW, 0);
+    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -760,14 +885,14 @@ class Screen3
 
   void buttons_menu_overhead_color(system_data &sdSysData)
   // Define control buttons and load them to the 
-  //  color picker button zone.
+  //  button zone.
   // Overhead activation and color picker.
   {
-    btnButton1.modify(1, "", "", 0, -1, 5, COLOR_RED);
-    btnButton2.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, 7, COLOR_GREEN);
-    btnButton3.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, 6, COLOR_YELLOW);
-    btnButton4.modify(4, "", "", 0, -1, 6, COLOR_BLUE);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, 8, COLOR_BLUE);
+    btnButton1.modify(1, "", "", 0, -1, C_WHITE_RED, 0);
+    btnButton2.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_GREEN, 0);
+    btnButton3.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, C_WHITE_YELLOW, 0);
+    btnButton4.modify(4, "", "", 0, -1, C_WHITE_BLUE, 0);
+    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -832,8 +957,13 @@ class Screen3
     btnCPicker_Yellow.create(0, "", "", 0, 0, 0, 0);
     btnCPicker_Cyan.create(0, "", "", 0, 0, 0, 0);
     btnCPicker_Orange.create(0, "", "", 0, 0, 0, 0);
-    btnCPicker_Blank1.create(0, "", "", 0, 0, 0, 0);
     buttons_CPicker(sdSysData);
+
+    // Prep Tab buttons for program first start
+    btnTab1.create(0, "", "", 0, 0, 0, 0);
+    btnTab2.create(0, "", "", 0, 0, 0, 0);
+    btnTab3.create(0, "", "", 0, 0, 0, 0);
+    buttons_Tabs(sdSysData);
 
     // Draw screen the entire screen.  reset is also 
     //  called when the screen is resized.  
@@ -846,6 +976,9 @@ class Screen3
   //  To be called if panel sized changes or if windows are 
   //  opened or closed. 
   {
+    // Clear the Screen
+    clear();
+
     // Get Screen Size
     getmaxyx(stdscr, YMax, XMax);
 
@@ -885,22 +1018,6 @@ class Screen3
 
       // Set window color
       wbkgd(winStatus, COLOR_PAIR(8));
-
-      // PrepStaticButtons (Part of Status)
-      int doorx = 43;
-      int doory = 0;
-      int doorxsize = 2;
-      int doorysize = 2;
-      btnDoor2.move_resize(doory, doorx, doorysize, doorxsize);
-      btnDoor1.move_resize(doory + doorysize, doorx, doorysize, doorxsize);
-      btnDoor4.move_resize(doory, doorx + doorxsize, doorysize, doorxsize);
-      btnDoor3.move_resize(doory + doorysize, doorx + doorxsize, doorysize, doorxsize);
-
-      bzStatic_Buttons.clear();
-      bzStatic_Buttons.scan(btnDoor1);
-      bzStatic_Buttons.scan(btnDoor2);
-      bzStatic_Buttons.scan(btnDoor3);
-      bzStatic_Buttons.scan(btnDoor4);
     }
 
     // ---------------------------------------------------------------------------------------
@@ -1018,7 +1135,7 @@ class Screen3
       // Calculate Size and Position
       YConsolePos = YSplit;
       XConsolePos = XConsolePos;
-      YConsoleSize = YMax - YSplit;;
+      YConsoleSize = YMax - YSplit - YTabSize;
       XConsoleSize =  XSplit;
 
       // Build Window
@@ -1039,8 +1156,64 @@ class Screen3
       // the bottom line of the console.
       strBotLine = "";
       strBotLine = strBotLine.append(XConsoleSize-1, '_');
+
+    }
+
+    // ---------------------------------------------------------------------------------------
+    // Player Panel
+    if (ScrStat.Window_Player == true)
+    // Main Player Screen
+    {
+      // Calculate Size and Position
+      YPlayerPos = YSplit;
+      XPlayerPos = XPlayerPos;
+      YPlayerSize = YMax - YSplit - YTabSize;
+      XPlayerSize =  XSplit;
+
+      // Build Window
+      winPlayer = newwin(YPlayerSize, XPlayerSize, YPlayerPos, XPlayerPos);
+      
+      // Set Y Split
+      YSplit = YSplit + YPlayerSize;
+
+      // Player Window Border
+      wborder(winPlayer,' ',' ',' ',' ',' ',' ',' ',' ') ;
+
+      // Create Player Screen
+      wrefresh(winPlayer);
+
+      // Set window color
+      wbkgd(winPlayer, COLOR_PAIR(0));
+
+      // the bottom line of the Player.
+      strBotLine = "";
+      strBotLine = strBotLine.append(XPlayerSize-1, '_');
     }
     
+    // ---------------------------------------------------------------------------------------
+    // Tabs Panel
+    if (ScrStat.Window_Tabs == true)
+    {
+      // Calculate Size and Position
+      YSplit = YMax - YTabSize;
+
+      YTabPos = YSplit;
+      XTabPos = XTabPos;
+
+      // Prep Tab Buttons
+      btnTab1.move_resize(YTabPos + (YTabSize *0), XTabPos + (XTabSize * 0), YTabSize, XTabSize);
+      btnTab2.move_resize(YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize);
+      btnTab3.move_resize(YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), YTabSize, XTabSize);
+
+      bzTabs.clear();
+      bzTabs.scan(btnTab1);
+      bzTabs.scan(btnTab2);
+      bzTabs.scan(btnTab3);
+
+      // Set Y Split
+      YSplit = YSplit + YTabSize;
+    }
+
     // probably does something for the tty terminal.  probably should have 
     //  commented it when i reseached and wrote it.
     nodelay(stdscr, true);
@@ -1242,6 +1415,51 @@ class Screen3
     }
   }
   // ---------------------------------------------------------------------------------------
+  void the_player(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  // Shows the Player Window
+  {
+    int yCurPos = 0;
+
+    // Screen Title
+    /*
+    wattron(winPlayer, A_REVERSE);
+    mvwprintw(winPlayer, 0, XPlayerSize - 7, " PLAYER");
+    wattroff(winPlayer, A_REVERSE);
+    */
+
+    // Refresh the window.
+    // wrefresh(winPlayer);
+    
+  }
+
+  void window_player_draw_frame(PLAYER_FRAME &qframe)
+  {
+
+    for(int line=0; line < qframe.LINES.size(); line++)
+    {
+      /*
+      wmove(winPlayer, line, 0);  //move cursor to next line to print or clear.
+      wclrtoeol(winPlayer);            // clear line befor printing to it.
+      mvwprintw(winPlayer, line, 0, "%s", qframe.LINES.front().c_str());
+      qframe.LINES.pop_front();
+      */
+
+      wmove(winPlayer, (line + (YPlayerSize/2) - (qframe.HEIGHT/2)), ((XPlayerSize/2) - (qframe.WIDTH/2)));  //move cursor to next line to print or clear.
+      wclrtoeol(winPlayer);            // clear line befor printing to it.
+      mvwprintw(winPlayer, line + (YPlayerSize/2) - (qframe.HEIGHT/2), ((XPlayerSize/2) - (qframe.WIDTH/2)), "%s", qframe.LINES[line].c_str());
+    }
+    qframe.LINES.clear();
+
+    if(Player_Frame_Counter == true)
+    {
+      Player_Frame_Count++;
+      mvwprintw(winPlayer, 0, 0, "%08d", Player_Frame_Count);
+    }
+    wrefresh(winPlayer);
+    refresh();
+
+  }
+  // ---------------------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------------------
   void buttons(system_data &sdSysData, ScreenStatus &ScrStat, Button_Zone_Manager &button_manager)
@@ -1265,6 +1483,15 @@ class Screen3
     btnCPicker_Cyan.draw(ScrStat.Needs_Refresh);
     btnCPicker_Orange.draw(ScrStat.Needs_Refresh);
     btnCPicker_Blank1.draw(ScrStat.Needs_Refresh);
+  }
+
+    
+  void tabs(system_data &sdSysData, ScreenStatus &ScrStat, Button_Zone_Manager &button_manager)
+  // Draw Tab buttons.
+  {
+    btnTab1.draw(ScrStat.Needs_Refresh);
+    btnTab2.draw(ScrStat.Needs_Refresh);
+    btnTab3.draw(ScrStat.Needs_Refresh);
   }
   // ---------------------------------------------------------------------------------------
   
@@ -1326,10 +1553,22 @@ class Screen3
       output_timer(sdSysData, keywatch, clou, ScrStat, mouse);
     }
 
+    // Draw Tabs.
+    if (ScrStat.Window_Tabs == true)
+    {
+      tabs(sdSysData, ScrStat, bzButtons);
+    }
+
     // Draw Console window.
     if (ScrStat.Window_Console == true)
     {
       printout(clou, ScrStat);
+    }
+
+    // Draw Player window.
+    if (ScrStat.Window_Player == true)
+    {
+      the_player(clou, ScrStat);
     }
 
     // ---------------------------------------------------------------------------------------

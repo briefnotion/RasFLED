@@ -16,10 +16,12 @@ find_library(WS2811_LIBRARIES NAMES ws2811)
 add_executable(
   RasFLED
   main.cpp
+  commands.h
   animations.h
+  files.h
+  player.h
   consoleanddata.h
   definitions.h
-  files.h
   fledcore.h
   hardware_module_door.h
   helper.h

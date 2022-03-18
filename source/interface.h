@@ -18,6 +18,7 @@
 // RASFled related header files
 #include "consoleanddata.h"
 #include "timedeventsystem.h"
+#include "commands.h"
 
 
 // ***************************************************************************************
@@ -273,6 +274,8 @@ void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long t
 // Process and call routines as entered on the command line.
 void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
+  COMMANDS command;
+          
   if(cons.keywatch.cmdPressed() == true)
   {
     // Color Palettes
@@ -389,6 +392,49 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       
       command_desc(cons, "DAY mode OFF.");
       sdSysData.booDay_On = false;
+      cons.keywatch.cmdClear();
+    }
+    
+    // -------------------------------------------------------------------------------------
+    // TERMINAL COMMANDS
+    
+    /*
+    // Command line test - only for debugging.
+    if(cons.keywatch.Command.COMMANDLINE == " comtest")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      
+      command_desc(cons, "Command_Test");
+      command.test();
+      
+      cons.keywatch.cmdClear();
+    }
+    */
+
+    // Command Line (sudo shutdown now)
+    if(cons.keywatch.Command.COMMANDLINE == " comshutd")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      
+      command_desc(cons, "Shutdown Started");
+      command.shutdown_now();
+      command_desc(cons, "Shutdown likely to have failed.");
+      
+      cons.keywatch.cmdClear();
+    }
+
+    // -------------------------------------------------------------------------------------
+    // PLAYLIST
+    if(cons.keywatch.Command.COMMANDLINE == " playlist")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      
+      command_desc(cons, "Current Playlist:");
+      for (int x=0; x < cons.the_player.Play_List.size(); x++)
+      {
+        cons.printwait("  " + cons.the_player.Play_List.MOVIE_LIST[x]);
+      }
+
       cons.keywatch.cmdClear();
     }
 

@@ -27,6 +27,7 @@
 //#define FILES_DIRECTORY           "./"
 #define FILES_CONFIGURATION       "configuration.cfg"
 #define FILES_RUNNING_STATE_SAVE  "runningstate.cfg"
+#define FILES_PLAYLIST            "playlist.cfg"
 
 // Key Mapping
 #define KEYEXIT           'X'

@@ -674,7 +674,9 @@ class ScreenStatus
   bool Window_Debug = false;
   bool Window_Timer = false;
   bool Window_CPicker = false;
+  bool Window_Tabs = false;
   bool Window_Console = false;
+  bool Window_Player = false;
   
   // Refresh is set to true only if the value 
   //  of displaying the window has changed. 
@@ -783,6 +785,42 @@ class ScreenStatus
     if (Window_Console == true)
     {
       Window_Console = false;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Tabs_On()
+  {
+    if (Window_Tabs == false)
+    {
+      Window_Tabs = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Tabs_Off()
+  {
+    if (Window_Tabs == true)
+    {
+      Window_Tabs = false;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Player_On()
+  {
+    if (Window_Player == false)
+    {
+      Window_Player = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Player_Off()
+  {
+    if (Window_Player == true)
+    {
+      Window_Player = false;
       Needs_Refresh = true;
     }
   }
