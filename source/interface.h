@@ -397,7 +397,19 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     
     // -------------------------------------------------------------------------------------
     // TERMINAL COMMANDS
-    
+ 
+    // Command Line (sudo shutdown now)
+    if(cons.keywatch.Command.COMMANDLINE == " comshutd")
+    {
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      
+      command_desc(cons, "Shutdown Started");
+      command.shutdown_now();
+      command_desc(cons, "Shutdown likely to have failed.");
+      
+      cons.keywatch.cmdClear();
+    }
+
     /*
     // Command line test - only for debugging.
     if(cons.keywatch.Command.COMMANDLINE == " comtest")
@@ -410,18 +422,6 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
     */
-
-    // Command Line (sudo shutdown now)
-    if(cons.keywatch.Command.COMMANDLINE == " comshutd")
-    {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      
-      command_desc(cons, "Shutdown Started");
-      command.shutdown_now();
-      command_desc(cons, "Shutdown likely to have failed.");
-      
-      cons.keywatch.cmdClear();
-    }
 
     // -------------------------------------------------------------------------------------
     // PLAYLIST

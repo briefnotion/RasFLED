@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.40A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.41A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,13 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.41_220319
+// *    - Added comments and descriptions to many of the new routines, classes, and 
+// *        functions. 
+// *    - Removed old and commented out code.
+// *    - Changed the Buttons color to BLACK foreground instead of WHITE to test 
+// *        for better visibility in a live environment.
+// *
 // * V 0.40_220318
 // *    - Created Tabs.
 // *    - Tabs now cycle between main windows.
@@ -1108,21 +1115,6 @@ int loop()
     }
   }
 
-  /*
-  if (cons.load_movie_playlist() == true)
-  {
-    if (cons.play_next_movie(fsPlayer) == true)
-    {
-      cons.printi("Initializing Player, Loading Reel");
-    }
-    else
-    { 
-      cons.printi("FAILED - (Initializing Player, Loading Reel)");
-    }
-  }
-  */
-
-
   // ---------------------------------------------------------------------------------------
   // TEST AREA
 
@@ -1138,8 +1130,6 @@ int loop()
     //cons.printi(" : ");
   }
   */
-
-
 
   // ---------------------------------------------------------------------------------------
   // Define the Supid Random Numbers

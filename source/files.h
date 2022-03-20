@@ -38,6 +38,10 @@ using namespace std;
 
 */
 
+// I never really commented any of these routines.  I wish I had, may have saved 
+//  some time when I created the load playlist routines.  They dont belong here 
+//  anyway.  So, Ill move em out later. 
+
 class FILE_TO_DEQUE
 {
   public:
@@ -405,9 +409,6 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
     // Find and load the settings
     int loc = 0;
 
-    // ----
-    // Load Pin Switches
-
     loc = tmpSettings.exits_at("Switch_Count");
     if(loc >= 0)
     {
@@ -575,10 +576,6 @@ bool save_configuration(Console &cons, system_data &sdSysData, string strFilenam
   
   sdSysData.CONFIG.LED_MAIN.at(0).update_start_positions();
 
-
-  
-
-
   // -------------------------------------------------------------------------------------
   // build qFile.
   qFile.push_back("");
@@ -690,15 +687,10 @@ bool load_playlist(Console &cons, system_data &sdSysData, string strFilename)
     // Find and load the settings
     int loc = 0;
 
-    // ----
-    // Load Pin Switches
-
     loc = tmpSettings.exits_at("playlist");
     if(loc >= 0)
     {
       cons.printi(to_string(loc));
-
-
 
       for(int x=loc+1; x < tmpSettings.size() ; x++)
       {
@@ -706,54 +698,8 @@ bool load_playlist(Console &cons, system_data &sdSysData, string strFilename)
         cons.the_player.Play_List.add_to_list(tmpSettings.id_at(x));
       }
 
-
       return true;
     }
-
-  
-
-
-
-    /*
-    if (tmpSettings.size() > 0)
-    {
-      for (int x; x < tmpSettings.size(); x++)
-      {
-        cons.printi(to_string(tmpSettings.size()));
-        cons.the_player.Play_List.add_to_list(tmpSettings.value_at(x, 0));
-      }
-      success = true;
-    }
-    else
-    {
-      cons.printi("  Playlist file is empty.");
-      success = false;
-    }
-    */
-
-    /*
-    // Find and load the settings
-    int loc = 0;
-    // ----
-
-    loc = tmpSettings.exits_at("runningcolor");
-    if(loc >= 0)
-    {
-      color = color.StringtoCRGB(tmpSettings.value_at(loc,0));
-      cons.printi("  Setting running color to CRGB(" + to_string(color.r) + "," + to_string(color.g) + "," + to_string(color.b) + "), " + tmpSettings.value_at(loc,1));
-      sdSysData.set_running_color(color , tmpSettings.value_at(loc,1));   
-    }
-    else
-    {
-      color = CRGB(32,32,32);
-      cons.printi("  Creating setting running color to CRGB(" + to_string(color.r) + "," + to_string(color.g) + "," + to_string(color.b) + "), " + "White");
-      sdSysData.set_running_color(color , "White");   
-    }
-    
-    // ----
-
-    success = true;
-    */
   }
   else
   {

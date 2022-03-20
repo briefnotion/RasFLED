@@ -12,11 +12,12 @@
 #ifndef SCREEN3_H
 #define SCREEN3_H
 
-
+// Color pairing definitions for screen colors.
 #define C_RED_BLACK 1
 #define C_YELLOW_BLACK 2
 #define C_GREEN_BLACK 3
 #define C_BLUE_BLACK 4
+
 #define C_WHITE_RED 5
 #define C_WHITE_YELLOW 6
 #define C_WHITE_GREEN 7
@@ -24,7 +25,16 @@
 #define C_WHITE_PURPLE 9
 #define C_WHITE_CYAN 10
 #define C_WHITE_BLACK 11
+
 #define C_BLACK_WHITE 12
+
+#define C_BLACK_RED 15
+#define C_BLACK_YELLOW 16
+#define C_BLACK_GREEN 17
+#define C_BLACK_BLUE 18
+#define C_BLACK_PURPLE 19
+#define C_BLACK_CYAN 20
+#define C_BLACK_BLACK 21
 
 
 // Standard Header Files
@@ -791,13 +801,13 @@ class Screen3
   // Define Color Picker buttons and load them to the 
   //  color picker button zone.
   {
-    btnCPicker_Red.modify(1, "RED", "%r", 0, 1, C_WHITE_RED, 0);
-    btnCPicker_Green.modify(2, "GREEN", "%g", 0, 1, C_WHITE_GREEN, 0);
-    btnCPicker_Blue.modify(3, "BLUE", "%b", 0, 1, C_WHITE_BLUE, 0);
-    btnCPicker_Purple.modify(4, "PURPLE", "%u", 0, 1, C_WHITE_PURPLE, 0);
-    btnCPicker_Yellow.modify(5, "YELLOW", "%y", 0, 1, C_WHITE_YELLOW, 0);
-    btnCPicker_Cyan.modify(6, "CYAN", "%c", 0, 1, C_WHITE_CYAN, 0);
-    btnCPicker_Orange.modify(7, "ORANGE", "%n", 0, 1, C_WHITE_YELLOW, 0);
+    btnCPicker_Red.modify(1, "RED", "%r", 0, 1, C_BLACK_RED, 0);
+    btnCPicker_Green.modify(2, "GREEN", "%g", 0, 1, C_BLACK_GREEN, 0);
+    btnCPicker_Blue.modify(3, "BLUE", "%b", 0, 1, C_BLACK_BLUE, 0);
+    btnCPicker_Purple.modify(4, "PURPLE", "%u", 0, 1, C_BLACK_PURPLE, 0);
+    btnCPicker_Yellow.modify(5, "YELLOW", "%y", 0, 1, C_BLACK_YELLOW, 0);
+    btnCPicker_Cyan.modify(6, "CYAN", "%c", 0, 1, C_BLACK_CYAN, 0);
+    btnCPicker_Orange.modify(7, "ORANGE", "%n", 0, 1, C_BLACK_YELLOW, 0);
     btnCPicker_Blank1.modify(8, "WHITE", "%w", 0, 1, C_BLACK_WHITE, 0);
     
     bzCPicker.clear();
@@ -816,9 +826,9 @@ class Screen3
   //  button zone.
   // Console Tab Buttons 
   {
-    btnTab1.modify(1, "TABCONSOLE", "Console", 1, 2, C_WHITE_BLUE, 0);
-    btnTab2.modify(2, "TABBLANKSCREEN", "Blank%Screen", 0, 2, C_WHITE_BLUE, 0);
-    btnTab3.modify(3, "TABPLAYER", "Player", 0, 2, C_WHITE_BLUE, 0);
+    btnTab1.modify(1, "TABCONSOLE", "Console", 1, 2, C_BLACK_BLUE, 0);
+    btnTab2.modify(2, "TABBLANKSCREEN", "Blank%Screen", 0, 2, C_BLACK_BLUE, 0);
+    btnTab3.modify(3, "TABPLAYER", "Player", 0, 2, C_BLACK_BLUE, 0);
     
     bzTabs.clear();
     bzTabs.scan(btnTab1);
@@ -831,11 +841,11 @@ class Screen3
   //  button zone.
   // Main Buttons (Top)
   {
-    btnButton1.modify(1, "TIMER", "%Start%Timer", 0, 0, C_WHITE_YELLOW, 0);
-    btnButton2.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_GREEN, 0);
-    btnButton3.modify(3, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
-    btnButton4.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
-    btnButton5.modify(5, "MENUCONTROL", "%...", 0, 0, C_WHITE_BLUE, 0);
+    btnButton1.modify(1, "TIMER", "%Start%Timer", 0, 0, C_BLACK_YELLOW, 0);
+    btnButton2.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_BLACK_GREEN, 0);
+    btnButton3.modify(3, "FLASH", "%Flash", 0, 0, C_BLACK_GREEN, 0);
+    btnButton4.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, C_BLACK_GREEN, 0);
+    btnButton5.modify(5, "MENUCONTROL", "%...", 0, 0, C_BLACK_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -850,11 +860,11 @@ class Screen3
   //  button zone.
   // RasFLED settings
   {
-    btnButton1.modify(1, "MENUSYSTEM","%SYSTEM", 0, 0, C_WHITE_BLUE, 0);
-    btnButton2.modify(2, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, 0);
-    btnButton3.modify(3, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_WHITE_YELLOW, 0);
-    btnButton4.modify(4, "HAZARD","%HAZARD", 0, 0, C_WHITE_RED, 0);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    btnButton1.modify(1, "MENUSYSTEM","%SYSTEM", 0, 0, C_BLACK_BLUE, 0);
+    btnButton2.modify(2, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_BLACK_YELLOW, 0);
+    btnButton3.modify(3, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_BLACK_YELLOW, 0);
+    btnButton4.modify(4, "HAZARD","%HAZARD", 0, 0, C_BLACK_RED, 0);
+    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_BLACK_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -869,11 +879,11 @@ class Screen3
   //  button zone.
   // RasFLED advanced settings
   {
-    btnButton1.modify(1, "EXIT", "%EXIT", 0, 0, C_WHITE_RED, 0);
-    btnButton2.modify(2, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, C_WHITE_RED, 0);
+    btnButton1.modify(1, "EXIT", "%EXIT", 0, 0, C_BLACK_RED, 0);
+    btnButton2.modify(2, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, C_BLACK_RED, 0);
     btnButton4.modify(3, "", "", 0, -1, 6, 0);
-    btnButton3.modify(4, "DEBUG", "%DEBUG", 0, 0, C_WHITE_YELLOW, 0);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    btnButton3.modify(4, "DEBUG", "%DEBUG", 0, 0, C_BLACK_YELLOW, 0);
+    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_BLACK_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -888,11 +898,11 @@ class Screen3
   //  button zone.
   // Overhead activation and color picker.
   {
-    btnButton1.modify(1, "", "", 0, -1, C_WHITE_RED, 0);
-    btnButton2.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_GREEN, 0);
-    btnButton3.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, C_WHITE_YELLOW, 0);
-    btnButton4.modify(4, "", "", 0, -1, C_WHITE_BLUE, 0);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    btnButton1.modify(1, "", "", 0, -1, C_BLACK_RED, 0);
+    btnButton2.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, C_BLACK_GREEN, 0);
+    btnButton3.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, C_BLACK_YELLOW, 0);
+    btnButton4.modify(4, "", "", 0, -1, C_BLACK_BLUE, 0);
+    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_BLACK_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -917,6 +927,8 @@ class Screen3
     printf("\033[?1003h\n");  // Makes the terminal report mouse movement events.
 
     if(has_colors() == true)
+    // Set color pairs to defined integers.
+    //  First color foreground. Second color background.
     {
       Supports_Color = true;
       start_color();
@@ -933,6 +945,14 @@ class Screen3
       init_pair(C_WHITE_CYAN, COLOR_WHITE, COLOR_CYAN);
       init_pair(C_WHITE_BLACK, COLOR_WHITE, COLOR_BLACK);
       init_pair(C_BLACK_WHITE, COLOR_BLACK, COLOR_WHITE);
+
+      init_pair(C_BLACK_RED, COLOR_BLACK, COLOR_RED);
+      init_pair(C_BLACK_YELLOW, COLOR_BLACK, COLOR_YELLOW);
+      init_pair(C_BLACK_GREEN, COLOR_BLACK, COLOR_GREEN);
+      init_pair(C_BLACK_BLUE, COLOR_BLACK, COLOR_BLUE);
+      init_pair(C_BLACK_PURPLE, COLOR_BLACK, COLOR_MAGENTA);
+      init_pair(C_BLACK_CYAN, COLOR_BLACK, COLOR_CYAN);
+      init_pair(C_BLACK_BLACK, COLOR_BLACK, COLOR_BLACK);
     }
   }
 

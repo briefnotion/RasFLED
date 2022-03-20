@@ -58,7 +58,11 @@ class Console
 
   PLAYER the_player;
 
+  /*
   bool load_movie_playlist()
+  // Original play list loader. Was loading the playlist throught the compiler 
+  //  before the playlist was loaded through a file.  This routine is no longer 
+  //  needed.  Keeping it just in case.
   {
     the_player.Play_List.add_to_list("/home/pi/movies/loading.txt");
     the_player.Play_List.add_to_list("/home/pi/movies/UBERtandc.txt");
@@ -67,8 +71,13 @@ class Console
     the_player.Play_List.add_to_list("/home/pi/movies/asciimation.txt");
     return true;
   }
+  */
 
   bool load_reel(fstream &fsPlayer, string filename)
+  // Loads next film into the player. 
+  //  This is basiclly a pass through routine to keep calls 
+  //  in the main console area.
+  // Returns false if anything goes wrong.
   {
     bool success = false;
     success = the_player.load_reel(fsPlayer, filename);
@@ -76,6 +85,13 @@ class Console
   }
 
   bool play_next_movie(fstream &fsPlayer)
+  // Starts playing the next movie in the play list by 
+  //  advanceing the playlist and loading the next movie 
+  //  file into the file stream.
+  // If the file in the playlist returns false, it is removed 
+  //  from the playlist and next movie is played.
+  // If playlist is empty then the player is disabled.
+  // Returns false if anything goes wrong.
   {
     bool success = false;
 
@@ -103,6 +119,13 @@ class Console
   }
 
   bool print_movie_frame(fstream &fsPlayer, unsigned long tmeCurrent_Time_millis)
+  // This is the primary routine of the player. 
+  //  If everything is ok, and the time is at or past the next movie scheduled
+  //  display time, then the next frame is loaded into the frame buffer and 
+  //  passed over to the screen routine to be displayed, however it likes.
+  // If the current movie has reached its end, then the next one in the playlist 
+  //  is loaded.
+  // Returns false if anything goes wrong.
   {
     if ((the_player.booPlay == true) && (the_player.booDisable == false))
     {
@@ -131,6 +154,7 @@ class Console
   }
 
   void set_screen(system_data &sdSysData)
+  // Before drawing and initializing the screen, set the display to how it should look. 
   {
     ScrStat.Window_Status_On();
     ScrStat.Window_Buttons_On();
@@ -438,8 +462,6 @@ class Console
           the_player.play();
         }
 
-
- 
         // Update changes to buttons
         //Screen.update_tabs();
 
