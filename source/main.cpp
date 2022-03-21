@@ -56,6 +56,27 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.42_220320
+// *    - Modified button colors again to be visible when pressed.
+// *    - Started condensing down interface routines.  Lots of em. I started modifying 
+// *        other things.
+// *    - Really didnt like the black text button colors. Reverted back. 
+// *        Like I said, it was just a test. But, I was really curious to see how they 
+// *        would look, even though I had no intention on keeping them. 
+// *        The NCURSES documentation says consoles can support a much wider gambit 
+// *        of colors, so in the future, when I get tire of the 8 colors available, 
+// *        I may include text and background colors from the 0-255 RGB spectrum. 
+// *        I could then have proper contrast on the screen. Even though its simple 
+// *        text graphics, properly contrasted color combinations would completely 
+// *        enhance legibility.  
+// *        For example, white on bright blue looks great at night, but in the day 
+// *          its just a blur.  White on a deep navy blue for the status screen would 
+// *          detract the background from being an object, and make it a zone. 
+// *          Also, white on yellow is rediculous. It works now because the yellow 
+// *          isnt even yellow. Its orange. And, I cant find a solution yet for the 
+// *          white on green.  I shouldnt get upset about it because nobody is 
+// *          complaining about it. And, I built it so its up to me to fix it. 
+// *
 // * V 0.41_220319
 // *    - Added comments and descriptions to many of the new routines, classes, and 
 // *        functions. 

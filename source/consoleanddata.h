@@ -347,7 +347,7 @@ class Console
           if (value == 1)
           {
             keywatch.cmdInString("dayon");
-            Screen.bzButtons.change_label("DAYNIGHT", "%%Day");
+            Screen.bzButtons.change_label("DAYNIGHT", "%Day");
           }
           else
           {

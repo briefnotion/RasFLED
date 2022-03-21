@@ -271,6 +271,35 @@ void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long t
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
 
+bool check_command(Console &cons, string command, string description)
+// Check the cons command with the parameter command
+//  If matched, print command entered, description, and clears cons.command.
+//  Only print description if one is provideded, not equal to "".
+//  Else, just return false.
+{
+  if (cons.keywatch.Command.COMMANDLINE == command)
+  {
+    cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+    if (description == "")
+    {
+      // do nothing
+    }
+    else
+    {
+      command_desc(cons, description);
+    }
+
+    cons.keywatch.cmdClear();
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+
+}
+
+
 // Process and call routines as entered on the command line.
 void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
@@ -294,74 +323,50 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // Call routines that match the info on the command line.
     
     // Program Exit
-    if((cons.keywatch.Command.COMMANDLINE[0] == KEYEXIT) || (cons.keywatch.Command.COMMANDLINE == "exit"))
+    if (check_command(cons,"X", "Program Exit") || check_command(cons, "exit", "Program Exit"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Program Exit");
       cons.keywatch.in(KEYEXIT);
-      cons.keywatch.cmdClear();
     }
 
     // Program Restart
-    if(cons.keywatch.Command.COMMANDLINE == " restart")
+    if (check_command(cons, " restart", "Restart Program"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Restart Program");
       sdSysData.booREBOOT = true;
       cons.keywatch.in(KEYEXIT);
-      cons.keywatch.cmdClear();
     }
 
     // print help
-    if(cons.keywatch.Command.COMMANDLINE == "help")
+    if (check_command(cons, "help", "Help and Instructions"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Help and Instructions");
       consoleprinthelp(cons);
-      cons.keywatch.cmdClear();
     }
 
     // print event list
-    if(cons.keywatch.Command.COMMANDLINE == " events")
+    if (check_command(cons, " events", "All Currently Running Events"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "All Currently Running Events");
       consoleprintevents(cons, sdSysData, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // print configuration data
-    if(cons.keywatch.Command.COMMANDLINE == " config")
+    if (check_command(cons, " config", "Current Configuration and Settings"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Current Configuration and Settings");
       consoleprintconfig(cons, sdSysData, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // End All Extra Repeating Lights and Countdown Timer
-    if(cons.keywatch.Command.COMMANDLINE == "``")
+    if (check_command(cons, "``", "End Most Pulse Animations"))
     {
-      // end Countdown Timer
-      sdSysData.cdTIMER.end();
-
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "End Most Pulse Animations");
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // -------------------------------------------------------------------------------------
     // DAY NIGHT MODE
 
     // Toggle Day Night
-    if(cons.keywatch.Command.COMMANDLINE == "dd")
+    if (check_command(cons, "dd", ""))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-
       if (sdSysData.booDay_On == true)
       {
         command_desc(cons, "Toggle DAY mode OFF.");
@@ -372,277 +377,166 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
         command_desc(cons, "Toggle DAY mode ON.");
         sdSysData.booDay_On = true;
       }
-      cons.keywatch.cmdClear();
     }
 
     // Toggle Day Mode On
-    if(cons.keywatch.Command.COMMANDLINE == "dayon")
+    if (check_command(cons, "dayon", "DAY mode ON."))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-
-      command_desc(cons, "DAY mode ON.");
       sdSysData.booDay_On = true;
-      cons.keywatch.cmdClear();
     }
 
     // Toggle Day Mode Off
-    if(cons.keywatch.Command.COMMANDLINE == "dayoff")
+    if (check_command(cons, "dayoff", "DAY mode OFF."))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      
-      command_desc(cons, "DAY mode OFF.");
       sdSysData.booDay_On = false;
-      cons.keywatch.cmdClear();
     }
     
     // -------------------------------------------------------------------------------------
     // TERMINAL COMMANDS
  
     // Command Line (sudo shutdown now)
-    if(cons.keywatch.Command.COMMANDLINE == " comshutd")
+    if (check_command(cons, " comshutd", "Shutdown Started"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      
-      command_desc(cons, "Shutdown Started");
       command.shutdown_now();
       command_desc(cons, "Shutdown likely to have failed.");
-      
-      cons.keywatch.cmdClear();
     }
-
-    /*
-    // Command line test - only for debugging.
-    if(cons.keywatch.Command.COMMANDLINE == " comtest")
-    {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      
-      command_desc(cons, "Command_Test");
-      command.test();
-      
-      cons.keywatch.cmdClear();
-    }
-    */
 
     // -------------------------------------------------------------------------------------
     // PLAYLIST
-    if(cons.keywatch.Command.COMMANDLINE == " playlist")
+
+    if (check_command(cons, " playlist", "Current Playlist:"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      
-      command_desc(cons, "Current Playlist:");
       for (int x=0; x < cons.the_player.Play_List.size(); x++)
       {
         cons.printwait("  " + cons.the_player.Play_List.MOVIE_LIST[x]);
       }
-
-      cons.keywatch.cmdClear();
     }
 
     // -------------------------------------------------------------------------------------
     // FLASH
 
     // flash Running
-    if(cons.keywatch.Command.COMMANDLINE == "ff")
+    if (check_command(cons, "ff", "Flash All LEDs with Running Color"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash All LEDs with Running Color");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
-      cons.keywatch.cmdClear();
     }
 
     // flash White
-    if(cons.keywatch.Command.COMMANDLINE == "fw")
+    if (check_command(cons, "fw", "Flash White All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash White All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
     }
 
     // flash Red
-    if(cons.keywatch.Command.COMMANDLINE == "fr")
+    if (check_command(cons, "fr", "Flash Red All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Red All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
-      cons.keywatch.cmdClear();
     }
 
     // flash Green
-    if(cons.keywatch.Command.COMMANDLINE == "fg")
+    if (check_command(cons, "fg", "Flash Green All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Green All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
-      cons.keywatch.cmdClear();
     }
 
     // flash Blue
-    if(cons.keywatch.Command.COMMANDLINE == "fb")
+    if (check_command(cons, "fb", "Flash Blue All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Blue All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
     }
 
     // flash Purple
-    if(cons.keywatch.Command.COMMANDLINE == "fu")
+    if (check_command(cons, "fu", "Flash Purple All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Purple All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
-      cons.keywatch.cmdClear();
     }
   
     // flash Yellow
-    if(cons.keywatch.Command.COMMANDLINE == "fy")
+    if (check_command(cons, "fy", "Flash Yellow All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Yellow All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
-      cons.keywatch.cmdClear();
     }
     
     // flash Cyan
-    if(cons.keywatch.Command.COMMANDLINE == "fc")
+    if (check_command(cons, "fc", "Flash Cyan All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Cyan All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
-      cons.keywatch.cmdClear();
     }
 
     // flash Orange
-    if(cons.keywatch.Command.COMMANDLINE == "fn")
+    if (check_command(cons, "fn", "Flash Orange All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Flash Orange All LEDs");
       processcommandflash(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
-      cons.keywatch.cmdClear();
     }
 
     // -------------------------------------------------------------------------------------
     // PULSES
 
     // pulse end
-    if(cons.keywatch.Command.COMMANDLINE == "p`")
+    if (check_command(cons, "p`", "End Most Pulse Animations"))
     {
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "End Most Pulse Animations");
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Running
-    if(cons.keywatch.Command.COMMANDLINE == "  ")
+    if (check_command(cons, "  ", "5 minute Pulse Timer Started with Running Color"))
     {
-      // Keep values below 128
       sdSysData.start_timer(DEFAULTTIMER * 60);
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "5 minute Pulse Timer Started with Running Color");
       processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Running Color
-    if(cons.keywatch.Command.COMMANDLINE == "pp")
+    if (check_command(cons, "pp", "Pulse Running Color All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Running Color All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
-      cons.keywatch.cmdClear();
     }
 
     // pulse White
-    if(cons.keywatch.Command.COMMANDLINE == "pw")
+    if (check_command(cons, "pw", "Pulse White All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse White All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Red
-    if(cons.keywatch.Command.COMMANDLINE == "pr")
+    if (check_command(cons, "pr", "Pulse Red All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Red All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Green
-    if(cons.keywatch.Command.COMMANDLINE == "pg")
+    if (check_command(cons, "pg", "Pulse Green All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Green All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Blue
-    if(cons.keywatch.Command.COMMANDLINE == "pb")
+    if (check_command(cons, "pb", "Pulse Blue All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Blue All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Purple
-    if(cons.keywatch.Command.COMMANDLINE == "pu")
+    if (check_command(cons, "pu", "Pulse Purple All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Purple All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Yellow
-    if(cons.keywatch.Command.COMMANDLINE == "py")
+    if (check_command(cons, "py", "Pulse Yellow All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Yellow All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Cyan
-    if(cons.keywatch.Command.COMMANDLINE == "pc")
+    if (check_command(cons, "pc", "Pulse Cyan All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Cyan All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
-      cons.keywatch.cmdClear();
     }
 
     // pulse Orange
-    if(cons.keywatch.Command.COMMANDLINE == "pn")
+    if (check_command(cons, "pn", "Pulse Orange All LEDs"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Pulse Orange All LEDs");
       processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
-      cons.keywatch.cmdClear();
     }
 
     // -------------------------------------------------------------------------------------
