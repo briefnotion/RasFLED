@@ -56,6 +56,15 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.43_220321
+// *    - Finished condensing down interface routines. Left the debug stuff alone.
+// *    - Added two more buttons to the control portion of the panel.
+// *        Screen resolution I'm working with is ~100x30.
+// *    - Corrected and introduced bug that was a result of condensing down interface 
+// *        routines.  Cant be certain its the only one.
+// *    - Improved the key mouse input routine.
+// *    - Started looking at displaying changed button parameters.
+// *
 // * V 0.42_220320
 // *    - Modified button colors again to be visible when pressed.
 // *    - Started condensing down interface routines.  Lots of em. I started modifying 

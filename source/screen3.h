@@ -766,6 +766,8 @@ class Screen3
   Button btnButton3;
   Button btnButton4;
   Button btnButton5;
+  Button btnButton6;
+  Button btnButton7;
 
   Button btnCPicker_Red;
   Button btnCPicker_Green;
@@ -795,6 +797,8 @@ class Screen3
     bzButtons.update_change_process(btnButton3);
     bzButtons.update_change_process(btnButton4);
     bzButtons.update_change_process(btnButton5);
+    bzButtons.update_change_process(btnButton6);
+    bzButtons.update_change_process(btnButton7);
   }
 
   void update_tabs()
@@ -851,10 +855,12 @@ class Screen3
   // Main Buttons (Top)
   {
     btnButton1.modify(1, "TIMER", "%Start%Timer", 0, 0, C_WHITE_YELLOW, 0);
-    btnButton2.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_YELLOW, 0);
-    btnButton3.modify(3, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
-    btnButton4.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
-    btnButton5.modify(5, "MENUCONTROL", "%...", 0, 0, C_WHITE_BLUE, 0);
+    btnButton2.modify(2, "", "", 0, -1, 6, 0);
+    btnButton3.modify(3, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_YELLOW, 0);
+    btnButton4.modify(4, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
+    btnButton5.modify(5, "", "", 0, -1, 6, 0);
+    btnButton6.modify(3, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
+    btnButton7.modify(3, "MENUCONTROL", "%...", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -862,6 +868,8 @@ class Screen3
     bzButtons.scan(btnButton3);
     bzButtons.scan(btnButton4);
     bzButtons.scan(btnButton5);
+    bzButtons.scan(btnButton6);
+    bzButtons.scan(btnButton7);
   }
 
   void buttons_menu_control(system_data &sdSysData)
@@ -869,11 +877,26 @@ class Screen3
   //  button zone.
   // RasFLED settings
   {
-    btnButton1.modify(1, "MENUSYSTEM","%SYSTEM", 0, 0, C_WHITE_BLUE, 0);
-    btnButton2.modify(2, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, 0);
+    btnButton1.modify(1, "HAZARD","%HAZARD", 0, 0, C_WHITE_RED, 0);
+    btnButton2.modify(2, "", "", 0, -1, 6, 0);
     btnButton3.modify(3, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_WHITE_YELLOW, 0);
-    btnButton4.modify(4, "HAZARD","%HAZARD", 0, 0, C_WHITE_RED, 0);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    btnButton4.modify(4, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, 0);
+    btnButton5.modify(5, "", "", 0, -1, 6, 0);
+    btnButton6.modify(3, "MENUSYSTEM","%SYSTEM", 0, 0, C_WHITE_BLUE, 0);
+    btnButton7.modify(3, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+
+    if (sdSysData.booDay_On == true)
+    {
+      btnButton3.PROP.LABEL = "%Day%Mode";
+      btnButton3.PROP.VALUE = 1;
+      btnButton3.CHANGED=true;
+    }
+    else
+    {
+      btnButton3.PROP.LABEL = "%Night%Mode";
+      btnButton3.PROP.VALUE = 0;
+      btnButton3.CHANGED=true;
+    }
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -881,6 +904,8 @@ class Screen3
     bzButtons.scan(btnButton3);
     bzButtons.scan(btnButton4);
     bzButtons.scan(btnButton5);
+    bzButtons.scan(btnButton6);
+    bzButtons.scan(btnButton7);
   }
 
   void buttons_menu_system(system_data &sdSysData)
@@ -890,9 +915,11 @@ class Screen3
   {
     btnButton1.modify(1, "EXIT", "%EXIT", 0, 0, C_WHITE_RED, 0);
     btnButton2.modify(2, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, C_WHITE_RED, 0);
-    btnButton4.modify(3, "", "", 0, -1, 6, 0);
-    btnButton3.modify(4, "DEBUG", "%DEBUG", 0, 0, C_WHITE_YELLOW, 0);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    btnButton3.modify(3, "", "", 0, -1, 6, 0);
+    btnButton4.modify(4, "DEBUG", "%DEBUG", 0, 0, C_WHITE_YELLOW, 0);
+    btnButton5.modify(5, "", "", 0, -1, 6, 0);
+    btnButton6.modify(3, "", "", 0, -1, 6, 0);
+    btnButton7.modify(3, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -900,6 +927,8 @@ class Screen3
     bzButtons.scan(btnButton3);
     bzButtons.scan(btnButton4);
     bzButtons.scan(btnButton5);
+    bzButtons.scan(btnButton6);
+    bzButtons.scan(btnButton7);
   }
 
   void buttons_menu_overhead_color(system_data &sdSysData)
@@ -911,7 +940,9 @@ class Screen3
     btnButton2.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_GREEN, 0);
     btnButton3.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, C_WHITE_YELLOW, 0);
     btnButton4.modify(4, "", "", 0, -1, C_WHITE_BLUE, 0);
-    btnButton5.modify(5, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    btnButton5.modify(5, "", "", 0, -1, 6, 0);
+    btnButton6.modify(3, "", "", 0, -1, 6, 0);
+    btnButton7.modify(3, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
 
     bzButtons.clear();
     bzButtons.scan(btnButton1);
@@ -919,8 +950,9 @@ class Screen3
     bzButtons.scan(btnButton3);
     bzButtons.scan(btnButton4);
     bzButtons.scan(btnButton5);
+    bzButtons.scan(btnButton6);
+    bzButtons.scan(btnButton7);
   }
-
 
   void init()
   // Initialize the main screen for first start.  
@@ -975,6 +1007,8 @@ class Screen3
     btnButton3.create(0, "", "", 0, 0, 0, 0);
     btnButton4.create(0, "", "", 0, 0, 0, 0);
     btnButton5.create(0, "", "", 0, 0, 0, 0);
+    btnButton6.create(0, "", "", 0, 0, 0, 0);
+    btnButton7.create(0, "", "", 0, 0, 0, 0);
     buttons_menu_home(sdSysData);
 
     // Prep Color Picker Buttons, even thought they 
@@ -1063,6 +1097,8 @@ class Screen3
       btnButton3.move_resize((YButtonSize *2), XButtonPos, YButtonSize, XButtonSize);
       btnButton4.move_resize((YButtonSize *3), XButtonPos, YButtonSize, XButtonSize);
       btnButton5.move_resize((YButtonSize *4), XButtonPos, YButtonSize, XButtonSize);
+      btnButton6.move_resize((YButtonSize *5), XButtonPos, YButtonSize, XButtonSize);
+      btnButton7.move_resize((YButtonSize *6), XButtonPos, YButtonSize, XButtonSize);
       
       bzButtons.clear();
       bzButtons.scan(btnButton1);
@@ -1070,6 +1106,8 @@ class Screen3
       bzButtons.scan(btnButton3);
       bzButtons.scan(btnButton4);
       bzButtons.scan(btnButton5);
+      bzButtons.scan(btnButton6);
+      bzButtons.scan(btnButton7);
     }
 
     // ---------------------------------------------------------------------------------------
@@ -1499,6 +1537,8 @@ class Screen3
     btnButton3.draw(ScrStat.Needs_Refresh);
     btnButton4.draw(ScrStat.Needs_Refresh);
     btnButton5.draw(ScrStat.Needs_Refresh);
+    btnButton6.draw(ScrStat.Needs_Refresh);
+    btnButton7.draw(ScrStat.Needs_Refresh);
   }
 
   void cpicker(system_data &sdSysData, ScreenStatus &ScrStat, Button_Zone_Manager &button_manager)

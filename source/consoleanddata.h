@@ -212,13 +212,14 @@ class Console
   void readkeyboardinput2()
   // read keyboard for keypresses.  Just exit if nothing is being pressed.
   {
-    key = wgetch(stdscr);
+      key = wgetch(stdscr);   // Read key
 
-    char buffer[512];
-    size_t max_size = sizeof(buffer);
+      char buffer[512];
+      size_t max_size = sizeof(buffer);
     
-    if (key != ERR)
+    while (key != ERR)        // Continuous loop untill all keys are read
     {
+
       // Check for Mouse Events.
       if (key == KEY_MOUSE)
       {
@@ -238,6 +239,12 @@ class Console
         // Put all remaining input into the Command Line.
         keywatch.cmdIn(key); 
       }
+
+      key = wgetch(stdscr);   // Read the key again to repeat if not empty.
+
+      char buffer[512];
+      size_t max_size = sizeof(buffer);
+    
     }
   }
 
@@ -344,15 +351,15 @@ class Console
         else if (name.compare("DAYNIGHT") == 0)
         // Day Night Mode
         {
-          if (value == 1)
+          if (sdSysData.booDay_On == false)
           {
             keywatch.cmdInString("dayon");
-            Screen.bzButtons.change_label("DAYNIGHT", "%Day");
+            Screen.bzButtons.change_label("DAYNIGHT", "%Day%Mode");
           }
           else
           {
             keywatch.cmdInString("dayoff");
-            Screen.bzButtons.change_label("DAYNIGHT", "%%Night");
+            Screen.bzButtons.change_label("DAYNIGHT", "%Night%Mode");
           }
         }
 

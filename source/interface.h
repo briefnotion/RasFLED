@@ -356,6 +356,9 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // End All Extra Repeating Lights and Countdown Timer
     if (check_command(cons, "``", "End Most Pulse Animations"))
     {
+      // end Countdown Timer
+      sdSysData.cdTIMER.end();
+
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
@@ -543,169 +546,107 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // Overhead Illumination
     
     // pulse end overhead illum
-    if(cons.keywatch.Command.COMMANDLINE == "o`")
+    if (check_command(cons, "o`", "Turn Off Overhead Illumination Lights"))
     {
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn Off Overhead Illumination Lights");
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Running
-    if((cons.keywatch.Command.COMMANDLINE == "oo") || (cons.keywatch.Command.COMMANDLINE == "zz"))
+    if (check_command(cons,"oo", "Turn On Overhead Illumination Lights with Running Color") || 
+        check_command(cons,"zz", "Turn On Overhead Illumination Lights with Running Color"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Overhead Illumination Lights with Running Color");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
-      cons.keywatch.cmdClear();
     }
 
     // Overhead White
-    if(cons.keywatch.Command.COMMANDLINE == "ow")
+    if (check_command(cons, "ow", "Turn On White Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On White Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Red
-    if(cons.keywatch.Command.COMMANDLINE == "or")
+    if (check_command(cons, "or", "Turn On Red Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Red Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Green
-    if(cons.keywatch.Command.COMMANDLINE == "og")
+    if (check_command(cons, "og", "Turn On Green Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Green Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Blue
-    if(cons.keywatch.Command.COMMANDLINE == "ob")
+    if (check_command(cons, "ob", "Turn On Blue Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Blue Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Purple
-    if(cons.keywatch.Command.COMMANDLINE == "ou")
+    if (check_command(cons, "ou", "Turn On Purple Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Purple Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Yellow
-    if(cons.keywatch.Command.COMMANDLINE == "oy")
+    if (check_command(cons, "oy", "Turn On Yellow Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Yellow Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Cyan
-    if(cons.keywatch.Command.COMMANDLINE == "oc")
+    if (check_command(cons, "oc", "Turn On Cyan Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Cyan Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
-      cons.keywatch.cmdClear();
     }
 
     // Overhead Orange
-    if(cons.keywatch.Command.COMMANDLINE == "on")
+    if (check_command(cons, "on", "Turn On Orange Overhead Illumination Lights"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Turn On Orange Overhead Illumination Lights");
       processcommandpacificaishcolor(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
-      cons.keywatch.cmdClear();
     }
 
     // Set Running Color
-    if(cons.keywatch.Command.COMMANDLINE == "rw")
+    if (check_command(cons, "rw", "Set Running Color to White"))
     {
       sdSysData.set_running_color(crgbWhite, "White");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to White");
-      cons.keywatch.cmdClear();
     }
 
-    if(cons.keywatch.Command.COMMANDLINE == "rr")
+    if (check_command(cons, "rr", "Set Running Color to Red"))
     {
-      sdSysData.set_running_color(crgbRed, "Red");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Red");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Red");
     }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rg")
+
+    if (check_command(cons, "rg", "Set Running Color to Green"))
     {
-      sdSysData.set_running_color(crgbGreen, "Green");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Green");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Green");
     }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rb")
+
+    if (check_command(cons, "rb", "Set Running Color to Blue"))
     {
-      sdSysData.set_running_color(crgbBlue, "Blue");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Blue");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Blue");
     }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "ru")
+
+    if (check_command(cons, "ru", "Set Running Color to Purple"))
     {
-      sdSysData.set_running_color(crgbPurple, "Purple");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Purple");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Purple");
     }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "ry")
+
+    if (check_command(cons, "ry", "Set Running Color to Yellow"))
     {
-      sdSysData.set_running_color(crgbYellow, "Yellow");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Yellow");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Yellow");
     }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rc")
+
+    if (check_command(cons, "rc", "Set Running Color to Cyan"))
     {
-      sdSysData.set_running_color(crgbCyan, "Cyan");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Cyan");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Cyan");
     }
-    
-    if(cons.keywatch.Command.COMMANDLINE == "rn")
+
+    if (check_command(cons, "rn", "Set Running Color to Orange"))
     {
-      sdSysData.set_running_color(crgbOrange, "Orange");
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Set Running Color to Orange");
-      cons.keywatch.cmdClear();
+      sdSysData.set_running_color(crgbWhite, "Orange");
     }
+
 
     /*
     // -------------------------------------------------------------------------------------
@@ -732,34 +673,23 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // Hazard
     
     // Hazard illum end
-    if(cons.keywatch.Command.COMMANDLINE == "h`")
+    if (check_command(cons, "h`", "HAZARD LIGHTS OFF"))
     {
-      // end all pulses on all strips
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "HAZARD LIGHTS ON ('h`' to turn off");
       processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
-      cons.keywatch.cmdClear();
     }
 
     // Hazard
-    if(cons.keywatch.Command.COMMANDLINE == "hh")
+    if (check_command(cons, "hh", "HAZARD LIGHTS ON ('h`' to turn off"))
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "HAZARD LIGHTS OFF");
       processcommandhazard(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      cons.keywatch.cmdClear();
     }
-  
+
     // -------------------------------------------------------------------------------------
     // Debug Characters only active when debug mode is on
     // debug
-    if(cons.keywatch.Command.COMMANDLINE[0] == KEYDEBUG)
+    if (check_command(cons, "/", "Debug mode On/Off Toggle"))
     {
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      command_desc(cons, "Debug mode On/Off Toggle");
       cons.keywatch.in(KEYDEBUG);
-      cons.keywatch.cmdClear();
     }
 
     // Only accept debug keys if debug is on.
