@@ -280,7 +280,7 @@ class Console
       {
         // Go through all the buttons in the screen and update their values, 
         //  this will also update their values in the bzButtons list.
-        Screen.update_buttons();
+        //Screen.update_buttons();
 
         // If a Main Button is clicked, dont need the Color Picker
         //  Close it if it was opened.
@@ -413,7 +413,7 @@ class Console
         }
 
         // Update changes to buttons
-        Screen.update_buttons();
+        //Screen.update_buttons();
 
       }
 
@@ -425,7 +425,7 @@ class Console
 
         // Go through all the buttons in the screen and update their values, 
         //  this will also update their values in the bzButtons list.
-        Screen.update_tabs();
+        //Screen.update_tabs();
 
         string name = "";
         int value = 0;

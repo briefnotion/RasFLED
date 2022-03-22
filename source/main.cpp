@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.41A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.44A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,20 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.44_220322
+// *    - Merged the buttons into the button zone manager so that buttons can be managed 
+// *        as a group.  Because of that, the code is now much more simplified and the 
+// *        buttons can now manage themselves properly, if their values change or if 
+// *        they need a refresh.  All intereactions with the buttons will be handled by 
+// *        the button zone manager.  
+// *      I had origionally planned on creating the buttons this way and thought it 
+// *        thought it couldn't be done because pointers in the deque would get lost 
+// *        or the change in size of a variable in a deque was causing the data to be 
+// *        lost.  After testing and discovering that the buttons work just fine through 
+// *        list type variables, I rewrote the code and through away, what seems like 
+// *        tons, of code that was programmed as a work around for having the button 
+// *        manager as a seperate variable from the actual button variable.
+// *
 // * V 0.43_220321
 // *    - Finished condensing down interface routines. Left the debug stuff alone.
 // *    - Added two more buttons to the control portion of the panel.
