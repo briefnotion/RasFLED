@@ -693,9 +693,10 @@ class Screen3
   //  button zone.
   // Main Buttons (Top)
   {
-    bzButtons.modify(0, "TIMER", "%Start%Timer", 0, 0, C_WHITE_YELLOW, 0);
+    bzButtons.modify(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, C_WHITE_YELLOW, 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
     bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_YELLOW, 0);
+    //bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, C_WHITE_YELLOW, 0);
     bzButtons.modify(3, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
     bzButtons.modify(4, "", "", 0, -1, 6, 0);
     bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
@@ -707,23 +708,22 @@ class Screen3
   //  button zone.
   // RasFLED settings
   {
-    bzButtons.modify(0, "HAZARD","%HAZARD", 0, 0, C_WHITE_RED, 0);
+    bzButtons.modify(0, "HAZARD","%HAZARD", int(sdSysData.booHazardRunning), 1, C_WHITE_RED, 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
-    bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_WHITE_YELLOW, 0);
-    bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0,- 0, C_WHITE_YELLOW, 0);
+    bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_WHITE_GREEN, 0);
+    bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, C_WHITE_YELLOW, 0);
     bzButtons.modify(4, "", "", 0, -1, 6, 0);
     bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, C_WHITE_BLUE, 0);
     bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
 
+    // When first diplaying buttons, set its value to the value it represents.
     if (sdSysData.booDay_On == true)
     {
       bzButtons.change_label("DAYNIGHT", "%Day%Mode");
-      bzButtons.change_value("DAYNIGHT", 1);
     }
     else
     {
       bzButtons.change_label("DAYNIGHT", "%Night%Mode");
-      bzButtons.change_value("DAYNIGHT", 0);
     }
   }
 
@@ -748,7 +748,7 @@ class Screen3
   {
     bzButtons.modify(0, "", "", 0, -1, 6, 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
-    bzButtons.modify(2, "OVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_GREEN, 0);
+    bzButtons.modify(2, "OVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, C_WHITE_GREEN, 0);
     bzButtons.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, C_WHITE_YELLOW, 0);
     bzButtons.modify(4, "", "", 0, -1, C_WHITE_BLUE, 0);
     bzButtons.modify(5, "", "", 0, -1, 6, 0);
@@ -814,6 +814,7 @@ class Screen3
 
     // Prep Color Picker Buttons, even thought they 
     //  aren't displayed at start.
+    bzCPicker.create_button();
     bzCPicker.create_button();
     bzCPicker.create_button();
     bzCPicker.create_button();
@@ -1081,19 +1082,19 @@ class Screen3
 
     //Display Door Statuses, highlighting values that are on (doors open)
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 1, 45, " D1 ");
+    mvwprintw(winStatus, 1, 45, " Door1 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattroff(winStatus, A_REVERSE);}
     
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 0, 45, " D2 ");
+    mvwprintw(winStatus, 0, 45, " Door2 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattroff(winStatus, A_REVERSE);}
     
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 1, 50, " D3 ");
+    mvwprintw(winStatus, 1, 52, " Door3 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattroff(winStatus, A_REVERSE);}
 
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 0, 50, " D4 ");
+    mvwprintw(winStatus, 0, 52, " Door4 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winStatus, A_REVERSE);}
 
     // Display Repeat Animations Enabled.  (Not Yet Implemented)
@@ -1117,6 +1118,42 @@ class Screen3
     else
     {
       mvwprintw(winStatus, 0, 37, "NIGHT");      
+    }
+
+    // Display Hazard Indicator
+    if(sdSysData.booHazardRunning == true)
+    {
+      wattron(winStatus, A_REVERSE);
+      mvwprintw(winStatus, 1, 18, "HAZARD");
+      wattroff(winStatus, A_REVERSE);
+    }
+    else
+    {
+      mvwprintw(winStatus, 1, 18, "HAZARD"); 
+    }
+
+    // Display Overhead Indicator
+    if(sdSysData.booOverheadRunning == true)
+    {
+      wattron(winStatus, A_REVERSE);
+      mvwprintw(winStatus, 1, 26, "OVERHEAD ");
+      wattroff(winStatus, A_REVERSE);
+    }
+    else
+    {
+      mvwprintw(winStatus, 1, 26, "OVERHEAD "); 
+    }
+
+    // Display Timer Indicator
+    if(sdSysData.cdTIMER.is_active() == true)
+    {
+      wattron(winStatus, A_REVERSE);
+      mvwprintw(winStatus, 1, 37, "TIMER");
+      wattroff(winStatus, A_REVERSE);
+    }
+    else
+    {
+      mvwprintw(winStatus, 1, 37, "TIMER"); 
     }
 
     // Screen Title
@@ -1173,10 +1210,10 @@ class Screen3
     //------------------------
 
     // Show Number of Events per Channel
-    mvwprintw(winDebug, 1, 42, "%03d:D1", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
-    mvwprintw(winDebug, 0, 42, "%03d:D2", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
-    mvwprintw(winDebug, 1, 51, "D3:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
-    mvwprintw(winDebug, 0, 51, "D4:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
+    mvwprintw(winDebug, 1, 45, "%03d:D1", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
+    mvwprintw(winDebug, 0, 45, "%03d:D2", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
+    mvwprintw(winDebug, 1, 53, "D3:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
+    mvwprintw(winDebug, 0, 53, "D4:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
     
     //------------------------
     //Mouse Position
@@ -1338,18 +1375,6 @@ class Screen3
       output_status(sdSysData, keywatch, clou, ScrStat, mouse);
     }
 
-    // Draw buttons on buttons window.
-    if (ScrStat.Window_Buttons == true)
-    {
-      bzButtons.draw(ScrStat.Needs_Refresh);
-    }
-
-    // Draw Color Picker window.
-    if (ScrStat.Window_CPicker == true)
-    {
-      bzCPicker.draw(ScrStat.Needs_Refresh);
-    }
-
     // Draw Debug window.
     if (ScrStat.Window_Debug == true)
     {
@@ -1362,12 +1387,6 @@ class Screen3
       output_timer(sdSysData, keywatch, clou, ScrStat, mouse);
     }
 
-    // Draw Tabs.
-    if (ScrStat.Window_Tabs == true)
-    {
-      bzTabs.draw(ScrStat.Needs_Refresh);
-    }
-
     // Draw Console window.
     if (ScrStat.Window_Console == true)
     {
@@ -1378,6 +1397,26 @@ class Screen3
     if (ScrStat.Window_Player == true)
     {
       the_player(clou, ScrStat);
+    }
+
+    // Buttons
+
+    // Draw Tabs.
+    if (ScrStat.Window_Tabs == true)
+    {
+      bzTabs.draw(ScrStat.Needs_Refresh);
+    }
+
+    // Draw buttons on buttons window.
+    if (ScrStat.Window_Buttons == true)
+    {
+      bzButtons.draw(ScrStat.Needs_Refresh);
+    }
+
+    // Draw Color Picker window.
+    if (ScrStat.Window_CPicker == true)
+    {
+      bzCPicker.draw(ScrStat.Needs_Refresh);
     }
 
     // ---------------------------------------------------------------------------------------

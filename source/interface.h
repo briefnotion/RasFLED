@@ -48,15 +48,15 @@ void consoleprinthelp(Console &cons)
   cons.printwait("");
   cons.printwait("HELP SCREEN ------------");
   cons.printwait("");
-  cons.printwait("'x' or 'exit' - Safely exits the RasFLED.");
+  cons.printwait("'X' or 'exit' - Safely exits the RasFLED.");
   cons.printwait("' restart'    - Restart RasFLED.");
   cons.printwait("");
   cons.printwait("'help'    - Prints this help screen.");
   cons.printwait("' events' - Prints all active events.");
   cons.printwait("' config' - Prints some configuration data.");
   cons.printwait("");
-  cons.printwait("     hh - Hazard Lights");
-  cons.printwait("     h` - Hazard Lights Off");
+  cons.printwait("     hh - Hazard Lights      '  ' - Start Timer");
+  cons.printwait("     h` - Hazard Lights Off  ' '' - End Timer");
   cons.printwait("");
   cons.printwait("     `` - End Most Repeating Lights");
   cons.printwait("");
@@ -77,7 +77,7 @@ void consoleprinthelp(Console &cons)
   cons.printwait("");
   //cons.printwait("  Not all colors implemented for all commands.");
   //cons.printwait("");
-  cons.printwait("\\   - Turn on and off diagnosis mode.");
+  cons.printwait("'\' - Turn on and off diagnosis mode.");
   cons.printwait("t - Cycle Strips  c - Test LEDs   a - not specified");
   cons.printwait("");
 }
@@ -481,11 +481,18 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
     }
 
-    // pulse Running
+    // pulse Running Timer
     if (check_command(cons, "  ", "5 minute Pulse Timer Started with Running Color"))
     {
       sdSysData.start_timer(DEFAULTTIMER * 60);
       processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, teEvent);
+    }
+
+    // pulse Running Timer end
+    if (check_command(cons, " `", "Pulse Timer Stop"))
+    {
+      sdSysData.cdTIMER.end();
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
     }
 
     // pulse Running Color

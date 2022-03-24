@@ -681,20 +681,15 @@ bool load_playlist(Console &cons, system_data &sdSysData, string strFilename)
       qFile.pop_front();
     }
 
-    cons.printi(to_string(tmpSettings.size()));
-
-    
     // Find and load the settings
     int loc = 0;
 
     loc = tmpSettings.exits_at("playlist");
     if(loc >= 0)
     {
-      cons.printi(to_string(loc));
-
       for(int x=loc+1; x < tmpSettings.size() ; x++)
       {
-        cons.printi(tmpSettings.id_at(x));
+        //cons.printi(tmpSettings.id_at(x));
         cons.the_player.Play_List.add_to_list(tmpSettings.id_at(x));
       }
 

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.44A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.45A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,15 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.45_220323
+// *    - Corrected white color picker button.
+// *    - Added more indicators to the status bar.
+// *    - Changed some of the buttons to be on when the feature was on. Except for 
+// *        Overhead Lights, which is being stubborn.
+// *    - Added an end timer command.
+// *    - Updated the help screen, which is getting too big.
+// *    - Removed some load playlist degug info from program start. 
+// *
 // * V 0.44_220322
 // *    - Merged the buttons into the button zone manager so that buttons can be managed 
 // *        as a group.  Because of that, the code is now much more simplified and the 
@@ -1150,7 +1159,6 @@ int loop()
     if (cons.play_next_movie(fsPlayer) == true)
     {
       cons.printi("  Loading Reel");
-      
     }
     else
     { 

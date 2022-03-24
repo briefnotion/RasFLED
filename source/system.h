@@ -666,6 +666,7 @@ class ScreenStatus
   public:
   // Main Refresh Indicator
   bool Needs_Refresh = false;
+  
   //bool Needs_Redraw = false;
 
   // Windows - Controls to say if a window should be displayed.

@@ -332,8 +332,15 @@ class Console
         else if (name.compare("MENUOVERHEAD") == 0)
         // Load Home Buttons
         {
-          Screen.buttons_menu_overhead_color(sdSysData);
-          keywatch.cmdIn('o');
+          if(sdSysData.booOverheadRunning == false)
+          {
+            Screen.buttons_menu_overhead_color(sdSysData);
+            keywatch.cmdIn('o');
+          }
+          else
+          {
+            keywatch.cmdInString("o`");
+          }
         }
 
         else if(name.compare("EXIT") == 0)
@@ -364,9 +371,14 @@ class Console
         }
 
         else if(name.compare("TIMER") == 0)
-        // Start Timer
+        // Start / Stop Timer
+        if (sdSysData.cdTIMER.is_active() == false)
         {
           keywatch.cmdInString("  ");
+        }
+        else
+        {
+          keywatch.cmdInString(" `");
         }
 
         else if(name.compare("OVERHEAD") == 0)
@@ -389,9 +401,16 @@ class Console
         }
 
         else if(name.compare("HAZARD") == 0)
-        // Start Hazard Lights
+        // Start Hazard Lights or turn off.
         {
-          keywatch.cmdInString("hh");
+          if (sdSysData.booHazardRunning == false)
+          {
+            keywatch.cmdInString("hh");
+          }
+          else
+          {
+            keywatch.cmdInString("h`");
+          }
         }
 
         else if(name.compare("DEBUG") == 0)
