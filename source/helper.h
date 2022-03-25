@@ -229,6 +229,29 @@ class stupid_random
   }
 };
 
+class VAR_CHANGE_MON
+// Check to see if a value of an integer has changed.
+// Return true and reset if it has.
+// Retrun false if it is the same.
+{
+  private:
+
+  int PREV_VALUE = 0;
+
+  bool switched(int Value)
+  {
+    if (Value == PREV_VALUE)
+    {
+      return false;
+    }
+    else
+    {
+      PREV_VALUE = Value;
+      return true;
+    }
+  }
+};
+
 
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES
@@ -338,6 +361,11 @@ class hardware_monitor
       tmeTOGGLEDTIME = tmeTme;
       return true;
     }
+  }
+
+  void read(bool booValue, unsigned long tmeCheckTime)
+  {
+    changed(booValue, tmeCheckTime);
   }
 };
 

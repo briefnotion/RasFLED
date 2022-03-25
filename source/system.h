@@ -19,6 +19,7 @@
 // RASFled related header files
 #include "definitions.h"
 #include "helper.h"
+#include "hardware_status.h"
 
 using namespace std;
 
@@ -119,6 +120,9 @@ class system_data
   // Timer and Color Schemes
   countdown_timer cdTIMER;
   running_colors running_color_list;
+
+  // Hardware Status Indicators
+  HARDWARE_STATUS hsHardware_Status;
 
   // Day Mode Active
   bool booDay_On = false;
@@ -296,6 +300,11 @@ class system_data
     return (sleeptime);
   }
 
+  void read_hardware_status(int Milis_Frequency)
+  {
+    hsHardware_Status.read_hardware_status(tmeCURRENT_FRAME_TIME, Milis_Frequency);
+  }
+
   // reset monitor times.
   void refresh()
   {
@@ -306,8 +315,7 @@ class system_data
     fltCYCLETIME.min    = 0;
     fltCYCLETIME.max    = 0;
   }
-
-};
+ };
 // -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------

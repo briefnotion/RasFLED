@@ -621,37 +621,37 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
     if (check_command(cons, "rr", "Set Running Color to Red"))
     {
-      sdSysData.set_running_color(crgbWhite, "Red");
+      sdSysData.set_running_color(crgbRed, "Red");
     }
 
     if (check_command(cons, "rg", "Set Running Color to Green"))
     {
-      sdSysData.set_running_color(crgbWhite, "Green");
+      sdSysData.set_running_color(crgbGreen, "Green");
     }
 
     if (check_command(cons, "rb", "Set Running Color to Blue"))
     {
-      sdSysData.set_running_color(crgbWhite, "Blue");
+      sdSysData.set_running_color(crgbBlue, "Blue");
     }
 
     if (check_command(cons, "ru", "Set Running Color to Purple"))
     {
-      sdSysData.set_running_color(crgbWhite, "Purple");
+      sdSysData.set_running_color(crgbPurple, "Purple");
     }
 
     if (check_command(cons, "ry", "Set Running Color to Yellow"))
     {
-      sdSysData.set_running_color(crgbWhite, "Yellow");
+      sdSysData.set_running_color(crgbYellow, "Yellow");
     }
 
     if (check_command(cons, "rc", "Set Running Color to Cyan"))
     {
-      sdSysData.set_running_color(crgbWhite, "Cyan");
+      sdSysData.set_running_color(crgbCyan, "Cyan");
     }
 
     if (check_command(cons, "rn", "Set Running Color to Orange"))
     {
-      sdSysData.set_running_color(crgbWhite, "Orange");
+      sdSysData.set_running_color(crgbOrange, "Orange");
     }
 
 

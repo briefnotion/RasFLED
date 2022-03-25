@@ -208,7 +208,7 @@ class Button
     refresh();
 
     wborder(winButton,'|','|','-','-','+','+','+','+') ;
-    wrefresh(winButton);
+    //wrefresh(winButton);
 
     bool CHANGED = true;
   }
@@ -658,6 +658,10 @@ class Screen3
   WINDOW * winConsole;
   WINDOW * winPlayer;
 
+  // Monitor these varibles for changes to update their corres buttons.
+  VAR_CHANGE_MON vcmTIMER;
+  VAR_CHANGE_MON vcmMENUOVERHEAD;
+
   public:
 
   Button_Zone_Manager bzButtons;
@@ -668,14 +672,14 @@ class Screen3
   // Define Color Picker buttons and load them to the 
   //  color picker button zone.
   {
-    bzCPicker.modify(0, "RED", "%r", 0, 1, C_WHITE_RED, 0);
-    bzCPicker.modify(1, "GREEN", "%g", 0, 1, C_WHITE_GREEN, 0);
-    bzCPicker.modify(2, "BLUE", "%b", 0, 1, C_WHITE_BLUE, 0);
-    bzCPicker.modify(3, "PURPLE", "%u", 0, 1, C_WHITE_PURPLE, 0);
-    bzCPicker.modify(4, "YELLOW", "%y", 0, 1, C_WHITE_YELLOW, 0);
-    bzCPicker.modify(5, "CYAN", "%c", 0, 1, C_WHITE_CYAN, 0);
-    bzCPicker.modify(6, "ORANGE", "%n", 0, 1, C_WHITE_YELLOW, 0);
-    bzCPicker.modify(7, "WHITE", "%w", 0, 1, C_BLACK_WHITE, 0);
+    bzCPicker.modify(0, "RED", "%r", 0, 0, C_WHITE_RED, 0);
+    bzCPicker.modify(1, "GREEN", "%g", 0, 0, C_WHITE_GREEN, 0);
+    bzCPicker.modify(2, "BLUE", "%b", 0, 0, C_WHITE_BLUE, 0);
+    bzCPicker.modify(3, "PURPLE", "%u", 0, 0, C_WHITE_PURPLE, 0);
+    bzCPicker.modify(4, "YELLOW", "%y", 0, 0, C_WHITE_YELLOW, 0);
+    bzCPicker.modify(5, "CYAN", "%c", 0, 0, C_WHITE_CYAN, 0);
+    bzCPicker.modify(6, "ORANGE", "%n", 0, 0, C_WHITE_YELLOW, 0);
+    bzCPicker.modify(7, "WHITE", "%w", 0, 0, C_BLACK_WHITE, 0);
   }
 
   void buttons_Tabs(system_data &sdSysData)
@@ -695,8 +699,8 @@ class Screen3
   {
     bzButtons.modify(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, C_WHITE_YELLOW, 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
-    bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_YELLOW, 0);
-    //bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, C_WHITE_YELLOW, 0);
+    //bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_YELLOW, 0);
+    bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, C_WHITE_YELLOW, 0);
     bzButtons.modify(3, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
     bzButtons.modify(4, "", "", 0, -1, 6, 0);
     bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
@@ -1156,6 +1160,27 @@ class Screen3
       mvwprintw(winStatus, 1, 37, "TIMER"); 
     }
 
+    /*
+    // Display Undervoltage
+    if (sdSysData.hsHardware_Status.enabled() == true)
+    {
+      if (sdSysData.hsHardware_Status.get_low_voltage() != 0)
+      {
+        mvwprintw(winStatus, 0, XStatusSize - 13, "%3.3f", sdSysData.hsHardware_Status.get_low_voltage());
+      }
+    }
+    */
+
+    // Display CPU Temp
+    if (sdSysData.hsHardware_Status.enabled() == true)
+    {
+      mvwprintw(winStatus, 1, XStatusSize - 12, "%3.0fc", sdSysData.hsHardware_Status.get_temperature());
+    }
+    else
+    {
+      mvwprintw(winStatus, 1, XStatusSize - 12, "NA");
+    }
+
     // Screen Title
     wattron(winStatus, A_REVERSE);
     mvwprintw(winStatus, 0, XStatusSize - 7, " STATUS");
@@ -1173,9 +1198,9 @@ class Screen3
     string strLevel = "";
 
     // Print Timings
-    mvwprintw(winDebug, 0, 7, "Compute: %fms", sdSysData.fltCOMPUTETIME.data);
-    mvwprintw(winDebug, 1, 7, "  Sleep: %fms", sdSysData.fltPREVSLEEPTIME.data);
-    mvwprintw(winDebug, 2, 7, "  Cycle: %fms", sdSysData.fltCYCLETIME.data);
+    mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.fltCOMPUTETIME.data);
+    mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.fltPREVSLEEPTIME.data);
+    mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.fltCYCLETIME.data);
     // Not Very Usefule: mvwprintw(winDebug, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
 
     /*  -- Needs Removal
@@ -1184,6 +1209,9 @@ class Screen3
       mvwprintw(winStatus, 4, 1, ":%s", sdSysData.strprintbuffer.c_str());
     }
     */
+
+    //Print Running Color
+    mvwprintw(winDebug, 0, 26, "rc:%3i,%3i,%3i", sdSysData.running_color_list.color[0].r, sdSysData.running_color_list.color[0].g, sdSysData.running_color_list.color[0].b);
 
     //------------------------
     // Print LED Display Mode
@@ -1349,8 +1377,20 @@ class Screen3
   {
     // Run any routines that may cause the screen to need to be refreshed.
 
-    if (sdSysData.cdTIMER.is_active() == true)
+    // Button value follow ups.
+    //  Sometimes things change.  Sometimes things change at strange times. 
+    //  And the buttons need to reflect those status changes. But there is no way 
+    //  for the buttons to know those changes occured because they have no active 
+    //  communication to the variables they represent. So, they just stayed the way 
+    //  they were when they were last intereacted with. I don't like these next few 
+    //  lines, but they will solve the problem of buttons displaying the wrong status 
+    //  until I find a way for the buttons to know that what they are representing 
+    //  has changed.
+    bzButtons.change_value("TIMER",int(sdSysData.cdTIMER.is_active()));
+    bzButtons.change_value("MENUOVERHEAD",int(sdSysData.booOverheadRunning));
+
     // Check for Timer Window
+    if (sdSysData.cdTIMER.is_active() == true)
     {
       ScrStat.Window_Timer_On();
     }

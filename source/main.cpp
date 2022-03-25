@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.45A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.47A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,45 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.47_220325
+// *    - Corrected running color changer.
+// *    - Button value follow ups are now being ran in the Screen, before drawn.
+// *        Sometimes things change.  Sometimes things change at strange times. 
+// *          And the buttons need to reflect those status changes. But there is no way 
+// *          for the buttons to know those changes occured because they have no active 
+// *          communication to the variables they represent. So, they just stay the way 
+// *          they were when they were last intereacted with. I don't like my new button   
+// *          draw follow up, but they will solve the problem of buttons displaying the  
+// *          wrong status, until I find a way for the buttons to know what they are 
+// *          representing has changed.
+// *        For anyone who may be following this, let me explain: I would've liked like 
+// *          the buttons to be more, directly tied, to the variable they represent. 
+// *          I had originally developed them based on the model of buttons found in 
+// *          Starbase, but I slowly realized this couldn't be done the same way. 
+// *          The reason is, for that, Starbase's computer model is considered a 
+// *          distibuted computer.  Whereas, RasFLED is a centralized computer. 
+// *          Everything in RasFLED is processed by one single centralized loop. 
+// *          And in a distributed computer, all the components attached to it works 
+// *          individually. Some components talk, some listen, some do both, but all in 
+// *          all, each component does what its suposed to do, without being told to do 
+// *          it. A decentralized computer is much more diversible and RasFLED would be 
+// *          much easier to develop and powerful, if it were made this way. But, the hardware, 
+// *          as far as I know, for a decentralized system doesnt exist yet.  Did you learn 
+// *          anything?
+// *        I thought of creating one of my own though. Sure, anyone could duck tape a button 
+// *          to an Arduino Nano, and it would be hundreds of times better than what a 
+// *          decentralized button component needs to be. The problem is, there is no 
+// *          network to support it.  Etherenet is just end to end communications. I am 
+// *          not aware of any network capable of being just one wire, with hundreds of 
+// *          components talking to whomever they want, through that singe wire. 
+// *        Also, side note here: This may be very analogous to why democracy has the 
+// *          capability of working so well, where monachy doesn't.
+// *    - Other small changes and modifications.
+// *
+// * V 0.46_220324
+// *    - Added a CPU temp indicator in status bar.
+// *    - Attempted to add a low voltage indicator, but failed.
+// *
 // * V 0.45_220323
 // *    - Corrected white color picker button.
 // *    - Added more indicators to the status bar.
@@ -1266,6 +1305,7 @@ int loop()
     // MOVE RENAME ELIMINATE ??? !!!
     bool booUpdate = false;
 
+    // Read values of switches
     for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
     {
       sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
@@ -1409,6 +1449,8 @@ int loop()
     // all the lights, we will take the latter clock cycles to get keybord input and update 
     // console with status and so on. 
 
+    // Read Hardware Status before printing to screen.
+    sdSystem.read_hardware_status(1000);
 
     // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
     //cons.readkeyboardinput();

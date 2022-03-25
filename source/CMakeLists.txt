@@ -17,6 +17,7 @@ add_executable(
   RasFLED
   main.cpp
   commands.h
+  hardware_status.h
   animations.h
   files.h
   player.h
