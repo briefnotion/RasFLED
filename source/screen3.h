@@ -483,8 +483,11 @@ class Button_Zone_Manager
     {
       if (BUTTONS[pos].PROP.NAME == name)
       {
-        BUTTONS[pos].PROP.LABEL = label;
-        BUTTONS[pos].PROP.CHANGED = true;
+        if (BUTTONS[pos].PROP.LABEL != label)
+        {
+          BUTTONS[pos].PROP.LABEL = label;
+          BUTTONS[pos].PROP.CHANGED = true;
+        }
       }
     }
   }
@@ -495,8 +498,11 @@ class Button_Zone_Manager
     {
       if (BUTTONS[pos].PROP.NAME == name)
       {
-        BUTTONS[pos].PROP.VALUE = value;
-        BUTTONS[pos].PROP.CHANGED = true;
+        if (BUTTONS[pos].PROP.VALUE != value)
+        {
+          BUTTONS[pos].PROP.VALUE = value;
+          BUTTONS[pos].PROP.CHANGED = true;
+        }
       }
     }
   }
@@ -1340,6 +1346,11 @@ class Screen3
     
   }
 
+  void window_player_clear()
+  {
+    wclear(winPlayer);
+  }
+
   void window_player_draw_frame(PLAYER_FRAME &qframe)
   {
 
@@ -1352,16 +1363,48 @@ class Screen3
       qframe.LINES.pop_front();
       */
 
-      wmove(winPlayer, (line + (YPlayerSize/2) - (qframe.HEIGHT/2)), ((XPlayerSize/2) - (qframe.WIDTH/2)));  //move cursor to next line to print or clear.
-      wclrtoeol(winPlayer);            // clear line befor printing to it.
-      mvwprintw(winPlayer, line + (YPlayerSize/2) - (qframe.HEIGHT/2), ((XPlayerSize/2) - (qframe.WIDTH/2)), "%s", qframe.LINES[line].c_str());
+      int ypos = 0;
+      int xpos = 0;
+
+      if (qframe.HEIGHT > YPlayerSize)
+      {
+        ypos = 0;
+      }
+      else
+      {
+        ypos = (YPlayerSize/2) - (qframe.HEIGHT/2);
+      }
+
+      if (qframe.WIDTH > XPlayerSize)
+      {
+        xpos = 0;
+      }
+      else
+      {
+        xpos = (XPlayerSize/2) - (qframe.WIDTH/2);
+      }
+      
+      if (qframe.TYPE = 1)
+      {
+        wmove(winPlayer, line + ypos, xpos);  //move cursor to next line to print or clear.
+        wclrtoeol(winPlayer);            // clear line befor printing to it.
+      }
+
+      mvwprintw(winPlayer, line + ypos, xpos, "%s", qframe.LINES[line].c_str());
     }
     qframe.LINES.clear();
 
     if(Player_Frame_Counter == true)
     {
       Player_Frame_Count++;
-      mvwprintw(winPlayer, 0, 0, "%08d", Player_Frame_Count);
+      mvwprintw(winPlayer, 0, 0, "%08d Count  ", Player_Frame_Count);
+      mvwprintw(winPlayer, 1, 0, "%08d Width  ", qframe.WIDTH);
+      mvwprintw(winPlayer, 2, 0, "%08d Height ", qframe.HEIGHT);
+      mvwprintw(winPlayer, 3, 0, "%08d Delay  ", qframe.DELAY);
+      mvwprintw(winPlayer, 4, 0, "%08d FPS    ", qframe.FPS);
+      mvwprintw(winPlayer, 5, 0, "%08d Type   ", qframe.TYPE);
+      mvwprintw(winPlayer, 6, 0, "                ");
+
     }
     wrefresh(winPlayer);
     refresh();

@@ -81,6 +81,15 @@ class Console
   {
     bool success = false;
     success = the_player.load_reel(fsPlayer, filename);
+    
+    if (success == true)
+    {
+      printwait("Film Loaded: " + filename);
+    }
+    else
+    {
+      printwait("FAILED Film Load: " + filename);
+    }
     return success;
   }
 
@@ -129,8 +138,16 @@ class Console
   {
     if ((the_player.booPlay == true) && (the_player.booDisable == false))
     {
+      if (the_player.booSkip == true)
+      // I dont want this here, quick and dirty.
+      {
+        the_player.booSkip = false;
+        the_player.ftqFilm.close_the_file(fsPlayer);
+      }
+
       if (the_player.ftqFilm.booEOF == true)
       {
+        Screen.window_player_clear();
         play_next_movie(fsPlayer);
       }
 
@@ -140,8 +157,14 @@ class Console
         {
           if(tmeCurrent_Time_millis >= the_player.tmeNEXT_FRAME_DRAW_TIME)
           {
-            the_player.get_frame(fsPlayer, tmeCurrent_Time_millis);
-            Screen.window_player_draw_frame(the_player.qFrame);
+            if (the_player.get_frame(fsPlayer, tmeCurrent_Time_millis) == false)
+            {
+              printwait("Dropped Frame");
+            }
+            else
+            {
+              Screen.window_player_draw_frame(the_player.qFrame);
+            }
           }
         }
       }

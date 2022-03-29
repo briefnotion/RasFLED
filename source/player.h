@@ -28,11 +28,23 @@ class PLAYER_FRAME
 {
   public:
 
+  int TYPE = 0;
+  int FPS = 15;  // Frame hang time. Measured in 15ths of a second
   int DELAY = 1;  // Frame hang time. Measured in 15ths of a second
   int HEIGHT = 1; // Amount of lines per frame.
   int WIDTH = 1;  // Amount of characters per line.
 
   deque<string> LINES;  // Frame buffer.
+
+  void reset()
+  {
+    TYPE = 0;
+    FPS = 15;
+    DELAY = 1;
+    HEIGHT = 1;
+    WIDTH = 1;
+    LINES.clear();
+  }
 };
 
 class PLAYER_MOVIE_LIST
@@ -120,6 +132,15 @@ class PLAYER_FILE_TO_DEQUE
     return booSuccess;
   }
 
+  void close_the_file(fstream &fsPlayer)
+  // close the film file and set everything off.
+  {
+    booActive = false;
+    booSuccess = false;
+    booEOF = true;
+    fsPlayer.close();
+  }
+
   string strRead_Line(fstream &fsPlayer)
   // Returns the next line of the file stream.
   //  Returns false if could not read for any reason.
@@ -131,10 +152,7 @@ class PLAYER_FILE_TO_DEQUE
       
       if(fsPlayer.eof())
       {
-        booActive = false;
-        booSuccess = false;
-        booEOF = true;
-        fsPlayer.close();
+        close_the_file(fsPlayer);
       }
     }
     return strRead;
@@ -171,6 +189,7 @@ class PLAYER
   PLAYER_MOVIE_LIST Play_List;  // Playlist handler for sequential movies.
   bool booPlay = true;          // Plays movie when set to true. Pause when 
                                 //  set to false
+  bool booSkip = false;         // Set the track to skip at next read.
 
   bool booSucess = false;       // Set to false if anything went wrong.
 
@@ -187,7 +206,7 @@ class PLAYER
                                               //  frame drawn to screen
   unsigned long tmeNEXT_FRAME_DRAW_TIME = 0;  // The futer time of when the next
                                               //  frame will be drawn to the screen.
-  unsigned long tmeFRAME_TIME_MILLIS = 1000/15; // Lenght of time 1 frame will be displayed 
+  //unsigned long tmeFRAME_TIME_MILLIS = 1000/15; // Lenght of time 1 frame will be displayed 
                                                 //  without delay (fastest.) Time is stored 
                                                 //  in milliseconds.
 
@@ -195,8 +214,7 @@ class PLAYER
   // Opens the file containing te movie.
   //  Returns false if anything goes wrong.
   {
-    qFrame.HEIGHT = 13;
-    qFrame.WIDTH = 67;
+    qFrame.reset();
 
     booSucess = ftqFilm.booLoad_Film(fsPlayer, filename);
     
@@ -214,6 +232,16 @@ class PLAYER
   //  it will return what it found as the frame and return success as true. 
   {
     int hold_time = 0;
+    string strFrameInfo = "";
+    int Frame_Type = 0;
+    int Frame_Width = 0;
+    int Frame_Height = 0; 
+    int Frame_FPS = 60;
+    
+    int pos1 = 0;
+    int pos2 = 0;
+
+    bool booFrame_info_loaded = false;
 
     // Prep for first run
     if (tmeNEXT_FRAME_DRAW_TIME == 0)
@@ -221,12 +249,69 @@ class PLAYER
       tmeNEXT_FRAME_DRAW_TIME = tmeCurrent_Time_millis;
     }
 
-    // Get Frame Hold Time
-    while (hold_time == 0 && ftqFilm.booSuccess == true)
+    // Get Frame Info
+    while (booFrame_info_loaded == false && ftqFilm.booSuccess == true)
     {
       try
       {
-        hold_time = stoi(ftqFilm.strRead_Line(fsPlayer));
+        // Read next line
+        strFrameInfo = ftqFilm.strRead_Line(fsPlayer);
+
+        // Check for basic frame time hold
+        pos1 = strFrameInfo.find(" ");
+
+        // Check to see if Frame type is unset or type 1.
+        if (pos1 == strFrameInfo.npos && (qFrame.TYPE == 0 || qFrame.TYPE == 1))
+        {
+          qFrame.TYPE = 1;
+          hold_time = stoi(strFrameInfo);
+          
+          qFrame.DELAY = hold_time;
+          qFrame.FPS = 15;
+
+          qFrame.WIDTH = 67;
+          qFrame.HEIGHT = 13;
+
+          booFrame_info_loaded = true;
+        }
+        else
+        // Check to see if Frame type is 1000
+        {
+          int Frame_Type = atoi(strFrameInfo.substr(0, pos1).c_str());
+
+          if (Frame_Type == 1000 || qFrame.TYPE == 1000)
+
+          {
+            qFrame.TYPE = 1000;
+
+            // Get Width
+            pos2 = strFrameInfo.find(" ", pos1 +1);
+            Frame_Width = atoi(strFrameInfo.substr(pos1 +1, pos2).c_str());
+
+            pos1 = pos2;
+            pos2 = strFrameInfo.find(" ", pos1 +1);
+            Frame_Height = atoi(strFrameInfo.substr(pos1 +1, pos2).c_str());
+
+            pos1 = pos2;
+            //pos2 = strFrameInfo.find(" ", pos1 +1);
+            Frame_FPS = atoi(strFrameInfo.substr(pos1 +1).c_str());
+
+            qFrame.WIDTH = Frame_Width;
+            qFrame.HEIGHT = Frame_Height;
+            qFrame.DELAY = 1;
+
+            if (Frame_FPS <= 0)
+            {
+              qFrame.FPS = 30;
+            }
+            else
+            {
+              qFrame.FPS = Frame_FPS;
+            }
+
+            booFrame_info_loaded = true;
+          }
+        }
         booSucess = ftqFilm.booSuccess;
       }
       catch(const std::exception& e)
@@ -236,8 +321,17 @@ class PLAYER
       }
     }
 
-    tmeLAST_FRAME_DRAW_TIME = tmeNEXT_FRAME_DRAW_TIME;
-    tmeNEXT_FRAME_DRAW_TIME = tmeNEXT_FRAME_DRAW_TIME + (tmeFRAME_TIME_MILLIS * hold_time);
+    //tmeLAST_FRAME_DRAW_TIME = tmeNEXT_FRAME_DRAW_TIME;
+    tmeLAST_FRAME_DRAW_TIME = tmeCurrent_Time_millis;
+    
+    if (qFrame.TYPE == 1)
+    { // if frame type is 1 use delay method.
+      tmeNEXT_FRAME_DRAW_TIME = tmeLAST_FRAME_DRAW_TIME + (1000 /15 * qFrame.DELAY);
+    }
+    else
+    { // if frame type is 1000 use FPS method
+      tmeNEXT_FRAME_DRAW_TIME = tmeLAST_FRAME_DRAW_TIME + (1000 / qFrame.FPS);
+    }
 
     if (ftqFilm.booSuccess == true)
     {

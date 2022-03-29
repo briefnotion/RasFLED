@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.47A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.48A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,18 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.48_220328
+// *    - Added capability of playing a new type of movie.
+// *        New movie type, just like the old, except:
+// *        - Instead of a delay in first pos of line befgore each frame, a 1000
+// *            is in its place.  Labeling the frame as Type 1000.
+// *        - The 1000 is followed by frame size height and with and FPS that the 
+// *            frame will run at.
+// *    - Added ' skip' command, but I did it quick because its late. 
+// *        Skip may change in future.
+// *    - Added the new test movies to the git. The text vids are for testing and arent 
+// *        anything good.  Test videos were converted from a few random small videos.
+// *
 // * V 0.47_220325
 // *    - Corrected running color changer.
 // *    - Button value follow ups are now being ran in the Screen, before drawn.
@@ -1197,7 +1209,7 @@ int loop()
   {
     if (cons.play_next_movie(fsPlayer) == true)
     {
-      cons.printi("  Loading Reel");
+      //cons.printi("  Loading Reel");
     }
     else
     { 

@@ -407,12 +407,19 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // -------------------------------------------------------------------------------------
     // PLAYLIST
 
+    // Print out the current playlist.
     if (check_command(cons, " playlist", "Current Playlist:"))
     {
       for (int x=0; x < cons.the_player.Play_List.size(); x++)
       {
         cons.printwait("  " + cons.the_player.Play_List.MOVIE_LIST[x]);
       }
+    }
+
+    // Skip to the next film in the playlist.
+    if (check_command(cons, " skip", "Play Next in Playlist:"))
+    {
+      cons.the_player.booSkip = true;
     }
 
     // -------------------------------------------------------------------------------------
