@@ -56,6 +56,15 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
+// * V 0.49_220328
+// *    - Dimmed the colors down.  Dosn't work on my terminal emulator.
+// *    - Added 1001 movie type.  Just like the 1000 type but allows 
+// *        color controlable escape sequences to display full color text animations.
+// *        Warning: These colored ansi films really bog down the termial emulation 
+// *        program. And in my case pulling the core load to 100%.  RasFLED waits, but
+// *        the 20ms return time is constantly exceded.  The animations will adjust but 
+// *        there will be visual FPS losses in the animations.
+// *
 // * V 0.48_220328
 // *    - Added capability of playing a new type of movie.
 // *        New movie type, just like the old, except:

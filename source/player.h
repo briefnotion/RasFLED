@@ -275,31 +275,37 @@ class PLAYER
           booFrame_info_loaded = true;
         }
         else
-        // Check to see if Frame type is 1000
+        // Check to see if Frame type is 1000 or 1001
         {
           int Frame_Type = atoi(strFrameInfo.substr(0, pos1).c_str());
 
-          if (Frame_Type == 1000 || qFrame.TYPE == 1000)
-
+          if ((Frame_Type == 1000 || qFrame.TYPE == 1000) ||
+              (Frame_Type == 1001 || qFrame.TYPE == 1001)    )
           {
-            qFrame.TYPE = 1000;
-
             // Get Width
             pos2 = strFrameInfo.find(" ", pos1 +1);
             Frame_Width = atoi(strFrameInfo.substr(pos1 +1, pos2).c_str());
 
+            // Get Height
             pos1 = pos2;
             pos2 = strFrameInfo.find(" ", pos1 +1);
             Frame_Height = atoi(strFrameInfo.substr(pos1 +1, pos2).c_str());
 
+            // Get FPS
             pos1 = pos2;
             //pos2 = strFrameInfo.find(" ", pos1 +1);
             Frame_FPS = atoi(strFrameInfo.substr(pos1 +1).c_str());
 
+            // No exceptions yet, not likely to get any.
+            // Store the settings.
+            qFrame.TYPE = Frame_Type;
             qFrame.WIDTH = Frame_Width;
             qFrame.HEIGHT = Frame_Height;
             qFrame.DELAY = 1;
 
+            // With possibility of read error, FPS may be 0.
+            // Set FPS to something else if it is 0 because 
+            //  0 FPS will trigger an exception elswhere in the program.
             if (Frame_FPS <= 0)
             {
               qFrame.FPS = 30;
@@ -309,6 +315,7 @@ class PLAYER
               qFrame.FPS = Frame_FPS;
             }
 
+            // Info line sucessfully loaded, exit the trap loop.
             booFrame_info_loaded = true;
           }
         }

@@ -785,6 +785,17 @@ class Screen3
       Supports_Color = true;
       start_color();
 
+      // The only corors available
+      //  
+      //  COLOR_BLACK
+      //  COLOR_RED
+      //  COLOR_GREEN
+      //  COLOR_YELLOW
+      //  COLOR_BLUE
+      //  COLOR_MAGENTA
+      //  COLOR_CYAN
+      //  COLOR_WHITE
+
       init_pair(C_RED_BLACK, COLOR_RED, COLOR_BLACK);
       init_pair(C_YELLOW_BLACK, COLOR_YELLOW, COLOR_BLACK);
       init_pair(C_GREEN_BLACK, COLOR_GREEN, COLOR_BLACK);
@@ -805,6 +816,14 @@ class Screen3
       init_pair(C_BLACK_PURPLE, COLOR_BLACK, COLOR_MAGENTA);
       init_pair(C_BLACK_CYAN, COLOR_BLACK, COLOR_CYAN);
       init_pair(C_BLACK_BLACK, COLOR_BLACK, COLOR_BLACK);
+
+      //Redefine Colors
+      init_color(COLOR_RED,     700, 000, 000);
+      init_color(COLOR_GREEN,   000, 700, 000);
+      init_color(COLOR_BLUE,    000, 000, 700);
+      init_color(COLOR_YELLOW,  500, 500, 000);
+      init_color(COLOR_MAGENTA, 700, 000, 700);
+      init_color(COLOR_CYAN,    000, 700, 700);
     }
   }
 
@@ -1347,14 +1366,57 @@ class Screen3
   }
 
   void window_player_clear()
+  // clear the contents of the player window.
   {
     wclear(winPlayer);
   }
 
   void window_player_draw_frame(PLAYER_FRAME &qframe)
+  //  Draw the window player qframe.  
+  //  This routine is externally called at any time and its timing is not handled here.
+  //  This routine will center the screen when its size is smaller than the display size.
+  //  If the size is larger than the display size, it will not center, instead it will 
+  //    only position itself in the upper left and truncate the bottom and right.
   {
 
-    for(int line=0; line < qframe.LINES.size(); line++)
+    int ypos = 0;
+    int xpos = 0;
+    int lines_max = 0;
+    int length_max = 0;
+
+    // Find upper left positions to print the screen.
+    // Set the max size to be printed.
+    if (qframe.HEIGHT > YPlayerSize)
+    {
+      ypos = 0;
+      lines_max = YPlayerSize;
+    }
+    else
+    {
+      ypos = (YPlayerSize/2) - (qframe.HEIGHT/2);
+      lines_max = qframe.HEIGHT;
+    }
+
+    if (qframe.WIDTH > XPlayerSize)
+    {
+      xpos = 0;
+      length_max = XPlayerSize;
+    }
+    else
+    {
+      xpos = (XPlayerSize/2) - (qframe.WIDTH/2);
+      length_max = qframe.WIDTH;
+    }
+
+    // Make sure the amount of lines are within range to avoid exception errors.
+    // This routine is for program integrety safety.  There is a possibility 
+    //    of a corrupt player file to not load the entire frame.
+    if (lines_max > qframe.LINES.size())
+    {
+      lines_max = qframe.LINES.size();
+    }
+
+    for(int line=0; line < lines_max; line++)
     {
       /*
       wmove(winPlayer, line, 0);  //move cursor to next line to print or clear.
@@ -1363,39 +1425,86 @@ class Screen3
       qframe.LINES.pop_front();
       */
 
-      int ypos = 0;
-      int xpos = 0;
+      if (qframe.TYPE == 1)
+      {
+        // Draw basic first iteration movie frame type with delay built in.
+        //  Mananged by NCurses.
 
-      if (qframe.HEIGHT > YPlayerSize)
-      {
-        ypos = 0;
-      }
-      else
-      {
-        ypos = (YPlayerSize/2) - (qframe.HEIGHT/2);
-      }
-
-      if (qframe.WIDTH > XPlayerSize)
-      {
-        xpos = 0;
-      }
-      else
-      {
-        xpos = (XPlayerSize/2) - (qframe.WIDTH/2);
-      }
-      
-      if (qframe.TYPE = 1)
-      {
         wmove(winPlayer, line + ypos, xpos);  //move cursor to next line to print or clear.
         wclrtoeol(winPlayer);            // clear line befor printing to it.
-      }
+        mvwprintw(winPlayer, line + ypos, xpos, "%s", qframe.LINES[line].c_str());
 
-      mvwprintw(winPlayer, line + ypos, xpos, "%s", qframe.LINES[line].c_str());
+      }
+      else if (qframe.TYPE == 1000)
+      {
+        // Draw second iteration frame type. Black and White text only.
+        //  Mananged by NCurses.
+        
+        mvwprintw(winPlayer, line + ypos, xpos, "%s", qframe.LINES[line].c_str());
+
+      }
+      else if (qframe.TYPE == 1001)
+      {
+        // Draw third iteration frame type. Color by escape sequences.
+        //  Not Mananged by NCurses.
+        //  This routine is cheesed because for some reason NCurses cant handle 
+        //  direct escape sequences to console. So...
+        //    An escape sequence is made to position the cursor, then the line 
+        //    read from file is tacked onto the end, followed by a \n.
+        //    then the line is printed by a std printf.
+        //  PROBLEMS:
+        //    I have not validated the substring being printed does not contain 
+        //    any unprinted escape sequences.
+      
+        // Find the position of the length position.
+
+        int pos1            = 0;  //  Stores pos of last char to be displayed.
+
+        string cursor_pos   = ""; //  Stores string containing cursor pos to print
+                                  //    line.
+        string print_string = ""; //  Stores full line to be printed, including 
+                                  //    moving cursor.
+        
+        // The line to print may be smaller than the display size. So, we need to 
+        //  the position +1 of the last character to be printed. Because this is 
+        //  not a simple character array, and is insted, a complex string including 
+        //  escape characters, we will count escape character, and hold the pos 
+        //  of the last found when the line length conditions were exceded. 
+        pos1 = qframe.LINES[line].find("\e[", pos1);
+        for (int x = 0; (x < length_max) && (pos1 != qframe.LINES[line].npos); x++)
+        {
+          pos1 = qframe.LINES[line].find("\e[", pos1 +1);
+        }
+
+        // Build cursor positioning escape sequence.
+        cursor_pos = "\e[" + to_string(YPlayerPos +1 + ypos + line) + ";" 
+                      + to_string(XPlayerPos +1 + xpos) + "f";
+
+        // Bring back pos 1 if not at full length.
+        if (pos1 == qframe.LINES[line].npos || length_max == XPlayerSize)
+        {
+          // Do nothing
+        }
+        else
+        {
+          pos1 = pos1 - 1;
+        }
+
+        // Set print_string var to be the cursor position escape sequence 
+        //  combined with the substring, regarding length, of the line to be 
+        //  printed.
+        print_string = cursor_pos + qframe.LINES[line].substr(0,pos1);
+
+        // print the print_string followed by \n to tell terminal update is required.
+        printf("%s\n", print_string.c_str() );
+      }
     }
     qframe.LINES.clear();
 
     if(Player_Frame_Counter == true)
     {
+      // Print details about the player frame for debug purposes. 
+      //  Only turned on at compile time.
       Player_Frame_Count++;
       mvwprintw(winPlayer, 0, 0, "%08d Count  ", Player_Frame_Count);
       mvwprintw(winPlayer, 1, 0, "%08d Width  ", qframe.WIDTH);
@@ -1406,8 +1515,16 @@ class Screen3
       mvwprintw(winPlayer, 6, 0, "                ");
 
     }
-    wrefresh(winPlayer);
-    refresh();
+
+    //if (qframe.TYPE != 1001)  // Don't enable this. NCurses must be cleaing things
+                                //  up.
+    {
+      // Update the player portion of the window. 
+      wrefresh(winPlayer);
+
+      // Since things were changed, we need to redraw the entire screen.
+      refresh();
+    }
 
   }
   // ---------------------------------------------------------------------------------------
