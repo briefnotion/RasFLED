@@ -1,0 +1,40 @@
+  ToDo:
+    - Combine Button class with Button Zone Manager class to simplify the buttons 
+        and greatly reduce the amount of code.  The button zones class was originally
+        designed with the buttons as being part of its queue list, but there was a
+        problem with the window pointers.
+    - Update everything properly classified with reference .h, supporting, and helper 
+        libraries. (in progress)
+    - Create a way to import all animations from an animations file. (finish 
+          configuration files first)
+    - Clean up 90% of the code. (recursive)
+    - Move all the main animations into their own subroutines.
+    - Generate animations for shutting down animations.
+    - Trace Flicker that occurs when sleep = 0 and doors are closing.
+    - Replace vectors with deques.
+    - Continue refining animations into an event language that can be ported. 
+    - Configuration files. (in progress)
+    - Add descriptions in the configuration.cfg file.
+    - Thow in some code to allow switchs to groups to respond to multiple "Overhead" 
+        and "Door"s within the group.
+    - Tie Switches to groups through ID in configuration. 
+    - Build a seperate config file for the Door control module so any additional 
+        control modules created can be differentiated. 
+    - Create an animation profile system to change all animations to another set of 
+        animations.  For instance, change from normal animations to prebuilt holiday
+        animations. 
+    - There were a few more things to list here.  I'll write them down later as 
+        needed.
+    - Virtual LED Strips, for lack of a better name.  A way for the single LED strip
+        to be a composit of two or more other strip, and act as one.  The overhead
+        lights can be combined together so that animations can flow from one, to the 
+        other, even if the LEDs are in differant portions of the LED strip, or in a 
+        differant type of order or orientation.
+    - Create alternatives to the console screen.
+    - Create a "YOUR ADS HERE" screen.
+    - Create an "ENGINE STATUS" screen: speed, temperature, pressure, errors, fuel
+        health, and other vehicle stuff.
+        - Combine vehicle related info to new animations, and animation events.
+    - Create other types of screens. 
+
+// **************************************************************************************
