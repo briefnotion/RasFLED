@@ -15,6 +15,7 @@ RasFLED requires 3 libraries.
 	
 	3.	rpi_281x
 			RPI_281X is also depreciated, from what I see, but it is still availble at (https://github.com/jgarff/rpi_ws281x)  I've included a working copy of it with my source code, because I couldn't get the program installed otherwise.  Likly, due to my misunderstanding of part of it.  The library can be installed by cd ing into its directory, running command "cmake ." then "make install"  Yet, even though the WS2811 library is found during RasFLED's make process, the ws2811.h file isn't.
+      Keep in mind, the audio chip may need to be disabled.  Definitly required for the RPI3+ The quick instrucutions: edit "/etc/modprobe.d/snd-blacklist.conf" and add line blacklist "snd_bcm2835".  Refer to documation for more information.
 	
 Compilation:
 

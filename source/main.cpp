@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.48A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.51A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,7 +56,30 @@
 // *    https://github.com/briefnotion/Fled/blob/master/Description%20and%20Background.txt
 // *
 // ***************************************************************************************
-// * V 0.49_220328
+// * V 0.51_220403
+// *    - I've been an advicate for multitasking since the GEOS days. I've been very very
+// *        reluctant to implement it, but in this itereation, I've gotten my feet wet 
+// *        with threads.  Simple enough, but it took some time to cast a thread for the 
+// *        hardware implementation of bringing the color values to the lights. the 
+// *        led_render routine was a perfect candidate for a thread because it took the 
+// *        majority of the cpu cycle, once it started, nothing else needed to wait for 
+// *        the render to complete. After, the render was called, the remaining part of 
+// *        the loop focuses on the interface.  Cycle: Get data, compute values, render, 
+// *        interface.
+// *
+// * V 0.50_220332
+// *    - Seperating type 1001 from the other types in the player post frame routine 
+// *        to attempt to improve performance.
+// *        Sure, if it works well on a slow system, it is more likely to run 
+// *        well on a slightly damaged or overheating  system. But my terminal 
+// *        emulator has too much overhead. Will try to reduce this by only printing 
+// *        one line to it. It really is a terminal issue. I like the one I have because 
+// *        it is the only one I found with tabs. I don't use tabs anymore so maybe 
+// *        I should just seach for another terminal capable of full color and full 
+// *        screen from a script.  All infomation just posted has nothing to do with 
+// *        RasFLED. I just felt like typing stuff.
+// *
+// * V 0.49_220331
 // *    - Dimmed the colors down.  Dosn't work on my terminal emulator.
 // *    - Added 1001 movie type.  Just like the 1000 type but allows 
 // *        color controlable escape sequences to display full color text animations.
@@ -851,6 +874,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <pthread.h>
 #include <wiringPi.h>
 #include <string>
 #include <chrono>
@@ -862,7 +886,7 @@
 
 // Distros: Jeremy Garff <jer @ jers.net>
 //  Zips at https://github.com/jgarff/rpi_ws281x
-static char VERSION[] = "XX.YY.ZZ";
+//static char VERSION[] = "XX.YY.ZZ";
 
 #include <stdint.h>
 #include <stdio.h>
@@ -882,7 +906,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #include "gpio.h"
 #include "dma.h"
 #include "pwm.h"
-#include "version.h"
+//#include "version.h"
 
 #include "ws2811.h"
 
@@ -1048,6 +1072,17 @@ void setup()
   //  yet.
 }
 
+// ---------------------------------------------------------------------------------------
+// Global function for Main Loop
+// By passing the global variable, difficult to work with, ledstring to the, just as 
+//  difficult to work with, ws2811_render routine, all led and values will be transmitted 
+//  to the lights on a seperate thread.
+void *proc_render_thread(void *ptr)
+{
+  int ret = 0;  // contains fail or pass status of the render routine.
+  ret = ws2811_render(&ledstring);  // Send values of ledstring to hardware.
+  return (void *)ret; // return ws2811_render status.
+}
 
 // ---------------------------------------------------------------------------------------
 // MAIN LOOP
@@ -1062,6 +1097,9 @@ int loop()
   using namespace std;
 
   // ---------------------------------------------------------------------------------------
+  // Create Threads
+  pthread_t thread_render;
+
   // Define System Data and Console
   int return_code = 0;
   Console cons;
@@ -1453,17 +1491,23 @@ int loop()
                           matrix, mcount);
       }
 
+
       // LED Library Renderer -- Recommend: DON'T TOUCH        
       matrix_render(led_count);
-      if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
+
+      // Create a seperate thread only to render the LEDs with the hardware.  This process
+      //  is very intensive for the system and is only one way.  The render thread only needs 
+      //  to rejoin with the main program, at the end of the main loop, to signify its 
+      //  completion, so that the loop can restart and begin computing its values and colors 
+      //  again. 
+      // A render thread should not be created if no changes have been made to the led values. 
+      return_code = pthread_create(&thread_render, NULL, *proc_render_thread, (void *)  &ledstring);
+      if (return_code != 0)
       {
-          fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
-          //break;    // boop - i touched
-          //cons.printi("ws2811_render failed: " + ws2811_get_return_t_str(ret));
-          return_code = (int)ret;
-          break;
+        cons.printi("Thread Create Error");
       }
-    }   // End Delayless Loop
+    }
+
 
     // ---------------------------------------------------------------------------------------
     // Now that we have done all the hard work, read hardware, computed, generated, displayed 
@@ -1512,6 +1556,25 @@ int loop()
     // Player
     cons.print_movie_frame(fsPlayer, tmeCurrentMillis);
 
+    // Reconnect the Renderi Thread.
+    //  Check for Render Errors.
+    if (booUpdate == true)
+    {
+      pthread_join(thread_render, (void **)&return_code);
+      if (return_code != 0)
+      {
+        string ret_code = ws2811_get_return_t_str(ret);
+        cons.printi("ws2811_render failed: " + ret_code);
+      }
+    }
+
+    // Consider aborts on errors.
+    if (return_code != 0)
+    {
+      cons.keywatch.in(KEYEXIT);
+    }
+
+
     // ---------------------------------------------------------------------------------------
     // Now that the complete cycle is over, we need figure out how much time is remaining in 
     // the cycle and go to sleep for the appropriate amount of time. 
@@ -1541,7 +1604,7 @@ int loop()
   }
   else
   {
-    // Just print we have ended the program.
+    // Just print are restarting the program.
     printf ("\nRasFLED Loop ... Rebooting\n");
     return_code = 9999;
   }
@@ -1571,8 +1634,23 @@ int main(int argc, char *argv[])
     }
   }
 
-  // Exit the program.
-  printf("RasFLED ... Exit(%d)\n", ret);
-  return ret;
+  printf("Exit Code: %d: ", ret);
 
+  if (ret == 0)
+  {
+    printf("Standard Exit\n");
+  }
+  else if (ret == 0)
+  {
+    printf("Exit For Reboot\n");
+  }
+  else
+  {
+    printf("Non Standard Exit\n");
+  }
+
+  // Exit the program.
+  printf("RasFLED ... Exit\n");
+  return ret;
+  
 }

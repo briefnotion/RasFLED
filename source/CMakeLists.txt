@@ -12,6 +12,7 @@ include_directories(./rpi_ws281x-master)
 find_package(Curses REQUIRED)
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
 find_library(WS2811_LIBRARIES NAMES ws2811)
+find_library(PTHREAD_LIBRARIES NAMES pthread)
 
 add_executable(
   RasFLED
@@ -34,4 +35,4 @@ add_executable(
   screen3.h
 )
 
-target_link_libraries(RasFLED ${WIRINGPI_LIBRARIES} ${WS2811_LIBRARIES} ${CURSES_LIBRARIES})
+target_link_libraries(RasFLED ${WIRINGPI_LIBRARIES} ${WS2811_LIBRARIES} ${CURSES_LIBRARIES} ${PTHREAD_LIBRARIES})
