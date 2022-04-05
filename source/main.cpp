@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.51A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.53A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -297,11 +297,17 @@ int loop()
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console
+
+  // Prep Timers
+  cons.console_timer.set(SCREENUPDATEDELAY);
+
+  // Init and prepare screen
   initscr();
   cons.Screen.init();   // Prepare console.
   //cons.Screen.set(CONSOLESPLITSIZE);
   cons.set_screen(sdSystem);
   
+  // Print Start Info
   cons.printi("Console Initialized ...  OK");
   cons.printi("");
   cons.printi("RasFLED");
@@ -707,40 +713,29 @@ int loop()
     //cons.readkeyboardinput();
     cons.readkeyboardinput2();
 
-    // Displaying and updating the screen, but only when its ready.  
-    //  This will be every SCREENUPDATEDELAY ms.
-    if (cons.isready(tmeCurrentMillis, SCREENUPDATEDELAY))
-    {
-      // Process keyboard info before displaying the screen.
-      // This will handle special redraw events such as screen resize.
-      cons.processkeyboadinput();
-      cons.processmouseinput(sdSystem);
-      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
-      extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
-      // Refresh console data storeage from main program. This will be a pass through buffer. 
-      // so the console will not have to access any real data. 
-      sdSystem.store_door_switch_states();
-      store_event_counts(sdSystem, teEvents);
+    // Process keyboard info before displaying the screen.
+    // This will handle special redraw events such as screen resize.
+    cons.processkeyboadinput();
+    cons.processmouseinput(sdSystem);
+    processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
+    extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
 
-      // Update display screen.
-      cons.output(sdSystem);
+    // Refresh console data storeage from main program. This will be a pass through buffer. 
+    // so the console will not have to access any real data. 
+    sdSystem.store_door_switch_states();
+    store_event_counts(sdSystem, teEvents);
 
-      cons.update_displayed_time(tmeCurrentMillis);
-
-      sdSystem.refresh();
+    // Call the Interface routine. (IO from user)
+    cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
 
       // Also delayed, File maintenance.
-      if (sdSystem.booRunning_State_File_Dirty == true)
-      {
-        save_running_state(cons, sdSystem, Running_State_Filename);
+    if (sdSystem.booRunning_State_File_Dirty == true)
+    {
+      save_running_state(cons, sdSystem, Running_State_Filename);
 
-        // set false even if there was a save error to avoid repeats.
-        sdSystem.booRunning_State_File_Dirty = false;
-      }
+      // set false even if there was a save error to avoid repeats.
+      sdSystem.booRunning_State_File_Dirty = false;
     }
-
-    // Player
-    cons.print_movie_frame(fsPlayer, tmeCurrentMillis);
 
     // Reconnect the Renderi Thread.
     //  Check for Render Errors.

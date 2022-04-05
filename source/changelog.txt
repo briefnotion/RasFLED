@@ -1,3 +1,6 @@
+  V 0.53_220405
+    - Modified some of the routines to change the way the console is displayed.
+
   V 0.52_220404
     - Transfered the update log into its own file.
     - Transfered the todo list into its own file.

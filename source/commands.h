@@ -29,18 +29,9 @@ class COMMANDS
 // Commands that can be executed as if from a shell prompt.
 {
   private:
-  string TEST = "cp /home/pi/scripts/test /home/pi/scripts/test_success";
   string SHUTDOWN_NOW = "sudo shutdown now";
 
   public:
-
-  /*
-  void test()
-  // Test command line functionality for debugging
-  {
-    system(TEST.c_str());
-  }
-  */
 
   void shutdown_now()
   // Shut down the entire system.

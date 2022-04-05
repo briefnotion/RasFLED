@@ -206,6 +206,12 @@ class PLAYER
                                               //  frame drawn to screen
   unsigned long tmeNEXT_FRAME_DRAW_TIME = 0;  // The futer time of when the next
                                               //  frame will be drawn to the screen.
+  unsigned long tmeTIME_LAST_ASKED      = 0;  // If the player was asked if it was time
+                                              //  to draw a frame, this time will be 
+                                              //  recorded.  This time can be used 
+                                              //  shortly after to calculate the time 
+                                              //  the next frame can be drawn.
+                                                                                            
   //unsigned long tmeFRAME_TIME_MILLIS = 1000/15; // Lenght of time 1 frame will be displayed 
                                                 //  without delay (fastest.) Time is stored 
                                                 //  in milliseconds.
@@ -221,7 +227,7 @@ class PLAYER
     return booSucess;
   }
 
-  bool get_frame(fstream &fsPlayer, unsigned long tmeCurrent_Time_millis)
+  bool get_frame(fstream &fsPlayer)
   // Puts next frame into frame buffer.
   //  Returns false if anything goes wrong.
   // Also, in case of a bad or errored movie file, instead of crashing the 
@@ -246,7 +252,7 @@ class PLAYER
     // Prep for first run
     if (tmeNEXT_FRAME_DRAW_TIME == 0)
     {
-      tmeNEXT_FRAME_DRAW_TIME = tmeCurrent_Time_millis;
+      tmeNEXT_FRAME_DRAW_TIME = tmeTIME_LAST_ASKED;
     }
 
     // Get Frame Info
@@ -329,7 +335,7 @@ class PLAYER
     }
 
     //tmeLAST_FRAME_DRAW_TIME = tmeNEXT_FRAME_DRAW_TIME;
-    tmeLAST_FRAME_DRAW_TIME = tmeCurrent_Time_millis;
+    tmeLAST_FRAME_DRAW_TIME = tmeTIME_LAST_ASKED;
     
     if (qFrame.TYPE == 1)
     { // if frame type is 1 use delay method.
@@ -359,6 +365,23 @@ class PLAYER
   // Start the player by setting play to true.
   {
     booPlay = true;
+  }
+
+  bool is_ready_to_draw_frame(unsigned long tmeCurrent_Time_millis)
+  // Returns true all conditions are met to draw the next frame.
+  // Conditions: not disabled, playing, time_ready.
+  {
+    bool ready = false;
+    tmeTIME_LAST_ASKED = tmeCurrent_Time_millis;
+
+    if((booPlay == true) && (booDisable == false))
+    {
+      if (tmeCurrent_Time_millis >= tmeNEXT_FRAME_DRAW_TIME)
+      {
+        ready = true;
+      }
+    }
+    return ready;
   }
 };
 

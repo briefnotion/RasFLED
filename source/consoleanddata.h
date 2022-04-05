@@ -50,6 +50,8 @@ class Console
 
   public:
 
+  TIMED_IS_READY console_timer;
+
   Screen3 Screen;
 
   Keys keywatch;
@@ -57,21 +59,6 @@ class Console
   ScreenStatus ScrStat;
 
   PLAYER the_player;
-
-  /*
-  bool load_movie_playlist()
-  // Original play list loader. Was loading the playlist throught the compiler 
-  //  before the playlist was loaded through a file.  This routine is no longer 
-  //  needed.  Keeping it just in case.
-  {
-    the_player.Play_List.add_to_list("/home/pi/movies/loading.txt");
-    the_player.Play_List.add_to_list("/home/pi/movies/UBERtandc.txt");
-    the_player.Play_List.add_to_list("/home/pi/movies/advert.txt");
-    the_player.Play_List.add_to_list("/home/pi/movies/loading.txt");
-    the_player.Play_List.add_to_list("/home/pi/movies/asciimation.txt");
-    return true;
-  }
-  */
 
   bool load_reel(fstream &fsPlayer, string filename)
   // Loads next film into the player. 
@@ -127,7 +114,7 @@ class Console
     return success;
   }
 
-  bool print_movie_frame(fstream &fsPlayer, unsigned long tmeCurrent_Time_millis)
+  bool print_movie_frame(fstream &fsPlayer)
   // This is the primary routine of the player. 
   //  If everything is ok, and the time is at or past the next movie scheduled
   //  display time, then the next frame is loaded into the frame buffer and 
@@ -136,44 +123,34 @@ class Console
   //  is loaded.
   // Returns false if anything goes wrong.
   {
-    if ((the_player.booPlay == true) && (the_player.booDisable == false))
+    if (the_player.booSkip == true)
+    // I dont want this here, quick and dirty.
     {
-      if (the_player.booSkip == true)
-      // I dont want this here, quick and dirty.
-      {
-        the_player.booSkip = false;
-        the_player.ftqFilm.close_the_file(fsPlayer);
-      }
+      the_player.booSkip = false;
+      the_player.ftqFilm.close_the_file(fsPlayer);
+    }
 
-      if (the_player.ftqFilm.booEOF == true)
-      {
-        Screen.window_player_clear();
-        play_next_movie(fsPlayer);
-      }
+    if (the_player.ftqFilm.booEOF == true)
+    {
+      Screen.window_player_clear();
+      play_next_movie(fsPlayer);
+    }
 
-      if (the_player.booSucess == true)
+    if (the_player.booSucess == true)
+    {
+      if (ScrStat.Window_Player == true)
       {
-        if (ScrStat.Window_Player == true)
+        if (the_player.get_frame(fsPlayer) == false)
         {
-          if(tmeCurrent_Time_millis >= the_player.tmeNEXT_FRAME_DRAW_TIME)
-          {
-            if (the_player.get_frame(fsPlayer, tmeCurrent_Time_millis) == false)
-            {
-              printwait("Dropped Frame");
-            }
-            else
-            {
-              Screen.window_player_draw_frame(the_player.qFrame);
-            }
-          }
+          printwait("Dropped Frame");
+        }
+        else
+        {
+          Screen.window_player_draw_frame(the_player.qFrame);
         }
       }
-      return the_player.booSucess;
     }
-    else
-    {
-      return true;
-    }
+    return the_player.booSucess;
   }
 
   void set_screen(system_data &sdSysData)
@@ -217,19 +194,6 @@ class Console
     // console line time is inaccurate.  Will only refect previous console update time
     //  and not actual time printed.  Current time is not global.  This is a filler.
     clou.add(Update_Time,in);         // Add line to console line list.
-  }
-
-  bool isready(unsigned long time, int intmsWaitTime)
-  {
-    //Check to see if enough time has passed to refresh the console. (wait is in ms)
-    if(time > Update_Time + intmsWaitTime)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
   }
 
   void readkeyboardinput2()
@@ -637,6 +601,35 @@ class Console
     }
     */
 
+  }
+
+  void display(fstream &fsPlayer, system_data sdSystem, unsigned long tmeCurrentMillis)
+  {
+    // Displaying and updating the screen, but only when its ready.  
+    //  This will be every SCREENUPDATEDELAY ms.
+    if (console_timer.is_ready_no_reset(tmeCurrentMillis) == true || 
+        the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
+    {
+      if (console_timer.is_ready(tmeCurrentMillis))
+      {
+        // Designed for keeping times of things printed to the console.  
+        //  NEEDS TO BE REMOVED IN LUE OF A BETTER ACURATE SOLUTION.
+        update_displayed_time(tmeCurrentMillis);
+        
+        // Update display screen.
+        output(sdSystem);
+
+        // Reset mins and max time values displayed in the console.
+        //  Currently, not being stored, calculated or displayed.
+        sdSystem.refresh();
+      }
+
+      // Player
+      if(the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
+      {
+        print_movie_frame(fsPlayer);
+      }
+    }
   }
 };
 // -------------------------------------------------------------------------------------

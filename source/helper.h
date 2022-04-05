@@ -419,4 +419,69 @@ string progress_bar(int size, int max_value, int value)
   return bar;
 }
 
+class TIMED_IS_READY
+// Class to manage conditions of when something needs to be ran.
+{
+  private:
+  unsigned long TRIGGERED_TIME  = 0;
+  unsigned long LAST_ASKED_TIME = 0;
+  int           INTREVAL        = 0;
+
+  public:
+
+  void set(unsigned long current_time, int delay)
+  // Prep the TIMED_IS_READY varable
+  // delay is measured in ms.
+  {
+    TRIGGERED_TIME  = current_time;
+    INTREVAL        = delay;
+  }
+
+  void set(int delay)
+  // Prep the TIMED_IS_READY varable
+  //  If current time isn't available
+  // delay is measured in ms.
+  {
+    TRIGGERED_TIME  = 0;
+    INTREVAL        = delay;
+  }
+
+  bool is_ready(unsigned long current_time)
+  {
+    // Check to see if enough time has passed.
+    //  Returns true if interval time has passed.
+    //    Resets timer if returned true.
+    //  Returns false if time has not elapsed.
+    //    Stores last asked time.
+    if(current_time > TRIGGERED_TIME + INTREVAL)
+    {
+      TRIGGERED_TIME = current_time;
+      return true;
+    }
+    else
+    {
+      LAST_ASKED_TIME = current_time;
+      return false;
+    }
+  }
+  
+  bool is_ready_no_reset(unsigned long current_time)
+  {
+    // Check to see if enough time has passed.
+    //  Returns true if interval time has passed.
+    //    Does not resets timer if returned true.
+    //  Returns false if time has not elapsed.
+    //    Stores last asked time.
+    if(current_time > TRIGGERED_TIME + INTREVAL)
+    {
+      return true;
+    }
+    else
+    {
+      LAST_ASKED_TIME = current_time;
+      return false;
+    }
+  }
+};
+
 #endif
