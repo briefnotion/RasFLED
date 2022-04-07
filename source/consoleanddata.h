@@ -13,7 +13,11 @@
 #define CONSOLEANDDATA_H
 
 // Standard Header Files
+//#include <atomic>
+//#include <thread>
+//#include <future>
 #include <stdio.h>
+//#include <pthread.h>
 #include <ncurses.h>
 #include <string.h>
 #include <deque>
@@ -47,6 +51,12 @@ class Console
   
   // Mouse position and button position
   TheMouse mouse;
+
+  // Handle the thread control
+  //pthread_t thread_screen_output;
+  bool  thread_active   = false;
+  bool  thread_complete = true;
+
 
   public:
 
@@ -150,6 +160,10 @@ class Console
         }
       }
     }
+
+    // set the Thread control variable to complete.
+    thread_complete = true;
+
     return the_player.booSucess;
   }
 
@@ -600,24 +614,35 @@ class Console
       printi("Printed not cleared.");
     }
     */
-
+    thread_complete = true;
   }
 
-  void display(fstream &fsPlayer, system_data sdSystem, unsigned long tmeCurrentMillis)
+  void display(fstream &fsPlayer, system_data &sdSystem, unsigned long tmeCurrentMillis)
   {
+    // ***  All this thread information stuff isnt necessary because I hadn't been 
+    // ***  able to put a thread handler inside this class... yet.  For now, I'm
+    // ***  leaving this stuff here because I may want to revisit it whenever I am 
+    // ***  able to understand threads in more detail. 
+
     // Displaying and updating the screen, but only when its ready.  
     //  This will be every SCREENUPDATEDELAY ms.
-    if (console_timer.is_ready_no_reset(tmeCurrentMillis) == true || 
-        the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
+    if (thread_complete == true && thread_active == false)
+    // If thread is coplete and not active
+    //  create a new thread if the screen is ready to be drawn.
     {
-      if (console_timer.is_ready(tmeCurrentMillis))
+      if (thread_active == false && console_timer.is_ready(tmeCurrentMillis))
       {
         // Designed for keeping times of things printed to the console.  
         //  NEEDS TO BE REMOVED IN LUE OF A BETTER ACURATE SOLUTION.
         update_displayed_time(tmeCurrentMillis);
         
+        // Set Thread Conditions to active and incomplete.
+        thread_complete = false;
+        thread_active   = true;
+        
         // Update display screen.
         output(sdSystem);
+        //thread test (output, sdSystem);
 
         // Reset mins and max time values displayed in the console.
         //  Currently, not being stored, calculated or displayed.
@@ -625,10 +650,24 @@ class Console
       }
 
       // Player
-      if(the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
+      if(thread_active == false && the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
       {
+        // Set Thread Conditions to active and incomplete.
+        thread_complete = false;
+        thread_active   = true;
+
+        // Load next movie frame and send it to the screen.
         print_movie_frame(fsPlayer);
       }
+    }
+
+    if (thread_active == true && thread_complete == true)
+    // If thread is complete and still active active
+    //  close or join the thread back to the main program.
+    {
+      // Set Thread Conditions
+      thread_complete = true;
+      thread_active = false;
     }
   }
 };

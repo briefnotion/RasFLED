@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.53A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.54A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -60,6 +60,8 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <thread>
+#include <future>
 #include <pthread.h>
 #include <wiringPi.h>
 #include <string>
@@ -259,7 +261,7 @@ void setup()
 }
 
 // ---------------------------------------------------------------------------------------
-// Global function for Main Loop
+// Global function for Main Loop Threads
 // By passing the global variable, difficult to work with, ledstring to the, just as 
 //  difficult to work with, ws2811_render routine, all led and values will be transmitted 
 //  to the lights on a seperate thread.
@@ -269,6 +271,13 @@ void *proc_render_thread(void *ptr)
   ret = ws2811_render(&ledstring);  // Send values of ledstring to hardware.
   return (void *)ret; // return ws2811_render status.
 }
+
+void raw_window_player_draw_frame(string Buffer)
+// Simply printf the Buffer string to the screen.
+{
+  printf("%s\n", Buffer.c_str());
+}
+
 
 // ---------------------------------------------------------------------------------------
 // MAIN LOOP
@@ -285,6 +294,17 @@ int loop()
   // ---------------------------------------------------------------------------------------
   // Create Threads
   pthread_t thread_render;
+
+  // Control for the output thread. 
+  //  The only part of output asynced is the printf function of the player 1001 type.
+  //  Everything else in output will be paused if async is actively running and does 
+  //  not need to be asynced because the interface is fast enough to run within one 
+  //  cycle.
+  future<void> thread_output;         // The thread containing function to printf a large 
+                                      //  string.
+  bool thread_output_running = false; // Set to true when thread is active.
+  string raw_string_buffer = "";      // A string buffer to contain the Screen buffer. 
+                                      //  Redundant. Possibly consolidate the line. 
 
   // Define System Data and Console
   int return_code = 0;
@@ -726,9 +746,31 @@ int loop()
     store_event_counts(sdSystem, teEvents);
 
     // Call the Interface routine. (IO from user)
-    cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
+    if (thread_output_running == false)
+    // If thread is not running, then update the screen display terminal interface.
+    //  After the interface has an update, see if the player has a frame left over inside.
+    //  the buffer. 
+    //  Only start a thread and pause future screen updateas if the buffer contains a movie 
+    //  frame to be displayed.
+    {
+      cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
 
-      // Also delayed, File maintenance.
+      if (cons.Screen.buffer_active == true)
+      {
+        raw_string_buffer = cons.Screen.buffer();
+        thread_output = async(raw_window_player_draw_frame, raw_string_buffer);
+
+        thread_output_running = true;
+        cons.Screen.buffer_active = false;     
+      }
+    }
+    else if(thread_output.wait_for(0ms) == future_status::ready)
+    // Check to verify thte thread is complete before allowing the console to be updated again. 
+    {
+      thread_output_running = false;
+    }
+    
+    // Also delayed, File maintenance.
     if (sdSystem.booRunning_State_File_Dirty == true)
     {
       save_running_state(cons, sdSystem, Running_State_Filename);

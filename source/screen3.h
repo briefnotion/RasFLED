@@ -668,7 +668,11 @@ class Screen3
   VAR_CHANGE_MON vcmTIMER;
   VAR_CHANGE_MON vcmMENUOVERHEAD;
 
+  string strBuffer = "";      // Buffer string containing a movie frame to be printed.
+
   public:
+
+  bool buffer_active = false; // Set to true when a buffer has a new movie frame. 
 
   Button_Zone_Manager bzButtons;
   Button_Zone_Manager bzCPicker;
@@ -1384,6 +1388,10 @@ class Screen3
     int lines_max = 0;
     int length_max = 0;
 
+    strBuffer = "";         // Clear current buffer information before creating a new 
+                            //  buffer frame.
+    buffer_active = false;  // Clear the buffer active information.
+
     // Find upper left positions to print the screen.
     // Set the max size to be printed.
     if (qframe.HEIGHT > YPlayerSize)
@@ -1462,7 +1470,7 @@ class Screen3
 
         string cursor_pos   = ""; //  Stores string containing cursor pos to print
                                   //    line.
-        string print_string = ""; //  Stores full line to be printed, including 
+        //string print_string = ""; //  Stores full line to be printed, including 
                                   //    moving cursor.
         
         // The line to print may be smaller than the display size. So, we need to 
@@ -1490,13 +1498,13 @@ class Screen3
           pos1 = pos1 - 1;
         }
 
-        // Set print_string var to be the cursor position escape sequence 
+        // Set strBuffer var to be the cursor position escape sequence 
         //  combined with the substring, regarding length, of the line to be 
-        //  printed.
-        print_string = cursor_pos + qframe.LINES[line].substr(0,pos1);
+        //  printed.  Plus, whatever it was before.
+        strBuffer = strBuffer + cursor_pos + qframe.LINES[line].substr(0,pos1);
 
-        // print the print_string followed by \n to tell terminal update is required.
-        printf("%s\n", print_string.c_str() );
+        // The buffer was recently updated so set buffer active to true.
+        buffer_active = true;
       }
     }
     qframe.LINES.clear();
@@ -1527,6 +1535,14 @@ class Screen3
     }
 
   }
+
+  string buffer()
+  // Returns the value stored in the buffer.
+  {
+    return strBuffer;
+  }
+
+
   // ---------------------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------------------

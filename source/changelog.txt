@@ -1,3 +1,10 @@
+  V 0.54_220407
+    - Added a thread to display a movie type 1001 frame, because terminal emulators
+        tend to bog down when printing such large amount of text to the screen. 
+        With this update in place, even if the screen is bogged down and would be 
+        taking more than its aloted cycle time, the output will not intefere with 
+        the timing loop.
+
   V 0.53_220405
     - Modified some of the routines to change the way the console is displayed.
 

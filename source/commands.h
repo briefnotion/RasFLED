@@ -30,6 +30,7 @@ class COMMANDS
 {
   private:
   string SHUTDOWN_NOW = "sudo shutdown now";
+  //(sleep 5 && shutdown now) &
 
   public:
 
