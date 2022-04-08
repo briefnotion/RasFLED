@@ -1,10 +1,24 @@
+
+  V 0.55_220408
+    - Well, got my feet wet with threading. On the surface, they look simple.  Threads 
+        are finicky things though. Threads like static calls.  Threads don't play nice 
+        when embedded in classes. Pthreads seem the most common class of threads with 
+        Linux programmers, and seem very versitile and complex. Standard threads work 
+        with the limitation of being called, and wanting to close before moving on. 
+        And, I hadn't been able to get atomic variables to work. I decided to go with 
+        future threads because, unlike standard threads, I could define the thread in 
+        functions opening, and always reference back.
+    - Converted system to one type of thread handler. 
+    - Changed the shutdown to wait 5 seconds before starting.
+    - Removed extra, unused, thread handleing variables from output routine. 
+
   V 0.54_220407
     - Added a thread to display a movie type 1001 frame, because terminal emulators
         tend to bog down when printing such large amount of text to the screen. 
         With this update in place, even if the screen is bogged down and would be 
         taking more than its aloted cycle time, the output will not intefere with 
-        the timing loop.
-
+        the timing loop. (Not sure why this entry was lost on my local system)
+  
   V 0.53_220405
     - Modified some of the routines to change the way the console is displayed.
 

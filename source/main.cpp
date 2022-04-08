@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.54A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.55A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -60,9 +60,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <thread>
 #include <future>
-#include <pthread.h>
 #include <wiringPi.h>
 #include <string>
 #include <chrono>
@@ -265,11 +263,10 @@ void setup()
 // By passing the global variable, difficult to work with, ledstring to the, just as 
 //  difficult to work with, ws2811_render routine, all led and values will be transmitted 
 //  to the lights on a seperate thread.
-void *proc_render_thread(void *ptr)
+void proc_render_thread()
 {
   int ret = 0;  // contains fail or pass status of the render routine.
   ret = ws2811_render(&ledstring);  // Send values of ledstring to hardware.
-  return (void *)ret; // return ws2811_render status.
 }
 
 void raw_window_player_draw_frame(string Buffer)
@@ -293,7 +290,10 @@ int loop()
 
   // ---------------------------------------------------------------------------------------
   // Create Threads
-  pthread_t thread_render;
+  //pthread_t thread_render;
+  future<void> thread_render; // The thread containing function to send the led color array 
+                              //  to the leds.
+  bool thread_render_running = false; // Set to true when thread is active.
 
   // Control for the output thread. 
   //  The only part of output asynced is the printf function of the player 1001 type.
@@ -557,6 +557,18 @@ int loop()
 
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
+    // Before starting a new loop, close the console thread from the previous loop, if 
+    //  data being printed to the screen has completed.
+    if(thread_output_running == true)
+    // Check to see if output thread was started before checking the completion status.
+    {
+      if(thread_output.wait_for(0ms) == future_status::ready)
+      // Check to verify thte thread is complete before allowing the console to be updated again. 
+      {
+        thread_output_running = false;
+      }
+    }
+
     // --- Prpare the Loop ---
 
     // Measure how much time has passed since last frame time read.
@@ -712,11 +724,11 @@ int loop()
       //  to rejoin with the main program, at the end of the main loop, to signify its 
       //  completion, so that the loop can restart and begin computing its values and colors 
       //  again. 
-      // A render thread should not be created if no changes have been made to the led values. 
-      return_code = pthread_create(&thread_render, NULL, *proc_render_thread, (void *)  &ledstring);
-      if (return_code != 0)
+      // A render thread should not be created if no changes have been made to the led values.
+      if (thread_render_running == false)
       {
-        cons.printi("Thread Create Error");
+        thread_render = async(proc_render_thread);
+        thread_render_running = true;
       }
     }
 
@@ -764,11 +776,6 @@ int loop()
         cons.Screen.buffer_active = false;     
       }
     }
-    else if(thread_output.wait_for(0ms) == future_status::ready)
-    // Check to verify thte thread is complete before allowing the console to be updated again. 
-    {
-      thread_output_running = false;
-    }
     
     // Also delayed, File maintenance.
     if (sdSystem.booRunning_State_File_Dirty == true)
@@ -779,15 +786,13 @@ int loop()
       sdSystem.booRunning_State_File_Dirty = false;
     }
 
-    // Reconnect the Renderi Thread.
-    //  Check for Render Errors.
-    if (booUpdate == true)
+    if(thread_render_running == true)
+    // Check to see if render thread was started before checking the completion status.
     {
-      pthread_join(thread_render, (void **)&return_code);
-      if (return_code != 0)
+      if(thread_render.wait_for(0ms) == future_status::ready)
+      // Check to verify the thread is complete before allowing the render to start again. 
       {
-        string ret_code = ws2811_get_return_t_str(ret);
-        cons.printi("ws2811_render failed: " + ret_code);
+        thread_render_running = false;
       }
     }
 
