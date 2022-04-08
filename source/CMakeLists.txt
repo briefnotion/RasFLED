@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-#set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_BUILD_TYPE Release)
+option(BUILD_RELEASE "Release Build" OFF)
 
+set(BUILD_RELEASE OFF)
+
+if(BUILD_RELEASE)
+      set(CMAKE_BUILD_TYPE Release)
+else()
+      set(CMAKE_BUILD_TYPE Debug)
+endif()
+      
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 project(RasFled)
@@ -31,6 +38,7 @@ add_executable(
   LEDstuff.h
   stringthings.h
   timedeventsystem.h
+  buttons.h
   screen3.h
 )
 

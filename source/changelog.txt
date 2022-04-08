@@ -1,3 +1,6 @@
+  V 0.56_220409
+    - Changed settings in CMakeLists.txt
+    - Brought the buttons into its own .h file
 
   V 0.55_220408
     - Well, got my feet wet with threading. On the surface, they look simple.  Threads 

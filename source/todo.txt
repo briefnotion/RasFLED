@@ -1,8 +1,4 @@
   ToDo:
-    - Combine Button class with Button Zone Manager class to simplify the buttons 
-        and greatly reduce the amount of code.  The button zones class was originally
-        designed with the buttons as being part of its queue list, but there was a
-        problem with the window pointers.
     - Update everything properly classified with reference .h, supporting, and helper 
         libraries. (in progress)
     - Create a way to import all animations from an animations file. (finish 
@@ -30,11 +26,11 @@
         lights can be combined together so that animations can flow from one, to the 
         other, even if the LEDs are in differant portions of the LED strip, or in a 
         differant type of order or orientation.
-    - Create alternatives to the console screen.
-    - Create a "YOUR ADS HERE" screen.
     - Create an "ENGINE STATUS" screen: speed, temperature, pressure, errors, fuel
         health, and other vehicle stuff.
         - Combine vehicle related info to new animations, and animation events.
     - Create other types of screens. 
+    - Create Automated Checklist screen triggered by conditions.
+    - Create Conditions monitor to call events.
 
 // **************************************************************************************

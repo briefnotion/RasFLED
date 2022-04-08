@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.55A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.56A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -272,7 +272,7 @@ void proc_render_thread()
 void raw_window_player_draw_frame(string Buffer)
 // Simply printf the Buffer string to the screen.
 {
-  printf("%s\n", Buffer.c_str());
+  printf("%s", Buffer.c_str());
 }
 
 
