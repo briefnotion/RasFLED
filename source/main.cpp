@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.57A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.58A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -324,16 +324,13 @@ int loop()
   input_from_switches.set(20);
   events_and_render.set(get_frame_interval(sdSystem.CONFIG.iFRAMES_PER_SECOND));
   input_from_user.set(100);
-  display.set(100);
+  display.set(SCREENUPDATEDELAY);
 
   // Disposable Variables
   int count  = 0;
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console
-
-  // Prep Timers
-  cons.console_timer.set(SCREENUPDATEDELAY);
 
   // Init and prepare screen
   initscr();
@@ -574,6 +571,20 @@ int loop()
   
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
+    // Close all completed and active threads after sleep cycle is complete.
+
+    // Before starting a new loop, close the render thread from the previous loop, if 
+    //  render is complete
+    if(thread_render_running == true)
+    // Check to see if render thread was started before checking the completion status.
+    {
+      if(thread_render.wait_for(0ms) == future_status::ready)
+      // Check to verify the thread is complete before allowing the render to start again. 
+      {
+        thread_render_running = false;
+      }
+    }
+
     // Before starting a new loop, close the console thread from the previous loop, if 
     //  data being printed to the screen has completed.
     if(thread_output_running == true)
@@ -597,9 +608,6 @@ int loop()
     //    This vabiable will be checked at the end of the loop.  If nothing was updated,
     //    the loop will just walk on past any hardware updates that would otherwise be
     //    sent.
-
-    // MOVE RENAME ELIMINATE ??? !!!
-    bool booUpdate = false;
 
      // Are switches ready -----------------
     if (input_from_switches.is_ready(tmeCurrentMillis) == true)
@@ -627,11 +635,12 @@ int loop()
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
 
-
-
-     // Is Events and Render ready -----------------
+    // Is Events and Render ready -----------------
     if (events_and_render.is_ready(tmeCurrentMillis) == true)
     {
+      // MOVE RENAME ELIMINATE ??? !!!
+      bool booUpdate = false;
+
       //  Run ALL GLOBAL Timed Events
       teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
     
@@ -754,9 +763,7 @@ int loop()
         }
       }
     } // Is Events and Render ready -----------------
-
-
-
+     
 
     // ---------------------------------------------------------------------------------------
     // Now that we have done all the hard work, read hardware, computed, generated, displayed 
@@ -764,7 +771,7 @@ int loop()
     // console with status and so on.
 
 
-    // Is Interface ready -----------------
+    // Is Keyboard or Mouse read ready -----------------
     if (input_from_user.is_ready(tmeCurrentMillis) == true)
     {
       // Read Hardware Status before printing to screen.
@@ -780,17 +787,12 @@ int loop()
       cons.processmouseinput(sdSystem);
       processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
       extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
-    } // Is Interface ready -----------------
+    } // Is Keyboard or Mouse read ready -----------------
 
 
     // Is display to console ready -----------------
     if (display.is_ready(tmeCurrentMillis) == true)
     {
-      // Refresh console data storeage from main program. This will be a pass through buffer. 
-      // so the console will not have to access any real data. 
-      sdSystem.store_door_switch_states();
-      store_event_counts(sdSystem, teEvents);
-
       // Call the Interface routine. (IO from user)
       if (thread_output_running == false)
       // If thread is not running, then update the screen display terminal interface.
@@ -799,8 +801,22 @@ int loop()
       //  Only start a thread and pause future screen updateas if the buffer contains a movie 
       //  frame to be displayed.
       {
+        // Refresh console data storeage from main program. This will be a pass through buffer. 
+        // so the console will not have to access any real data. 
+        sdSystem.store_door_switch_states();
+        store_event_counts(sdSystem, teEvents);
+
+        // Redraw the console screen with what the screen determines needs to be displayed.
         cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
 
+        if (cons.the_player.get_next_frame_draw_time() > 0)
+        {
+          display.set_earliest_ready_time(cons.the_player.get_next_frame_draw_time());
+        }
+
+        // If anything in the screen buffer is waiting to be displayed, start a new thread 
+        //  then print out the data. Likely to take a long time so pause further screen 
+        //  updates while thread is running.
         if (cons.Screen.buffer_active == true)
         {
           raw_string_buffer = cons.Screen.buffer();
@@ -818,16 +834,6 @@ int loop()
 
         // set false even if there was a save error to avoid repeats.
         sdSystem.booRunning_State_File_Dirty = false;
-      }
-
-      if(thread_render_running == true)
-      // Check to see if render thread was started before checking the completion status.
-      {
-        if(thread_render.wait_for(0ms) == future_status::ready)
-        // Check to verify the thread is complete before allowing the render to start again. 
-        {
-          thread_render_running = false;
-        }
       }
     } // Is display to console ready -----------------
 

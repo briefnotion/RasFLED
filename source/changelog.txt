@@ -1,3 +1,9 @@
+    V 0.58_220411
+    - Corrected the "animations running at half speed" problem. The close render 
+        thread was tied to the display ready state.
+    - Corrected console movie player to play frames at FPS defined in the movie 
+        file.
+  
   V 0.57_220410
     - Warning: This build should not be made live. 
     - Warning: The timings may be a little too presice. The animations are running 

@@ -383,6 +383,20 @@ class PLAYER
     }
     return ready;
   }
+
+  unsigned long get_next_frame_draw_time()
+  // Returns the time the next frame is to be drawn.
+  // Returns 0 if the not playing or player is disabled.
+  {
+    if((booPlay == true) && (booDisable == false))
+    {
+      return tmeNEXT_FRAME_DRAW_TIME;
+    }
+    else
+    {
+      return 0;
+    }
+  }
 };
 
 

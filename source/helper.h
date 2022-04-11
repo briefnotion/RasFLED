@@ -463,12 +463,15 @@ class TIMED_IS_READY
     }
   }
   
-  void set_ready_time(unsigned long current_time)
-  // manually set the ready time of the variable. 
+  void set_earliest_ready_time(unsigned long current_time)
+  // Manually set the ready time of the variable. 
+  // Does not change time if time to set is later than the already set time.
   {
-    READY_TIME = current_time;
+    if (current_time < READY_TIME)
+    {
+      READY_TIME = current_time;
+    }
   }
-
 };
 
 

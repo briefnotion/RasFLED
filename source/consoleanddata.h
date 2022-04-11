@@ -50,8 +50,6 @@ class Console
 
   public:
 
-  TIMED_IS_READY console_timer;
-
   Screen3 Screen;
 
   Keys keywatch;
@@ -605,29 +603,18 @@ class Console
 
   void display(fstream &fsPlayer, system_data &sdSystem, unsigned long tmeCurrentMillis)
   {
-    // ***  All this thread information stuff isnt necessary because I hadn't been 
-    // ***  able to put a thread handler inside this class... yet.  For now, I'm
-    // ***  leaving this stuff here because I may want to revisit it whenever I am 
-    // ***  able to understand threads in more detail. 
+    // Designed for keeping times of things printed to the console.  
+    //  NEEDS TO BE REMOVED IN LUE OF A BETTER ACURATE SOLUTION.
+    //  For future log file.
+    update_displayed_time(tmeCurrentMillis);
+    
+    // Update display screen.
+    output(sdSystem);
 
-    // Displaying and updating the screen, but only when its ready.  
-    //  This will be every SCREENUPDATEDELAY ms.
-
-    if (console_timer.is_ready(tmeCurrentMillis))
-    {
-      // Designed for keeping times of things printed to the console.  
-      //  NEEDS TO BE REMOVED IN LUE OF A BETTER ACURATE SOLUTION.
-      update_displayed_time(tmeCurrentMillis);
-      
-      // Update display screen.
-      output(sdSystem);
-      //thread test (output, sdSystem);
-
-      // Reset mins and max time values displayed in the console.
-      //  Currently, not being stored, calculated or displayed.
-      sdSystem.refresh();
-    }
-
+    // Reset mins and max time values displayed in the console.
+    //  Currently, not being stored, calculated or displayed.
+    sdSystem.refresh();
+    
     // Player
     if(the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
     {
