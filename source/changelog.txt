@@ -1,3 +1,7 @@
+  V 0.59B_220412
+    - There is no excuse for the mouse behavior to be so inconsistant. I'm worried 
+        this will be a persistant issue without finding and eliminating the problem. 
+
   V 0.59_220412
     - Changed the way the mouse was monitored with the hopes of removing a 300ms
       program freeze with every mouse click.  Didn't do anything different and the 
