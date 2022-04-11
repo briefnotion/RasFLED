@@ -1,4 +1,14 @@
-    V 0.58_220411
+  V 0.59_220412
+    - Changed the way the mouse was monitored with the hopes of removing a 300ms
+      program freeze with every mouse click.  Didn't do anything different and the 
+      program still locks up every time a button is pressed on the mouse. Oddly 
+      enough, just moving the mouse on the screen updates the X Y position without 
+      any lag at all. 
+    - Started working a new set of animations based on current animations. 
+        Hopefully with less power draw.  
+    - Created power up animation. 
+
+  V 0.58_220411
     - Corrected the "animations running at half speed" problem. The close render 
         thread was tied to the display ready state.
     - Corrected console movie player to play frames at FPS defined in the movie 

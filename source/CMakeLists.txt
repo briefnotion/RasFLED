@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-option(BUILD_RELEASE "Release Build" OFF)
+#option(BUILD_RELEASE "Release Build" OFF)
 
 set(BUILD_RELEASE ON)
 

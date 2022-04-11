@@ -122,18 +122,17 @@ void teSystem(Console &cons, system_data &sdSysData, timed_event teEvent[], unsi
 
                   // Special Animations
 
-                  /*
-                  case AnTaPowerOn:
-                  // Animation on startup
+                  case AnTavdPowerAnimation:
+                  // Color Specific Channel Pulse
                   {
-                    vdPowerOnAnimation(cons, lsStripList, 0, teEvent, tmeCurrentTime);
+                    vdPower_Animation(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip), teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
                     break;
-                  }
-                  */
+                  }    
+
                   case AnTavdTestAnimation:
                   // Color Specific Channel Pulse
                   {
-                    vdTestPattern(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(sfind), teEvent, tmeCurrentTime);
+                    vdTestPattern(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip), teEvent, tmeCurrentTime, teEvent[channel].teDATA[event].crgbCOLORSTART1);
                     //vdFront_Overhead_Mask(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(sfind), teEvent, tmeCurrentTime);
                     break;
                   }    

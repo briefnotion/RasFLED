@@ -496,7 +496,8 @@ class TheMouse
   
   int X = 0;
   int Y = 0;
-  int B = 0;
+  //int B = 0;
+  MEVENT MOUSE_EVENT;
 
   int XDOWN = 0;
   int YDOWN = 0;
@@ -518,9 +519,9 @@ class TheMouse
     return Y;
   }
   
-  int b()   // B Pos
+  MEVENT mouse_event()   // B Pos
   {
-    return B;
+    return MOUSE_EVENT;
   }
 
   int x_clicked()   // Clicked X pos
@@ -536,14 +537,14 @@ class TheMouse
   void check_click()
   // Do stuff on click down and click up.
   {
-    if (B == 1 || B == 4)
+    if (MOUSE_EVENT.bstate & (BUTTON1_CLICKED || BUTTON1_RELEASED))
     // Mouse Button Down and Up.
     {
       XCLICK = X;
       YCLICK = Y;
       CLICKED = true;
     }
-    else if (B == 2)
+    else if (MOUSE_EVENT.bstate & BUTTON1_PRESSED)
     // Mouse Button Down.
     {
       XDOWN = X;
@@ -552,12 +553,12 @@ class TheMouse
     }
   }
 
-  void store(int x, int y, int b)
+  void store(int x, int y, MEVENT &mouse_event)
   // Put mouse changes into storage.
   {
     X = x;
     Y = y;
-    B = b;
+    MOUSE_EVENT = mouse_event;
 
     check_click();
   }

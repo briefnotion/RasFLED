@@ -167,6 +167,15 @@ void processtestanimation(Console &cons, system_data &sdSysData, unsigned long t
   sdSysData.booPulsesRunning = true;
 }
 
+void process_power_animation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+{
+  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
+  {
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 0, 0, AnEvSchedule, AnTavdPowerAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+  }
+  sdSysData.booPulsesRunning = true;
+}
+
 // -------------------------------------------------------------------------------------
 // Pulses
 
@@ -400,8 +409,16 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // Command Line (sudo shutdown now)
     if (check_command(cons, " comshutd", "Shutdown Started"))
     {
+      command_desc(cons, "Shutting System Down.");
+      
+      // Call Shutdown command.
       command.shutdown_now();
-      command_desc(cons, "Shutdown likely to have failed.");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+
+      // Set system to exit
+      cons.keywatch.in(KEYEXIT);
     }
 
     // -------------------------------------------------------------------------------------
@@ -713,7 +730,9 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       if(cons.keywatch.Command.COMMANDLINE[0] == KEYTESTANIM)
       {
         cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        processtestanimation(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+        //processtestanimation(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+        //process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+        process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(0, 0, 25));
         cons.keywatch.cmdClear();
       }
 

@@ -667,7 +667,7 @@ class Screen3
     // Display CPU Temp
     if (sdSysData.hsHardware_Status.enabled() == true)
     {
-      mvwprintw(winStatus, 1, XStatusSize - 12, "%3.0fc", sdSysData.hsHardware_Status.get_temperature());
+      mvwprintw(winStatus, 1, XStatusSize - 5, "%3.0fc", sdSysData.hsHardware_Status.get_temperature());
     }
     else
     {

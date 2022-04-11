@@ -149,6 +149,7 @@
 
 // Other Effects and Animations
 #define AnTavdOverhead_Mask     51
+#define AnTavdPowerAnimation    52
 
 //  Normal Effects  
 #define AnTavdPacificaish       60

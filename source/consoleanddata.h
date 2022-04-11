@@ -212,7 +212,7 @@ class Console
         MEVENT event;
         if (getmouse(&event) ==OK)
         {
-          mouse.store(event.x, event.y, event.bstate);
+          mouse.store(event.x, event.y, event);
         }
       }
       // Check for Resize Screen.

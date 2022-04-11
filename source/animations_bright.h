@@ -65,31 +65,13 @@ void show_anim_info(Console &cons, v_profile_strip strip, string strDescription)
 // -------------------------------------------------------------------------------------
 // Advanced Animations
 
-void vdPower_Animation(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
-// Turn Additional Lights On on to show the door is open.
-// Pulseating yellow light, brightest at center.
-{
-  show_anim_info(cons, strip, "Power");
-
-  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 20, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
-}
-
-void vdTestPattern(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
+void vdTestPattern(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
 // Turn Additional Lights On on to show the door is open.
 // Pulseating yellow light, brightest at center.
 {
   show_anim_info(cons, strip, "Test Pattern");
 
-  teEvent[strip.intCHANNEL].set("Overhead", tmeCurrentTime, 20, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
-}
-
-void vdTestPattern_backup_01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
-// Turn Additional Lights On on to show the door is open.
-// Pulseating yellow light, brightest at center.
-{
-  show_anim_info(cons, strip, "Test Pattern");
-
-  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1000, 500, 10, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), strip.fs(0), strip.fe(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), strip.fs(0), strip.fe(0), false, false, false);
 }
 
 // -------------------------------------------------------------------------------------
