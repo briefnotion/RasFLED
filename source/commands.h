@@ -29,7 +29,7 @@ class COMMANDS
 // Commands that can be executed as if from a shell prompt.
 {
   private:
-  string SHUTDOWN_NOW = "sleep 5 && sudo shutdown now";
+  string SHUTDOWN_NOW = "sleep 5 && sudo shutdown now &";
 
   public:
 

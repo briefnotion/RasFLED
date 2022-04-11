@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.56A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.57A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -289,8 +289,16 @@ int loop()
   using namespace std;
 
   // ---------------------------------------------------------------------------------------
+  // Is_Ready varibles for main loop.
+  TIMED_IS_READY  input_from_switches;    // Delay for the hardware switches.
+  TIMED_IS_READY  events_and_render;      // Delay for the events and render system.
+  TIMED_IS_READY  input_from_user;        // Delay for the input from mouse and keyboard.
+  TIMED_IS_READY  display;                // Delay for displaying information on the console.
+  unsigned long   tmeSleep_Wake_time = 0; // Will contain time the cycle sleeper wakes.
+
+  EFFICIANTCY_TIMER effi_timer;           // Diagnostic timer to measure cycle times.
+
   // Create Threads
-  //pthread_t thread_render;
   future<void> thread_render; // The thread containing function to send the led color array 
                               //  to the leds.
   bool thread_render_running = false; // Set to true when thread is active.
@@ -311,6 +319,12 @@ int loop()
   Console cons;
   system_data sdSystem;
   int intRet = wiringPiSetup(); 
+
+  // Set is_ready variables
+  input_from_switches.set(20);
+  events_and_render.set(get_frame_interval(sdSystem.CONFIG.iFRAMES_PER_SECOND));
+  input_from_user.set(100);
+  display.set(100);
 
   // Disposable Variables
   int count  = 0;
@@ -555,6 +569,9 @@ int loop()
 
   cons.printi("Starting System ...");
 
+  // Start the the compute timer (stopwatch) for first iteration. 
+  effi_timer.start_timer((unsigned long)tmeFled.tmeFrameMillis);
+  
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
     // Before starting a new loop, close the console thread from the previous loop, if 
@@ -571,10 +588,6 @@ int loop()
 
     // --- Prpare the Loop ---
 
-    // Measure how much time has passed since last frame time read.
-    // Store the amount of time it tooke to run a frame
-    sdSystem.store_cycle_time(tmeFled.tmeFrameElapse());
-
     //  Get current time.  This will be our timeframe to work in.
     tmeFled.setframetime();
     tmeCurrentMillis = (unsigned long)tmeFled.tmeFrameMillis;
@@ -588,232 +601,278 @@ int loop()
     // MOVE RENAME ELIMINATE ??? !!!
     bool booUpdate = false;
 
-    // Read values of switches
-    for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
-    {
-      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
-    }
+     // Are switches ready -----------------
+    if (input_from_switches.is_ready(tmeCurrentMillis) == true)
+    {    
+      // Read values of switches
+      for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+      {
+        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
+      }
 
-    // Override the digital pins if in debugging mode.
-    if(cons.keywatch.getnoreset(KEYDEBUG) == 1)
-    {
-      // Toggle on and off the door sensors with keyboard.
-      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(0).value = cons.keywatch.getTF('1');
-      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(1).value = cons.keywatch.getTF('2');
-      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(2).value = cons.keywatch.getTF('3');
-      sdSystem.CONFIG.vSWITCH_PIN_MAP.at(3).value = cons.keywatch.getTF('4');
-    }
+      // Override the digital pins if in debugging mode.
+      if(cons.keywatch.getnoreset(KEYDEBUG) == 1)
+      {
+        // Toggle on and off the door sensors with keyboard.
+        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(0).value = cons.keywatch.getTF('1');
+        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(1).value = cons.keywatch.getTF('2');
+        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(2).value = cons.keywatch.getTF('3');
+        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(3).value = cons.keywatch.getTF('4');
+      }
 
-    // Check the doors and start or end all animations
-    v_DoorMonitorAndAnimationControlModule(cons, sdSystem, teEvents, tmeCurrentMillis);
+      // Check the doors and start or end all animations
+      v_DoorMonitorAndAnimationControlModule(cons, sdSystem, teEvents, tmeCurrentMillis);
+    } // Are switches ready -----------------
 
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
 
-    //  Run ALL GLOBAL Timed Events
-    teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
-  
-    for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+
+
+     // Is Events and Render ready -----------------
+    if (events_and_render.is_ready(tmeCurrentMillis) == true)
     {
-      for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+      //  Run ALL GLOBAL Timed Events
+      teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
+    
+      for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
       {
-        int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
-        sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
-          = teEvents[channel].execute(cons, sdSystem, sRND, 
-              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-              tmeCurrentMillis);
-      }
-    }
-
-
-    // ---------------------------------------------------------------------------------------
-    // Render all the LEDs if changes have been made.
-
-    // --- Execute LED Hardware Changes If Anything Was Updated ---
-    //  For now we are working with just one big LED strip.  So, just check to see if anything
-    //    changed.  Then, Redraw the entire strip. 
-
-    // Update?
-    for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-    {
-      for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-      {
-        if (sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED == true)
+        for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
         {
-          booUpdate = true;
+          int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
+            = teEvents[channel].execute(cons, sdSystem, sRND, 
+                sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                tmeCurrentMillis);
         }
       }
-    }
 
 
-    if (booUpdate == true)
-    {
-      //  Do I need to move the whole thing or can I just move the changed pixels?
+      // ---------------------------------------------------------------------------------------
+      // Render all the LEDs if changes have been made.
 
-      int mcount = 0;
+      // --- Execute LED Hardware Changes If Anything Was Updated ---
+      //  For now we are working with just one big LED strip.  So, just check to see if anything
+      //    changed.  Then, Redraw the entire strip. 
 
-      // If debug mode Display all lights static color are selectted, replace all generated led colors
-      // with a static color
-      if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
+      // Update?
+      for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
       {
-        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+        for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
         {
-          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+          if (sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED == true)
           {
-            MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
-            CRGB(25,25,25));
+            booUpdate = true;
           }
         }
       }
-      
-      // Copy the prepaird Matrixes to the display matrix
-      if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
-      {
-        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-        {
-          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-          {
-            // Build LED Array to display
-            // FUTER !!! - Only update portions of LED array that has changed. First, group. Second individual LEDs.
-                // Probably not needed because I'v only seen .5ms time needed for full matrix copy.
-            MatrixPrepare(cons, sdSystem, 
-                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
-                  matrix, mcount);
-          }
-        }
-      }
-      else
-      {
-        // Build TEST array to display
-        int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
-        int pos = 0;
-        int g = 0; 
-        int s = 0;
 
-        // Find Strip
-        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+
+      if (booUpdate == true)
+      {
+        //  Do I need to move the whole thing or can I just move the changed pixels?
+
+        int mcount = 0;
+
+        // If debug mode Display all lights static color are selectted, replace all generated led colors
+        // with a static color
+        if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
         {
-          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
           {
-            if (selected_test_array == pos)
+            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
             {
-              g = group;
-              s = strip;
-              sdSystem.t_group = group;
-              sdSystem.t_strip = strip;
+              MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+              CRGB(25,25,25));
             }
-            pos++;
           }
         }
+        
+        // Copy the prepaird Matrixes to the display matrix
+        if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
+        {
+          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+          {
+            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            {
+              // Build LED Array to display
+              // FUTER !!! - Only update portions of LED array that has changed. First, group. Second individual LEDs.
+                  // Probably not needed because I'v only seen .5ms time needed for full matrix copy.
+              MatrixPrepare(cons, sdSystem, 
+                    sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                    sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+                    matrix, mcount);
+            }
+          }
+        }
+        else
+        {
+          // Build TEST array to display
+          int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
+          int pos = 0;
+          int g = 0; 
+          int s = 0;
 
-        // Draw fround strip
-        MatrixPrepare(cons, sdSystem, 
-                          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
-                          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
-                          matrix, mcount);
+          // Find Strip
+          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+          {
+            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            {
+              if (selected_test_array == pos)
+              {
+                g = group;
+                s = strip;
+                sdSystem.t_group = group;
+                sdSystem.t_strip = strip;
+              }
+              pos++;
+            }
+          }
+
+          // Draw fround strip
+          MatrixPrepare(cons, sdSystem, 
+                            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
+                            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
+                            matrix, mcount);
+        }
+
+
+        // LED Library Renderer -- Recommend: DON'T TOUCH        
+        matrix_render(led_count);
+
+        // Create a seperate thread only to render the LEDs with the hardware.  This process
+        //  is very intensive for the system and is only one way.  The render thread only needs 
+        //  to rejoin with the main program, at the end of the main loop, to signify its 
+        //  completion, so that the loop can restart and begin computing its values and colors 
+        //  again. 
+        // A render thread should not be created if no changes have been made to the led values.
+        if (thread_render_running == false)
+        {
+          thread_render = async(proc_render_thread);
+          thread_render_running = true;
+        }
       }
+    } // Is Events and Render ready -----------------
 
 
-      // LED Library Renderer -- Recommend: DON'T TOUCH        
-      matrix_render(led_count);
-
-      // Create a seperate thread only to render the LEDs with the hardware.  This process
-      //  is very intensive for the system and is only one way.  The render thread only needs 
-      //  to rejoin with the main program, at the end of the main loop, to signify its 
-      //  completion, so that the loop can restart and begin computing its values and colors 
-      //  again. 
-      // A render thread should not be created if no changes have been made to the led values.
-      if (thread_render_running == false)
-      {
-        thread_render = async(proc_render_thread);
-        thread_render_running = true;
-      }
-    }
 
 
     // ---------------------------------------------------------------------------------------
     // Now that we have done all the hard work, read hardware, computed, generated, displayed 
     // all the lights, we will take the latter clock cycles to get keybord input and update 
-    // console with status and so on. 
+    // console with status and so on.
 
-    // Read Hardware Status before printing to screen.
-    sdSystem.read_hardware_status(1000);
 
-    // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
-    //cons.readkeyboardinput();
-    cons.readkeyboardinput2();
-
-    // Process keyboard info before displaying the screen.
-    // This will handle special redraw events such as screen resize.
-    cons.processkeyboadinput();
-    cons.processmouseinput(sdSystem);
-    processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
-    extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
-
-    // Refresh console data storeage from main program. This will be a pass through buffer. 
-    // so the console will not have to access any real data. 
-    sdSystem.store_door_switch_states();
-    store_event_counts(sdSystem, teEvents);
-
-    // Call the Interface routine. (IO from user)
-    if (thread_output_running == false)
-    // If thread is not running, then update the screen display terminal interface.
-    //  After the interface has an update, see if the player has a frame left over inside.
-    //  the buffer. 
-    //  Only start a thread and pause future screen updateas if the buffer contains a movie 
-    //  frame to be displayed.
+    // Is Interface ready -----------------
+    if (input_from_user.is_ready(tmeCurrentMillis) == true)
     {
-      cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
+      // Read Hardware Status before printing to screen.
+      sdSystem.read_hardware_status(1000);
 
-      if (cons.Screen.buffer_active == true)
+      // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
+      //cons.readkeyboardinput();
+      cons.readkeyboardinput2();
+
+      // Process keyboard info before displaying the screen.
+      // This will handle special redraw events such as screen resize.
+      cons.processkeyboadinput();
+      cons.processmouseinput(sdSystem);
+      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
+      extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
+    } // Is Interface ready -----------------
+
+
+    // Is display to console ready -----------------
+    if (display.is_ready(tmeCurrentMillis) == true)
+    {
+      // Refresh console data storeage from main program. This will be a pass through buffer. 
+      // so the console will not have to access any real data. 
+      sdSystem.store_door_switch_states();
+      store_event_counts(sdSystem, teEvents);
+
+      // Call the Interface routine. (IO from user)
+      if (thread_output_running == false)
+      // If thread is not running, then update the screen display terminal interface.
+      //  After the interface has an update, see if the player has a frame left over inside.
+      //  the buffer. 
+      //  Only start a thread and pause future screen updateas if the buffer contains a movie 
+      //  frame to be displayed.
       {
-        raw_string_buffer = cons.Screen.buffer();
-        thread_output = async(raw_window_player_draw_frame, raw_string_buffer);
+        cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
 
-        thread_output_running = true;
-        cons.Screen.buffer_active = false;     
+        if (cons.Screen.buffer_active == true)
+        {
+          raw_string_buffer = cons.Screen.buffer();
+          thread_output = async(raw_window_player_draw_frame, raw_string_buffer);
+
+          thread_output_running = true;
+          cons.Screen.buffer_active = false;     
+        }
       }
-    }
-    
-    // Also delayed, File maintenance.
-    if (sdSystem.booRunning_State_File_Dirty == true)
-    {
-      save_running_state(cons, sdSystem, Running_State_Filename);
-
-      // set false even if there was a save error to avoid repeats.
-      sdSystem.booRunning_State_File_Dirty = false;
-    }
-
-    if(thread_render_running == true)
-    // Check to see if render thread was started before checking the completion status.
-    {
-      if(thread_render.wait_for(0ms) == future_status::ready)
-      // Check to verify the thread is complete before allowing the render to start again. 
+      
+      // Also delayed, File maintenance.
+      if (sdSystem.booRunning_State_File_Dirty == true)
       {
-        thread_render_running = false;
+        save_running_state(cons, sdSystem, Running_State_Filename);
+
+        // set false even if there was a save error to avoid repeats.
+        sdSystem.booRunning_State_File_Dirty = false;
       }
-    }
+
+      if(thread_render_running == true)
+      // Check to see if render thread was started before checking the completion status.
+      {
+        if(thread_render.wait_for(0ms) == future_status::ready)
+        // Check to verify the thread is complete before allowing the render to start again. 
+        {
+          thread_render_running = false;
+        }
+      }
+    } // Is display to console ready -----------------
 
     // Consider aborts on errors.
+    // Check every cycle.
     if (return_code != 0)
     {
       cons.keywatch.in(KEYEXIT);
     }
-
 
     // ---------------------------------------------------------------------------------------
     // Now that the complete cycle is over, we need figure out how much time is remaining in 
     // the cycle and go to sleep for the appropriate amount of time. 
     // Calculate times and sleep till next frame is ready.
 
-    // For the next display cycle, we need to store info to the console about how things went.
-    // Determine how long it took to compute before sleep.
-    sdSystem.store_compute_time(tmeFled.tmeFrameElapse());
-    
-    // Determine how long to sleep and then sleep.
-    usleep (1000 * sdSystem.getsleeptime(sdSystem.CONFIG.iFRAMES_PER_SECOND));
+    // Determine how long to sleep and then sleep by 
+    //  finding the earliest sleep wake time.
+    tmeSleep_Wake_time = input_from_switches.get_ready_time();   
+    if (events_and_render.get_ready_time() < tmeSleep_Wake_time)
+    {
+      tmeSleep_Wake_time = events_and_render.get_ready_time();
+    }
+    if (input_from_user.get_ready_time() < tmeSleep_Wake_time)
+    {
+      tmeSleep_Wake_time = input_from_user.get_ready_time();
+    }
+    if (display.get_ready_time() < tmeSleep_Wake_time)
+    {
+      tmeSleep_Wake_time = display.get_ready_time();
+    }
+
+    // Measure how much time has passed since the previous time the program was at 
+    //  this point and store that value to be displayed in diag.
+    sdSystem.store_cycle_time(effi_timer.elapsed_time(tmeFled.now()));
+
+    // Reset the the compute timer (stopwatch) and store the value before the program sleeps. 
+    sdSystem.store_compute_time(effi_timer.elapsed_timer_time(tmeFled.now()));
+
+    // Determine how long the program will sleep, store the value to be displayed in diag, and put the cycle
+    //  to sleep.
+    usleep ((int)(1000 * sdSystem.store_sleep_time(sdSystem.get_sleep_time(tmeFled.now(), tmeSleep_Wake_time))));
+
+    // Start the the compute timer (stopwatch) before the program as the program wakes to measure the amount of 
+    //  time the compute cycle is. 
+    effi_timer.start_timer(tmeFled.now());
 
   }// End MAIN CYCLE WHILE loop.
 

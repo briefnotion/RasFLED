@@ -691,9 +691,9 @@ class Screen3
     string strLevel = "";
 
     // Print Timings
-    mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.fltCOMPUTETIME.data);
-    mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.fltPREVSLEEPTIME.data);
-    mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.fltCYCLETIME.data);
+    mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.dblCOMPUTETIME.data);
+    mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.dblPREVSLEEPTIME.data);
+    mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.dblCYCLETIME.data);
     // Not Very Usefule: mvwprintw(winDebug, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
 
     /*  -- Needs Removal

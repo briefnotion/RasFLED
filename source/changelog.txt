@@ -1,3 +1,36 @@
+  V 0.57_220410
+    - Warning: This build should not be made live. 
+    - Warning: The timings may be a little too presice. The animations are running 
+        at half speed. 
+    - Warning: This verson of the build does not contain the code to update the 
+        player console with the correct times yet. Movies will not play at the correct 
+        FPS.  I wanted to test the following changes first. 
+    - Updated the TIMED_IS_READY class type
+    - Change the way the main loop cycle determins how long it will last. 
+        Cycle is no longer a fixed 20ms. The cycle time can now be dynamicly 
+          controled by the main parts within the cycle: hardware input, render, 
+          and interface.
+        The sleep time at the end of the cycle is determined by the part of the 
+          cycle that will need to be called next. 
+        Because of this implementation, portions of the program, such as the player, 
+          will be able to request itself called at a specific time in the future, so 
+          an, other than 20ms, time can be requested.  That way, a movie can play at 
+          30fps, or 60fps, or 15fps, and not be hindered with the 20ms cycle time, 
+          which is 50fps. 
+    - Changed the way the cycle time and sleep time is calculated and changed their 
+        variable type to double, microseconds. Considered changing the rest of the 
+        the program to access its timing variables in microseconds also, But a few 
+        things stopped me.  For one, it would be a long arduous task. The program 
+        is based on millisecond timing because it is a relic of the programs orgins, 
+        which was an Arduino, whos smallest measurment of time was in milliseconds. 
+        Secondly, when rendering some of the colors, a more absolute value of time, 
+        such as 1/1000 of a second, will render a color in an absolute value. The 
+        timing of an animation can be calculated to run predictibly if the time is 
+        measured at, for instance, t=2, as opposed to t=2.4598.  If the animation 
+        is set to move, the color may leak into a nearby LED.  All cosmetic, of course.
+        Maybe, I'll change it in the future. But, for now, reason 1 is the lead reason 
+        of not making the change over.  
+        
   V 0.56_220409
     - Changed settings in CMakeLists.txt
     - Brought the buttons into its own .h file

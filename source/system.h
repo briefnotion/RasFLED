@@ -83,6 +83,13 @@ class system_data
     float max   = 0;
   };
 
+  struct stat_data_double
+  {
+    double data  = 0;
+    double min   = 0; 
+    double max   = 0;
+  };
+
   class running_colors
   {
     public:
@@ -104,10 +111,10 @@ class system_data
   configuration CONFIG;
 
   // System Timing
-  stat_data fltCOMPUTETIME;   // Loop time spent while only proceessing.
-  stat_data fltSLEEPTIME;     // Calculated time needed to sleep.
-  stat_data fltCYCLETIME;     // Amount of time to complete an entire cycle.
-  stat_data fltPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
+  stat_data_double dblCOMPUTETIME;   // Loop time spent while only proceessing.
+  stat_data_double dblSLEEPTIME;     // Calculated time needed to sleep.
+  stat_data_double dblCYCLETIME;     // Amount of time to complete an entire cycle.
+  stat_data_double dblPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
 
   // Door Module Support
   deque<bool> boolDOOR_SENSOR_STATUS;
@@ -269,35 +276,45 @@ class system_data
     cdTIMER.set_timer(tmeCURRENT_FRAME_TIME, Seconds);
   }
 
-  // Reference for the time (elapsed) since program start.
-  void store_compute_time(float fltComputeTime)
+
+  void store_compute_time(double fltComputeTime)
+  // Stores the time the program spent actively running, for diag. 
   {
-    fltCOMPUTETIME.data = fltComputeTime;
+    dblCOMPUTETIME.data = fltComputeTime;
   }
 
-  void store_cycle_time(float fltCycleTime)
+  void store_cycle_time(double fltCycleTime)
+  // Stores the time the program spent point to point while running, for diag. 
   {
-    fltCYCLETIME.data = fltCycleTime;
+    dblCYCLETIME.data = fltCycleTime;
+    /*
     if (fltCycleTime > fltCYCLETIME.max)
     {
       fltCYCLETIME.max = fltCycleTime;
     }
+    */
   }
 
-  // Reference since sleep started and wake up time elapsed. 
-  float getsleeptime(int intFPS)
+  double store_sleep_time(double tmeSleep)
+  // Pass through variable
+  // Stores the Sleep time to be displayed in diag, then returns the same value.
   {
-    // Return, in milliseconds, the amount of time required to sleep 
-    //  before returning to the next cycle. 
-    float sleeptime = (1000 / intFPS) - fltCOMPUTETIME.data;
+    dblPREVSLEEPTIME.data = tmeSleep;
+    return tmeSleep;
+  }
+  
+  double get_sleep_time(double Current_Time, unsigned long Wake_Time)
+  {
+    // Return, in microseconds, the amount of time required to sleep.
     
-    if (sleeptime < 0)
+    double sleeptime = 0;
+
+    if(Current_Time < Wake_Time)
     {
-      sleeptime = 0;
+      sleeptime = (unsigned long)Wake_Time - Current_Time;
     }
 
-    fltPREVSLEEPTIME.data = sleeptime;
-    return (sleeptime);
+    return sleeptime;
   }
 
   void read_hardware_status(int Milis_Frequency)
@@ -308,12 +325,12 @@ class system_data
   // reset monitor times.
   void refresh()
   {
-    fltCOMPUTETIME.min  = 0;
-    fltCOMPUTETIME.max  = 0;
-    fltSLEEPTIME.min    = 0;
-    fltSLEEPTIME.max    = 0;
-    fltCYCLETIME.min    = 0;
-    fltCYCLETIME.max    = 0;
+    dblCOMPUTETIME.min  = 0;
+    dblCOMPUTETIME.max  = 0;
+    dblSLEEPTIME.min    = 0;
+    dblSLEEPTIME.max    = 0;
+    dblCYCLETIME.min    = 0;
+    dblCYCLETIME.max    = 0;
   }
  };
 // -------------------------------------------------------------------------------------

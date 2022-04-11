@@ -252,27 +252,8 @@ class VAR_CHANGE_MON
   }
 };
 
-
-// ***************************************************************************************
-// FUNCTION AND PROCEDURES
-// ***************************************************************************************
-
-// ---------------------------------------------------------------------------------------
-// Random Number
-
-int intRandomHD(int intBase)
-// Generate a random number between half and double of the base
-{
-  int intLowerOffset = intBase / 2;
-  int intUpperOffset = (intBase * 2) - intLowerOffset;
-  return ((rand() % intUpperOffset) + intLowerOffset);
-}
-
-
-
 // ---------------------------------------------------------------------------------------
 // Hardware Monitor Class
-
 class switch_map
 // A simple switch to pin reference map
 {
@@ -368,29 +349,49 @@ class hardware_monitor
     changed(booValue, tmeCheckTime);
   }
 };
+// ---------------------------------------------------------------------------------------
 
-
-// Some time display type things
-int millis_to_time_minutes(long millis_time)
-// Returns minutes portion of time.
+class EFFICIANTCY_TIMER
+// Measures time passed between calls. 
 {
-  return abs(millis_time/60000);
-}
+  private:
+  double LAST_ASKED_TIME = 0;
+  double TIMER_STARTED   = 0;
 
-int millis_to_time_seconds(long millis_time)
-// Returns seconds portion of time.
-{
-  return abs((millis_time % 60000)/1000);
-}
+  public:
 
+  void start_timer(double dblCurrent_Time)
+  // Start the timer (stopwatch) by setting its the stopwatch time.
+  //  The timer is a simple and can be considered always active. 
+  {
+    TIMER_STARTED = dblCurrent_Time;
+  }
+
+  double elapsed_timer_time(double dblCurrent_Time)
+  //  Returns the amount of time passed since the reset. 
+  {
+    return dblCurrent_Time - TIMER_STARTED;
+  }
+
+  double elapsed_time(double dblCurrent_Time)
+  // Measures the amount of time elaspeds since the privious time the function was 
+  //  called, then returns the value, then resets for next time. 
+  {
+    double time_elapsed = dblCurrent_Time - LAST_ASKED_TIME;
+    LAST_ASKED_TIME = dblCurrent_Time;
+    return time_elapsed;
+  }
+
+};
 
 class TIMED_IS_READY
 // Class to manage conditions of when something needs to be ran.
 {
   private:
-  unsigned long TRIGGERED_TIME  = 0;
-  unsigned long LAST_ASKED_TIME = 0;
-  int           INTREVAL        = 0;
+  unsigned long TRIGGERED_TIME  = 0;  //  Most recent time the ready was activated
+  unsigned long LAST_ASKED_TIME = 0;  //  Most recent time the variable was asked if was ready.
+  unsigned long READY_TIME      = 0;  //  Calculated time of when variable will be ready.
+  int           INTREVAL        = 0;  //  Time in miliseconds between ready.
 
   public:
 
@@ -411,6 +412,18 @@ class TIMED_IS_READY
     INTREVAL        = delay;
   }
 
+  unsigned long get_ready_time()
+  // Return the time value of when the variable will be ready. 
+  {
+    return READY_TIME;
+  }
+
+  int get_interval()
+  // Return the time value of how long the interval was set for.  
+  {
+    return INTREVAL;
+  }
+
   bool is_ready(unsigned long current_time)
   {
     // Check to see if enough time has passed.
@@ -418,9 +431,10 @@ class TIMED_IS_READY
     //    Resets timer if returned true.
     //  Returns false if time has not elapsed.
     //    Stores last asked time.
-    if(current_time > TRIGGERED_TIME + INTREVAL)
+    if(current_time >= READY_TIME)
     {
       TRIGGERED_TIME = current_time;
+      READY_TIME = current_time + INTREVAL;
       return true;
     }
     else
@@ -437,8 +451,9 @@ class TIMED_IS_READY
     //    Does not resets timer if returned true.
     //  Returns false if time has not elapsed.
     //    Stores last asked time.
-    if(current_time > TRIGGERED_TIME + INTREVAL)
+    if(current_time >= READY_TIME)
     {
+      LAST_ASKED_TIME = current_time;
       return true;
     }
     else
@@ -447,6 +462,50 @@ class TIMED_IS_READY
       return false;
     }
   }
+  
+  void set_ready_time(unsigned long current_time)
+  // manually set the ready time of the variable. 
+  {
+    READY_TIME = current_time;
+  }
+
 };
+
+
+// ***************************************************************************************
+// FUNCTION AND PROCEDURES
+// ***************************************************************************************
+
+// ---------------------------------------------------------------------------------------
+// Random Number
+
+int intRandomHD(int intBase)
+// Generate a random number between half and double of the base
+{
+  int intLowerOffset = intBase / 2;
+  int intUpperOffset = (intBase * 2) - intLowerOffset;
+  return ((rand() % intUpperOffset) + intLowerOffset);
+}
+
+// Some time display type things
+int millis_to_time_minutes(long millis_time)
+// Returns minutes portion of time.
+{
+  return abs(millis_time/60000);
+}
+
+int millis_to_time_seconds(long millis_time)
+// Returns seconds portion of time.
+{
+  return abs((millis_time % 60000)/1000);
+}
+
+int get_frame_interval(int Frames_Per_Second)
+{
+  return (1000 / Frames_Per_Second);
+}
+
+
+
 
 #endif
