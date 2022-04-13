@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.59B
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.60A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -325,6 +325,9 @@ int loop()
   events_and_render.set(get_frame_interval(sdSystem.CONFIG.iFRAMES_PER_SECOND));
   input_from_user.set(100);
   display.set(SCREENUPDATEDELAY);
+
+  // Console sub timer. Just a little faster to prevent blips.
+  cons.Console_Display.set(SCREENUPDATEDELAY-1);
 
   // Disposable Variables
   int count  = 0;

@@ -1,3 +1,17 @@
+  V 0.60A_220413
+    - Changed the overhead animations and some of the convienance lights to go dark 
+        when in day mode.
+    - Reduced the brightness of all the closed door animations when one door is open, 
+        by 4.  Hopefully thuis will reduce all power draw significantly.
+        I really don't know how much amprage the system is pulling.  It would be good 
+        to have hardware on the board reading that. I feel I shouldn't be working 
+        alone on much of the system because I don't have the knowlege to build 
+        and code a hardware system monitor to read things like voltage, amprage from 
+        the lights as well as the computer, and other such things. Same thing goes 
+        for creating a car diagnostics monitor hardware and interface. I don't 
+        have the time or money.
+    - Changed the frequency the console is updated while a movie is playing. 
+
   V 0.59B_220412
     - There is no excuse for the mouse behavior to be so inconsistant. I'm worried 
         this will be a persistant issue without finding and eliminating the problem. 

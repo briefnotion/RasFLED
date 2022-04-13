@@ -58,6 +58,8 @@ class Console
 
   PLAYER the_player;
 
+  TIMED_IS_READY Console_Display;
+
   bool load_reel(fstream &fsPlayer, string filename)
   // Loads next film into the player. 
   //  This is basiclly a pass through routine to keep calls 
@@ -608,12 +610,17 @@ class Console
     //  For future log file.
     update_displayed_time(tmeCurrentMillis);
     
-    // Update display screen.
-    output(sdSystem);
+    // Dont refresh the Console (output) every time a new frame is drawn with the 
+    //  movie player. 
+    if (Console_Display.is_ready(tmeCurrentMillis) == true)
+    {
+      // Update display screen.
+      output(sdSystem);
 
-    // Reset mins and max time values displayed in the console.
-    //  Currently, not being stored, calculated or displayed.
-    sdSystem.refresh();
+      // Reset mins and max time values displayed in the console.
+      //  Currently, not being stored, calculated or displayed.
+      sdSystem.refresh();
+    }
     
     // Player
     if(the_player.is_ready_to_draw_frame(tmeCurrentMillis) == true)
