@@ -1,3 +1,13 @@
+V 0.62A_220415
+  - Changed the pulse animations to have shorter tails and animated differently.
+  - Changed the overhead convienance lights to be more promenant.
+  - Change my least liked animation, flash color, to be more like what I intended 
+      it to be from my first envisioning it to be. Less gaudy, more flashy and 
+      poppingly.
+  - Removed the color redefinitions from the console display. It really wasn't 
+      serving any purpose because my term emu didn't support it anyway. If they 
+      need to be changed, then change them on the emulator side. 
+
 V 0.61A_220414
   - The system was failing to shutdown. Reverted back to simpler shutdown command, 
       and waylaying the futer plans involving it. I suspect the konsole terminal 

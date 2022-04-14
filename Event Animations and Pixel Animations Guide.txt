@@ -125,7 +125,7 @@ AnPiPulse - Pulses a light from start color to dest color
     For Repeat Puslse set ClearOnEnd = True, Repeat = True      
 
 
-AnPiPulseTo - Pulses to Color then back back to Color 2
+AnPiPulseTo - Pulses to Color then ending on Color 2
     strIdentity - Animation text identifier for reference.
     
     Start 1     - Color Pulsing to

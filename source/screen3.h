@@ -285,6 +285,7 @@ class Screen3
       init_pair(C_BLACK_CYAN, COLOR_BLACK, COLOR_CYAN);
       init_pair(C_BLACK_BLACK, COLOR_BLACK, COLOR_BLACK);
 
+      /*
       //Redefine Colors
       init_color(COLOR_RED,     700, 000, 000);
       init_color(COLOR_GREEN,   000, 700, 000);
@@ -292,6 +293,7 @@ class Screen3
       init_color(COLOR_YELLOW,  500, 500, 000);
       init_color(COLOR_MAGENTA, 700, 000, 700);
       init_color(COLOR_CYAN,    000, 700, 700);
+      */
     }
   }
 

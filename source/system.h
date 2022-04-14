@@ -94,9 +94,9 @@ class system_data
   {
     public:
     // array for now. ll in future if necessary.
-    int size = 4;
+    int size = 6;
     string strRunningColor = "";  // 
-    CRGB color[4];
+    CRGB color[6];
   };
 
   public:
@@ -199,7 +199,9 @@ class system_data
     running_color_list.color[0] = CRGB(0,0,0);
     running_color_list.color[1] = CRGB(0,64,0);  // Green
     running_color_list.color[2] = CRGB(48,48,0); // Yellow
-    running_color_list.color[3] = CRGB(64,0,0);  // Red
+    running_color_list.color[3] = CRGB(64,16,0); // Orange
+    running_color_list.color[4] = CRGB(20,20,20); // White
+    running_color_list.color[5] = CRGB(64,0,0);  // Red
   }
 
   CRGB get_running_color()
