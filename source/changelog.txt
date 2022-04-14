@@ -1,870 +1,887 @@
-  V 0.60A_220413
-    - Changed the overhead animations and some of the convienance lights to go dark 
-        when in day mode.
-    - Reduced the brightness of all the closed door animations when one door is open, 
-        by 4.  Hopefully thuis will reduce all power draw significantly.
-        I really don't know how much amprage the system is pulling.  It would be good 
-        to have hardware on the board reading that. I feel I shouldn't be working 
-        alone on much of the system because I don't have the knowlege to build 
-        and code a hardware system monitor to read things like voltage, amprage from 
-        the lights as well as the computer, and other such things. Same thing goes 
-        for creating a car diagnostics monitor hardware and interface. I don't 
-        have the time or money.
-    - Changed the frequency the console is updated while a movie is playing. 
+V 0.61A_220414
+  - The system was failing to shutdown. Reverted back to simpler shutdown command, 
+      and waylaying the futer plans involving it. I suspect the konsole terminal 
+      to be the culpret. Its not the first time the konsole was caught behaving 
+      differently than most regular programs. 
+    Terminal programs are difficult to choose. I looked at 3ish others to find one 
+      with all the features I need.  
+      - kitty: Super fast with all the features needed, but screems like a banshee
+          even while idle.  Can easily max all cores without a thought in the world.
+      - xterm: Fast and quiet, but nearly imposible to configure without external 
+          help. Also, cant find full screen support for it.
+      - lxterm: much like xterm and with full screen support, but not from a 
+          command line. 
+      - native headless terminal: Fastest by far, and extremely quiet due to no 
+          desktop. Screen is hardware rendered so no cpu usage to run. Drawbacks 
+          are no mouse support and CGA only.
 
-  V 0.59B_220412
-    - There is no excuse for the mouse behavior to be so inconsistant. I'm worried 
-        this will be a persistant issue without finding and eliminating the problem. 
+V 0.60A_220413
+  - Changed the overhead animations and some of the convienance lights to go dark 
+      when in day mode.
+  - Reduced the brightness of all the closed door animations when one door is open, 
+      by 4.  Hopefully thuis will reduce all power draw significantly.
+      I really don't know how much amprage the system is pulling.  It would be good 
+      to have hardware on the board reading that. I feel I shouldn't be working 
+      alone on much of the system because I don't have the knowlege to build 
+      and code a hardware system monitor to read things like voltage, amprage from 
+      the lights as well as the computer, and other such things. Same thing goes 
+      for creating a car diagnostics monitor hardware and interface. I don't 
+      have the time or money.
+  - Changed the frequency the console is updated while a movie is playing. 
 
-  V 0.59_220412
-    - Changed the way the mouse was monitored with the hopes of removing a 300ms
-      program freeze with every mouse click.  Didn't do anything different and the 
-      program still locks up every time a button is pressed on the mouse. Oddly 
-      enough, just moving the mouse on the screen updates the X Y position without 
-      any lag at all. 
-    - Started working a new set of animations based on current animations. 
-        Hopefully with less power draw.  
-    - Created power up animation. 
+V 0.59B_220412
+  - There is no excuse for the mouse behavior to be so inconsistant. I'm worried 
+      this will be a persistant issue without finding and eliminating the problem. 
 
-  V 0.58_220411
-    - Corrected the "animations running at half speed" problem. The close render 
-        thread was tied to the display ready state.
-    - Corrected console movie player to play frames at FPS defined in the movie 
-        file.
-  
-  V 0.57_220410
-    - Warning: This build should not be made live. 
-    - Warning: The timings may be a little too presice. The animations are running 
-        at half speed. 
-    - Warning: This verson of the build does not contain the code to update the 
-        player console with the correct times yet. Movies will not play at the correct 
-        FPS.  I wanted to test the following changes first. 
-    - Updated the TIMED_IS_READY class type
-    - Change the way the main loop cycle determins how long it will last. 
-        Cycle is no longer a fixed 20ms. The cycle time can now be dynamicly 
-          controled by the main parts within the cycle: hardware input, render, 
-          and interface.
-        The sleep time at the end of the cycle is determined by the part of the 
-          cycle that will need to be called next. 
-        Because of this implementation, portions of the program, such as the player, 
-          will be able to request itself called at a specific time in the future, so 
-          an, other than 20ms, time can be requested.  That way, a movie can play at 
-          30fps, or 60fps, or 15fps, and not be hindered with the 20ms cycle time, 
-          which is 50fps. 
-    - Changed the way the cycle time and sleep time is calculated and changed their 
-        variable type to double, microseconds. Considered changing the rest of the 
-        the program to access its timing variables in microseconds also, But a few 
-        things stopped me.  For one, it would be a long arduous task. The program 
-        is based on millisecond timing because it is a relic of the programs orgins, 
-        which was an Arduino, whos smallest measurment of time was in milliseconds. 
-        Secondly, when rendering some of the colors, a more absolute value of time, 
-        such as 1/1000 of a second, will render a color in an absolute value. The 
-        timing of an animation can be calculated to run predictibly if the time is 
-        measured at, for instance, t=2, as opposed to t=2.4598.  If the animation 
-        is set to move, the color may leak into a nearby LED.  All cosmetic, of course.
-        Maybe, I'll change it in the future. But, for now, reason 1 is the lead reason 
-        of not making the change over.  
-        
-  V 0.56_220409
-    - Changed settings in CMakeLists.txt
-    - Brought the buttons into its own .h file
+V 0.59_220412
+  - Changed the way the mouse was monitored with the hopes of removing a 300ms
+    program freeze with every mouse click.  Didn't do anything different and the 
+    program still locks up every time a button is pressed on the mouse. Oddly 
+    enough, just moving the mouse on the screen updates the X Y position without 
+    any lag at all. 
+  - Started working a new set of animations based on current animations. 
+      Hopefully with less power draw.  
+  - Created power up animation. 
 
-  V 0.55_220408
-    - Well, got my feet wet with threading. On the surface, they look simple.  Threads 
-        are finicky things though. Threads like static calls.  Threads don't play nice 
-        when embedded in classes. Pthreads seem the most common class of threads with 
-        Linux programmers, and seem very versitile and complex. Standard threads work 
-        with the limitation of being called, and wanting to close before moving on. 
-        And, I hadn't been able to get atomic variables to work. I decided to go with 
-        future threads because, unlike standard threads, I could define the thread in 
-        functions opening, and always reference back.
-    - Converted system to one type of thread handler. 
-    - Changed the shutdown to wait 5 seconds before starting.
-    - Removed extra, unused, thread handleing variables from output routine. 
+V 0.58_220411
+  - Corrected the "animations running at half speed" problem. The close render 
+      thread was tied to the display ready state.
+  - Corrected console movie player to play frames at FPS defined in the movie 
+      file.
 
-  V 0.54_220407
-    - Added a thread to display a movie type 1001 frame, because terminal emulators
-        tend to bog down when printing such large amount of text to the screen. 
-        With this update in place, even if the screen is bogged down and would be 
-        taking more than its aloted cycle time, the output will not intefere with 
-        the timing loop. (Not sure why this entry was lost on my local system)
-  
-  V 0.53_220405
-    - Modified some of the routines to change the way the console is displayed.
-
-  V 0.52_220404
-    - Transfered the update log into its own file.
-    - Transfered the todo list into its own file.
-
-  V 0.51_220403
-    - I've been an advicate for multitasking since the GEOS days. I've been very very
-        reluctant to implement it, but in this itereation, I've gotten my feet wet 
-        with threads.  Simple enough, but it took some time to cast a thread for the 
-        hardware implementation of bringing the color values to the lights. the 
-        led_render routine was a perfect candidate for a thread because it took the 
-        majority of the cpu cycle, once it started, nothing else needed to wait for 
-        the render to complete. After, the render was called, the remaining part of 
-        the loop focuses on the interface.  Cycle: Get data, compute values, render, 
-        interface.
-
-  V 0.50_220332
-    - Seperating type 1001 from the other types in the player post frame routine 
-        to attempt to improve performance.
-        Sure, if it works well on a slow system, it is more likely to run 
-        well on a slightly damaged or overheating  system. But my terminal 
-        emulator has too much overhead. Will try to reduce this by only printing 
-        it is the only one I found with tabs. I don't use tabs anymore so maybe 
-        I should just seach for another terminal capable of full color and full 
-        screen from a script.  All infomation just posted has nothing to do with 
-        RasFLED. I just felt like typing stuff.
-
-  V 0.49_220331
-    - Dimmed the colors down.  Dosn't work on my terminal emulator.
-    - Added 1001 movie type.  Just like the 1000 type but allows 
-        color controlable escape sequences to display full color text animations.
-        Warning: These colored ansi films really bog down the termial emulation 
-        program. And in my case pulling the core load to 100%.  RasFLED waits, but
-        the 20ms return time is constantly exceded.  The animations will adjust but 
-        there will be visual FPS losses in the animations.
-
-  V 0.48_220328
-    - Added capability of playing a new type of movie.
-        New movie type, just like the old, except:
-        - Instead of a delay in first pos of line befgore each frame, a 1000
-            is in its place.  Labeling the frame as Type 1000.
-        - The 1000 is followed by frame size height and with and FPS that the 
-            frame will run at.
-    - Added ' skip' command, but I did it quick because its late. 
-        Skip may change in future.
-    - Added the new test movies to the git. The text vids are for testing and arent 
-        anything good.  Test videos were converted from a few random small videos.
-
-  V 0.47_220325
-    - Corrected running color changer.
-    - Button value follow ups are now being ran in the Screen, before drawn.
-        Sometimes things change.  Sometimes things change at strange times. 
-          And the buttons need to reflect those status changes. But there is no way 
-          for the buttons to know those changes occured because they have no active 
-          communication to the variables they represent. So, they just stay the way 
-          they were when they were last intereacted with. I don't like my new button   
-          draw follow up, but they will solve the problem of buttons displaying the  
-          wrong status, until I find a way for the buttons to know what they are 
-          representing has changed.
-        For anyone who may be following this, let me explain: I would've liked like 
-          the buttons to be more, directly tied, to the variable they represent. 
-          I had originally developed them based on the model of buttons found in 
-          Starbase, but I slowly realized this couldn't be done the same way. 
-          The reason is, for that, Starbase's computer model is considered a 
-          distibuted computer.  Whereas, RasFLED is a centralized computer. 
-          Everything in RasFLED is processed by one single centralized loop. 
-          And in a distributed computer, all the components attached to it works 
-          individually. Some components talk, some listen, some do both, but all in 
-          all, each component does what its suposed to do, without being told to do 
-          it. A decentralized computer is much more diversible and RasFLED would be 
-          much easier to develop and powerful, if it were made this way. But, the hardware, 
-          as far as I know, for a decentralized system doesnt exist yet.  Did you learn 
-          anything?
-        I thought of creating one of my own though. Sure, anyone could duck tape a button 
-          to an Arduino Nano, and it would be hundreds of times better than what a 
-          decentralized button component needs to be. The problem is, there is no 
-          network to support it.  Etherenet is just end to end communications. I am 
-          not aware of any network capable of being just one wire, with hundreds of 
-          components talking to whomever they want, through that singe wire. 
-        Also, side note here: This may be very analogous to why democracy has the 
-          capability of working so well, where monachy doesn't.
-    - Other small changes and modifications.
-
-  V 0.46_220324
-    - Added a CPU temp indicator in status bar.
-    - Attempted to add a low voltage indicator, but failed.
-
-  V 0.45_220323
-    - Corrected white color picker button.
-    - Added more indicators to the status bar.
-    - Changed some of the buttons to be on when the feature was on. Except for 
-        Overhead Lights, which is being stubborn.
-    - Added an end timer command.
-    - Updated the help screen, which is getting too big.
-    - Removed some load playlist degug info from program start. 
-
-  V 0.44_220322
-    - Merged the buttons into the button zone manager so that buttons can be managed 
-        as a group.  Because of that, the code is now much more simplified and the 
-        buttons can now manage themselves properly, if their values change or if 
-        they need a refresh.  All intereactions with the buttons will be handled by 
-        the button zone manager.  
-      I had origionally planned on creating the buttons this way and thought it 
-        thought it couldn't be done because pointers in the deque would get lost 
-        or the change in size of a variable in a deque was causing the data to be 
-        lost.  After testing and discovering that the buttons work just fine through 
-        list type variables, I rewrote the code and through away, what seems like 
-        tons, of code that was programmed as a work around for having the button 
-        manager as a seperate variable from the actual button variable.
-
-  V 0.43_220321
-    - Finished condensing down interface routines. Left the debug stuff alone.
-    - Added two more buttons to the control portion of the panel.
-        Screen resolution I'm working with is ~100x30.
-    - Corrected and introduced bug that was a result of condensing down interface 
-        routines.  Cant be certain its the only one.
-    - Improved the key mouse input routine.
-    - Started looking at displaying changed button parameters.
-
-  V 0.42_220320
-    - Modified button colors again to be visible when pressed.
-    - Started condensing down interface routines.  Lots of em. I started modifying 
-        other things.
-    - Really didnt like the black text button colors. Reverted back. 
-        Like I said, it was just a test. But, I was really curious to see how they 
-        would look, even though I had no intention on keeping them. 
-        The NCURSES documentation says consoles can support a much wider gambit 
-        of colors, so in the future, when I get tire of the 8 colors available, 
-        I may include text and background colors from the 0-255 RGB spectrum. 
-        I could then have proper contrast on the screen. Even though its simple 
-        text graphics, properly contrasted color combinations would completely 
-        enhance legibility.  
-        For example, white on bright blue looks great at night, but in the day 
-          its just a blur.  White on a deep navy blue for the status screen would 
-          detract the background from being an object, and make it a zone. 
-          Also, white on yellow is rediculous. It works now because the yellow 
-          isnt even yellow. Its orange. And, I cant find a solution yet for the 
-          white on green.  I shouldnt get upset about it because nobody is 
-          complaining about it. And, I built it so its up to me to fix it. 
-
-  V 0.41_220319
-    - Added comments and descriptions to many of the new routines, classes, and 
-        functions. 
-    - Removed old and commented out code.
-    - Changed the Buttons color to BLACK foreground instead of WHITE to test 
-        for better visibility in a live environment.
-
-  V 0.40_220318
-    - Created Tabs.
-    - Tabs now cycle between main windows.
-    - Created a Blank Screen tab - because I get tired of looking at 
-        the console.
-    - Created a player tab.
-
-        How it works:
-          1. When RasFLED loads, it will look for a file with this name and in this 
-              location "/etc/RasFLED/playlist.cfg"
-                The file should be formatted like:
-                 ______________________________________
-                |
-                |* ------------------------------
-                |* RasFLED Playlist
-                |*   This file belongs in the "/etc/RasFLED" dirctory
-                |* ------------------------------
-                |
-                |playlist
-                |/etc/RasFLED/movies/loading.txt
-                |/etc/RasFLED/movies/advert.txt
-                |
-
-          2. A playlist will be built from that file in the order given.
-              files in the playlist can be repeated. The playlist is simple.
-
-              The text files is like a slide show. 
-                First line contains how long a frame will hold.
-                  1 means 1/15 of a second and 15 means 1 second.
-                The next 13 lines contain the frame drawn to the screen.
-                  The lines are 67 characters in lenght.
-                The next, and all following frames are just the same, just added 
-                  like the film of a movie.
-
-                I went with the format given by Mr Simon Jansen because I thought 
-                  what he made was interesting.
-                  Link to what he made here: https://www.asciimation.co.nz/index.php
-                  Link to the FAQ here: https://www.asciimation.co.nz/asciimation/ascii_faq.html
-                  His FAQ contains more information on the file format.
-
-          3. The file plays when on the Player tab and stops when it isn't
-
-          4. A " playlist" command was also added to see the currently loaded playlist.
-
-    - A "SHUTDOWN SYSTEM" button was added to the System menu to "sudo shutdown now" the
-        entire system in a hurry.
-    - Not sure, did I add color to this version?
-    - I'll try to add a new directory to git hub page to contain what should be in the 
-        etc/RasFLED directory.
-    - The code still needs much commenting and optimization.
-
-  V 0.39_220306
-    - No significant changes to the program.
-    - Added comment to source code.
-    - Removed chunks of commented out source code.
-    - Rearanged some of the source code.
-    - Updated the todo list.
-
-  V 0.38_220305
-    - Everything works as before.  Keyboard command input still accepts the same 
-        commands.
-    - Added to and changed the inteface.
-    - Added buttons on right side of screen to control main functions.
-    - Status bar changed to blue and made smaller because, 
-        diagnostic, or debug, will hide when not on.  Debug window is red.
-    - Timer window appears when on with countdown status and progress bar.
-    - Screen remains resizable, but artifacts can appear.
-    - Buttons work best with touchscreen. Not sure I mentioned it.
-    - Colors only limited to 10, including black and white. Probably compatible
-        for most tty terminals built above the 1960's. I think it was called 
-        CGA.
-    - Live testing for this build could not be done. Car broke down and 
-        the transmission control module for it can not be found anywhere. 
-        Probably a result of chip shortage or pandemic or whatever, I don't 
-        know.  Just means I cant fix the car because I cant get a replacement 
-        part.  And I cant test the program for hours on end without a car. 
-
-    -  V 0.37_220218
-    - Started adding mouse/touchscreen support
-    - Retooled console to help determine what will be needed for new panel.
-    - Debug screen will now show mouse info.
-    - Adjusted some animations to not display during day.
-    - Reworked the console line screen to scroll, like a normal (classical) command 
-        line screen.  No page scroll up supported.
-
-  V 0.36_220214
-    - Returning to RasFLED development.
-    - Added Day and Night mode so certain animations will not display during the day.
-        Day mode is also a good stand in for night silent mode, for when I don't want
-          to shine.
-        I wanted to get my feet wet before redesigning the console.
-    - Puddle animations will not display during day mode.
-    - Side running lights will not display during day mode.
-    - fledcore could stand a rewrite, but the milk hasn't spilt.  And, if ever the 
-        networked version of RasFLED ever gets built, there is still an advantage 
-        to processing each light color 1 by 1.
-
-  V 0.35_210706
-    - Found a few more little random inconsistant bugs.
-    - Default generated config file corrected to place hanging lights on the 
-        front overheads instead of the front doors.  Backup, modify, or let the 
-        system recreate a new configuration file, because,
-    - Hazard ligts now properly generate its mask from the bottom (front) after 
-        another minor correction.
-    - Countered the anti-symetry in the Pulse lights so that the spaces in the 
-        pulses could be further apart.  Keep in mind, this is a counter anti- 
-        symetry, not an anti-anti-symetry, which would amount to no changes.  
-        Nor is it a counter counter symetry.  Maybe I should have just labled it 
-        a reverse counter sysmetry.  Really, nothing seems right here.
-    - I did already plan out the next animations.  They will be ditherable versions
-        of all the current animations. I'm sure I'll get a kick out of programming 
-        all that also. 
-    - Added descriptor to display after a command is entered. 
-    - Side Note:  Completed the prototype test design of my cyber arm.  :D
-        Of course, it will still take some time to put together the components. 
-        Not saying whats needed.  Also, the Test Alpha version will not have a 
-        dynamic torque clutch either, may not even be strong enough to lift itself
-        however, the design is there and the most difficult part, the hand (grapple)
-        has been thought out.  
-      When I say it may take a while, I really mean "a long time."  Honestly, It took
-        5 days for the genius in me to write down "I completed the design for my 
-        cyber arm." into my book of poetry.  I'll just throw it together in time 
-        like everything else.
-        
-  V 0.34_210705
-    - The configurable system testing, at the current stage is coming to an end. 
-        The system seems to be working ok and the known bugs have been addressed. 
-      Although I only wrote the configurability system for myself, as sort of a proof 
-        of concept, I have to say I am very disappointetd.  The system works just as 
-        before, and the only thing I felt I got out of it was a hand full of coffee 
-        beans, multiple consistant kicks in the face, and counciling for multiple 
-        kicks in the face.  
-      Perhaps in the future, if I ever add door lights to the hatch back, under 
-        carrage, or front hood, then the configuration system would be useful. 
-        I had no plans to do that anyway, so it was really just a waste of my time. 
-    - Corrected the Overhead Front Door Mask for the Hazard Lights. 
-    - Corrected the pulse timing issue that was related to the second half of the 
-        pulse starting time being tied directly to the length of the LED strip.  
-        Corrected by coding its start time of the second pulse to be the same amount 
-        of time as the pulse fade out color.
-      Also, added some counter symetry to liven it up.  Not much but better than 
-        the robotic look.
-
-  V 0.33_210702 
-    - MAKE NO MISTAKE: 
-        I have no disillusionment about this software.  At the time of this writing  
-        RasFLED has always been free to use, as per the GNU GENERAL PUBLIC LICENSE. 
-         
-        I can honestly say, literally, I have never been paid, by anybody or anyone,  
-        in any way, shape or form, for writing this software.  Nor, has anybody or  
-        anyone contributed in any way for its development. I have, literally, not   
-        recieved any feedback at all that ever helped contribute to RasFLEDs future  
-        developement.  The only comments ever recieved by first hand experience from  
-        passerbys was the generic "thats nice." 
- 
-        If you paid or given up anything to send or suggest anything, regarding these 
-        lights, or anything else, for that matter, then, I am sorry, but you have been 
-        scammed.  Your message was never delivered.  If you paid anyone for a feature  
-        to be placed into this software, you have been scammed.  Any and all features  
-        of RasFLED were by my design, and the only driving force behind my desire to  
-        change, delete, or add to the program, has always been, "because I wanted to." 
-        I promise to tell you, in the unlikely event the program gets any type of  
-        sponser or paid for feature added, I will disclose it with a statement in  
-        these comments, along with any relevant information.  
- 
-        Literally, this app has no followers or comments or support.  Metaphorically,  
-        well, if you didn't help make the bread, then you are not going to help eat  
-        the bread. 
-
-    - Door module can handle multiple strips.  Groups triggered by switches will run 
-        preset animations on strips with the grouple with name "Door" and "Overhead". 
- 
-                 To Demonstrate, here is an example config file.
-                 ______________________________________
-                |
-                |* ------------------------------
-                |* Switch Configuration
-                |*   - Switch ID PIN
-                |Switch_Count 4
-                |Switch 0 22
-                |Switch 1 23
-                |Switch 2 24
-                |Switch 3 25
-                |
-                |* ------------------------------
-                |* Strip Configuration
-                |LED_Main 0 Car
-                |
-                |
-                |
-                |LED_Group_Count 4
-                |  LED_Group_ID 0 Back_Driver
-                |    LED_Strip_Count 0 2
-                |      LED_Strip_ID 0 0 Door Back 70 Forward Standing
-                |      LED_Strip_ID 0 1 Overhead Back 52 Forward Standing
-                |  LED_Group_ID 1 Front_Driver
-                |    LED_Strip_Count 1 4
-                |      LED_Strip_ID 1 0 Overhead Front 52 Forward Standing
-                |      LED_Strip_ID 1 1 Door Front 66 Forward Hanging
-                |      LED_Strip_ID 1 2 Overhead Front 52 Forward Standing
-                |      LED_Strip_ID 1 3 Door Front 66 Forward Hanging
-                |  LED_Group_ID 2 Back_Passenger
-                |    LED_Strip_Count 2 3
-                |      LED_Strip_ID 2 0 Overhead Back 52 Forward Standing
-                |      LED_Strip_ID 2 1 Door Back 70 Forward Standing
-                |      LED_Strip_ID 2 2 Overhead Back 52 Forward Standing
-                |  LED_Group_ID 3 Front_Passenger
-                |   LED_Strip_Count 3 2
-                |      LED_Strip_ID 3 0 Overhead Front 52 Forward Standing
-                |      LED_Strip_ID 3 1 Door Front 66 Forward Hanging
-                |______________________________________
-
-        - Made some changes to the pulse repeat timer.  Its still not right, but  
-           I know whats wrong. 
-
-  V 0.31_210622
-    - Current version will be more of a "get it working in any kind of way" update for 
-        the configurable system.  Plenty of routines need an overhaul.  
-        - Current Restrictions for current test version:
-            - Switches are directly tied to groups of strips.
-            - Animations are directly tied to groups of strips (mostly).
-            - Only one switch per group.
-            - There is no direct mapping for switch to strip group.
-            - Console Display could use plenty of work.  Holding off until I get 
-                a display because never needed in live environement and not a system 
-                dependent component. 
-    - Sucesses:
-        - No Hardcoded strip sizes or switch sizes should exist anywhere in the 
-            system.
-        - Any Array within the system is dynamicly allocated on startup or whenever 
-            needed.
-        - Every part of the system that relied on hardcoded sizes has been rewritten 
-            to handle dynamic sizes or allocations. 
-        - Portions of the console has been rewitten to handle dynamic sizes.
-        - Test funcions have been modified to handle dynamic sizes.
-        - All in all, a bunch of things changed.
-    - I am not certain everythings is working as was before, so running everything 
-        through some live test to find out.  
-    - Cut out a bunch of old animations.  Structure of the animation classes changed 
-        so much, probably couldnt get them running without a rewrite anyway. 
-    - Added things to the ToDo list.  Good things.
-    - I would totally love a Cesna 152 and the ability to continuously affor its 
-        upkeep and minor trips.  I think I could handle a Cesna 152 as long as  
-        everything worked.  Do you really need to go to a flight school to get 
-        a pilots license.  Really need to get rid of people in my life who keep 
-        tieing me down.
-    - Large portions of code are out of place, not needed, or just in the wrong 
-        order.  Doesn't really affect the program compile or running, but, tidying 
-        up will make the program easier to read. 
-
-  V 0.30_210619
-    - Delete the old configuration file before running.  Things have changed.
-    - Got tired of looking at the same old animations.  
-        Redid the Door open spotlight animation.
-        Redid the Pulse animation.  Easier on the eyes.
-    - Scheduled Events (AnEvSchedule) are now repeatable by setting repeat = true and
-        duration.
-    - Pulse animation and Pulse Countdown now call the same single simple pulse
-        animation repeatedly.  No need to double up on the same animation to do two 
-        seperate versions of the same thing.
-    - Started the trek of configurable and numeralable strip types and sizes.  I am 
-        not going to need to traverse any mountains, but there are a number of not so 
-        small hills on the way.  I had the foresight during the designing and the 
-        seemingly novel days of the Arduino Nano, to design the system so Fled could 
-        handle an array type of LED strips.  Back then, though, I had no idea about 
-        how it could be implemented. A fair amount of code will need to be rewritten.
-    - Added a new command (config) to see if files loaded properly.  Probably have 
-        more function in the futuer.
-    - The Door Sensor Hardware Interface is now upgraded to the new Configurable 
-        system.  Sure, much of the system cant take advantage of the varible amount  
-        of switches, yet, and things like the console is hardcoded for, no less than
-        4 switches.  However, a first step towards a fully configurable system has 
-        been made.  The only steps remaining is:  modifying the strip classes to 
-        be something more generic.  Writing the code to load those generic strips 
-        with custom classifications.  Mapping the Hardware Map to the strips, and 
-        hardware reactions through configuration files.  And, rewriting all the 
-        animations.  I'm making it sound much more difficult than it actually is. 
-        Like I said before, the groundwork has already been laid out. 
-    - Taking the system out for a test before making any more changes. 
-
-  V 0.29_210616
-    - A simple, editable, configuration file is generated when ran for the first 
-        time.  It will look like this:
-          ______________________________________
-          |Size_Test_Strip 63
-          |
-          |Size_Door_Back_Driver 70
-          |Size_Door_Back_Passenger 70
-          |Size_Door_Front_Driver 66
-          |Size_Door_Front_Passenger 66
-          |
-          |Size_Overhead_Back_Driver 52
-          |Size_Overhead_Back_Passenger 52
-          |Size_Overhead_Front_Driver 52
-          |Size_Overhead_Front_Passenger 52
-          |______________________________________
-
-        This file can then be edited to match your LED count setup.  
-        
-        The string path is still propritary and is one long string
-          in this order:
+V 0.57_220410
+  - Warning: This build should not be made live. 
+  - Warning: The timings may be a little too presice. The animations are running 
+      at half speed. 
+  - Warning: This verson of the build does not contain the code to update the 
+      player console with the correct times yet. Movies will not play at the correct 
+      FPS.  I wanted to test the following changes first. 
+  - Updated the TIMED_IS_READY class type
+  - Change the way the main loop cycle determins how long it will last. 
+      Cycle is no longer a fixed 20ms. The cycle time can now be dynamicly 
+        controled by the main parts within the cycle: hardware input, render, 
+        and interface.
+      The sleep time at the end of the cycle is determined by the part of the 
+        cycle that will need to be called next. 
+      Because of this implementation, portions of the program, such as the player, 
+        will be able to request itself called at a specific time in the future, so 
+        an, other than 20ms, time can be requested.  That way, a movie can play at 
+        30fps, or 60fps, or 15fps, and not be hindered with the 20ms cycle time, 
+        which is 50fps. 
+  - Changed the way the cycle time and sleep time is calculated and changed their 
+      variable type to double, microseconds. Considered changing the rest of the 
+      the program to access its timing variables in microseconds also, But a few 
+      things stopped me.  For one, it would be a long arduous task. The program 
+      is based on millisecond timing because it is a relic of the programs orgins, 
+      which was an Arduino, whos smallest measurment of time was in milliseconds. 
+      Secondly, when rendering some of the colors, a more absolute value of time, 
+      such as 1/1000 of a second, will render a color in an absolute value. The 
+      timing of an animation can be calculated to run predictibly if the time is 
+      measured at, for instance, t=2, as opposed to t=2.4598.  If the animation 
+      is set to move, the color may leak into a nearby LED.  All cosmetic, of course.
+      Maybe, I'll change it in the future. But, for now, reason 1 is the lead reason 
+      of not making the change over.  
       
-          Size_Door_Back_Driver --> Size_Overhead_Back_Driver --> 
-          Size_Overhead_Front_Driver --> Size_Door_Front_Driver --> 
-          Size_Door_Back_Passenger --> Size_Overhead_Back_Passenger --> 
-          Size_Overhead_Front_Passenger --> Size_Door_Front_Passenger
+V 0.56_220409
+  - Changed settings in CMakeLists.txt
+  - Brought the buttons into its own .h file
+
+V 0.55_220408
+  - Well, got my feet wet with threading. On the surface, they look simple.  Threads 
+      are finicky things though. Threads like static calls.  Threads don't play nice 
+      when embedded in classes. Pthreads seem the most common class of threads with 
+      Linux programmers, and seem very versitile and complex. Standard threads work 
+      with the limitation of being called, and wanting to close before moving on. 
+      And, I hadn't been able to get atomic variables to work. I decided to go with 
+      future threads because, unlike standard threads, I could define the thread in 
+      functions opening, and always reference back.
+  - Converted system to one type of thread handler. 
+  - Changed the shutdown to wait 5 seconds before starting.
+  - Removed extra, unused, thread handleing variables from output routine. 
+
+V 0.54_220407
+  - Added a thread to display a movie type 1001 frame, because terminal emulators
+      tend to bog down when printing such large amount of text to the screen. 
+      With this update in place, even if the screen is bogged down and would be 
+      taking more than its aloted cycle time, the output will not intefere with 
+      the timing loop. (Not sure why this entry was lost on my local system)
+
+V 0.53_220405
+  - Modified some of the routines to change the way the console is displayed.
+
+V 0.52_220404
+  - Transfered the update log into its own file.
+  - Transfered the todo list into its own file.
+
+V 0.51_220403
+  - I've been an advicate for multitasking since the GEOS days. I've been very very
+      reluctant to implement it, but in this itereation, I've gotten my feet wet 
+      with threads.  Simple enough, but it took some time to cast a thread for the 
+      hardware implementation of bringing the color values to the lights. the 
+      led_render routine was a perfect candidate for a thread because it took the 
+      majority of the cpu cycle, once it started, nothing else needed to wait for 
+      the render to complete. After, the render was called, the remaining part of 
+      the loop focuses on the interface.  Cycle: Get data, compute values, render, 
+      interface.
+
+V 0.50_220332
+  - Seperating type 1001 from the other types in the player post frame routine 
+      to attempt to improve performance.
+      Sure, if it works well on a slow system, it is more likely to run 
+      well on a slightly damaged or overheating  system. But my terminal 
+      emulator has too much overhead. Will try to reduce this by only printing 
+      it is the only one I found with tabs. I don't use tabs anymore so maybe 
+      I should just seach for another terminal capable of full color and full 
+      screen from a script.  All infomation just posted has nothing to do with 
+      RasFLED. I just felt like typing stuff.
+
+V 0.49_220331
+  - Dimmed the colors down.  Dosn't work on my terminal emulator.
+  - Added 1001 movie type.  Just like the 1000 type but allows 
+      color controlable escape sequences to display full color text animations.
+      Warning: These colored ansi films really bog down the termial emulation 
+      program. And in my case pulling the core load to 100%.  RasFLED waits, but
+      the 20ms return time is constantly exceded.  The animations will adjust but 
+      there will be visual FPS losses in the animations.
+
+V 0.48_220328
+  - Added capability of playing a new type of movie.
+      New movie type, just like the old, except:
+      - Instead of a delay in first pos of line befgore each frame, a 1000
+          is in its place.  Labeling the frame as Type 1000.
+      - The 1000 is followed by frame size height and with and FPS that the 
+          frame will run at.
+  - Added ' skip' command, but I did it quick because its late. 
+      Skip may change in future.
+  - Added the new test movies to the git. The text vids are for testing and arent 
+      anything good.  Test videos were converted from a few random small videos.
+
+V 0.47_220325
+  - Corrected running color changer.
+  - Button value follow ups are now being ran in the Screen, before drawn.
+      Sometimes things change.  Sometimes things change at strange times. 
+        And the buttons need to reflect those status changes. But there is no way 
+        for the buttons to know those changes occured because they have no active 
+        communication to the variables they represent. So, they just stay the way 
+        they were when they were last intereacted with. I don't like my new button   
+        draw follow up, but they will solve the problem of buttons displaying the  
+        wrong status, until I find a way for the buttons to know what they are 
+        representing has changed.
+      For anyone who may be following this, let me explain: I would've liked like 
+        the buttons to be more, directly tied, to the variable they represent. 
+        I had originally developed them based on the model of buttons found in 
+        Starbase, but I slowly realized this couldn't be done the same way. 
+        The reason is, for that, Starbase's computer model is considered a 
+        distibuted computer.  Whereas, RasFLED is a centralized computer. 
+        Everything in RasFLED is processed by one single centralized loop. 
+        And in a distributed computer, all the components attached to it works 
+        individually. Some components talk, some listen, some do both, but all in 
+        all, each component does what its suposed to do, without being told to do 
+        it. A decentralized computer is much more diversible and RasFLED would be 
+        much easier to develop and powerful, if it were made this way. But, the hardware, 
+        as far as I know, for a decentralized system doesnt exist yet.  Did you learn 
+        anything?
+      I thought of creating one of my own though. Sure, anyone could duck tape a button 
+        to an Arduino Nano, and it would be hundreds of times better than what a 
+        decentralized button component needs to be. The problem is, there is no 
+        network to support it.  Etherenet is just end to end communications. I am 
+        not aware of any network capable of being just one wire, with hundreds of 
+        components talking to whomever they want, through that singe wire. 
+      Also, side note here: This may be very analogous to why democracy has the 
+        capability of working so well, where monachy doesn't.
+  - Other small changes and modifications.
+
+V 0.46_220324
+  - Added a CPU temp indicator in status bar.
+  - Attempted to add a low voltage indicator, but failed.
+
+V 0.45_220323
+  - Corrected white color picker button.
+  - Added more indicators to the status bar.
+  - Changed some of the buttons to be on when the feature was on. Except for 
+      Overhead Lights, which is being stubborn.
+  - Added an end timer command.
+  - Updated the help screen, which is getting too big.
+  - Removed some load playlist degug info from program start. 
+
+V 0.44_220322
+  - Merged the buttons into the button zone manager so that buttons can be managed 
+      as a group.  Because of that, the code is now much more simplified and the 
+      buttons can now manage themselves properly, if their values change or if 
+      they need a refresh.  All intereactions with the buttons will be handled by 
+      the button zone manager.  
+    I had origionally planned on creating the buttons this way and thought it 
+      thought it couldn't be done because pointers in the deque would get lost 
+      or the change in size of a variable in a deque was causing the data to be 
+      lost.  After testing and discovering that the buttons work just fine through 
+      list type variables, I rewrote the code and through away, what seems like 
+      tons, of code that was programmed as a work around for having the button 
+      manager as a seperate variable from the actual button variable.
+
+V 0.43_220321
+  - Finished condensing down interface routines. Left the debug stuff alone.
+  - Added two more buttons to the control portion of the panel.
+      Screen resolution I'm working with is ~100x30.
+  - Corrected and introduced bug that was a result of condensing down interface 
+      routines.  Cant be certain its the only one.
+  - Improved the key mouse input routine.
+  - Started looking at displaying changed button parameters.
+
+V 0.42_220320
+  - Modified button colors again to be visible when pressed.
+  - Started condensing down interface routines.  Lots of em. I started modifying 
+      other things.
+  - Really didnt like the black text button colors. Reverted back. 
+      Like I said, it was just a test. But, I was really curious to see how they 
+      would look, even though I had no intention on keeping them. 
+      The NCURSES documentation says consoles can support a much wider gambit 
+      of colors, so in the future, when I get tire of the 8 colors available, 
+      I may include text and background colors from the 0-255 RGB spectrum. 
+      I could then have proper contrast on the screen. Even though its simple 
+      text graphics, properly contrasted color combinations would completely 
+      enhance legibility.  
+      For example, white on bright blue looks great at night, but in the day 
+        its just a blur.  White on a deep navy blue for the status screen would 
+        detract the background from being an object, and make it a zone. 
+        Also, white on yellow is rediculous. It works now because the yellow 
+        isnt even yellow. Its orange. And, I cant find a solution yet for the 
+        white on green.  I shouldnt get upset about it because nobody is 
+        complaining about it. And, I built it so its up to me to fix it. 
+
+V 0.41_220319
+  - Added comments and descriptions to many of the new routines, classes, and 
+      functions. 
+  - Removed old and commented out code.
+  - Changed the Buttons color to BLACK foreground instead of WHITE to test 
+      for better visibility in a live environment.
+
+V 0.40_220318
+  - Created Tabs.
+  - Tabs now cycle between main windows.
+  - Created a Blank Screen tab - because I get tired of looking at 
+      the console.
+  - Created a player tab.
+
+      How it works:
+        1. When RasFLED loads, it will look for a file with this name and in this 
+            location "/etc/RasFLED/playlist.cfg"
+              The file should be formatted like:
+                ______________________________________
+              |
+              |* ------------------------------
+              |* RasFLED Playlist
+              |*   This file belongs in the "/etc/RasFLED" dirctory
+              |* ------------------------------
+              |
+              |playlist
+              |/etc/RasFLED/movies/loading.txt
+              |/etc/RasFLED/movies/advert.txt
+              |
+
+        2. A playlist will be built from that file in the order given.
+            files in the playlist can be repeated. The playlist is simple.
+
+            The text files is like a slide show. 
+              First line contains how long a frame will hold.
+                1 means 1/15 of a second and 15 means 1 second.
+              The next 13 lines contain the frame drawn to the screen.
+                The lines are 67 characters in lenght.
+              The next, and all following frames are just the same, just added 
+                like the film of a movie.
+
+              I went with the format given by Mr Simon Jansen because I thought 
+                what he made was interesting.
+                Link to what he made here: https://www.asciimation.co.nz/index.php
+                Link to the FAQ here: https://www.asciimation.co.nz/asciimation/ascii_faq.html
+                His FAQ contains more information on the file format.
+
+        3. The file plays when on the Player tab and stops when it isn't
+
+        4. A " playlist" command was also added to see the currently loaded playlist.
+
+  - A "SHUTDOWN SYSTEM" button was added to the System menu to "sudo shutdown now" the
+      entire system in a hurry.
+  - Not sure, did I add color to this version?
+  - I'll try to add a new directory to git hub page to contain what should be in the 
+      etc/RasFLED directory.
+  - The code still needs much commenting and optimization.
+
+V 0.39_220306
+  - No significant changes to the program.
+  - Added comment to source code.
+  - Removed chunks of commented out source code.
+  - Rearanged some of the source code.
+  - Updated the todo list.
+
+V 0.38_220305
+  - Everything works as before.  Keyboard command input still accepts the same 
+      commands.
+  - Added to and changed the inteface.
+  - Added buttons on right side of screen to control main functions.
+  - Status bar changed to blue and made smaller because, 
+      diagnostic, or debug, will hide when not on.  Debug window is red.
+  - Timer window appears when on with countdown status and progress bar.
+  - Screen remains resizable, but artifacts can appear.
+  - Buttons work best with touchscreen. Not sure I mentioned it.
+  - Colors only limited to 10, including black and white. Probably compatible
+      for most tty terminals built above the 1960's. I think it was called 
+      CGA.
+  - Live testing for this build could not be done. Car broke down and 
+      the transmission control module for it can not be found anywhere. 
+      Probably a result of chip shortage or pandemic or whatever, I don't 
+      know.  Just means I cant fix the car because I cant get a replacement 
+      part.  And I cant test the program for hours on end without a car. 
+
+  -  V 0.37_220218
+  - Started adding mouse/touchscreen support
+  - Retooled console to help determine what will be needed for new panel.
+  - Debug screen will now show mouse info.
+  - Adjusted some animations to not display during day.
+  - Reworked the console line screen to scroll, like a normal (classical) command 
+      line screen.  No page scroll up supported.
+
+V 0.36_220214
+  - Returning to RasFLED development.
+  - Added Day and Night mode so certain animations will not display during the day.
+      Day mode is also a good stand in for night silent mode, for when I don't want
+        to shine.
+      I wanted to get my feet wet before redesigning the console.
+  - Puddle animations will not display during day mode.
+  - Side running lights will not display during day mode.
+  - fledcore could stand a rewrite, but the milk hasn't spilt.  And, if ever the 
+      networked version of RasFLED ever gets built, there is still an advantage 
+      to processing each light color 1 by 1.
+
+V 0.35_210706
+  - Found a few more little random inconsistant bugs.
+  - Default generated config file corrected to place hanging lights on the 
+      front overheads instead of the front doors.  Backup, modify, or let the 
+      system recreate a new configuration file, because,
+  - Hazard ligts now properly generate its mask from the bottom (front) after 
+      another minor correction.
+  - Countered the anti-symetry in the Pulse lights so that the spaces in the 
+      pulses could be further apart.  Keep in mind, this is a counter anti- 
+      symetry, not an anti-anti-symetry, which would amount to no changes.  
+      Nor is it a counter counter symetry.  Maybe I should have just labled it 
+      a reverse counter sysmetry.  Really, nothing seems right here.
+  - I did already plan out the next animations.  They will be ditherable versions
+      of all the current animations. I'm sure I'll get a kick out of programming 
+      all that also. 
+  - Added descriptor to display after a command is entered. 
+  - Side Note:  Completed the prototype test design of my cyber arm.  :D
+      Of course, it will still take some time to put together the components. 
+      Not saying whats needed.  Also, the Test Alpha version will not have a 
+      dynamic torque clutch either, may not even be strong enough to lift itself
+      however, the design is there and the most difficult part, the hand (grapple)
+      has been thought out.  
+    When I say it may take a while, I really mean "a long time."  Honestly, It took
+      5 days for the genius in me to write down "I completed the design for my 
+      cyber arm." into my book of poetry.  I'll just throw it together in time 
+      like everything else.
       
-        This much of the configuration file only allows easy change of the LED count 
-          in each segment.  
-        Remaining work:  Number of segments, Number of sub segments, Segment names, 
-          Segment order, Segment orientation...
+V 0.34_210705
+  - The configurable system testing, at the current stage is coming to an end. 
+      The system seems to be working ok and the known bugs have been addressed. 
+    Although I only wrote the configurability system for myself, as sort of a proof 
+      of concept, I have to say I am very disappointetd.  The system works just as 
+      before, and the only thing I felt I got out of it was a hand full of coffee 
+      beans, multiple consistant kicks in the face, and counciling for multiple 
+      kicks in the face.  
+    Perhaps in the future, if I ever add door lights to the hatch back, under 
+      carrage, or front hood, then the configuration system would be useful. 
+      I had no plans to do that anyway, so it was really just a waste of my time. 
+  - Corrected the Overhead Front Door Mask for the Hazard Lights. 
+  - Corrected the pulse timing issue that was related to the second half of the 
+      pulse starting time being tied directly to the length of the LED strip.  
+      Corrected by coding its start time of the second pulse to be the same amount 
+      of time as the pulse fade out color.
+    Also, added some counter symetry to liven it up.  Not much but better than 
+      the robotic look.
 
-  V 0.28_210615
-    - "AnEvSetToEnd" event now works as expected and properly ends sheduled events 
-        also.  This squishes the bug causing Pulse Animations to, seemingly, randomly 
-        not end.  The problem was a scheduled event would get reactivated during 
-        PostCheck if it the ScheduleEvent was a passing Repeat=true parameter, and 
-        the event was able to repeat itself before the the SetToEnd event completed.  
-        There may be a reason to do this.  I don't know, But, never the less, the 
-        event now stops, cold turkey, when asked to.
-      Ok, its complecated.  Just went back and looked at it.  It may be realated to 
-        the code not setting the completion value to true, because it was lumped into
-        a part of code that actually needed to check for repeats.  
-      Just checked, "AnEvSchedule" aren't coded to be able to be repeated.  Could 
-        be with just one line of code.  But, isn't.
-
-  V 0.27_210614
-    - Program files are now stored in "/etc/RasFLED/"
-        Note: The program cannot create the directory.  "/etc/RasFLED/" will need to 
-        be created manually before RasFLED is ran for the first time.
-    - LED Count is now calculated and not hard coded.
-    - Further reduction of static variables to facilitate migration towards loadable 
-        configuration.  Also, necessary for future implementation of dynamic 
-        classification of objects, such as doors, and sub objects, such as overhead 
-        lights, door lights, and switches.
-    - Still haven't traced the END_ANIMATION bug.  To think, I was only setting out 
-        to remove one static, rarely used definition (LED_COUNT).
+V 0.33_210702 
+  - MAKE NO MISTAKE: 
+      I have no disillusionment about this software.  At the time of this writing  
+      RasFLED has always been free to use, as per the GNU GENERAL PUBLIC LICENSE. 
         
-  V 0.26_210609
-    - More work has been done for loading files and settings
-    - Started working on a loadable, from file, hardware configuration.  This is a 
-        precursor to a more dynamiclly configurable system and is just the first step, 
-        of many, towards a system that can handle multiple varying numbers of LED 
-        strips and switch configurations.  All defined by one configuration file, and 
-        without needing a recompile to change.  This is also the groundwork for 
-        loadable animation packages. 
-    - Transfered a large chunk of settings to the System Data variable.
+      I can honestly say, literally, I have never been paid, by anybody or anyone,  
+      in any way, shape or form, for writing this software.  Nor, has anybody or  
+      anyone contributed in any way for its development. I have, literally, not   
+      recieved any feedback at all that ever helped contribute to RasFLEDs future  
+      developement.  The only comments ever recieved by first hand experience from  
+      passerbys was the generic "thats nice." 
+
+      If you paid or given up anything to send or suggest anything, regarding these 
+      lights, or anything else, for that matter, then, I am sorry, but you have been 
+      scammed.  Your message was never delivered.  If you paid anyone for a feature  
+      to be placed into this software, you have been scammed.  Any and all features  
+      of RasFLED were by my design, and the only driving force behind my desire to  
+      change, delete, or add to the program, has always been, "because I wanted to." 
+      I promise to tell you, in the unlikely event the program gets any type of  
+      sponser or paid for feature added, I will disclose it with a statement in  
+      these comments, along with any relevant information.  
+
+      Literally, this app has no followers or comments or support.  Metaphorically,  
+      well, if you didn't help make the bread, then you are not going to help eat  
+      the bread. 
+
+  - Door module can handle multiple strips.  Groups triggered by switches will run 
+      preset animations on strips with the grouple with name "Door" and "Overhead". 
+
+                To Demonstrate, here is an example config file.
+                ______________________________________
+              |
+              |* ------------------------------
+              |* Switch Configuration
+              |*   - Switch ID PIN
+              |Switch_Count 4
+              |Switch 0 22
+              |Switch 1 23
+              |Switch 2 24
+              |Switch 3 25
+              |
+              |* ------------------------------
+              |* Strip Configuration
+              |LED_Main 0 Car
+              |
+              |
+              |
+              |LED_Group_Count 4
+              |  LED_Group_ID 0 Back_Driver
+              |    LED_Strip_Count 0 2
+              |      LED_Strip_ID 0 0 Door Back 70 Forward Standing
+              |      LED_Strip_ID 0 1 Overhead Back 52 Forward Standing
+              |  LED_Group_ID 1 Front_Driver
+              |    LED_Strip_Count 1 4
+              |      LED_Strip_ID 1 0 Overhead Front 52 Forward Standing
+              |      LED_Strip_ID 1 1 Door Front 66 Forward Hanging
+              |      LED_Strip_ID 1 2 Overhead Front 52 Forward Standing
+              |      LED_Strip_ID 1 3 Door Front 66 Forward Hanging
+              |  LED_Group_ID 2 Back_Passenger
+              |    LED_Strip_Count 2 3
+              |      LED_Strip_ID 2 0 Overhead Back 52 Forward Standing
+              |      LED_Strip_ID 2 1 Door Back 70 Forward Standing
+              |      LED_Strip_ID 2 2 Overhead Back 52 Forward Standing
+              |  LED_Group_ID 3 Front_Passenger
+              |   LED_Strip_Count 3 2
+              |      LED_Strip_ID 3 0 Overhead Front 52 Forward Standing
+              |      LED_Strip_ID 3 1 Door Front 66 Forward Hanging
+              |______________________________________
+
+      - Made some changes to the pulse repeat timer.  Its still not right, but  
+          I know whats wrong. 
+
+V 0.31_210622
+  - Current version will be more of a "get it working in any kind of way" update for 
+      the configurable system.  Plenty of routines need an overhaul.  
+      - Current Restrictions for current test version:
+          - Switches are directly tied to groups of strips.
+          - Animations are directly tied to groups of strips (mostly).
+          - Only one switch per group.
+          - There is no direct mapping for switch to strip group.
+          - Console Display could use plenty of work.  Holding off until I get 
+              a display because never needed in live environement and not a system 
+              dependent component. 
+  - Sucesses:
+      - No Hardcoded strip sizes or switch sizes should exist anywhere in the 
+          system.
+      - Any Array within the system is dynamicly allocated on startup or whenever 
+          needed.
+      - Every part of the system that relied on hardcoded sizes has been rewritten 
+          to handle dynamic sizes or allocations. 
+      - Portions of the console has been rewitten to handle dynamic sizes.
+      - Test funcions have been modified to handle dynamic sizes.
+      - All in all, a bunch of things changed.
+  - I am not certain everythings is working as was before, so running everything 
+      through some live test to find out.  
+  - Cut out a bunch of old animations.  Structure of the animation classes changed 
+      so much, probably couldnt get them running without a rewrite anyway. 
+  - Added things to the ToDo list.  Good things.
+  - I would totally love a Cesna 152 and the ability to continuously affor its 
+      upkeep and minor trips.  I think I could handle a Cesna 152 as long as  
+      everything worked.  Do you really need to go to a flight school to get 
+      a pilots license.  Really need to get rid of people in my life who keep 
+      tieing me down.
+  - Large portions of code are out of place, not needed, or just in the wrong 
+      order.  Doesn't really affect the program compile or running, but, tidying 
+      up will make the program easier to read. 
+
+V 0.30_210619
+  - Delete the old configuration file before running.  Things have changed.
+  - Got tired of looking at the same old animations.  
+      Redid the Door open spotlight animation.
+      Redid the Pulse animation.  Easier on the eyes.
+  - Scheduled Events (AnEvSchedule) are now repeatable by setting repeat = true and
+      duration.
+  - Pulse animation and Pulse Countdown now call the same single simple pulse
+      animation repeatedly.  No need to double up on the same animation to do two 
+      seperate versions of the same thing.
+  - Started the trek of configurable and numeralable strip types and sizes.  I am 
+      not going to need to traverse any mountains, but there are a number of not so 
+      small hills on the way.  I had the foresight during the designing and the 
+      seemingly novel days of the Arduino Nano, to design the system so Fled could 
+      handle an array type of LED strips.  Back then, though, I had no idea about 
+      how it could be implemented. A fair amount of code will need to be rewritten.
+  - Added a new command (config) to see if files loaded properly.  Probably have 
+      more function in the futuer.
+  - The Door Sensor Hardware Interface is now upgraded to the new Configurable 
+      system.  Sure, much of the system cant take advantage of the varible amount  
+      of switches, yet, and things like the console is hardcoded for, no less than
+      4 switches.  However, a first step towards a fully configurable system has 
+      been made.  The only steps remaining is:  modifying the strip classes to 
+      be something more generic.  Writing the code to load those generic strips 
+      with custom classifications.  Mapping the Hardware Map to the strips, and 
+      hardware reactions through configuration files.  And, rewriting all the 
+      animations.  I'm making it sound much more difficult than it actually is. 
+      Like I said before, the groundwork has already been laid out. 
+  - Taking the system out for a test before making any more changes. 
+
+V 0.29_210616
+  - A simple, editable, configuration file is generated when ran for the first 
+      time.  It will look like this:
+        ______________________________________
+        |Size_Test_Strip 63
+        |
+        |Size_Door_Back_Driver 70
+        |Size_Door_Back_Passenger 70
+        |Size_Door_Front_Driver 66
+        |Size_Door_Front_Passenger 66
+        |
+        |Size_Overhead_Back_Driver 52
+        |Size_Overhead_Back_Passenger 52
+        |Size_Overhead_Front_Driver 52
+        |Size_Overhead_Front_Passenger 52
+        |______________________________________
+
+      This file can then be edited to match your LED count setup.  
+      
+      The string path is still propritary and is one long string
+        in this order:
+    
+        Size_Door_Back_Driver --> Size_Overhead_Back_Driver --> 
+        Size_Overhead_Front_Driver --> Size_Door_Front_Driver --> 
+        Size_Door_Back_Passenger --> Size_Overhead_Back_Passenger --> 
+        Size_Overhead_Front_Passenger --> Size_Door_Front_Passenger
+    
+      This much of the configuration file only allows easy change of the LED count 
+        in each segment.  
+      Remaining work:  Number of segments, Number of sub segments, Segment names, 
+        Segment order, Segment orientation...
+
+V 0.28_210615
+  - "AnEvSetToEnd" event now works as expected and properly ends sheduled events 
+      also.  This squishes the bug causing Pulse Animations to, seemingly, randomly 
+      not end.  The problem was a scheduled event would get reactivated during 
+      PostCheck if it the ScheduleEvent was a passing Repeat=true parameter, and 
+      the event was able to repeat itself before the the SetToEnd event completed.  
+      There may be a reason to do this.  I don't know, But, never the less, the 
+      event now stops, cold turkey, when asked to.
+    Ok, its complecated.  Just went back and looked at it.  It may be realated to 
+      the code not setting the completion value to true, because it was lumped into
+      a part of code that actually needed to check for repeats.  
+    Just checked, "AnEvSchedule" aren't coded to be able to be repeated.  Could 
+      be with just one line of code.  But, isn't.
+
+V 0.27_210614
+  - Program files are now stored in "/etc/RasFLED/"
+      Note: The program cannot create the directory.  "/etc/RasFLED/" will need to 
+      be created manually before RasFLED is ran for the first time.
+  - LED Count is now calculated and not hard coded.
+  - Further reduction of static variables to facilitate migration towards loadable 
+      configuration.  Also, necessary for future implementation of dynamic 
+      classification of objects, such as doors, and sub objects, such as overhead 
+      lights, door lights, and switches.
+  - Still haven't traced the END_ANIMATION bug.  To think, I was only setting out 
+      to remove one static, rarely used definition (LED_COUNT).
+      
+V 0.26_210609
+  - More work has been done for loading files and settings
+  - Started working on a loadable, from file, hardware configuration.  This is a 
+      precursor to a more dynamiclly configurable system and is just the first step, 
+      of many, towards a system that can handle multiple varying numbers of LED 
+      strips and switch configurations.  All defined by one configuration file, and 
+      without needing a recompile to change.  This is also the groundwork for 
+      loadable animation packages. 
+  - Transfered a large chunk of settings to the System Data variable.
 
 
-  V 0.25_210607
-    - Starting implementing the files system.  At the moment, the system will only 
-        remember the running colors through a reset.  It's only groundwork.
-    - Made the flash more visible.
-    - Added some randomness to the pulse animation.
-    - changed "pp" command to run pulses on running colors.
-    - Adjusted the start time of animation end to hopefully correct a problem 
-        causing the countdown timer pulse not to completely end when a door was
-        opened.
+V 0.25_210607
+  - Starting implementing the files system.  At the moment, the system will only 
+      remember the running colors through a reset.  It's only groundwork.
+  - Made the flash more visible.
+  - Added some randomness to the pulse animation.
+  - changed "pp" command to run pulses on running colors.
+  - Adjusted the start time of animation end to hopefully correct a problem 
+      causing the countdown timer pulse not to completely end when a door was
+      opened.
 
-  V 0.24_210514
-    - A few days of testing done. 
-    - Modified a few of the animations.
-    - Flash color flash animation can be called with 'f' command.
+V 0.24_210514
+  - A few days of testing done. 
+  - Modified a few of the animations.
+  - Flash color flash animation can be called with 'f' command.
 
-  V 0.23_210519
-    - Spent the day working on Twinkle and got it working as it was originally 
-        programmed.  Still broken though and needs a rewrite.  Works fine until 
-        the animation speed is anything more than 0.  All I wanted to do is refresh
-        the animations.
-    - Changed the ovehead door open animation to pulse yellow. 
-    - Changed the default pulses to sweep from front to back top to bottom, 
-        hopefully.
-    - Reworked and recrated many animations.  Everthing now as a Glitch theme to 
-        constantly remind me I need to finish twinkle.
-    - Flash needs plenty of work.  It looks garbage enough to catch my attention 
-        when the countdown timer runs out
-    - Oh, Countdown timer works.  It was an to correct.
+V 0.23_210519
+  - Spent the day working on Twinkle and got it working as it was originally 
+      programmed.  Still broken though and needs a rewrite.  Works fine until 
+      the animation speed is anything more than 0.  All I wanted to do is refresh
+      the animations.
+  - Changed the ovehead door open animation to pulse yellow. 
+  - Changed the default pulses to sweep from front to back top to bottom, 
+      hopefully.
+  - Reworked and recrated many animations.  Everthing now as a Glitch theme to 
+      constantly remind me I need to finish twinkle.
+  - Flash needs plenty of work.  It looks garbage enough to catch my attention 
+      when the countdown timer runs out
+  - Oh, Countdown timer works.  It was an to correct.
 
-  V 0.22_210517
-    - Duplicated Pulse Animation to Pulse Animation Running.
-    - Introduced a Countdown Timer.
-    - Original plan was to create a helper library and move a few functions needed
-        for the timer functions.  Thing went nova.
-    - Countdown timer changes color of 'pp' or 'space space' command starting with
-        running color, to green, to yellow, and then to red.
-    - Added a 'fw', to flash white, command.  It is suposed to be triggered at end 
-        of countdown timer, but it is just a freeloading gonk that doesn't want to
-        behave.
+V 0.22_210517
+  - Duplicated Pulse Animation to Pulse Animation Running.
+  - Introduced a Countdown Timer.
+  - Original plan was to create a helper library and move a few functions needed
+      for the timer functions.  Thing went nova.
+  - Countdown timer changes color of 'pp' or 'space space' command starting with
+      running color, to green, to yellow, and then to red.
+  - Added a 'fw', to flash white, command.  It is suposed to be triggered at end 
+      of countdown timer, but it is just a freeloading gonk that doesn't want to
+      behave.
 
-  V 0.21_210315
-    - Increased the size of the side running lights from 6 to 12.
-    - Running Color allows a default color for Pulse and Overhead Illumination to be
-        set and retained.  'pp' or '  ' and 'oo' or 'zz' commands will call pulse 
-        and or overhead with the set color.  Choose with 'rX' where X is the color, 
-        shuch as R is Red, G is Green ...
-    - 'zz' can now turn on overhead illumination.  This was added because the z key 
-      is much easier to find in the dark than the o key.
-    - Yes, I want to tackle the to do list items such as "code it into header files," 
-        and have a "configuration file" or "read the animations from a JSON file" 
-        but, nearly every time I'm out there, testing the system, I find the smallest 
-        amount of changes and additions, adds more practicallity, utility, and 
-        convienance to my job.  For instance, a simple 5 minute pulse that starts 
-        green and ends red when finished, would let people know, at a glance 
-        how much time is remaining before I start thinking, and have to figure out 
-        if its a no show or not.
+V 0.21_210315
+  - Increased the size of the side running lights from 6 to 12.
+  - Running Color allows a default color for Pulse and Overhead Illumination to be
+      set and retained.  'pp' or '  ' and 'oo' or 'zz' commands will call pulse 
+      and or overhead with the set color.  Choose with 'rX' where X is the color, 
+      shuch as R is Red, G is Green ...
+  - 'zz' can now turn on overhead illumination.  This was added because the z key 
+    is much easier to find in the dark than the o key.
+  - Yes, I want to tackle the to do list items such as "code it into header files," 
+      and have a "configuration file" or "read the animations from a JSON file" 
+      but, nearly every time I'm out there, testing the system, I find the smallest 
+      amount of changes and additions, adds more practicallity, utility, and 
+      convienance to my job.  For instance, a simple 5 minute pulse that starts 
+      green and ends red when finished, would let people know, at a glance 
+      how much time is remaining before I start thinking, and have to figure out 
+      if its a no show or not.
 
-  V 0.20_210301
-    - Hardware changed requiring me to change the order of pixel animations.  Some of 
-        animations work differently because the Door Strip is no longer door*2 and 
-        the Overhead Strips are no longer door*2+1.  I'm surprised it works at all.
-    - Window resize stopped working.  A work around is now in place and hotkeyable 
-        with the '*' key. 
-    - Created the "profile_strip" and "profile_strip_group" classes, to, completely, 
-        replace the "led_strip" class, so the door*2+1 problem is no longer an issue.
-    - Overhead illumination now turns off when a door is opened.  The code was there,
-        I had just forgotten to activate it.
-    - Color markings are added to the "c - Test LEDs" so the LEDs can be counted.
-    - Started removing code and animations no longer needed because the new classes
-        has made them obsolete.  Keeping animations like Halloween, Christmas, and 
-        Thanksgiving commented, to be referenced when rebuilding next year.
-    - Reprogrmmed Running Lights.
-    - I've been live running the lights for a week now, and, despite one occasional 
-        bug that doesnt turn off (all) the pusle lights when a door is opened, 
-        the system is very stable.  Meaning: no crashes, no odd behavior, nothing 
-        out of the ordinary.  Putting this up on GitHub now before I go through the 
-        next phase of major changes. 
+V 0.20_210301
+  - Hardware changed requiring me to change the order of pixel animations.  Some of 
+      animations work differently because the Door Strip is no longer door*2 and 
+      the Overhead Strips are no longer door*2+1.  I'm surprised it works at all.
+  - Window resize stopped working.  A work around is now in place and hotkeyable 
+      with the '*' key. 
+  - Created the "profile_strip" and "profile_strip_group" classes, to, completely, 
+      replace the "led_strip" class, so the door*2+1 problem is no longer an issue.
+  - Overhead illumination now turns off when a door is opened.  The code was there,
+      I had just forgotten to activate it.
+  - Color markings are added to the "c - Test LEDs" so the LEDs can be counted.
+  - Started removing code and animations no longer needed because the new classes
+      has made them obsolete.  Keeping animations like Halloween, Christmas, and 
+      Thanksgiving commented, to be referenced when rebuilding next year.
+  - Reprogrmmed Running Lights.
+  - I've been live running the lights for a week now, and, despite one occasional 
+      bug that doesnt turn off (all) the pusle lights when a door is opened, 
+      the system is very stable.  Meaning: no crashes, no odd behavior, nothing 
+      out of the ordinary.  Putting this up on GitHub now before I go through the 
+      next phase of major changes. 
 
-  V 0.19 _210205
-    - Created a routine for copying over the prepared matrix to the display matrix.
-    - Clean up the Calculated Matrix to the Render Matrix part, somewhat.  Still 
-        wishing it was handled better.  At least now I have a central part for it. 
-    - Put the matrix fill into its own routine. 
+V 0.19 _210205
+  - Created a routine for copying over the prepared matrix to the display matrix.
+  - Clean up the Calculated Matrix to the Render Matrix part, somewhat.  Still 
+      wishing it was handled better.  At least now I have a central part for it. 
+  - Put the matrix fill into its own routine. 
 
-  V 0.18 _210203
-    - Removed these items from ToDo list.  They got done.
-      - Set up an animation ID tag.
-      - Create an Better interface.
-      - Create specialized animations for specific alerts and hazards.
-    - No longer clearing all animations before starting new animations.  Instead, 
-        setting animations of animations being replaced to ClearOnEnd. 
-    - Added Orange to the pulses, for Lyft.
-    - Added Blue and Orange to the Overhead.
+V 0.18 _210203
+  - Removed these items from ToDo list.  They got done.
+    - Set up an animation ID tag.
+    - Create an Better interface.
+    - Create specialized animations for specific alerts and hazards.
+  - No longer clearing all animations before starting new animations.  Instead, 
+      setting animations of animations being replaced to ClearOnEnd. 
+  - Added Orange to the pulses, for Lyft.
+  - Added Blue and Orange to the Overhead.
 
-  V 0.17 _210202
-    - Hazard Light placeholder created.
-    - End all repeating non door animations command created.
-    - "`" or reverse apostrophe or whatever that button left of the 1 on a US 
-        keyboard is, will be the end command command. Still trying to come up with a 
-        good command set.  Thought of the way it is now, early on, and it seems to 
-        be working, for the most part, well now. 
-    - Hazard, Pulses, and Overhead extra animation statuss are now being reported to 
-        to the system varibles, in case I ever want show the status on the console. 
+V 0.17 _210202
+  - Hazard Light placeholder created.
+  - End all repeating non door animations command created.
+  - "`" or reverse apostrophe or whatever that button left of the 1 on a US 
+      keyboard is, will be the end command command. Still trying to come up with a 
+      good command set.  Thought of the way it is now, early on, and it seems to 
+      be working, for the most part, well now. 
+  - Hazard, Pulses, and Overhead extra animation statuss are now being reported to 
+      to the system varibles, in case I ever want show the status on the console. 
 
-  V 0.16 _210201
-    - Changed Debug to Diagnosis, because debug info really isn't being shown. 
-    - Added a DIAG indicator. 
-    - Added a line to show command line size. 
-    - Updated the SetToEnd documentation.
-    - Created an Overhead Illumination animation (simple as it is a placeholder.)
-    - Commands entered are now reported to the console.
+V 0.16 _210201
+  - Changed Debug to Diagnosis, because debug info really isn't being shown. 
+  - Added a DIAG indicator. 
+  - Added a line to show command line size. 
+  - Updated the SetToEnd documentation.
+  - Created an Overhead Illumination animation (simple as it is a placeholder.)
+  - Commands entered are now reported to the console.
 
-  V 0.15 _210130
-    - Assigned GPIO.22 (pin 31) to Door 1
-    - Assigned GPIO.23 (pin 33) to Door 2
-    - Assigned GPIO.24 (pin 35) to Door 3
-    - Assigned GPIO.25 (pin 37) to Door 4
-    - When in Debug mode, Pin Door Pin reads will be over written.
-    - I've been putting this off because I don't like the risk associated to testing 
-        hardware. 
+V 0.15 _210130
+  - Assigned GPIO.22 (pin 31) to Door 1
+  - Assigned GPIO.23 (pin 33) to Door 2
+  - Assigned GPIO.24 (pin 35) to Door 3
+  - Assigned GPIO.25 (pin 37) to Door 4
+  - When in Debug mode, Pin Door Pin reads will be over written.
+  - I've been putting this off because I don't like the risk associated to testing 
+      hardware. 
 
-  V 0.14 _210129
-    - SetToEnd can now end Scheduled events.
-    - Pulse commands will now repeat indefinitly.
-    - "pe" command now added to stop all pulses on all channels.
-    - Pulse colors available are Red, Green (Lyft), Blue, Purple (Uber), Cyan, 
-        and Yellow.  Need to put an Orange (Lyft).
-    - Pulses will automatically end when a door is opened.
+V 0.14 _210129
+  - SetToEnd can now end Scheduled events.
+  - Pulse commands will now repeat indefinitly.
+  - "pe" command now added to stop all pulses on all channels.
+  - Pulse colors available are Red, Green (Lyft), Blue, Purple (Uber), Cyan, 
+      and Yellow.  Need to put an Orange (Lyft).
+  - Pulses will automatically end when a door is opened.
 
-  V 0.13 _210128
-    - Created an "events" command to list all running events. I was going to have it 
-        display more information, that is more than just the Event Identity, but ...
-        wrote this routine because I couldn't find a stuck animation. Immediatly 
-        after running it I found "... Animm" and it was suposed to be "... Anim".  :)
-    - Moved debug hot keys to the Command Line.
-    - Created a pulse white and blue for testing. Commands are "pp" and "pw". 
-        Need to keep values below 128.  There is no extreme value checks on the Pulse.
+V 0.13 _210128
+  - Created an "events" command to list all running events. I was going to have it 
+      display more information, that is more than just the Event Identity, but ...
+      wrote this routine because I couldn't find a stuck animation. Immediatly 
+      after running it I found "... Animm" and it was suposed to be "... Anim".  :)
+  - Moved debug hot keys to the Command Line.
+  - Created a pulse white and blue for testing. Commands are "pp" and "pw". 
+      Need to keep values below 128.  There is no extreme value checks on the Pulse.
 
-  V 0.12 _210127
-    - Command line now works as inteded. 
-        This was fairly easy to do because I put most of it in the backbone already. 
-    - Command line now accepts one command, "help".
-    - Also, press enter to clear it.  This will make the command line HOT (not sure
-        if there is tech word for this,) meaning, that as soon as a command is 
-        recognized, it will execute.  The reasoning for this HOT Command line is I 
-        dont want to be fuddling arround with the keyboard while driving when all 
-        I want to do is turn on or off hazard lights.  This input method is 
-        imprtant because its so easy and fast.  For example, press "Enter" a few 
-        times in case the battery powered keyboard is assleep.  press "o" twice 
-        to turn on the overhead lights.  Or, something like "ob" to turn overhead 
-        lights on in the back.  Not yet implemented, but you see where this is 
-        going. 
+V 0.12 _210127
+  - Command line now works as inteded. 
+      This was fairly easy to do because I put most of it in the backbone already. 
+  - Command line now accepts one command, "help".
+  - Also, press enter to clear it.  This will make the command line HOT (not sure
+      if there is tech word for this,) meaning, that as soon as a command is 
+      recognized, it will execute.  The reasoning for this HOT Command line is I 
+      dont want to be fuddling arround with the keyboard while driving when all 
+      I want to do is turn on or off hazard lights.  This input method is 
+      imprtant because its so easy and fast.  For example, press "Enter" a few 
+      times in case the battery powered keyboard is assleep.  press "o" twice 
+      to turn on the overhead lights.  Or, something like "ob" to turn overhead 
+      lights on in the back.  Not yet implemented, but you see where this is 
+      going. 
 
-  V 0.11 _210126
-    - Events can now have Identifiers.
-    - Updated some both of the Guides.
-    - SetToEnd event can now target events with certain Identifiers.  
-        This will allow easier ways to turn off a set of events.  Especially when 
-        events with seperate roles are running on the same strip, such as the 
-        Overhead light running with the additional Overhead Door Open light. 
+V 0.11 _210126
+  - Events can now have Identifiers.
+  - Updated some both of the Guides.
+  - SetToEnd event can now target events with certain Identifiers.  
+      This will allow easier ways to turn off a set of events.  Especially when 
+      events with seperate roles are running on the same strip, such as the 
+      Overhead light running with the additional Overhead Door Open light. 
 
-  V 0.10 _210125
-    - Main routine now returns an int, for no programmed reason at all at this time,
-        just as any C based program should. Still haven't programed any flags yet. 
-        As of this writing, I cant think of any reason to do so, except for maybe 
-        console dislay colors, for when I actually have a monitor in the car or 
-        something. 
-    - Went through some of the newer portions of the program and put a few lines of 
-        comments and descriptions, for reference. 
-    - Not seen or displayed in any of this code, but what was done. 
-        Experimented with althernate ways of displaying and rending all the LEDS 
-        that with alternate LED librarys.  This was important because I don't 
-        like the one pin, LED strip limit.
-        - Atttempted to utilize the second channel programmed in the library. 
-            It failed because I just couldn't get it to work. Either it doesn't
-            look as if the original programme finished it.  Also, it has been 
-            years since he worked on it, so chance are it will never be finished. 
-        - This following portion of my test was sucessful.  
-            Instead of having the RPi hardware display the LEDs, I had the the Pi
-            generate what was displayed, then I sent those values to Arduinos, who 
-            were resonsible for their own LED strips.  
-          This is great because it allowed the arduinos to work as modules. This is 
-            primary intintions of the program.  It also allowed a, backup, failsafe, 
-            mode for the LEDs to work, if a break in the line occured, and or, 
-            limited operation when the RPI was offline and or booting up. 
-            It would also allow (MANY!) more LED strips to be running at the same 
-            time because the 90% of the clock cycles taken by this program is just 
-            timing and pushing the LED values to the LED strips through that DMA 
-            channel.  Also, I would get DMA 10 back so I could get my audio back. 
-          Although I was successful, I stopped progress on this because I was limited 
-            by the serial bus, which ran, at best, 14400 bytes per second.  Or, at 
-            best, 14 kbs.  And thats, with errors.  LED strips run at about 800 kbs. 
-            My best results yeilded at about 30 FPS with 130 LEDs without error 
-            correction.
-          I want to bring this back in the future.  I want to get Ethernet Hats 
-            for the Arduinos and stupid little low power ENet hub. I could then 
-            just attach and power an Arduino, directly to the LED strip via 
-            a simple Ethernet and power cable.  But, only if it works properly. 
+V 0.10 _210125
+  - Main routine now returns an int, for no programmed reason at all at this time,
+      just as any C based program should. Still haven't programed any flags yet. 
+      As of this writing, I cant think of any reason to do so, except for maybe 
+      console dislay colors, for when I actually have a monitor in the car or 
+      something. 
+  - Went through some of the newer portions of the program and put a few lines of 
+      comments and descriptions, for reference. 
+  - Not seen or displayed in any of this code, but what was done. 
+      Experimented with althernate ways of displaying and rending all the LEDS 
+      that with alternate LED librarys.  This was important because I don't 
+      like the one pin, LED strip limit.
+      - Atttempted to utilize the second channel programmed in the library. 
+          It failed because I just couldn't get it to work. Either it doesn't
+          look as if the original programme finished it.  Also, it has been 
+          years since he worked on it, so chance are it will never be finished. 
+      - This following portion of my test was sucessful.  
+          Instead of having the RPi hardware display the LEDs, I had the the Pi
+          generate what was displayed, then I sent those values to Arduinos, who 
+          were resonsible for their own LED strips.  
+        This is great because it allowed the arduinos to work as modules. This is 
+          primary intintions of the program.  It also allowed a, backup, failsafe, 
+          mode for the LEDs to work, if a break in the line occured, and or, 
+          limited operation when the RPI was offline and or booting up. 
+          It would also allow (MANY!) more LED strips to be running at the same 
+          time because the 90% of the clock cycles taken by this program is just 
+          timing and pushing the LED values to the LED strips through that DMA 
+          channel.  Also, I would get DMA 10 back so I could get my audio back. 
+        Although I was successful, I stopped progress on this because I was limited 
+          by the serial bus, which ran, at best, 14400 bytes per second.  Or, at 
+          best, 14 kbs.  And thats, with errors.  LED strips run at about 800 kbs. 
+          My best results yeilded at about 30 FPS with 130 LEDs without error 
+          correction.
+        I want to bring this back in the future.  I want to get Ethernet Hats 
+          for the Arduinos and stupid little low power ENet hub. I could then 
+          just attach and power an Arduino, directly to the LED strip via 
+          a simple Ethernet and power cable.  But, only if it works properly. 
 
-  V 0.09 _210119
-    - Moved the Keys variable keywatch to the Console, since it is the part of the 
-        console anyway.
-    - Changed the look of the interface.
-    - Normal operation will now disable debug inputs.
-    - Moved more console related routines into the console class.
-    - Created a Command Line on the interface.  This will be part of the routines 
-        to call specific animations fly style.
+V 0.09 _210119
+  - Moved the Keys variable keywatch to the Console, since it is the part of the 
+      console anyway.
+  - Changed the look of the interface.
+  - Normal operation will now disable debug inputs.
+  - Moved more console related routines into the console class.
+  - Created a Command Line on the interface.  This will be part of the routines 
+      to call specific animations fly style.
 
-  V 0.08 _210118
-    - Converted the interface to utilize some of the, fancier, features of ncurses.
-        Dynamic sized console window, suporting resizing.
-        Started working on the better interface.
+V 0.08 _210118
+  - Converted the interface to utilize some of the, fancier, features of ncurses.
+      Dynamic sized console window, suporting resizing.
+      Started working on the better interface.
 
-  V 0.07 _210117
-    - Fixed the Sleep Timer to sleep and display the acurate times.
-    - Built a simple console interface.
-    - Changed Max FPS to 50. Best before at nearly 500 LEDs was 52.  A strange flicker
-        now exist when maxing frame rate.  Will look into in the future.
-    - Sending this to GitHub now before I break something.  
-    - Interface not finished.  FYI: I nearly abandoned this project with the problems 
-        I had with V.06.  It was that bad.  Except for the flicker, everything seems 
-        to be running perfectly now.
+V 0.07 _210117
+  - Fixed the Sleep Timer to sleep and display the acurate times.
+  - Built a simple console interface.
+  - Changed Max FPS to 50. Best before at nearly 500 LEDs was 52.  A strange flicker
+      now exist when maxing frame rate.  Will look into in the future.
+  - Sending this to GitHub now before I break something.  
+  - Interface not finished.  FYI: I nearly abandoned this project with the problems 
+      I had with V.06.  It was that bad.  Except for the flicker, everything seems 
+      to be running perfectly now.
 
-  V 0.06 _210116
-    - Corrected some major problems.
-    - Reverted teEvents back to a simple array.  The events are still in a linked
-        vector list that was the already accomplished goal. The reversion was a 
-        byproduct of getting rid of the errors.  I may have seen the bug fly past 
-        on my way to this, now working as I expect it to be, version.  But, I'm not 
-        entirely sure.  I think its behind me and I am scared of letting it get near 
-        me again.
-    - More byproducts as a result:
-        - Convert the stucts to classes.
-        - ReDo the DoorMonitorAndAnimationControlModule to handle a a few thintgs more
-            appropriately.
-        - Port the GitHub page over from previous FLED project.
-        - Learned, created, then completely destroy an interface designed with the 
-            ncurses library.  After I feel like the bug isnt hiding, I may create 
-            it again.  I liked what it could do, so I may try again.
-        - Spent, maybe 36 hours of programming, in the past 2 days, only to revert 
-            all the way back to the GitHub version (twice.)  Yes, I had major pointer 
-            problems.  Did I get them all? Stay tuned.
+V 0.06 _210116
+  - Corrected some major problems.
+  - Reverted teEvents back to a simple array.  The events are still in a linked
+      vector list that was the already accomplished goal. The reversion was a 
+      byproduct of getting rid of the errors.  I may have seen the bug fly past 
+      on my way to this, now working as I expect it to be, version.  But, I'm not 
+      entirely sure.  I think its behind me and I am scared of letting it get near 
+      me again.
+  - More byproducts as a result:
+      - Convert the stucts to classes.
+      - ReDo the DoorMonitorAndAnimationControlModule to handle a a few thintgs more
+          appropriately.
+      - Port the GitHub page over from previous FLED project.
+      - Learned, created, then completely destroy an interface designed with the 
+          ncurses library.  After I feel like the bug isnt hiding, I may create 
+          it again.  I liked what it could do, so I may try again.
+      - Spent, maybe 36 hours of programming, in the past 2 days, only to revert 
+          all the way back to the GitHub version (twice.)  Yes, I had major pointer 
+          problems.  Did I get them all? Stay tuned.
 
-  V 0.05 _210114
-    - Convert the Event system to use Linked List Push, Pop method.  This would be 
-        less work on the cpu, while both idle and running.
-      Took all night, but the Event List in each Event has been converted to Vectors.
-        The results is, program take <1% CPU while sleeping and I dont have to worry 
-        about animations dropping because I kept the array small to keep the load 
-        small.  
-      The collateral damage:  teEvents is now partially converted to Vectors, and
-        I learned how to program vectors.
+V 0.05 _210114
+  - Convert the Event system to use Linked List Push, Pop method.  This would be 
+      less work on the cpu, while both idle and running.
+    Took all night, but the Event List in each Event has been converted to Vectors.
+      The results is, program take <1% CPU while sleeping and I dont have to worry 
+      about animations dropping because I kept the array small to keep the load 
+      small.  
+    The collateral damage:  teEvents is now partially converted to Vectors, and
+      I learned how to program vectors.
 
-  V 0.04 _210113
-    - Minor Changes code.
-    - Added and changed comments.
-    - Removed unneeded commented code.
+V 0.04 _210113
+  - Minor Changes code.
+  - Added and changed comments.
+  - Removed unneeded commented code.
 
-  V 0.03 _210112
-    - Rebuilt all animations. These are slightly more interesting than the ones 
-        before. ;)
-    - Fixed a bunch of things
-    - The animations are airly well tested now.  This could actually be installed 
-        with a few minor tweeks.
+V 0.03 _210112
+  - Rebuilt all animations. These are slightly more interesting than the ones 
+      before. ;)
+  - Fixed a bunch of things
+  - The animations are airly well tested now.  This could actually be installed 
+      with a few minor tweeks.
 
-  V 0.02 _210109
-    - Added a simple text interface for testing.
-    - Started making more advanced animations. I like the new door animations.
-    - Corrected, fixed, and changed a bunch of things.
-    - Code is still very dirty.
-    - Created a ToDo list.
+V 0.02 _210109
+  - Added a simple text interface for testing.
+  - Started making more advanced animations. I like the new door animations.
+  - Corrected, fixed, and changed a bunch of things.
+  - Code is still very dirty.
+  - Created a ToDo list.
 
-  V 0.01 _201223 - _210106
-    - Holy Moley IT WORKS!!!
-        Running all 4 doors, not just 2, at lightning speeds, with tons ov overhead
-        resources.  And, better yet, it isn't just partially working, its a full  
-        fledge conversion.
-    - This is the dirty code, next will be cleaning it up.
-    - Ported over from my Arduino FLED project https://github.com/briefnotion/Fled
+V 0.01 _201223 - _210106
+  - Holy Moley IT WORKS!!!
+      Running all 4 doors, not just 2, at lightning speeds, with tons ov overhead
+      resources.  And, better yet, it isn't just partially working, its a full  
+      fledge conversion.
+  - This is the dirty code, next will be cleaning it up.
+  - Ported over from my Arduino FLED project https://github.com/briefnotion/Fled
 
 *************************************************************************************
