@@ -168,7 +168,9 @@ void teSystem(Console &cons, system_data &sdSysData, timed_event teEvent[], unsi
                   case AnTaChannelPulseColorCountdown:
                   // Color Specific Channel Pulse
                   {
+                    string return_string = "";
                     vdChannelLightPulseColorCountdown01(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip), teEvent, tmeCurrentTime, sdSysData.get_countdown_color());
+                    cons.printwait(return_string);
                     if (sdSysData.cdTIMER.is_triggered() == true)
                     {
                       if(sdSysData.cdTIMER.is_checked() == false)

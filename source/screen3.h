@@ -581,28 +581,20 @@ class Screen3
 
     //Display Door Statuses, highlighting values that are on (doors open)
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 1, 45, " Door1 ");
+    mvwprintw(winStatus, 1, 37, " Door1 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattroff(winStatus, A_REVERSE);}
     
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 0, 45, " Door2 ");
+    mvwprintw(winStatus, 0, 37, " Door2 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattroff(winStatus, A_REVERSE);}
     
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 1, 52, " Door3 ");
+    mvwprintw(winStatus, 1, 44, " Door3 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattroff(winStatus, A_REVERSE);}
 
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattron(winStatus, A_REVERSE);}
-    mvwprintw(winStatus, 0, 52, " Door4 ");
+    mvwprintw(winStatus, 0, 44, " Door4 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winStatus, A_REVERSE);}
-
-    // Display Repeat Animations Enabled.  (Not Yet Implemented)
-    mvwprintw(winStatus, 0, 18, "REPEAT");
-
-    // Display Door Aware Toggle Enabled. (Not Yet Implemented)
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 0, 26, "DOORAWARE");
-    wattroff(winStatus, A_REVERSE);
 
     // Display Day or Night mode toggle.
     if(sdSysData.booDay_On == true)
@@ -610,49 +602,49 @@ class Screen3
       //init_pair(1, COLOR_WHITE, COLOR_BLUE);
       //wattron(winStatus, COLOR_PAIR(1));
       wattron(winStatus, A_REVERSE);
-      mvwprintw(winStatus, 0, 37, " DAY ");
+      mvwprintw(winStatus, 0, 29, "  DAY  ");
       wattroff(winStatus, A_REVERSE);
       //wattroff(winStatus, COLOR_PAIR(1));
     }
     else
     {
-      mvwprintw(winStatus, 0, 37, "NIGHT");      
+      mvwprintw(winStatus, 0, 29, " NIGHT ");      
     }
 
     // Display Hazard Indicator
     if(sdSysData.booHazardRunning == true)
     {
       wattron(winStatus, A_REVERSE);
-      mvwprintw(winStatus, 1, 18, "HAZARD");
+      mvwprintw(winStatus, 1, 18, "  HAZARD  ");
       wattroff(winStatus, A_REVERSE);
     }
     else
     {
-      mvwprintw(winStatus, 1, 18, "HAZARD"); 
+      mvwprintw(winStatus, 1, 18, "  HAZARD  "); 
     }
 
     // Display Overhead Indicator
     if(sdSysData.booOverheadRunning == true)
     {
       wattron(winStatus, A_REVERSE);
-      mvwprintw(winStatus, 1, 26, "OVERHEAD ");
+      mvwprintw(winStatus, 0, 18, " OVERHEAD ");
       wattroff(winStatus, A_REVERSE);
     }
     else
     {
-      mvwprintw(winStatus, 1, 26, "OVERHEAD "); 
+      mvwprintw(winStatus, 0, 18, " OVERHEAD "); 
     }
 
     // Display Timer Indicator
     if(sdSysData.cdTIMER.is_active() == true)
     {
       wattron(winStatus, A_REVERSE);
-      mvwprintw(winStatus, 1, 37, "TIMER");
+      mvwprintw(winStatus, 1, 29, " TIMER ");
       wattroff(winStatus, A_REVERSE);
     }
     else
     {
-      mvwprintw(winStatus, 1, 37, "TIMER"); 
+      mvwprintw(winStatus, 1, 29, " TIMER "); 
     }
 
     /*

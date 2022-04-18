@@ -229,17 +229,10 @@ class system_data
       float pos = cdTIMER.timer_position(tmeCURRENT_FRAME_TIME);
 
       // Get Section of Color List
-      int section = 0;
-      float section_size = 1 / (float)running_color_list.size;
-
-      section = running_color_list.size;
-      for (int x = 0; x < running_color_list.size; x++)
-      {
-        if ((pos >= x * section_size) && (pos < (x+1) * section_size))
-        {
-          section = x;
-        }
-      }
+      int section = floor((running_color_list.size -1) * pos);
+      
+      // Determine size in time of each secion.
+      float section_size = 1 / (float)(running_color_list.size -1);
 
       // Get % Section complete
       unsigned long section_time_removed = section * (cdTIMER.duration() * section_size);

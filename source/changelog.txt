@@ -1,3 +1,14 @@
+V 0.63A_220415
+  - Corrected coding so that the countdown timer colors will properly shift from 
+      first to last color. As it was, before the correction, the last color in the 
+      list would stay on, without color shifting, for a complete complete sub-
+      cycle.
+  - The pulses are now day night mode aware. If day the pulses will only be the 
+      color specified.  If at night, the color will have an extra leading bright 
+      light leading the pulse.  
+  - Eliminated "DOORAWARE" and "REPEAT" from the display status bar. One was 
+      never needed and the other was eliminated with the day night cycle. 
+
 V 0.62A_220415
   - Changed the pulse animations to have shorter tails and animated differently.
   - Changed the overhead convienance lights to be more promenant.

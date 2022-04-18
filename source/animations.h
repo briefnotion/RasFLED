@@ -225,10 +225,10 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
     counter_symetry = intDurG * (amount - x - 1); 
 
     // Door Animations
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, false);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, true);
     teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurG /3, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, false);
 
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, false);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, true);
     teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurG /3, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, false);
   }
 }
