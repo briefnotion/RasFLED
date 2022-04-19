@@ -455,6 +455,7 @@ class Console
           printi("Tab Console");
           ScrStat.Window_Console_On();
           ScrStat.Window_Player_Off();
+          ScrStat.Window_Craft_Stat_Off();
           the_player.pause();
         }
 
@@ -464,6 +465,7 @@ class Console
           printi("Tab Blank Screen");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
+          ScrStat.Window_Craft_Stat_Off();
           the_player.pause();
         }
 
@@ -473,6 +475,17 @@ class Console
           printi("Tab Player");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_On();
+          ScrStat.Window_Craft_Stat_Off();
+          the_player.play();
+        }
+
+        if(name.compare("TABCRAFT") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Player");
+          ScrStat.Window_Console_Off();
+          ScrStat.Window_Player_Off();
+          ScrStat.Window_Craft_Stat_On();
           the_player.play();
         }
 

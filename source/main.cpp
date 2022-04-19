@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.63A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.64A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -884,8 +884,31 @@ int loop()
   // ---------------------------------------------------------------------------------------
   // If we are here, then we are closing the program.
   
-  // Shutdown.
+  // Wait for threads to end before continuing to shutdown.
+
+  if(thread_render_running == true)
+  // Check to see if render thread was started before checking the completion status.
+  {
+    while(thread_render.wait_for(10ms) != future_status::ready)
+    {
+      cons.printi("Shutting thread down.");
+    }
+    thread_render_running = false;
+  }
+
+  if(thread_output_running == true)
+  // Check to see if output thread was started before checking the completion status.
+  {
+    while(thread_output.wait_for(10ms) != future_status::ready)
+    {
+      cons.printi("Shutting thread down.");
+    }
+    thread_output_running = false;
+  }
+
+  // Shutdown RPI.
   shutdown();
+
 
   printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 

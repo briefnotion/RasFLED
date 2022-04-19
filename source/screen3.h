@@ -114,6 +114,12 @@ class Screen3
   int XPlayerPos = 0;
   int YPlayerSize = -1;
   int XPlayerSize = -1;
+
+  // Craft_Stat
+  int YCraft_StatPos = -1;
+  int XCraft_StatPos = 0;
+  int YCraft_StatSize = -1;
+  int XCraft_StatSize = -1;
   
   bool Player_Frame_Counter = false;
   int Player_Frame_Count = 0;
@@ -127,6 +133,7 @@ class Screen3
   WINDOW * winCPicker;
   WINDOW * winConsole;
   WINDOW * winPlayer;
+  WINDOW * winCraft_Stat;
 
   // Monitor these varibles for changes to update their corres buttons.
   VAR_CHANGE_MON vcmTIMER;
@@ -164,6 +171,7 @@ class Screen3
     bzTabs.modify(0, "TABCONSOLE", "Console", 1, 2, C_WHITE_BLUE, 0);
     bzTabs.modify(1, "TABBLANKSCREEN", "Blank%Screen", 0, 2, C_WHITE_BLUE, 0);
     bzTabs.modify(2, "TABPLAYER", "Player", 0, 2, C_WHITE_BLUE, 0);
+    bzTabs.modify(3, "TABCRAFT", "Craft%Stat", 0, 2, C_WHITE_BLUE, 0);
   }
 
   void buttons_menu_home(system_data &sdSysData)
@@ -301,6 +309,9 @@ class Screen3
   // Set the screen and defines its contents for first run. 
   // Call after the screen init.
   {
+    // !!! Auto create not made yet. Run create for every button 
+    //      to be displayed.
+
     // Prep Control Buttons for program start.
     bzButtons.create_button();
     bzButtons.create_button();
@@ -324,6 +335,7 @@ class Screen3
     buttons_CPicker(sdSysData);
 
     // Prep Tab buttons for program first start
+    bzTabs.create_button();
     bzTabs.create_button();
     bzTabs.create_button();
     bzTabs.create_button();
@@ -537,6 +549,37 @@ class Screen3
       strBotLine = "";
       strBotLine = strBotLine.append(XPlayerSize-1, '_');
     }
+
+    // ---------------------------------------------------------------------------------------
+    // Craft_Stat Panel
+    if (ScrStat.Window_Craft_Stat == true)
+    // Main Craft_Stat Screen
+    {
+      // Calculate Size and Position
+      YCraft_StatPos = YSplit;
+      XCraft_StatPos = XCraft_StatPos;
+      YCraft_StatSize = YMax - YSplit - YTabSize;
+      XCraft_StatSize =  XSplit;
+
+      // Build Window
+      winCraft_Stat = newwin(YCraft_StatSize, XCraft_StatSize, YCraft_StatPos, XCraft_StatPos);
+      
+      // Set Y Split
+      YSplit = YSplit + YCraft_StatSize;
+
+      // Craft_Stat Window Border
+      wborder(winCraft_Stat,' ',' ',' ',' ',' ',' ',' ',' ') ;
+
+      // Create Player Screen
+      wrefresh(winCraft_Stat);
+
+      // Set window color
+      wbkgd(winCraft_Stat, COLOR_PAIR(0));
+
+      // the bottom line of the Craft_Stat.
+      strBotLine = "";
+      strBotLine = strBotLine.append(XCraft_StatSize-1, '_');
+    }
     
     // ---------------------------------------------------------------------------------------
     // Tabs Panel
@@ -552,6 +595,7 @@ class Screen3
       bzTabs.move_resize(0, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 0), YTabSize, XTabSize);
       bzTabs.move_resize(1, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize);
       bzTabs.move_resize(2, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), YTabSize, XTabSize);
+      bzTabs.move_resize(3, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), YTabSize, XTabSize);
 
       // Set Y Split
       YSplit = YSplit + YTabSize;
@@ -1008,6 +1052,60 @@ class Screen3
     return strBuffer;
   }
 
+  void craft_stat(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  // Shows the Player Window
+  {
+    int yCurPos = 0;
+
+    // Screen Title
+    wattron(winCraft_Stat, A_REVERSE);
+    mvwprintw(winCraft_Stat, 0, XCraft_StatSize - 7, "  CRAFT");
+    wattroff(winCraft_Stat, A_REVERSE);
+
+    mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
+
+    mvwprintw(winCraft_Stat, 3, 2, "Coolant Temp: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 3, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 5, 2, "    Oil Temp: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 5, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 7, 2, "  Trans Temp: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 7, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 9, 0, "Performance ---");
+
+    mvwprintw(winCraft_Stat, 11, 2, "       Speed: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 11, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 13, 2, "Acceleration: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 13, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 15, 2, "        MPG: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 15, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 17, 0, "Other ---");
+
+    mvwprintw(winCraft_Stat, 19, 2, "   Tire PSI: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 19, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 21, 2, "   Tire PSI: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 21, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 23, 2, "   Tire PSI: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 23, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 25, 2, "   Tire PSI: %02d : %02d", 60, 75);
+    mvwprintw(winCraft_Stat, 25, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+
+    mvwprintw(winCraft_Stat, 27, 0, "Alerts ---");
+
+    mvwprintw(winCraft_Stat, 29, 0, "  NO ALERTS");
+
+    // Refresh the window.
+    wrefresh(winCraft_Stat);
+    
+  }
 
   // ---------------------------------------------------------------------------------------
 
@@ -1079,6 +1177,12 @@ class Screen3
     if (ScrStat.Window_Player == true)
     {
       the_player(clou, ScrStat);
+    }
+
+    // Draw Craft_Stat window.
+    if (ScrStat.Window_Craft_Stat == true)
+    {
+      craft_stat(clou, ScrStat);
     }
 
     // Buttons

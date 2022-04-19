@@ -705,6 +705,7 @@ class ScreenStatus
   bool Window_Tabs = false;
   bool Window_Console = false;
   bool Window_Player = false;
+  bool Window_Craft_Stat = false;
   
   // Refresh is set to true only if the value 
   //  of displaying the window has changed. 
@@ -849,6 +850,24 @@ class ScreenStatus
     if (Window_Player == true)
     {
       Window_Player = false;
+      Needs_Refresh = true;
+    }
+  }
+
+    void Window_Craft_Stat_On()
+  {
+    if (Window_Craft_Stat == false)
+    {
+      Window_Craft_Stat = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Craft_Stat_Off()
+  {
+    if (Window_Craft_Stat == true)
+    {
+      Window_Craft_Stat = false;
       Needs_Refresh = true;
     }
   }

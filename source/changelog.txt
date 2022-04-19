@@ -1,3 +1,7 @@
+V 0.64A_220418
+  - Built a car status place holder screen.
+  - Added code to ensure threads are ended before completing exit program.
+
 V 0.63A_220415
   - Corrected coding so that the countdown timer colors will properly shift from 
       first to last color. As it was, before the correction, the last color in the 
