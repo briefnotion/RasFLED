@@ -1,3 +1,6 @@
+V 0.65A_220419
+  - Internal work on Gadget Progress Bar.
+
 V 0.64A_220418
   - Built a car status place holder screen.
   - Added code to ensure threads are ended before completing exit program.

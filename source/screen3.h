@@ -141,6 +141,20 @@ class Screen3
 
   string strBuffer = "";      // Buffer string containing a movie frame to be printed.
 
+  // Gadgets
+  PROGRESS_BAR Temp_Coolant;
+  PROGRESS_BAR Temp_Oil;
+  PROGRESS_BAR Temp_Trans;
+
+  PROGRESS_BAR Perf_Speed;
+  PROGRESS_BAR Perf_Acceleration;
+  PROGRESS_BAR Perf_MPG;
+  
+  PROGRESS_BAR Othr_FD_Tire_PSI;
+  PROGRESS_BAR Othr_FP_Tire_PSI;
+  PROGRESS_BAR Othr_RD_Tire_PSI;
+  PROGRESS_BAR Othr_RP_Tire_PSI;
+
   public:
 
   bool buffer_active = false; // Set to true when a buffer has a new movie frame. 
@@ -340,6 +354,60 @@ class Screen3
     bzTabs.create_button();
     bzTabs.create_button();
     buttons_Tabs(sdSysData);
+
+    // Build any Gadgets that will be called.
+    // Engine
+    Temp_Coolant.label("Coolant Temp");
+    Temp_Coolant.label_size(13);
+    Temp_Coolant.size(15);
+    Temp_Coolant.max_value(75);
+
+    Temp_Oil.label("Oil Temp");
+    Temp_Oil.label_size(13);
+    Temp_Oil.size(15);
+    Temp_Oil.max_value(75);
+
+    Temp_Trans.label("Trans Temp");
+    Temp_Trans.label_size(13);
+    Temp_Trans.size(15);
+    Temp_Trans.max_value(75);
+
+    // Performance
+    Perf_Speed.label("Speed");
+    Perf_Speed.label_size(13);
+    Perf_Speed.size(15);
+    Perf_Speed.max_value(75);
+
+    Perf_Acceleration.label("Acceleration");
+    Perf_Acceleration.label_size(13);
+    Perf_Acceleration.size(15);
+    Perf_Acceleration.max_value(75);
+
+    Perf_MPG.label("MPG");
+    Perf_MPG.label_size(13);
+    Perf_MPG.size(15);
+    Perf_MPG.max_value(75);
+
+    // Other
+    Othr_FD_Tire_PSI.label("FD_Tire_PSI");
+    Othr_FD_Tire_PSI.label_size(13);
+    Othr_FD_Tire_PSI.size(15);
+    Othr_FD_Tire_PSI.max_value(75);
+
+    Othr_FP_Tire_PSI.label("FP_Tire_PSI");
+    Othr_FP_Tire_PSI.label_size(13);
+    Othr_FP_Tire_PSI.size(15);
+    Othr_FP_Tire_PSI.max_value(75);
+
+    Othr_RD_Tire_PSI.label("RD_Tire_PSI");
+    Othr_RD_Tire_PSI.label_size(13);
+    Othr_RD_Tire_PSI.size(15);
+    Othr_RD_Tire_PSI.max_value(75);
+
+    Othr_RP_Tire_PSI.label("RP_Tire_PSI");
+    Othr_RP_Tire_PSI.label_size(13);
+    Othr_RP_Tire_PSI.size(15);
+    Othr_RP_Tire_PSI.max_value(75);
 
     // Draw screen the entire screen.  reset is also 
     //  called when the screen is resized.  
@@ -805,7 +873,7 @@ class Screen3
 
     // Display
     mvwprintw(winTimer, 1, 2, "Timer: %02d:%02d", millis_to_time_minutes(remaining_time), millis_to_time_seconds(remaining_time));
-    mvwprintw(winTimer, 1, 15, "[%s]", progress_bar(15, duration_time, duration_time-elaped_time).c_str());
+    mvwprintw(winTimer, 1, 15, "[%s]", simple_progress_bar(15, duration_time, duration_time-elaped_time).c_str());
 
     //------------------------
     // Screen Title
@@ -1064,39 +1132,22 @@ class Screen3
 
     mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
 
-    mvwprintw(winCraft_Stat, 3, 2, "Coolant Temp: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 3, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 5, 2, "    Oil Temp: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 5, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 7, 2, "  Trans Temp: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 7, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+    Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 35);
+    Temp_Oil.progress_bar(winCraft_Stat, 5, 2, 35);
+    Temp_Trans.progress_bar(winCraft_Stat, 7, 2, 35);
 
     mvwprintw(winCraft_Stat, 9, 0, "Performance ---");
 
-    mvwprintw(winCraft_Stat, 11, 2, "       Speed: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 11, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 13, 2, "Acceleration: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 13, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 15, 2, "        MPG: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 15, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+    Perf_Speed.progress_bar(winCraft_Stat, 11, 2, 35);
+    Perf_Acceleration.progress_bar(winCraft_Stat, 13, 2, 35);
+    Perf_MPG.progress_bar(winCraft_Stat, 15, 2, 35);
 
     mvwprintw(winCraft_Stat, 17, 0, "Other ---");
 
-    mvwprintw(winCraft_Stat, 19, 2, "   Tire PSI: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 19, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 21, 2, "   Tire PSI: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 21, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 23, 2, "   Tire PSI: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 23, 25, "[%s]", progress_bar(15, 60, 75).c_str());
-
-    mvwprintw(winCraft_Stat, 25, 2, "   Tire PSI: %02d : %02d", 60, 75);
-    mvwprintw(winCraft_Stat, 25, 25, "[%s]", progress_bar(15, 60, 75).c_str());
+    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 19, 2, 35);
+    Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 21, 2, 35);
+    Othr_RD_Tire_PSI.progress_bar(winCraft_Stat, 23, 2, 35);
+    Othr_RP_Tire_PSI.progress_bar(winCraft_Stat, 25, 2, 35);
 
     mvwprintw(winCraft_Stat, 27, 0, "Alerts ---");
 

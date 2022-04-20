@@ -559,12 +559,123 @@ class Button_Zone_Manager
     return clicked;
   }
 };
+
+
+class PROGRESS_BAR
+{
+  private:
+
+  string LABEL = "";
+  int LABEL_SIZE = 0;
+
+  int YPOS = 0;
+  int XPOS = 0;
+
+  int SIZE = 0;
+
+  int MAX_VALUE = 0;
+  int VALUE = 0;
+
+  void draw(WINDOW *winWindow)
+  // Drawing a progress bar
+  {
+    string label = "";
+
+    string bar = "";
+    string fill = "";
+    int bar_size = 0;
+    int value = 0;
+
+    // create empty label
+
+    if (LABEL.size() < LABEL_SIZE)
+    {
+      label = label.append(LABEL_SIZE - LABEL.size(), ' ') + LABEL;
+    }
+    else
+    {
+      label = LABEL;
+    }
+
+    // create empty bar
+    bar = bar.append(SIZE,' ');
+
+    // stay positive
+    value = abs(VALUE);
+
+    // stay within size
+    if (value > MAX_VALUE)
+    {
+      value = MAX_VALUE;
+    }
+
+    // calculate the size of the fill bar with respects to full bar size.
+    bar_size = SIZE*VALUE/MAX_VALUE;
+
+    // create fill bar
+    fill = fill.append(bar_size , '|'   );
+
+    // put bar in empty bar
+    bar.replace(0, bar_size, fill);
+
+    //return bar;
+
+    mvwprintw(winWindow, YPOS, XPOS, "%s: [%s] %d", label.c_str(), bar.c_str(), (LABEL_SIZE - LABEL.size()));
+  }
+
+  public:
+
+  void label(string Label)
+  {
+    LABEL = Label;
+  }
+
+  void label_size(int Label_Size)
+  {
+    LABEL_SIZE = Label_Size;
+  }
+
+  void size(int Size)
+  {
+    SIZE = Size;
+  }
+
+  void max_value(int Max_Value)
+  {
+    MAX_VALUE = Max_Value;
+  }
+
+  // Creates a simple progress bar of 0 to 100 percent.
+  //  Returns a string of size.
+  //  Of size, the percentage of value to max_value will be filled
+  //  with characters.
+  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value)
+  {
+    YPOS = YPos;
+    XPOS = XPos;
+    VALUE = value;
+
+    draw(winWindow);
+  }
+
+
+  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
+  {
+    YPOS = YPos;
+    XPOS = XPos;
+    SIZE = size;
+    MAX_VALUE = max_value;
+    VALUE = value;
+
+    draw(winWindow);
+  }
+};
 // ---------------------------------------------------------------------------------------
 // Gadgets functions
 
 
 // Drawing a progress bar
-string progress_bar(int size, int max_value, int value)
+string simple_progress_bar(int size, int max_value, int value)
 // Creates a simple progress bar of 0 to 100 percent.
 //  Returns a string of size.
 //  Of size, the percentage of value to max_value will be filled
@@ -597,6 +708,7 @@ string progress_bar(int size, int max_value, int value)
 
   return bar;
 }
+
 
 
 
