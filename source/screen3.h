@@ -18,6 +18,8 @@
 #include <string.h>
 #include <deque>
 
+#include "helper_ncurses.h"
+#include "stringthings.h"
 #include "system.h"
 #include "consoleanddata.h"
 #include "player.h"
@@ -142,6 +144,8 @@ class Screen3
   string strBuffer = "";      // Buffer string containing a movie frame to be printed.
 
   // Gadgets
+  PROGRESS_BAR Countdown_Timer;
+
   PROGRESS_BAR Temp_Coolant;
   PROGRESS_BAR Temp_Oil;
   PROGRESS_BAR Temp_Trans;
@@ -286,6 +290,7 @@ class Screen3
       //  COLOR_CYAN
       //  COLOR_WHITE
 
+      /*
       init_pair(C_RED_BLACK, COLOR_RED, COLOR_BLACK);
       init_pair(C_YELLOW_BLACK, COLOR_YELLOW, COLOR_BLACK);
       init_pair(C_GREEN_BLACK, COLOR_GREEN, COLOR_BLACK);
@@ -306,6 +311,9 @@ class Screen3
       init_pair(C_BLACK_PURPLE, COLOR_BLACK, COLOR_MAGENTA);
       init_pair(C_BLACK_CYAN, COLOR_BLACK, COLOR_CYAN);
       init_pair(C_BLACK_BLACK, COLOR_BLACK, COLOR_BLACK);
+      */
+
+      CRT_init_all_pairs();
 
       /*
       //Redefine Colors
@@ -356,56 +364,70 @@ class Screen3
     buttons_Tabs(sdSysData);
 
     // Build any Gadgets that will be called.
+
+    // Countdown Timer
+    Countdown_Timer.label("Timer: ");
+    Countdown_Timer.label_size(13);
+    Countdown_Timer.size(15);
+    Countdown_Timer.max_value(75);
+    Countdown_Timer.color_background(COLOR_BLACK);
+    Countdown_Timer.color_foreground(COLOR_WHITE);
+    Countdown_Timer.print_value(false);
+
     // Engine
-    Temp_Coolant.label("Coolant Temp");
-    Temp_Coolant.label_size(13);
+    Temp_Coolant.label("Coolant Temp: ");
+    Temp_Coolant.label_size(15);
     Temp_Coolant.size(15);
     Temp_Coolant.max_value(75);
+    Temp_Coolant.print_value(true);
 
-    Temp_Oil.label("Oil Temp");
-    Temp_Oil.label_size(13);
+    Temp_Oil.label("Oil Temp: ");
+    Temp_Oil.label_size(15);
     Temp_Oil.size(15);
     Temp_Oil.max_value(75);
 
-    Temp_Trans.label("Trans Temp");
-    Temp_Trans.label_size(13);
+    Temp_Trans.label("Trans Temp: ");
+    Temp_Trans.label_size(15);
     Temp_Trans.size(15);
     Temp_Trans.max_value(75);
+    Temp_Trans.print_value(true);
 
     // Performance
-    Perf_Speed.label("Speed");
-    Perf_Speed.label_size(13);
+    Perf_Speed.label("Speed: ");
+    Perf_Speed.label_size(15);
     Perf_Speed.size(15);
     Perf_Speed.max_value(75);
 
-    Perf_Acceleration.label("Acceleration");
-    Perf_Acceleration.label_size(13);
+    Perf_Acceleration.label("Acceleration: ");
+    Perf_Acceleration.label_size(15);
     Perf_Acceleration.size(15);
     Perf_Acceleration.max_value(75);
 
-    Perf_MPG.label("MPG");
-    Perf_MPG.label_size(13);
+    Perf_MPG.label("MPG: ");
+    Perf_MPG.label_size(15);
     Perf_MPG.size(15);
     Perf_MPG.max_value(75);
+    Perf_MPG.print_value(true);
 
     // Other
-    Othr_FD_Tire_PSI.label("FD_Tire_PSI");
-    Othr_FD_Tire_PSI.label_size(13);
+    Othr_FD_Tire_PSI.label("FD_Tire_PSI: ");
+    Othr_FD_Tire_PSI.label_size(15);
     Othr_FD_Tire_PSI.size(15);
     Othr_FD_Tire_PSI.max_value(75);
 
-    Othr_FP_Tire_PSI.label("FP_Tire_PSI");
-    Othr_FP_Tire_PSI.label_size(13);
+    Othr_FP_Tire_PSI.label("FP_Tire_PSI: ");
+    Othr_FP_Tire_PSI.label_size(15);
     Othr_FP_Tire_PSI.size(15);
     Othr_FP_Tire_PSI.max_value(75);
+    Othr_FP_Tire_PSI.print_value(true);
 
-    Othr_RD_Tire_PSI.label("RD_Tire_PSI");
-    Othr_RD_Tire_PSI.label_size(13);
+    Othr_RD_Tire_PSI.label("RD_Tire_PSI: ");
+    Othr_RD_Tire_PSI.label_size(15);
     Othr_RD_Tire_PSI.size(15);
     Othr_RD_Tire_PSI.max_value(75);
 
-    Othr_RP_Tire_PSI.label("RP_Tire_PSI");
-    Othr_RP_Tire_PSI.label_size(13);
+    Othr_RP_Tire_PSI.label("RP_Tire_PSI: ");
+    Othr_RP_Tire_PSI.label_size(15);
     Othr_RP_Tire_PSI.size(15);
     Othr_RP_Tire_PSI.max_value(75);
 
@@ -461,7 +483,8 @@ class Screen3
       wrefresh(winStatus);
 
       // Set window color
-      wbkgd(winStatus, COLOR_PAIR(C_WHITE_BLUE));
+      //wbkgd(winStatus, COLOR_PAIR(C_WHITE_BLUE));
+      wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
     }
 
     // ---------------------------------------------------------------------------------------
@@ -871,9 +894,13 @@ class Screen3
     elaped_time = sdSysData.cdTIMER.elapsed_time(sdSysData.tmeCURRENT_FRAME_TIME);
     remaining_time = duration_time - elaped_time;
 
-    // Display
-    mvwprintw(winTimer, 1, 2, "Timer: %02d:%02d", millis_to_time_minutes(remaining_time), millis_to_time_seconds(remaining_time));
-    mvwprintw(winTimer, 1, 15, "[%s]", simple_progress_bar(15, duration_time, duration_time-elaped_time).c_str());
+    // Display Timer
+    string mins = linemerge_right_justify(2, "00", to_string(millis_to_time_minutes(remaining_time)));
+    string secs = linemerge_right_justify(2, "00", to_string(millis_to_time_seconds(remaining_time)));
+
+    Countdown_Timer.label("Timer: " + mins + ":" + secs + " ");
+    Countdown_Timer.max_value(duration_time);
+    Countdown_Timer.progress_bar(winTimer, 1, 2, duration_time - elaped_time);
 
     //------------------------
     // Screen Title
@@ -1138,14 +1165,14 @@ class Screen3
 
     mvwprintw(winCraft_Stat, 9, 0, "Performance ---");
 
-    Perf_Speed.progress_bar(winCraft_Stat, 11, 2, 35);
-    Perf_Acceleration.progress_bar(winCraft_Stat, 13, 2, 35);
-    Perf_MPG.progress_bar(winCraft_Stat, 15, 2, 35);
+    Perf_Speed.progress_bar(winCraft_Stat, 11, 2, -15);
+    Perf_Acceleration.progress_bar(winCraft_Stat, 13, 2, 100);
+    Perf_MPG.progress_bar(winCraft_Stat, 15, 2, -100);
 
     mvwprintw(winCraft_Stat, 17, 0, "Other ---");
 
-    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 19, 2, 35);
-    Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 21, 2, 35);
+    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 19, 2, 75);
+    Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 21, 2, 0);
     Othr_RD_Tire_PSI.progress_bar(winCraft_Stat, 23, 2, 35);
     Othr_RP_Tire_PSI.progress_bar(winCraft_Stat, 25, 2, 35);
 

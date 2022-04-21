@@ -80,6 +80,89 @@ class WORDLINE
   }
 };
 
+string linefill(int size, string text)
+// Returns a space filled line of size with text in center.
+{
+  string line = "";
+
+  line = line.append(size,' ');
+
+  line.replace(((size/2)-(text.length()/2)), text.length(), text);
+  line.resize(size);
+  return line;
+}
+
+string linemerge(int size, string line, string text)
+// Overlaps and centers text onto line.
+// Returns value at size. 
+{
+  int text_size = text.length();
+  
+  if (text_size > size)
+  {
+    text.resize(size);
+    text_size = text.length();
+  }
+
+  line.replace(((size/2)-(text_size/2)), text_size, text);
+  line.resize(size);
+  return line;
+}
+
+string linemerge_left_justify(int size, string line, string text)
+// Overlaps and right justifies text onto line.
+// Returns value at size. 
+{
+  string return_string = line;
+
+  if (line.size() > text.size())
+  {
+    return_string.replace(0, text.size(), text);
+  }
+  else
+  {
+    return_string = text;
+  }
+
+  if((return_string.size() > size) && (size > 0))
+  {
+    return_string.erase(size, line.size() - size);
+  }
+
+  return return_string;
+}
+
+string linemerge_left_justify(string line, string text)
+// Overlaps and right justifies text onto line.
+// No Truncate.
+// Returns value at size. 
+{
+  return linemerge_left_justify(0, line, text);
+}
+
+string linemerge_right_justify(int size, string line, string text)
+// Overlaps and right justifies text onto line.
+// Returns value at size. 
+{
+  string return_string = line;
+
+  if (line.size() > text.size())
+  {
+    return_string.replace(line.size() - text.size(), text.size(), text);
+  }
+  else
+  {
+    return_string = text;
+  }
+
+  if(return_string.size() > size)
+  {
+    return_string.erase(0, return_string.size() - size);
+  }
+
+  return return_string;
+}
+
 
 
 #endif

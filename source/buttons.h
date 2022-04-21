@@ -13,28 +13,30 @@
 #define BUTTONS_H
 
 // Color pairing definitions for screen colors.
+//  Bacward Compatability
+// To Be Phased Out
 #define C_RED_BLACK 1
 #define C_YELLOW_BLACK 2
 #define C_GREEN_BLACK 3
 #define C_BLUE_BLACK 4
 
-#define C_WHITE_RED 5
-#define C_WHITE_YELLOW 6
-#define C_WHITE_GREEN 7
-#define C_WHITE_BLUE 8
-#define C_WHITE_PURPLE 9
-#define C_WHITE_CYAN 10
-#define C_WHITE_BLACK 11
+#define C_WHITE_RED 17
+#define C_WHITE_YELLOW 27
+#define C_WHITE_GREEN 37
+#define C_WHITE_BLUE 47
+#define C_WHITE_PURPLE 57
+#define C_WHITE_CYAN 67
+#define C_WHITE_BLACK 07
 
-#define C_BLACK_WHITE 12
+#define C_BLACK_WHITE 70
 
-#define C_BLACK_RED 15
-#define C_BLACK_YELLOW 16
-#define C_BLACK_GREEN 17
-#define C_BLACK_BLUE 18
-#define C_BLACK_PURPLE 19
-#define C_BLACK_CYAN 20
-#define C_BLACK_BLACK 21
+#define C_BLACK_RED 10
+#define C_BLACK_YELLOW 20
+#define C_BLACK_GREEN 30
+#define C_BLACK_BLUE 40
+#define C_BLACK_PURPLE 50
+#define C_BLACK_CYAN 60
+#define C_BLACK_BLACK 70
 
 
 // Standard Header Files
@@ -43,9 +45,8 @@
 #include <string.h>
 #include <deque>
 
-//#include "system.h"
-//#include "consoleanddata.h"
-//#include "player.h"
+#include "stringthings.h"
+#include "helper_ncurses.h"
 
 using namespace std;
 
@@ -92,32 +93,6 @@ class Button
   //  0 - click
   //  1 - toggle
   //  2 - radio (for the zone) (Not Implemented)
-
-  string linefill(int size, string text)
-  {
-    string line = "";
-
-    line = line.append(size,' ');
-
-    line.replace(((size/2)-(text.length()/2)), text.length(), text);
-    line.resize(size);
-    return line;
-  }
-
-  string linemerge(int size, string line, string text)
-  {
-    int text_size = text.length();
-    
-    if (text_size > size)
-    {
-      text.resize(size);
-      text_size = text.length();
-    }
-
-    line.replace(((size/2)-(text_size/2)), text_size, text);
-    line.resize(size);
-    return line;
-  }
 
   public:
 
@@ -565,6 +540,9 @@ class PROGRESS_BAR
 {
   private:
 
+  int COLOR_BACKGROUND = 0;
+  int COLOR_FOREGROUND = 0;
+
   string LABEL = "";
   int LABEL_SIZE = 0;
 
@@ -576,8 +554,11 @@ class PROGRESS_BAR
   int MAX_VALUE = 0;
   int VALUE = 0;
 
+  bool PRINT_VALUE = false;
+
   void draw(WINDOW *winWindow)
   // Drawing a progress bar
+  // This function is only acessable within this class.
   {
     string label = "";
 
@@ -610,39 +591,105 @@ class PROGRESS_BAR
     }
 
     // calculate the size of the fill bar with respects to full bar size.
-    bar_size = SIZE*VALUE/MAX_VALUE;
+    bar_size = SIZE*value/MAX_VALUE;
 
     // create fill bar
     fill = fill.append(bar_size , '|'   );
 
+
     // put bar in empty bar
     bar.replace(0, bar_size, fill);
 
-    //return bar;
+    // Colorize components
 
-    mvwprintw(winWindow, YPOS, XPOS, "%s: [%s] %d", label.c_str(), bar.c_str(), (LABEL_SIZE - LABEL.size()));
+
+    //Print bar;
+
+    // Print Label
+    mvwprintw(winWindow, YPOS, XPOS, "%s", label.c_str());
+
+    // Print first [
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE, "[");
+
+    // Print bar with color
+
+    if(VALUE > 0)
+    {
+      wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+    }
+    else
+    {
+      wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+    }
+
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
+    
+    if(VALUE > 0)
+    {
+      wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+    }
+    else
+    {
+      wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+    }
+
+    // Print last ]
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +1 , "]");
+
+    // Print Marker Again
+
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + bar_size +1 , "|");
+
+    if (PRINT_VALUE == true)
+    {
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +2, " %03d ", VALUE);
+    }
+
   }
 
   public:
 
+  void color_background(short Color)
+  // Set the propertie for Background Color.
+  // Expects NCurses color or color code. 
+  {
+    COLOR_BACKGROUND = Color;
+  }
+
+  void color_foreground(short Color)
+  // Set the propertie for Foreground Color.
+  // Expects NCurses color or color code. 
+  {
+    COLOR_FOREGROUND = Color;
+  }
+
   void label(string Label)
+  // Set the propertie for displayed label.
   {
     LABEL = Label;
   }
 
   void label_size(int Label_Size)
+  // Set the propertie for displayed label size.
   {
     LABEL_SIZE = Label_Size;
   }
 
   void size(int Size)
+  // Set the propertie for progress bar saize.
   {
     SIZE = Size;
   }
 
   void max_value(int Max_Value)
+  // Set the propertie for progress bar max value.
   {
     MAX_VALUE = Max_Value;
+  }
+
+  void print_value(bool Print_Value)
+  {
+    PRINT_VALUE = Print_Value;
   }
 
   // Creates a simple progress bar of 0 to 100 percent.
@@ -650,6 +697,7 @@ class PROGRESS_BAR
   //  Of size, the percentage of value to max_value will be filled
   //  with characters.
   void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value)
+  // Print progress bar in window at coords with value as progress.
   {
     YPOS = YPos;
     XPOS = XPos;
@@ -658,8 +706,9 @@ class PROGRESS_BAR
     draw(winWindow);
   }
 
-
   void progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
+  // Print progress bar in window at coords with value as progress.
+  // Also, allows for other properties to be change.
   {
     YPOS = YPos;
     XPOS = XPos;
@@ -670,9 +719,10 @@ class PROGRESS_BAR
     draw(winWindow);
   }
 };
+
+
 // ---------------------------------------------------------------------------------------
 // Gadgets functions
-
 
 // Drawing a progress bar
 string simple_progress_bar(int size, int max_value, int value)

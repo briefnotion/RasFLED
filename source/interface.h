@@ -16,6 +16,7 @@
 #include <string>
 
 // RASFled related header files
+#include "stringthings.h"
 #include "consoleanddata.h"
 #include "timedeventsystem.h"
 #include "commands.h"
@@ -32,8 +33,9 @@
 
 void command_desc(Console &cons, string strDescription)
 {
-  cons.printwait("__________________________");
-  cons.printwait(strDescription);
+  //cons.printwait(linemerge_left_justify("________________________________________________", 
+  //                                      "__" + strDescription));
+  cons.printwait("  " + strDescription);
 }
 
 // -------------------------------------------------------------------------------------
@@ -288,7 +290,10 @@ bool check_command(Console &cons, string command, string description)
 {
   if (cons.keywatch.Command.COMMANDLINE == command)
   {
-    cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+    //cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+    cons.printwait(linemerge_left_justify("________________________________________________", 
+                    "CMD: " + cons.keywatch.Command.COMMANDLINE));
+
     if (description == "")
     {
       // do nothing

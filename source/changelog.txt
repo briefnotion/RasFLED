@@ -1,3 +1,11 @@
+V 0.66A_220420
+  - More work on Gadget Progress Bar. I'm satisfied with the way it looks, for now. 
+  - Moved some of string functions of buttons to the stringthings library.
+  - Another CRT color indexing system is made and the old one will be phased out 
+      over time. What is this, my 3rd or fourth iteration of the indexing system. 
+      Anyway, the colors are scalable and can rotate with value, like I made 
+      when I created the Cardoon's control panel.  
+
 V 0.65A_220419
   - Internal work on Gadget Progress Bar.
 
