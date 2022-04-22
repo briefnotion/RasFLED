@@ -536,7 +536,10 @@ class Button_Zone_Manager
 };
 
 
-class PROGRESS_BAR
+class BAR
+// Display Progress Bar or Guage Bar.
+// Needs to be passed an NCurses window
+// Properties can be set when defined.
 {
   private:
 
@@ -556,9 +559,39 @@ class PROGRESS_BAR
 
   bool PRINT_VALUE = false;
 
-  void draw(WINDOW *winWindow)
+  void wat_on_green_red(WINDOW *winWindow, bool value)
+  {
+    if(value == true)
+    {
+      wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+    }
+    else
+    {
+      wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+    }
+  }
+
+  void wat_off_green_red(WINDOW *winWindow, bool value)
+  {
+    if(value == true)
+    {
+      wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+    }
+    else
+    {
+      wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+    }
+  }
+
+  void draw_bar(int Bar_Type, WINDOW *winWindow)
   // Drawing a progress bar
   // This function is only acessable within this class.
+
+  //  Bar Type
+  //  1 - Progress Bar
+  //  2 - Variable Guage Bar
+  //  3 - Mechanical Guage Bar
+
   {
     string label = "";
 
@@ -578,9 +611,6 @@ class PROGRESS_BAR
       label = LABEL;
     }
 
-    // create empty bar
-    bar = bar.append(SIZE,' ');
-
     // stay positive
     value = abs(VALUE);
 
@@ -593,17 +623,19 @@ class PROGRESS_BAR
     // calculate the size of the fill bar with respects to full bar size.
     bar_size = SIZE*value/MAX_VALUE;
 
-    // create fill bar
-    fill = fill.append(bar_size , '|'   );
+    // create empty bar
+    bar = bar.append(SIZE,' ');
+    
+    // Create Progress Bar
+    if (Bar_Type == 1)
+    {
+      // create fill bar
+      fill = fill.append(bar_size , '|'   );
+      // put bar in empty bar
+      bar.replace(0, bar_size, fill);
+    }
 
-
-    // put bar in empty bar
-    bar.replace(0, bar_size, fill);
-
-    // Colorize components
-
-
-    //Print bar;
+    //Print bar
 
     // Print Label
     mvwprintw(winWindow, YPOS, XPOS, "%s", label.c_str());
@@ -611,26 +643,16 @@ class PROGRESS_BAR
     // Print first [
     mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE, "[");
 
-    // Print bar with color
-
-    if(VALUE > 0)
+    if (Bar_Type == 1)
     {
-      wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+      // Print progress bar filler in color
+      wat_on_green_red(winWindow, VALUE > 0);
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
+      wat_off_green_red(winWindow, VALUE > 0);
     }
-    else
+    else if (Bar_Type == 2) // Guage bar blank background
     {
-      wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
-    }
-
-    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
-    
-    if(VALUE > 0)
-    {
-      wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
-    }
-    else
-    {
-      wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
     }
 
     // Print last ]
@@ -638,7 +660,7 @@ class PROGRESS_BAR
 
     // Print Marker Again
 
-    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + bar_size +1 , "|");
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + bar_size, "|");
 
     if (PRINT_VALUE == true)
     {
@@ -692,7 +714,7 @@ class PROGRESS_BAR
     PRINT_VALUE = Print_Value;
   }
 
-  // Creates a simple progress bar of 0 to 100 percent.
+  // Creates a progress bar of 0 to 100 percent.
   //  Returns a string of size.
   //  Of size, the percentage of value to max_value will be filled
   //  with characters.
@@ -703,7 +725,7 @@ class PROGRESS_BAR
     XPOS = XPos;
     VALUE = value;
 
-    draw(winWindow);
+    draw_bar(1, winWindow);
   }
 
   void progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
@@ -716,7 +738,34 @@ class PROGRESS_BAR
     MAX_VALUE = max_value;
     VALUE = value;
 
-    draw(winWindow);
+    draw_bar(1, winWindow);
+  }
+
+  // Creates a progress bar of 0 to 100 percent.
+  //  Returns a string of size.
+  //  Of size, the percentage of value to max_value will be filled
+  //  with characters.
+  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value)
+  // Print progress bar in window at coords with value as progress.
+  {
+    YPOS = YPos;
+    XPOS = XPos;
+    VALUE = value;
+
+    draw_bar(2, winWindow);
+  }
+
+  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
+  // Print progress bar in window at coords with value as progress.
+  // Also, allows for other properties to be change.
+  {
+    YPOS = YPos;
+    XPOS = XPos;
+    SIZE = size;
+    MAX_VALUE = max_value;
+    VALUE = value;
+
+    draw_bar(2, winWindow);
   }
 };
 

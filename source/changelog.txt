@@ -1,3 +1,6 @@
+V 0.67A_220421
+  - Started work on other types of bar. specificly guages.
+
 V 0.66A_220420
   - More work on Gadget Progress Bar. I'm satisfied with the way it looks, for now. 
   - Moved some of string functions of buttons to the stringthings library.

@@ -144,20 +144,26 @@ class Screen3
   string strBuffer = "";      // Buffer string containing a movie frame to be printed.
 
   // Gadgets
-  PROGRESS_BAR Countdown_Timer;
 
-  PROGRESS_BAR Temp_Coolant;
-  PROGRESS_BAR Temp_Oil;
-  PROGRESS_BAR Temp_Trans;
-
-  PROGRESS_BAR Perf_Speed;
-  PROGRESS_BAR Perf_Acceleration;
-  PROGRESS_BAR Perf_MPG;
+  // Timer
+  BAR Countdown_Timer;
   
-  PROGRESS_BAR Othr_FD_Tire_PSI;
-  PROGRESS_BAR Othr_FP_Tire_PSI;
-  PROGRESS_BAR Othr_RD_Tire_PSI;
-  PROGRESS_BAR Othr_RP_Tire_PSI;
+  // Diag
+  BAR Compute_Time;
+
+  // Craft Stats
+  BAR Temp_Coolant;
+  BAR Temp_Oil;
+  BAR Temp_Trans;
+
+  BAR Perf_Speed;
+  BAR Perf_Acceleration;
+  BAR Perf_MPG;
+  
+  BAR Othr_FD_Tire_PSI;
+  BAR Othr_FP_Tire_PSI;
+  BAR Othr_RD_Tire_PSI;
+  BAR Othr_RP_Tire_PSI;
 
   public:
 
@@ -374,11 +380,20 @@ class Screen3
     Countdown_Timer.color_foreground(COLOR_WHITE);
     Countdown_Timer.print_value(false);
 
+    // Compute Times
+    Compute_Time.label("Compute: ");
+    Compute_Time.label_size(9);
+    Compute_Time.size(15);
+    Compute_Time.max_value(20);
+    Compute_Time.color_background(COLOR_RED);
+    Compute_Time.color_foreground(COLOR_WHITE);
+    Compute_Time.print_value(true);
+
     // Engine
     Temp_Coolant.label("Coolant Temp: ");
     Temp_Coolant.label_size(15);
     Temp_Coolant.size(15);
-    Temp_Coolant.max_value(75);
+    Temp_Coolant.max_value(100);
     Temp_Coolant.print_value(true);
 
     Temp_Oil.label("Oil Temp: ");
@@ -413,7 +428,7 @@ class Screen3
     Othr_FD_Tire_PSI.label("FD_Tire_PSI: ");
     Othr_FD_Tire_PSI.label_size(15);
     Othr_FD_Tire_PSI.size(15);
-    Othr_FD_Tire_PSI.max_value(75);
+    Othr_FD_Tire_PSI.max_value(100);
 
     Othr_FP_Tire_PSI.label("FP_Tire_PSI: ");
     Othr_FP_Tire_PSI.label_size(15);
@@ -823,6 +838,9 @@ class Screen3
     mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.dblCOMPUTETIME.data);
     mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.dblPREVSLEEPTIME.data);
     mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.dblCYCLETIME.data);
+
+    Compute_Time.guage_bar(winDebug, 2, 26, sdSysData.dblCOMPUTETIME.data);
+    
     // Not Very Usefule: mvwprintw(winDebug, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
 
     /*  -- Needs Removal
@@ -1159,7 +1177,7 @@ class Screen3
 
     mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
 
-    Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 35);
+    Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 99);
     Temp_Oil.progress_bar(winCraft_Stat, 5, 2, 35);
     Temp_Trans.progress_bar(winCraft_Stat, 7, 2, 35);
 
@@ -1171,7 +1189,7 @@ class Screen3
 
     mvwprintw(winCraft_Stat, 17, 0, "Other ---");
 
-    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 19, 2, 75);
+    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 19, 2, 100);
     Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 21, 2, 0);
     Othr_RD_Tire_PSI.progress_bar(winCraft_Stat, 23, 2, 35);
     Othr_RP_Tire_PSI.progress_bar(winCraft_Stat, 25, 2, 35);
