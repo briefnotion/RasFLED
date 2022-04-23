@@ -395,6 +395,18 @@ class TIMED_IS_READY
 
   public:
 
+  bool is_set()
+  {
+    if (TRIGGERED_TIME == 0)
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+  }
+
   void set(unsigned long current_time, int delay)
   // Prep the TIMED_IS_READY varable
   // delay is measured in ms.

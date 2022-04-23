@@ -1,3 +1,34 @@
+V 0.69A_220423
+  - The guage bars, or compute bars, can now display min max values over the 
+      past 10 seconds.  Proprties can be modified to turn off and on the printing 
+      of the values.
+  - The original plan was to create 3 types of bars.
+      Progress bar - Typical of any windows environment, common on installs.
+        The difference being a negative value can be represented, such as the 
+        representing time past after the countdown timer has ended.
+      Mechanical guage (bar) - Instead of a radial guage the representation would 
+        be a bar guage. Designed to represent RPM in a Tachometer, or MPH in 
+        a speedometer, or Temperature.  The plan is to have this guage with a 
+        minimum zero value, although not necessary, and have customizable 
+        backdrop zones of green, yellow, red, and blue, to indicate things, 
+        such as red lining the tach.  Also, resettable min max values were 
+        planned along with event notifications to the rest of the system. 
+        I did not implement the Mechanical guage.
+      Compute guage - Much like a mechanical guage, but for monitoring extremely 
+        abstract or fluctuating data.  The compute guage is implemented on the 
+        diagnostics screen to monitor program compute time, cycle time, and 
+        sleep time.  The min max values are also displayed to show the range 
+        of fluctuation.  The min max value only represents the min max value 
+        over the past 10 seconds over, what was inteded to be, but not sure is,
+        five 2 second zones.
+      Note: I've implemented the progress bar and compute guage up to the point 
+        where they fulfill the current purpose as a countdown timer and 
+        diagnostics display. And even though I did not make the planned auto 
+        resizing, or mid level historical display portions of the guages, I 
+        don't have any plans to continue working on them at this time because 
+        I have no need for a mechanical guage or any of the other planned 
+        features. 
+
 V 0.68A_220422
   - Started fine tuning and etching details into the dials of the guages and 
       meters.  The gear works between both guages and dials have similar 

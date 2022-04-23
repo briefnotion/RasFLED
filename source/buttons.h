@@ -535,6 +535,64 @@ class Button_Zone_Manager
   }
 };
 
+// ---------------------------------------------------------------------------------------
+// Bar Classes
+
+class BAR_TIME_SLICE
+{
+  private:
+
+  bool ACTIVE = false;
+  int MIN_VALUE = 0;
+  int MAX_VALUE = 0;
+  string SNAPSHOT = "";
+
+  public:
+
+  void clear()
+  {
+    ACTIVE = false;
+    MIN_VALUE = 0;
+    MAX_VALUE = 0;
+    SNAPSHOT = "";
+  }
+
+  bool active()
+  {
+    return ACTIVE;
+  }
+
+  void store_min_max(int Value)
+  {
+    if (ACTIVE == false)
+    {
+      MIN_VALUE = Value;
+      MAX_VALUE = Value;
+      ACTIVE = true;
+    }
+    else
+    {
+      if (Value < MIN_VALUE)
+      {
+        MIN_VALUE = Value;
+      }
+      if (Value > MAX_VALUE)
+      {
+        MAX_VALUE = Value;
+      }
+    }
+  }
+
+  int min()
+  {
+    return MIN_VALUE;
+  }
+
+  int max()
+  {
+    return MAX_VALUE;
+  }
+};
 
 class BAR
 // Display Progress Bar or Guage Bar.
@@ -543,51 +601,119 @@ class BAR
 {
   private:
 
-  int COLOR_BACKGROUND = 0;
-  int COLOR_FOREGROUND = 0;
+  // Min Max time slice varables.
+  TIMED_IS_READY        TIME_SLICE_TIMER;       // Internal
+  int                   TIME_SLICE_COUNT = 5;   // Internal, could be exterenal.
+  deque<BAR_TIME_SLICE> TIME_SLICES;            // Internal
+  bool                  TIME_PROVIDED = false;  // Internal
+  unsigned long         FRAME_TIME;             // Internal
+  int                   MIN_MAX_TIME_SPAN = 0;  // Span of time made by slices. In ms.
 
-  string LABEL = "";
-  int LABEL_SIZE = 0;
+  int COLOR_BACKGROUND = 0; // Guage background color
+  int COLOR_FOREGROUND = 0; // Guage text color, when not std.
 
-  int YPOS = 0;
-  int XPOS = 0;
+  string LABEL = "";        // Displayed left of the gadget.
+  int LABEL_SIZE = 0;       // Character size of label.
 
-  int SIZE = 0;
+  int YPOS = 0;             // Y start position of gaudget in window.
+  int XPOS = 0;             // X start position of gaudget in window.
 
-  int MAX_VALUE = 0;
-  int MIN_VALUE = 0;
+  int SIZE = 0;             // Size of bar in gadget.
+
+  int MAX_VALUE = 0;        // Gadget's Max Value to be displayed.
+  int MIN_VALUE = 0;        // Gadget's Min Value to be displayed. not implemented.
   int VALUE = 0;
 
   // Guage Variables
-  bool MIN_MAX  = false;
-  bool MIN_MAX_SET = false; // Min Max Control - not accessable
-  int MIN = 0;
-  int MAX = 0;
+  bool MIN_MAX  = false;    // Gadget will show min max values over time lapse.
+  //bool MIN_MAX_SET = false; // Min Max values stored in min and max when true - internal
+  //int MIN = 0;              // Min value - internal.
+  //int MAX = 0;              // Max value - internal.
 
-  bool PRINT_VALUE = false;
+  bool PRINT_VALUE = false; // Print value on right of guage.
+  bool PRINT_MIN = false;   // Print Min value on right of guage.
+  bool PRINT_MAX = false;   // Print Max value on right of guage.
 
+  // I dont like this
+  int get_min_value()
+  {
+    bool found = false;
+    int min = 0;
+
+    for (int x = 0; x < TIME_SLICES.size(); x++)
+    {
+      if (TIME_SLICES[x].active() == true)
+      {
+        if (found == false)
+        {
+          min = TIME_SLICES[x].min();
+          found = true;
+        }
+        else
+        {
+          if (TIME_SLICES[x].min() < min)
+          {
+            min = TIME_SLICES[x].min();
+          }
+        }
+      }
+    }
+    return min;
+  }
+
+  // I dont like this
+  int get_max_value()
+  {
+    bool found = false;
+    int max = 0;
+
+    for (int x = 0; x < TIME_SLICES.size(); x++)
+    {
+      if (TIME_SLICES[x].active() == true)
+      {
+        if (found == false)
+        {
+          max = TIME_SLICES[x].max();
+          found = true;
+        }
+        else
+        {
+          if (TIME_SLICES[x].max() > max)
+          {
+            max = TIME_SLICES[x].max();
+          }
+        }
+      }
+    }
+    return max;
+  }
 
   void wat_on_background(WINDOW *winWindow)
+  // Set background color to print.
   {
     wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_FOREGROUND)));
   }
 
   void wat_off_background(WINDOW *winWindow)
+  // Set background color off to print to red.
   {
     wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_FOREGROUND)));
   }
 
   void wat_on_red(WINDOW *winWindow)
+  // Set color to print to red.
   {
     wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
   }
 
   void wat_off_red(WINDOW *winWindow)
+  // Set color off to print to red.
   {
     wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
   }
 
   void wat_on_green_red(WINDOW *winWindow, bool value)
+  // Set color to print to green if true. Set color to print to red if false.
   {
     if(value == true)
     {
@@ -600,6 +726,7 @@ class BAR
   }
 
   void wat_off_green_red(WINDOW *winWindow, bool value)
+  // Set color off to print to green if true. Set color off to print to red if false.
   {
     if(value == true)
     {
@@ -626,6 +753,9 @@ class BAR
   }
 
   void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
+  // Draw marker at value on guage.
+  //  Draws > if exceeding max of guage size.
+  //  Draws < if exceeding min of guage size.
   {
     char marker = '|';
     
@@ -638,7 +768,7 @@ class BAR
       marker = '<';
     }
 
-    mvwprintw(winWindow, Ypos, Xpos, "%c", marker);
+    mvwprintw(winWindow, Ypos, Xpos + get_marker_pos(value), "%c", marker);
   }
 
   void draw_bar(int Bar_Type, WINDOW *winWindow)
@@ -657,8 +787,13 @@ class BAR
     string fill = "";
     int bar_size = 0;
 
-    // create empty label
+    // Initial setup of min max timer variable for first run.
+    if (TIME_PROVIDED == true && TIME_SLICE_TIMER.is_set() == false)
+    {
+      TIME_SLICE_TIMER.set(FRAME_TIME, MIN_MAX_TIME_SPAN / 5);
+    }
 
+    // create empty label
     if (LABEL.size() < LABEL_SIZE)
     {
       label = label.append(LABEL_SIZE - LABEL.size(), ' ') + LABEL;
@@ -681,26 +816,26 @@ class BAR
       bar.replace(0, bar_size, fill.append(bar_size , '|'  ));
     }
 
-    // Set MIN MAX
-    if (Bar_Type == 2)         // If Guage
+    // Store Min Max
+    if (MIN_MAX == true)         // If Guage
     {
-      if (MIN_MAX_SET == false) // If Min Max not set
+      // Advance the stored values if time is up.
+
+      if (TIME_SLICE_TIMER.is_ready(FRAME_TIME) == true)
       {
-        MIN = VALUE;
-        MAX = VALUE;
-        MIN_MAX_SET = true;
-      }
-      else
-      {
-        if (VALUE < MIN)
+        if (TIME_SLICES.size() >= TIME_SLICE_COUNT)
         {
-          MIN = VALUE;
+          TIME_SLICES.pop_back();
+          BAR_TIME_SLICE new_time_slice;
+          TIME_SLICES.push_front(new_time_slice);
         }
-        else if (VALUE > MAX)
+        else if (TIME_SLICES.size() < TIME_SLICE_COUNT)
         {
-          MAX = VALUE;
+          BAR_TIME_SLICE new_time_slice;
+          TIME_SLICES.push_front(new_time_slice);
         }
       }
+      TIME_SLICES.front().store_min_max(VALUE);
     }
 
     // Print bar
@@ -734,24 +869,39 @@ class BAR
     if (MIN_MAX == true)
     {
       wat_on_red(winWindow);
-      print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1 + get_marker_pos(MIN), MIN);
-      print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1 + get_marker_pos(MAX), MAX);
+      print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1, get_min_value());
+      print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1, get_max_value());
       wat_off_red(winWindow);
     }
     // Print Indicator Marker
     wat_on_background(winWindow);
-    print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1 + get_marker_pos(VALUE), VALUE);
+    print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1, VALUE);
     wat_off_background(winWindow);
 
     // If Print Values are on
-    if (PRINT_VALUE == true)
+    if (PRINT_MIN == true || PRINT_VALUE == true || PRINT_MAX == true)
     {
-      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3, " %03d ", VALUE);
+      int step = 0;
+      if (PRINT_MIN == true)
+      {
+        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %03d ", get_min_value());
+        step ++;
+      }
+      if (PRINT_VALUE == true)
+      {
+        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %03d ", VALUE);
+        step ++;
+      }
+      if (PRINT_MAX == true)
+      {
+        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %03d ", get_max_value());
+        step ++;
+      }
     }
 
     // Debug
-      //mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +7, " %03d %03d %03d", 
-      //                                                  MAX_VALUE, MAX, get_marker_pos(MAX));
+    //  mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +7, " %03d %03d %03d", 
+    //                                                    TIME_SLICES.size(), TIME_SLICE_TIMER.get_ready_time(), FRAME_TIME);
   }
 
   public:
@@ -795,14 +945,35 @@ class BAR
   }
 
   void print_value(bool Print_Value)
+  // Set property to print value entered to right of bar.
   {
     PRINT_VALUE = Print_Value;
   }
 
+  void print_min(bool Print_Min)
+  // Set property to print value entered to right of bar.
+  {
+    PRINT_MIN = Print_Min;
+  }
+
+  void print_max(bool Print_Max)
+  // Set property to print value entered to right of bar.
+  {
+    PRINT_MAX = Print_Max;
+  }
+
   // Guage variables
   void min_max(bool min_max)
+  // Set property to activate Min Max observations.
   {
     MIN_MAX = min_max;
+  }
+
+  // Guage variables
+  void min_max_time_span(int Time_Span_in_ms)
+  // Set property time amount Min Max will track.
+  {
+    MIN_MAX_TIME_SPAN = Time_Span_in_ms;
   }
 
   // Creates a progress bar of 0 to 100 percent.
@@ -842,6 +1013,19 @@ class BAR
     YPOS = YPos;
     XPOS = XPos;
     VALUE = value;
+
+    draw_bar(2, winWindow);
+  }
+
+    void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time)
+  // Print progress bar in window at coords with value as progress.
+  {
+    YPOS = YPos;
+    XPOS = XPos;
+    VALUE = value;
+
+    TIME_PROVIDED = true;
+    FRAME_TIME = tmeFrame_Time;
 
     draw_bar(2, winWindow);
   }

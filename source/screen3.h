@@ -150,6 +150,8 @@ class Screen3
   
   // Diag
   BAR Compute_Time;
+  BAR Sleep_Time;
+  BAR Cycle_Time;
 
   // Craft Stats
   BAR Temp_Coolant;
@@ -382,13 +384,41 @@ class Screen3
 
     // Compute Times
     Compute_Time.label("Compute: ");
-    Compute_Time.label_size(9);
+    Compute_Time.label_size(13);
     Compute_Time.size(15);
     Compute_Time.max_value(20);
     Compute_Time.color_background(COLOR_YELLOW);
     Compute_Time.color_foreground(COLOR_WHITE);
-    Compute_Time.print_value(true);
+    Compute_Time.print_value(false);
+    Compute_Time.print_min(true);
+    Compute_Time.print_max(true);
     Compute_Time.min_max(true);
+    Compute_Time.min_max_time_span(10000);
+
+    Sleep_Time.label("Sleep: ");
+    Sleep_Time.label_size(13);
+    Sleep_Time.size(15);
+    Sleep_Time.max_value(20);
+    Sleep_Time.color_background(COLOR_YELLOW);
+    Sleep_Time.color_foreground(COLOR_WHITE);
+    Sleep_Time.print_value(false);
+    Sleep_Time.print_min(true);
+    Sleep_Time.print_max(true);
+    Sleep_Time.min_max(true);
+    Sleep_Time.min_max_time_span(10000);
+
+    
+    Cycle_Time.label("Cycle: ");
+    Cycle_Time.label_size(13);
+    Cycle_Time.size(15);
+    Cycle_Time.max_value(20);
+    Cycle_Time.color_background(COLOR_YELLOW);
+    Cycle_Time.color_foreground(COLOR_WHITE);
+    Cycle_Time.print_value(false);
+    Cycle_Time.print_min(true);
+    Cycle_Time.print_max(true);
+    Cycle_Time.min_max(true);
+    Cycle_Time.min_max_time_span(10000);
 
     // Engine
     Temp_Coolant.label("Coolant Temp: ");
@@ -837,11 +867,18 @@ class Screen3
     string strLevel = "";
 
     // Print Timings
-    mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.dblCOMPUTETIME.data);
-    mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.dblPREVSLEEPTIME.data);
-    mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.dblCYCLETIME.data);
+    //mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.dblCOMPUTETIME.data);
+    //mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.dblPREVSLEEPTIME.data);
+    //mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.dblCYCLETIME.data);
 
-    Compute_Time.guage_bar(winDebug, 2, 26, sdSysData.dblCOMPUTETIME.data);
+    Compute_Time.label("Compute: " + to_string(sdSysData.dblCOMPUTETIME.data) + " ");
+    Compute_Time.guage_bar(winDebug, 0, 7, sdSysData.dblCOMPUTETIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
+    
+    Sleep_Time.label("Sleep:   " + to_string(sdSysData.dblPREVSLEEPTIME.data) + " ");
+    Sleep_Time.guage_bar(winDebug, 1, 7, sdSysData.dblPREVSLEEPTIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
+    
+    Cycle_Time.label("Cycle:   " + to_string(sdSysData.dblCYCLETIME.data) + " ");
+    Cycle_Time.guage_bar(winDebug, 2, 7, sdSysData.dblCYCLETIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
     
     // Not Very Usefule: mvwprintw(winDebug, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
 
@@ -853,7 +890,7 @@ class Screen3
     */
 
     //Print Running Color
-    mvwprintw(winDebug, 0, 26, "rc:%3i,%3i,%3i", sdSysData.running_color_list.color[0].r, sdSysData.running_color_list.color[0].g, sdSysData.running_color_list.color[0].b);
+    //mvwprintw(winDebug, 0, 26, "rc:%3i,%3i,%3i", sdSysData.running_color_list.color[0].r, sdSysData.running_color_list.color[0].g, sdSysData.running_color_list.color[0].b);
 
     //------------------------
     // Print LED Display Mode
@@ -880,10 +917,10 @@ class Screen3
     //------------------------
 
     // Show Number of Events per Channel
-    mvwprintw(winDebug, 1, 45, "%03d:D1", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
-    mvwprintw(winDebug, 0, 45, "%03d:D2", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
-    mvwprintw(winDebug, 1, 53, "D3:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
-    mvwprintw(winDebug, 0, 53, "D4:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
+    mvwprintw(winDebug, 1, 50, "%03d:D1", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
+    mvwprintw(winDebug, 0, 50, "%03d:D2", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
+    mvwprintw(winDebug, 1, 57, "D3:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
+    mvwprintw(winDebug, 0, 57, "D4:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
     
     //------------------------
     //Mouse Position
