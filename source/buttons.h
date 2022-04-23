@@ -555,9 +555,37 @@ class BAR
   int SIZE = 0;
 
   int MAX_VALUE = 0;
+  int MIN_VALUE = 0;
   int VALUE = 0;
 
+  // Guage Variables
+  bool MIN_MAX  = false;
+  bool MIN_MAX_SET = false; // Min Max Control - not accessable
+  int MIN = 0;
+  int MAX = 0;
+
   bool PRINT_VALUE = false;
+
+
+  void wat_on_background(WINDOW *winWindow)
+  {
+    wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_FOREGROUND)));
+  }
+
+  void wat_off_background(WINDOW *winWindow)
+  {
+    wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_FOREGROUND)));
+  }
+
+  void wat_on_red(WINDOW *winWindow)
+  {
+    wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+  }
+
+  void wat_off_red(WINDOW *winWindow)
+  {
+    wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+  }
 
   void wat_on_green_red(WINDOW *winWindow, bool value)
   {
@@ -583,6 +611,36 @@ class BAR
     }
   }
 
+  int get_marker_pos(int value)
+  // calculate the size of the fill bar with respects to full bar size.
+  {
+    int pos = abs(SIZE*value/MAX_VALUE);
+
+    // Check bounds
+    if (pos > SIZE)
+    {
+      pos = SIZE;
+    }
+
+    return pos;
+  }
+
+  void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
+  {
+    char marker = '|';
+    
+    if (value > MAX_VALUE)
+    {
+      marker = '>';
+    }
+    else if (value < MIN_VALUE)
+    {
+      marker = '<';
+    }
+
+    mvwprintw(winWindow, Ypos, Xpos, "%c", marker);
+  }
+
   void draw_bar(int Bar_Type, WINDOW *winWindow)
   // Drawing a progress bar
   // This function is only acessable within this class.
@@ -598,7 +656,6 @@ class BAR
     string bar = "";
     string fill = "";
     int bar_size = 0;
-    int value = 0;
 
     // create empty label
 
@@ -611,36 +668,47 @@ class BAR
       label = LABEL;
     }
 
-    // stay positive
-    value = abs(VALUE);
-
-    // stay within size
-    if (value > MAX_VALUE)
-    {
-      value = MAX_VALUE;
-    }
-
-    // calculate the size of the fill bar with respects to full bar size.
-    bar_size = SIZE*value/MAX_VALUE;
+    bar_size = get_marker_pos(VALUE);
 
     // create empty bar
-    bar = bar.append(SIZE,' ');
+    bar = bar.append(SIZE +1,' ');
     
     // Create Progress Bar
     if (Bar_Type == 1)
     {
       // create fill bar
-      fill = fill.append(bar_size , '|'   );
       // put bar in empty bar
-      bar.replace(0, bar_size, fill);
+      bar.replace(0, bar_size, fill.append(bar_size , '|'  ));
     }
 
-    //Print bar
+    // Set MIN MAX
+    if (Bar_Type == 2)         // If Guage
+    {
+      if (MIN_MAX_SET == false) // If Min Max not set
+      {
+        MIN = VALUE;
+        MAX = VALUE;
+        MIN_MAX_SET = true;
+      }
+      else
+      {
+        if (VALUE < MIN)
+        {
+          MIN = VALUE;
+        }
+        else if (VALUE > MAX)
+        {
+          MAX = VALUE;
+        }
+      }
+    }
+
+    // Print bar
 
     // Print Label
     mvwprintw(winWindow, YPOS, XPOS, "%s", label.c_str());
 
-    // Print first [
+    // Print Bar Start "[""
     mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE, "[");
 
     if (Bar_Type == 1)
@@ -652,21 +720,38 @@ class BAR
     }
     else if (Bar_Type == 2) // Guage bar blank background
     {
+      wat_on_red(winWindow);
       mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
+      wat_off_red(winWindow);
     }
 
-    // Print last ]
-    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +1 , "]");
+    // Print Bar End "]""
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +2 , "]");
 
-    // Print Marker Again
+    // Print Markers
+    
+    // Print Min Max
+    if (MIN_MAX == true)
+    {
+      wat_on_red(winWindow);
+      print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1 + get_marker_pos(MIN), MIN);
+      print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1 + get_marker_pos(MAX), MAX);
+      wat_off_red(winWindow);
+    }
+    // Print Indicator Marker
+    wat_on_background(winWindow);
+    print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1 + get_marker_pos(VALUE), VALUE);
+    wat_off_background(winWindow);
 
-    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + bar_size, "|");
-
+    // If Print Values are on
     if (PRINT_VALUE == true)
     {
-      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +2, " %03d ", VALUE);
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3, " %03d ", VALUE);
     }
 
+    // Debug
+      //mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +7, " %03d %03d %03d", 
+      //                                                  MAX_VALUE, MAX, get_marker_pos(MAX));
   }
 
   public:
@@ -712,6 +797,12 @@ class BAR
   void print_value(bool Print_Value)
   {
     PRINT_VALUE = Print_Value;
+  }
+
+  // Guage variables
+  void min_max(bool min_max)
+  {
+    MIN_MAX = min_max;
   }
 
   // Creates a progress bar of 0 to 100 percent.

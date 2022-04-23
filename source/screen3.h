@@ -376,7 +376,7 @@ class Screen3
     Countdown_Timer.label_size(13);
     Countdown_Timer.size(15);
     Countdown_Timer.max_value(75);
-    Countdown_Timer.color_background(COLOR_BLACK);
+    Countdown_Timer.color_background(COLOR_YELLOW);
     Countdown_Timer.color_foreground(COLOR_WHITE);
     Countdown_Timer.print_value(false);
 
@@ -385,9 +385,10 @@ class Screen3
     Compute_Time.label_size(9);
     Compute_Time.size(15);
     Compute_Time.max_value(20);
-    Compute_Time.color_background(COLOR_RED);
+    Compute_Time.color_background(COLOR_YELLOW);
     Compute_Time.color_foreground(COLOR_WHITE);
     Compute_Time.print_value(true);
+    Compute_Time.min_max(true);
 
     // Engine
     Temp_Coolant.label("Coolant Temp: ");
@@ -399,7 +400,8 @@ class Screen3
     Temp_Oil.label("Oil Temp: ");
     Temp_Oil.label_size(15);
     Temp_Oil.size(15);
-    Temp_Oil.max_value(75);
+    Temp_Oil.max_value(100);
+    Temp_Oil.print_value(true);
 
     Temp_Trans.label("Trans Temp: ");
     Temp_Trans.label_size(15);
@@ -1178,7 +1180,7 @@ class Screen3
     mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
 
     Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 99);
-    Temp_Oil.progress_bar(winCraft_Stat, 5, 2, 35);
+    Temp_Oil.progress_bar(winCraft_Stat, 5, 2, 100);
     Temp_Trans.progress_bar(winCraft_Stat, 7, 2, 35);
 
     mvwprintw(winCraft_Stat, 9, 0, "Performance ---");

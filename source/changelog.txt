@@ -1,3 +1,8 @@
+V 0.68A_220422
+  - Started fine tuning and etching details into the dials of the guages and 
+      meters.  The gear works between both guages and dials have similar 
+      characteristics, so I will be meshing the two units together. 
+
 V 0.67A_220421
   - Started work on other types of bar. specificly guages.
 
