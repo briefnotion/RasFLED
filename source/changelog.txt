@@ -1,3 +1,6 @@
+V 0.70A_220501
+  - Moved the location of some of the guages on the mock car status screen. 
+
 V 0.69A_220423
   - The guage bars, or compute bars, can now display min max values over the 
       past 10 seconds.  Proprties can be modified to turn off and on the printing 

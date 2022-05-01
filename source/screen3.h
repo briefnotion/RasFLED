@@ -1217,25 +1217,25 @@ class Screen3
     mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
 
     Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 99);
-    Temp_Oil.progress_bar(winCraft_Stat, 5, 2, 100);
-    Temp_Trans.progress_bar(winCraft_Stat, 7, 2, 35);
+    Temp_Oil.progress_bar(winCraft_Stat, 3, 50, 100);
+    Temp_Trans.progress_bar(winCraft_Stat, 5, 2, 35);
 
-    mvwprintw(winCraft_Stat, 9, 0, "Performance ---");
+    mvwprintw(winCraft_Stat, 7, 0, "Performance ---");
 
-    Perf_Speed.progress_bar(winCraft_Stat, 11, 2, -15);
-    Perf_Acceleration.progress_bar(winCraft_Stat, 13, 2, 100);
-    Perf_MPG.progress_bar(winCraft_Stat, 15, 2, -100);
+    Perf_Speed.progress_bar(winCraft_Stat, 9, 2, -15);
+    Perf_Acceleration.progress_bar(winCraft_Stat, 9, 50, 100);
+    Perf_MPG.progress_bar(winCraft_Stat, 11, 2, -100);
 
-    mvwprintw(winCraft_Stat, 17, 0, "Other ---");
+    mvwprintw(winCraft_Stat, 13, 0, "Other ---");
 
-    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 19, 2, 100);
-    Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 21, 2, 0);
-    Othr_RD_Tire_PSI.progress_bar(winCraft_Stat, 23, 2, 35);
-    Othr_RP_Tire_PSI.progress_bar(winCraft_Stat, 25, 2, 35);
+    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 15, 2, 100);
+    Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 15, 50, 0);
+    Othr_RD_Tire_PSI.progress_bar(winCraft_Stat, 17, 2, 35);
+    Othr_RP_Tire_PSI.progress_bar(winCraft_Stat, 17, 50, 35);
 
-    mvwprintw(winCraft_Stat, 27, 0, "Alerts ---");
+    mvwprintw(winCraft_Stat, 19, 0, "Alerts ---");
 
-    mvwprintw(winCraft_Stat, 29, 0, "  NO ALERTS");
+    mvwprintw(winCraft_Stat, 21, 0, "  NO ALERTS");
 
     // Refresh the window.
     wrefresh(winCraft_Stat);
@@ -1282,25 +1282,7 @@ class Screen3
     }
 
     // ---------------------------------------------------------------------------------------
-    // Draw the windows on the screen
-
-    // Draw Status window.
-    if (ScrStat.Window_Status == true)
-    {
-      output_status(sdSysData, keywatch, clou, ScrStat, mouse);
-    }
-
-    // Draw Debug window.
-    if (ScrStat.Window_Debug == true)
-    {
-      output_debug2(sdSysData, keywatch, clou, ScrStat, mouse);
-    }
-
-    // Draw Timer window.
-    if (ScrStat.Window_Timer == true)
-    {
-      output_timer(sdSysData, keywatch, clou, ScrStat, mouse);
-    }
+    // Draw the Screens
 
     // Draw Console window.
     if (ScrStat.Window_Console == true)
@@ -1338,6 +1320,26 @@ class Screen3
     if (ScrStat.Window_CPicker == true)
     {
       bzCPicker.draw(ScrStat.Needs_Refresh);
+    }
+
+    // Draw Statuses
+
+    // Draw Timer window.
+    if (ScrStat.Window_Timer == true)
+    {
+      output_timer(sdSysData, keywatch, clou, ScrStat, mouse);
+    }
+
+    // Draw Debug window.
+    if (ScrStat.Window_Debug == true)
+    {
+      output_debug2(sdSysData, keywatch, clou, ScrStat, mouse);
+    }
+
+    // Draw Status window.
+    if (ScrStat.Window_Status == true)
+    {
+      output_status(sdSysData, keywatch, clou, ScrStat, mouse);
     }
 
     // ---------------------------------------------------------------------------------------
