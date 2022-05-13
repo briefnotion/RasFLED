@@ -427,6 +427,38 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     }
 
     // -------------------------------------------------------------------------------------
+    // Threadable Commands with from command prompt   
+
+    // Command Line (load air_m)
+    if (check_command(cons, " airstop", "Airband Stop"))
+    { 
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_airstop.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
+    // Command Line (load air_m)
+    if (check_command(cons, " lafm", "Airband Lafayette Multi"))
+    {
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafm.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
+    if (check_command(cons, " lafs", "Airband Lafayette Scan"))
+    {
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafs.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
+    // -------------------------------------------------------------------------------------
     // PLAYLIST
 
     // Print out the current playlist.

@@ -1,3 +1,19 @@
+V 0.71A_220513
+  - Started laying out the groundwork for implementing a radio interface 
+        after receiving an RTL-DSR.  Still trying to to find a way to build 
+        an interface.  Promblems are, limited access to command line digital 
+        tuners with viable options.  rtl_airband seems to be the most feature 
+        set with simple scanning options, multi channel, auto-squelch, and 
+        channel scan.  Problems are can't change channel once established, 
+        no feedback routines and no api, and multichannel doesn't seem to work.
+      Contemplating forking one of the programs and wrapping a simple api on it.
+        Currently, just trying to get the radio working at all with just a 
+        few button presses.
+      At the time, added 3 commands
+        " lafm"     - launch script "/home/pi/rtlsdr/ras_lafm.sh"
+        " lafs"     - launch script "/home/pi/rtlsdr/ras_lafs.sh"
+        " airstop"  - launch script "/home/pi/rtlsdr/ras_airstop.sh"
+
 V 0.70A_220501
   - Moved the location of some of the guages on the mock car status screen. 
 

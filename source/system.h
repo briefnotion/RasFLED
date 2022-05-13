@@ -19,6 +19,7 @@
 // RASFled related header files
 #include "definitions.h"
 #include "helper.h"
+#include "commands.h"
 #include "hardware_status.h"
 
 using namespace std;
@@ -139,6 +140,9 @@ class system_data
 
   // Event System
   deque<int> intCHANNEL_GROUP_EVENTS_COUNTS;
+
+  
+  COMMAND_THREAD Command_Thread;
 
   // Console Display Variables from other
 

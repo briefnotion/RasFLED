@@ -15,6 +15,7 @@
 // Standard Header Files
 #include <stdio.h>
 #include <string.h>
+#include <future>
 
 
 using namespace std;
@@ -39,6 +40,52 @@ class COMMANDS
   {
     system(SHUTDOWN_NOW.c_str());
   }
+};
+
+
+class COMMAND_THREAD
+{
+  private:
+
+  future<int> THREAD;
+  bool THREAD_RUNNING = false;
+
+  string COMMAND;
+
+  public:
+
+  bool running()
+  {
+    if(THREAD_RUNNING == true)
+    // Check to see if output thread was started before checking the completion status.
+    {
+      if(THREAD.wait_for(0ms) == future_status::ready)
+      // Check to verify thte thread is complete before allowing the console to be updated again. 
+      {
+        THREAD_RUNNING = false;
+      }
+    }
+    
+    return THREAD_RUNNING;
+  }
+
+  void run_command(string Command)
+  {
+    COMMAND = Command;
+
+    if (running() == false)
+    {
+      THREAD = async(system, COMMAND.c_str());
+      THREAD_RUNNING = true;
+    }
+  }
+
+  /*
+  void stop_command()
+  {
+    THREAD.erase();
+  }
+  */
 };
 
 
