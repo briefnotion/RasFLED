@@ -122,7 +122,17 @@ class Screen3
   int XCraft_StatPos = 0;
   int YCraft_StatSize = -1;
   int XCraft_StatSize = -1;
+
+  // Radio
+  int YRadioPos = -1;
+  int XRadioPos = 0;
+  int YRadioSize = -1;
+  int XRadioSize = -1;
+
+  int YBRadioSize = 2; // Radio Button Standard Sizes
+  int XBRadioSize = 15;
   
+  // Player Debug Counters
   bool Player_Frame_Counter = false;
   int Player_Frame_Count = 0;
 
@@ -136,6 +146,7 @@ class Screen3
   WINDOW * winConsole;
   WINDOW * winPlayer;
   WINDOW * winCraft_Stat;
+  WINDOW * winRadio;
 
   // Monitor these varibles for changes to update their corres buttons.
   VAR_CHANGE_MON vcmTIMER;
@@ -174,6 +185,16 @@ class Screen3
   Button_Zone_Manager bzButtons;
   Button_Zone_Manager bzCPicker;
   Button_Zone_Manager bzTabs;
+  Button_Zone_Manager bzRadio;
+
+  void buttons_Radio(system_data &sdSysData)
+  // Define Radio buttons and load them to the 
+  //  radio button zone.
+  {
+    bzRadio.modify(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.modify(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.modify(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+  }
 
   void buttons_CPicker(system_data &sdSysData)
   // Define Color Picker buttons and load them to the 
@@ -194,10 +215,11 @@ class Screen3
   //  button zone.
   // Console Tab Buttons 
   {
-    bzTabs.modify(0, "TABCONSOLE", "Console", 1, 2, C_WHITE_BLUE, 0);
-    bzTabs.modify(1, "TABBLANKSCREEN", "Blank%Screen", 0, 2, C_WHITE_BLUE, 0);
-    bzTabs.modify(2, "TABPLAYER", "Player", 0, 2, C_WHITE_BLUE, 0);
-    bzTabs.modify(3, "TABCRAFT", "Craft%Stat", 0, 2, C_WHITE_BLUE, 0);
+    bzTabs.modify(0, "TABCONSOLE", "Console", 1, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.modify(1, "TABBLANKSCREEN", "Blank%Screen", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.modify(2, "TABPLAYER", "Player", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.modify(3, "TABCRAFT", "Craft%Stat", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.modify(4, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
   }
 
   void buttons_menu_home(system_data &sdSysData)
@@ -342,6 +364,12 @@ class Screen3
     // !!! Auto create not made yet. Run create for every button 
     //      to be displayed.
 
+    // Prep Buttons for Radio screen.
+    bzRadio.create_button();
+    bzRadio.create_button();
+    bzRadio.create_button();
+    buttons_Radio(sdSysData);
+
     // Prep Control Buttons for program start.
     bzButtons.create_button();
     bzButtons.create_button();
@@ -365,6 +393,7 @@ class Screen3
     buttons_CPicker(sdSysData);
 
     // Prep Tab buttons for program first start
+    bzTabs.create_button();
     bzTabs.create_button();
     bzTabs.create_button();
     bzTabs.create_button();
@@ -720,6 +749,42 @@ class Screen3
     }
     
     // ---------------------------------------------------------------------------------------
+    // Radio Panel
+    if (ScrStat.Window_Radio == true)
+    // Main Radio Screen
+    {
+      // Calculate Size and Position
+      YRadioPos = YSplit;
+      XRadioPos = XRadioPos;
+      YRadioSize = YMax - YSplit - YTabSize;
+      XRadioSize =  XSplit;
+
+      // Build Window
+      winRadio = newwin(YRadioSize, XRadioSize, YRadioPos, XRadioPos);
+      
+      // Set Y Split
+      YSplit = YSplit + YRadioSize;
+
+      // Radio Window Border
+      wborder(winRadio,' ',' ',' ',' ',' ',' ',' ',' ') ;
+
+      // Create Player Screen
+      wrefresh(winRadio);
+
+      // Set window color
+      wbkgd(winRadio, COLOR_PAIR(0));
+
+      // the bottom line of the Radio.
+      strBotLine = "";
+      strBotLine = strBotLine.append(XRadioSize-1, '_');
+
+      // Prep Radio Buttons
+      bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0+1), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1+2), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2+3), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
+    }
+
+    // ---------------------------------------------------------------------------------------
     // Tabs Panel
     if (ScrStat.Window_Tabs == true)
     {
@@ -734,6 +799,7 @@ class Screen3
       bzTabs.move_resize(1, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize);
       bzTabs.move_resize(2, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), YTabSize, XTabSize);
       bzTabs.move_resize(3, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), YTabSize, XTabSize);
+      bzTabs.move_resize(4, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4), YTabSize, XTabSize);
 
       // Set Y Split
       YSplit = YSplit + YTabSize;
@@ -1005,6 +1071,7 @@ class Screen3
       wrefresh(winConsole);
     }
   }
+
   // ---------------------------------------------------------------------------------------
   void the_player(ConsoleLineList &clou, ScreenStatus &ScrStat)
   // Shows the Player Window
@@ -1204,6 +1271,7 @@ class Screen3
     return strBuffer;
   }
 
+  // ---------------------------------------------------------------------------------------
   void craft_stat(ConsoleLineList &clou, ScreenStatus &ScrStat)
   // Shows the Player Window
   {
@@ -1240,6 +1308,25 @@ class Screen3
     // Refresh the window.
     wrefresh(winCraft_Stat);
     
+  }
+  
+  // ---------------------------------------------------------------------------------------
+  void radio(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  // Shows the Player Window
+  {
+    if(ScrStat.Needs_Refresh == true)
+    {
+      int yCurPos = 0;
+
+      // Screen Title
+      wattron(winRadio, A_REVERSE);
+      mvwprintw(winRadio, 0, XRadioSize - 7, "  RADIO");
+      wattroff(winRadio, A_REVERSE);
+
+
+      // Refresh the window.
+      wrefresh(winRadio);
+    }
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1300,6 +1387,13 @@ class Screen3
     if (ScrStat.Window_Craft_Stat == true)
     {
       craft_stat(clou, ScrStat);
+    }
+
+    // Draw Radio window.
+    if (ScrStat.Window_Radio == true)
+    {
+      radio(clou, ScrStat);
+      bzRadio.draw(ScrStat.Needs_Refresh);
     }
 
     // Buttons

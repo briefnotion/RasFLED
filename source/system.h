@@ -710,6 +710,7 @@ class ScreenStatus
   bool Window_Console = false;
   bool Window_Player = false;
   bool Window_Craft_Stat = false;
+  bool Window_Radio = false;
   
   // Refresh is set to true only if the value 
   //  of displaying the window has changed. 
@@ -858,7 +859,7 @@ class ScreenStatus
     }
   }
 
-    void Window_Craft_Stat_On()
+  void Window_Craft_Stat_On()
   {
     if (Window_Craft_Stat == false)
     {
@@ -872,6 +873,24 @@ class ScreenStatus
     if (Window_Craft_Stat == true)
     {
       Window_Craft_Stat = false;
+      Needs_Refresh = true;
+    }
+  }
+
+    void Window_Radio_On()
+  {
+    if (Window_Radio == false)
+    {
+      Window_Radio = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Radio_Off()
+  {
+    if (Window_Radio == true)
+    {
+      Window_Radio = false;
       Needs_Refresh = true;
     }
   }

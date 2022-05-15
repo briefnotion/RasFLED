@@ -456,6 +456,7 @@ class Console
           ScrStat.Window_Console_On();
           ScrStat.Window_Player_Off();
           ScrStat.Window_Craft_Stat_Off();
+          ScrStat.Window_Radio_Off();
           the_player.pause();
         }
 
@@ -466,6 +467,7 @@ class Console
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
           ScrStat.Window_Craft_Stat_Off();
+          ScrStat.Window_Radio_Off();
           the_player.pause();
         }
 
@@ -476,6 +478,7 @@ class Console
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_On();
           ScrStat.Window_Craft_Stat_Off();
+          ScrStat.Window_Radio_Off();
           the_player.play();
         }
 
@@ -486,7 +489,19 @@ class Console
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
           ScrStat.Window_Craft_Stat_On();
-          the_player.play();
+          ScrStat.Window_Radio_Off();
+          the_player.pause();
+        }
+
+        if(name.compare("TABRADIO") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Radio");
+          ScrStat.Window_Console_Off();
+          ScrStat.Window_Player_Off();
+          ScrStat.Window_Craft_Stat_Off();
+          ScrStat.Window_Radio_On();
+          the_player.pause();
         }
 
         // Update changes to buttons
@@ -509,7 +524,7 @@ class Console
       // Check to see if any color picker buttons are clicked.
       if (Screen.bzCPicker.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
       // Check for any clicked buttons or if it was just empty space.
-      //  If anything was clicked, the list in the bzButtons will be updated.
+      //  If anything was clicked, the list in the bzCPicker will be updated.
       {
         string name = "empty";
         int value = 0;
@@ -580,8 +595,34 @@ class Console
         }
       }
 
+      if (Screen.bzRadio.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+      // Check for any clicked buttons or if it was just empty space.
+      //  If anything was clicked, the list in the bzRadio will be updated.
+      {
+        string name = "empty";
+        int value = 0;
+        name = Screen.bzRadio.get_clicked_name();
+        value = Screen.bzRadio.get_clicked_value(name);
+      
+        //Color Picker Window
+        if(name.compare("AIRSTOP") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdInString(" airstop");
+        }
+        else if(name.compare("LAFS") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdInString(" lafs");
+        }
+        else if(name.compare("LAFM") == 0)
+        // Start Hazard Lights
+        {
+          keywatch.cmdInString(" lafm");
+        }
+      }
     }
-  }
+  }  
 
   void update_displayed_time(unsigned long time)
   // Set the consoles last redraw time, a now should be passed in.
