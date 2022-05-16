@@ -55,7 +55,7 @@ class Screen3
   //      ||                            |  u  |   |x
   //   Y  ||                            |  t  |   |
   //   C  ||                            |  t  |   |
-  //   o  ||      winConsole            |  o  |   |
+  //   o  ||      tbConsole             |  o  |   |
   //   n  ||                            |  n  |   |
   //   s  ||                            |  s  |   |
   //   o  ||                            |     |   |
@@ -65,106 +65,104 @@ class Screen3
   //       ^-------XStatus--------------^
   //
 
+  // ----------
   // Screen Size Variables
   int YMax = 0;
   int XMax = 0;
 
-  // Status
+  // Status Screen Variables --------------------
   int YStatusPos = 0;
   int XStatusPos = 0;
   int YStatusSize = 2;
   int XStatusSize = -1;
 
-  // Buttons
+  WINDOW * winStatus;
+
+  // Buttons Screen Variables --------------------
   int YButtonPos = 0;
   int XButtonPos = 0;
   int YButtonSize = 4;
   int XButtonSize = 8;
 
-  // Debug
+  public:
+  Button_Zone_Manager bzButtons;
+  private:
+
+  // Debug Screen Variables --------------------
   int YDebugPos = -1;
   int XDebugPos = 0;
   int YDebugSize = 3;
   int XDebugSize = -1;
 
-  // Timer
+  WINDOW * winDebug;
+
+  // Player Debug Counters
+  bool Player_Frame_Counter = false;
+  int Player_Frame_Count = 0;
+
+  BAR Compute_Time;
+  BAR Sleep_Time;
+  BAR Cycle_Time;
+
+  // Timer Screen Variables --------------------
   int YTimerPos = -1;
   int XTimerPos = 0;
   int YTimerSize = 3;
   int XTimerSize = -1;
 
-  // Color Picker
+  WINDOW * winTimer;
+
+  BAR Countdown_Timer;
+
+  // Color Picker Variables --------------------
   int YCPickerPos = -1;
   int XCPickerPos = -1;
   int YCPickerSize = 3;
   int XCPickerSize = 6;
 
-  // Tabs
+  WINDOW * winCPicker;
+
+  public:
+  Button_Zone_Manager bzCPicker;
+  private:
+
+  // Tabs Variables --------------------
   int YTabPos = -1;
   int XTabPos = 0;
   int YTabSize = 2;
   int XTabSize = 12;
 
-  // Console
+  public:
+  Button_Zone_Manager bzTabs;
+  private:
+
+  // Console Screen Variables --------------------
   int YConsolePos = -1;
   int XConsolePos = 0;
   int YConsoleSize = -1;
   int XConsoleSize = -1;
 
-  // Player
+  public:
+  Text_Box tbConsole;
+  private:
+  Title_Bar tiConsole;
+
+  // Player Screen Variables --------------------
   int YPlayerPos = -1;
   int XPlayerPos = 0;
   int YPlayerSize = -1;
   int XPlayerSize = -1;
 
-  // Craft_Stat
+  WINDOW * winPlayer;
+
+  // Craft_Stat Screen Variables --------------------
   int YCraft_StatPos = -1;
   int XCraft_StatPos = 0;
   int YCraft_StatSize = -1;
   int XCraft_StatSize = -1;
 
-  // Radio
-  int YRadioPos = -1;
-  int XRadioPos = 0;
-  int YRadioSize = -1;
-  int XRadioSize = -1;
-
-  int YBRadioSize = 2; // Radio Button Standard Sizes
-  int XBRadioSize = 15;
-  
-  // Player Debug Counters
-  bool Player_Frame_Counter = false;
-  int Player_Frame_Count = 0;
-
-  // NCurses Window Variables
-  string strBotLine;
-  
-  WINDOW * winStatus;
-  WINDOW * winDebug;
-  WINDOW * winTimer;
-  WINDOW * winCPicker;
-  WINDOW * winConsole;
-  WINDOW * winPlayer;
   WINDOW * winCraft_Stat;
-  WINDOW * winRadio;
 
-  // Monitor these varibles for changes to update their corres buttons.
-  VAR_CHANGE_MON vcmTIMER;
-  VAR_CHANGE_MON vcmMENUOVERHEAD;
-
-  string strBuffer = "";      // Buffer string containing a movie frame to be printed.
-
-  // Gadgets
-
-  // Timer
-  BAR Countdown_Timer;
-  
-  // Diag
-  BAR Compute_Time;
-  BAR Sleep_Time;
-  BAR Cycle_Time;
-
-  // Craft Stats
   BAR Temp_Coolant;
   BAR Temp_Oil;
   BAR Temp_Trans;
@@ -178,14 +176,35 @@ class Screen3
   BAR Othr_RD_Tire_PSI;
   BAR Othr_RP_Tire_PSI;
 
+  // Radio Screen Variables --------------------
+  int YRadioPos = -1;
+  int XRadioPos = 0;
+  int YRadioSize = -1;
+  int XRadioSize = -1;
+
+  int YBRadioSize = 2; // Radio Button Standard Sizes
+  int XBRadioSize = 15;
+
+  WINDOW * winRadio;
+
+  public:
+  Button_Zone_Manager bzRadio;  
+  private:
+  
+  // --------------------
+  // NCurses Window Variables
+  string strBotLine;
+  
+  // Monitor these varibles for changes to update their corres buttons.
+  VAR_CHANGE_MON vcmTIMER;
+  VAR_CHANGE_MON vcmMENUOVERHEAD;
+
+  string strBuffer = "";      // Buffer string containing a movie frame to be printed.
+  
   public:
 
   bool buffer_active = false; // Set to true when a buffer has a new movie frame. 
 
-  Button_Zone_Manager bzButtons;
-  Button_Zone_Manager bzCPicker;
-  Button_Zone_Manager bzTabs;
-  Button_Zone_Manager bzRadio;
 
   void buttons_menu_home(system_data &sdSysData)
   // Define control buttons and load them to the 
@@ -294,8 +313,12 @@ class Screen3
   // Set the screen and defines its contents for first run. 
   // Call after the screen init.
   {
-    // !!! Auto create not made yet. Run create for every button 
-    //      to be displayed.
+
+    // Build any Gadgets that will be called.
+
+    // Prep Console Screen Text Box.
+    tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     // Prep Buttons for Radio screen.
     bzRadio.create_button(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
@@ -329,10 +352,7 @@ class Screen3
     bzTabs.create_button(3, "TABCRAFT", "Craft%Stat", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(4, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
-    //buttons_Tabs(sdSysData);
-
-    // Build any Gadgets that will be called.
-
+    // Countdown Screen
     // Countdown Timer
     Countdown_Timer.label("Timer: ");
     Countdown_Timer.label_size(13);
@@ -342,6 +362,7 @@ class Screen3
     Countdown_Timer.color_foreground(COLOR_WHITE);
     Countdown_Timer.print_value(false);
 
+    // Debug Screen 
     // Compute Times
     Compute_Time.label("Compute: ");
     Compute_Time.label_size(13);
@@ -355,6 +376,7 @@ class Screen3
     Compute_Time.min_max(true);
     Compute_Time.min_max_time_span(10000);
 
+    // Program Sleep Times
     Sleep_Time.label("Sleep: ");
     Sleep_Time.label_size(13);
     Sleep_Time.size(15);
@@ -367,7 +389,7 @@ class Screen3
     Sleep_Time.min_max(true);
     Sleep_Time.min_max_time_span(10000);
 
-    
+    // Program Sleep Times
     Cycle_Time.label("Cycle: ");
     Cycle_Time.label_size(13);
     Cycle_Time.size(15);
@@ -380,6 +402,7 @@ class Screen3
     Cycle_Time.min_max(true);
     Cycle_Time.min_max_time_span(10000);
 
+    // Craft_Stat Screen
     // Engine
     Temp_Coolant.label("Coolant Temp: ");
     Temp_Coolant.label_size(15);
@@ -596,20 +619,12 @@ class Screen3
       YConsoleSize = YMax - YSplit - YTabSize;
       XConsoleSize =  XSplit;
 
-      // Build Window
-      winConsole = newwin(YConsoleSize, XConsoleSize, YConsolePos, XConsolePos);
+      // Build Text Box
+      tbConsole.move_resize(YConsolePos, XConsolePos, YConsoleSize, XConsoleSize);
+      tiConsole.move_resize(YConsolePos, XConsolePos, YConsoleSize, XConsoleSize);
       
       // Set Y Split
       YSplit = YSplit + YConsoleSize;
-
-      // Console Window Border
-      wborder(winConsole,' ',' ',' ','_',' ',' ',' ',' ') ;
-
-      // Create Console Screen
-      wrefresh(winConsole);
-
-      // Set window color
-      wbkgd(winConsole, COLOR_PAIR(0));
 
       // the bottom line of the console.
       strBotLine = "";
@@ -743,7 +758,7 @@ class Screen3
   // ---------------------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------------------
-  void output_status(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  void output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
   // Displays command line input, status and door indicators
   {
     // Display Command Line
@@ -857,7 +872,7 @@ class Screen3
   }
 
   // ---------------------------------------------------------------------------------------
-  void output_debug2(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  void output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
   // Displays clock timings, event count, and mouse info.
   {
     string strRange = "";
@@ -933,7 +948,7 @@ class Screen3
   }
 
   // ---------------------------------------------------------------------------------------
-  void output_timer(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  void output_timer(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
   // Displays first countdown timer.
   {
     long elaped_time = 0;
@@ -966,45 +981,30 @@ class Screen3
   }
   
   // ---------------------------------------------------------------------------------------
-  void printout(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  void printout(ScreenStatus &ScrStat)
   // Displays console of commands ran, events starting and stoping, and other info.
   //  If console is on another tty through tty over ethernet or serial then a low 
   //    bandwith version will need to created.  Or, I put the console into its own 
   //    thread.  Whichever is necessary to develop or learn first.
   {
-    // Figurout the size of the console.
-    ConsoleLine line;
 
-    int yCurPos = 0;
+    /*
+    // Screen Title
+    wattron(winConsole, A_REVERSE);
+    mvwprintw(winConsole, 0, XConsoleSize - 7, "CONSOLE");
+    wattroff(winConsole, A_REVERSE);
+    */
 
-    if(clou.avail() == true || ScrStat.Needs_Refresh == true)
+    if (tbConsole.PROP.CHANGED == true || ScrStat.Needs_Refresh == true)
     {
-      for( int y=0; y < YConsoleSize; y++ )
-      {
-        // line position on screen or window
-        yCurPos = YConsoleSize -y -1;
-
-        // get next line to print from the line history
-        line = clou.get_line_to_print(y);
-
-        // print the line to the screen
-        wmove(winConsole, yCurPos, 0);  //move cursor to next line to print or clear.
-        wclrtoeol(winConsole);            // clear line befor printing to it.
-        mvwprintw(winConsole, yCurPos, 0, "%s", line.strLine.c_str());  //print line.       
-      }
-
-      // Screen Title
-      wattron(winConsole, A_REVERSE);
-      mvwprintw(winConsole, 0, XConsoleSize - 7, "CONSOLE");
-      wattroff(winConsole, A_REVERSE);
-
-      // Refresh the window.
-      wrefresh(winConsole);
+      tbConsole.draw(ScrStat.Needs_Refresh);
+      tiConsole.draw(true);
     }
+
   }
 
   // ---------------------------------------------------------------------------------------
-  void the_player(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  void the_player(ScreenStatus &ScrStat)
   // Shows the Player Window
   {
     int yCurPos = 0;
@@ -1203,7 +1203,7 @@ class Screen3
   }
 
   // ---------------------------------------------------------------------------------------
-  void craft_stat(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  void craft_stat(ScreenStatus &ScrStat)
   // Shows the Player Window
   {
     int yCurPos = 0;
@@ -1242,7 +1242,7 @@ class Screen3
   }
   
   // ---------------------------------------------------------------------------------------
-  void radio(ConsoleLineList &clou, ScreenStatus &ScrStat)
+  void radio(ScreenStatus &ScrStat)
   // Shows the Player Window
   {
     if(ScrStat.Needs_Refresh == true)
@@ -1266,7 +1266,7 @@ class Screen3
   // Main screen routine.
   // Draw the console, starting with status window, then whatever windows set to true.
 
-  void output(system_data &sdSysData, Keys &keywatch, ConsoleLineList &clou, ScreenStatus &ScrStat, TheMouse &mouse)
+  void output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
   {
     // Run any routines that may cause the screen to need to be refreshed.
 
@@ -1305,25 +1305,25 @@ class Screen3
     // Draw Console window.
     if (ScrStat.Window_Console == true)
     {
-      printout(clou, ScrStat);
+      printout(ScrStat);
     }
 
     // Draw Player window.
     if (ScrStat.Window_Player == true)
     {
-      the_player(clou, ScrStat);
+      the_player(ScrStat);
     }
 
     // Draw Craft_Stat window.
     if (ScrStat.Window_Craft_Stat == true)
     {
-      craft_stat(clou, ScrStat);
+      craft_stat(ScrStat);
     }
 
     // Draw Radio window.
     if (ScrStat.Window_Radio == true)
     {
-      radio(clou, ScrStat);
+      radio(ScrStat);
       bzRadio.draw(ScrStat.Needs_Refresh);
     }
 
@@ -1352,19 +1352,19 @@ class Screen3
     // Draw Timer window.
     if (ScrStat.Window_Timer == true)
     {
-      output_timer(sdSysData, keywatch, clou, ScrStat, mouse);
+      output_timer(sdSysData, keywatch, ScrStat, mouse);
     }
 
     // Draw Debug window.
     if (ScrStat.Window_Debug == true)
     {
-      output_debug2(sdSysData, keywatch, clou, ScrStat, mouse);
+      output_debug2(sdSysData, keywatch, ScrStat, mouse);
     }
 
     // Draw Status window.
     if (ScrStat.Window_Status == true)
     {
-      output_status(sdSysData, keywatch, clou, ScrStat, mouse);
+      output_status(sdSysData, keywatch, ScrStat, mouse);
     }
 
     // ---------------------------------------------------------------------------------------

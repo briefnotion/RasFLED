@@ -24,6 +24,116 @@
 using namespace std;
 
 // -------------------------------------------------------------------------------------
+//  Title_Bar Classes
+class Title_Bar_Properties
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CHANGED = false;
+};
+
+class Title_Bar
+// Routines for create, draw, modify, and behavior.
+{
+  private:
+
+  WINDOW * winTitle;
+
+  //Debug
+  bool CounterOn = false;
+  int Counter = 0;
+
+  public:
+
+  Title_Bar_Properties PROP;  
+
+  void modify(int id, string name, string label, int type, int color, int bcolor)
+  // Changes all properties
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+
+    PROP.CHANGED = true;
+  }
+
+  void create(int id, string name, string label, int type, int color, int bcolor)
+  // Define and behavior.  
+  // Like set but leaves off position and size details.
+  // Does not create window.
+
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+    PROP.BCOLOR = bcolor;
+
+    winTitle = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    bool CHANGED = true;
+  }
+
+  void move_resize(int posY, int posX, int sizeY, int sizeX)
+  // Redefine position and size.
+  {
+    PROP.POSX = posX;
+    PROP.POSY = posY;
+    PROP.SIZEX = sizeX;
+    PROP.SIZEY = sizeY;
+
+    winTitle = newwin(1, 7, PROP.POSY, sizeX - 7);
+
+    refresh();
+
+    wborder(winTitle,'|','|','-','-','+','+','+','+') ;
+
+    bool CHANGED = true;
+  }
+
+  bool changed()
+  // Returns true if any of the properties have changed.
+  {
+    return PROP.CHANGED;
+  }
+
+  void draw(bool Refresh)
+  // Draw the text_box on the screen if the value has changed or if  
+  //  the Refresh parameter is true.
+  {
+    if (PROP.CHANGED == true || Refresh == true)
+    {
+      wattron(winTitle, A_REVERSE);
+      mvwprintw(winTitle, 0, 0, "CONSOLE");
+      wattroff(winTitle, A_REVERSE);
+
+      PROP.CHANGED = false;
+
+      wrefresh(winTitle);
+    }
+  }
+};
+
+// -------------------------------------------------------------------------------------
 //  Text_Box Classes
 
 class Text_Line
@@ -146,7 +256,6 @@ class Text_Box_Properties
   int SIZEY = 0;
   int SIZEX = 0;
 
-  bool CLICKED = false;
   bool CHANGED = false;
 };
 
@@ -170,7 +279,7 @@ class Text_Box
   Text_Box_Properties PROP;  
 
   void modify(int id, string name, string label, int type, int color, int bcolor)
-  // Changes all button properties
+  // Changes all properties
   {
     PROP.ID = id;
     PROP.NAME = name;
@@ -183,7 +292,7 @@ class Text_Box
   }
 
   void create(int id, string name, string label, int type, int color, int bcolor)
-  // Define button and behavior.  
+  // Define and behavior.  
   // Like set but leaves off position and size details.
   // Does not create window.
 
@@ -202,7 +311,7 @@ class Text_Box
   }
 
   void move_resize(int posY, int posX, int sizeY, int sizeX)
-  // Redefine text_box position and size.
+  // Redefine position and size.
   {
     PROP.POSX = posX;
     PROP.POSY = posY;
@@ -230,7 +339,6 @@ class Text_Box
   {
     if (PROP.CHANGED == true || Refresh == true)
     {
-
       Text_Line line;
       int yCurPos = 0;
 
@@ -243,18 +351,22 @@ class Text_Box
         line = PROP.LINES.get_line_to_print(y);
 
         // print the line to the screen
-        wmove(winText_Box, PROP.POSY + yCurPos, PROP.POSX);  //move cursor to next line to print or clear.
+        wmove(winText_Box, yCurPos, PROP.POSX);  //move cursor to next line to print or clear.
         wclrtoeol(winText_Box);            // clear line befor printing to it.
-        mvwprintw(winText_Box, PROP.POSY + yCurPos, PROP.POSX, "%s", line.strLine.c_str());  //print line.       
+        mvwprintw(winText_Box, yCurPos, PROP.POSX, "%s", line.strLine.c_str());  //print line.       
       }
 
+      PROP.CHANGED = false;
+      
       wrefresh(winText_Box);
     }
   }
 
-  void add_line(string Text_Line)
+  void add_line(unsigned long Time_Milli, string Text)
+  // Add a line of text to Text_Box.
   {
-    bool CHANGED = true;
+    PROP.LINES.add(Time_Milli, Text);
+    PROP.CHANGED = true;
   }
 };
 

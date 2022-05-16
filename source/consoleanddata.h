@@ -42,7 +42,6 @@ class Console
 
   int key = -1;
 
-  ConsoleLineList clou;
   unsigned long Update_Time = 0;
   
   // Mouse position and button position
@@ -174,9 +173,9 @@ class Console
     //  and not actual time printed.  Current time is not global.  This is a filler.
 
     if (ScrStat.Window_Console == true)
-    {
-      clou.add(Update_Time,in);         // Add line to console line list.      
-      Screen.printout(clou, ScrStat);  // Immediately display the line onto the screen.
+    {       
+      Screen.tbConsole.add_line(Update_Time, in); // Add line to console line list. 
+      Screen.printout(ScrStat);  // Immediately display the line onto the screen.
     }
     else
     {
@@ -194,7 +193,7 @@ class Console
   {
     // console line time is inaccurate.  Will only refect previous console update time
     //  and not actual time printed.  Current time is not global.  This is a filler.
-    clou.add(Update_Time,in);         // Add line to console line list.
+    Screen.tbConsole.add_line(Update_Time, in); // Add line to console line list.
   }
 
   void readkeyboardinput2()
@@ -244,7 +243,6 @@ class Console
     {
       //printwait("RESIZING SCREEN");
       keywatch.Chars[KEYRESIZE].VALUE = 0;
-      clou.RefreshConsole = true;
       ScrStat.Needs_Refresh = true;
 
       Screen.reset(ScrStat);
@@ -647,7 +645,7 @@ class Console
     }
 
     // Screen Update
-    Screen.output(sdSysData, keywatch, clou, ScrStat, mouse);
+    Screen.output(sdSysData, keywatch, ScrStat, mouse);
     
     /*  Debug routine to verify console not in redisplay loop cycle.
     if(clou.avail()==true)

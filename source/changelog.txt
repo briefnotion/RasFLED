@@ -1,3 +1,9 @@
+V 0.74A_220516
+  - Completed implementation of the Text_Box gadget and replaced the console.
+  - Created a new gadget called Title_Bar.  More functions will be added as 
+      needed.
+  - Put the new Title_Bar is on the new Text_Box Console screen.  
+
 V 0.73A_220515
   - Renamed the buttons.h to gadgets.h 
   - Simplified the way buttons are created.
