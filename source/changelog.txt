@@ -1,3 +1,11 @@
+V 0.73A_220515
+  - Renamed the buttons.h to gadgets.h 
+  - Simplified the way buttons are created.
+  - Nearly completed writing a new gadget Text_Box, derived from the button 
+      gadget and the current console display.
+    The Text_Box class is not implemented into the program, yet, so, is 
+      untested.
+ 
 V 0.72A_220514
   - Started building a Radio Screen and added 3 buttons to test a few scripts.
       It would be pointless to provide details now.

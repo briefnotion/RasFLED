@@ -3,41 +3,14 @@
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
-// *    Department : (R+D)^2                        Name: buttons.h
+// *    Department : (R+D)^2                        Name: gadgets.h
 // *       Sub Dept: Programming
 // *    Location ID: 856-45B
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
-#ifndef BUTTONS_H
-#define BUTTONS_H
-
-// Color pairing definitions for screen colors.
-//  Bacward Compatability
-// To Be Phased Out
-#define C_RED_BLACK 1
-#define C_YELLOW_BLACK 2
-#define C_GREEN_BLACK 3
-#define C_BLUE_BLACK 4
-
-#define C_WHITE_RED 17
-#define C_WHITE_YELLOW 27
-#define C_WHITE_GREEN 37
-#define C_WHITE_BLUE 47
-#define C_WHITE_PURPLE 57
-#define C_WHITE_CYAN 67
-#define C_WHITE_BLACK 07
-
-#define C_BLACK_WHITE 70
-
-#define C_BLACK_RED 10
-#define C_BLACK_YELLOW 20
-#define C_BLACK_GREEN 30
-#define C_BLACK_BLUE 40
-#define C_BLACK_PURPLE 50
-#define C_BLACK_CYAN 60
-#define C_BLACK_BLACK 70
-
+#ifndef GADGETS_H
+#define GADGETS_H
 
 // Standard Header Files
 #include <stdio.h>
@@ -51,8 +24,245 @@
 using namespace std;
 
 // -------------------------------------------------------------------------------------
-// Button properties
+//  Text_Box Classes
+
+class Text_Line
+// Stores a standard text line with timestamp.
+{
+  public:
+  unsigned long tmeTime_stamp = 0;      // Timestamp of line time, if provided.
+  string strLine              = "";     // Text value of console line
+  bool printed                = false;  // If ever line was displayed, set to true.
+};
+
+class Text_Line_List
+// Routines for managing a list of Text_Line.
+{
+  private:
+
+  int max_lines = 200;        // MaxSize of stored lines
+
+  deque<Text_Line> LINES;  // stored console line 
+
+  public: 
+  
+  bool Refresh_Text_Line_List = false;
+
+  private:
+  
+  void clear_outside_max()
+  // Remove old line, printed or unprint, that are outside the 
+  //  max_lines range/
+  {
+    // keeping a buffer of 50, just to keep this routine from running
+    //  with every new line added. 
+    if (LINES.size()> (max_lines + 50))
+    {
+      // Erase lines from max to end.
+      LINES.erase(LINES.begin()+max_lines, LINES.end());
+    }
+  }
+
+  public:
+
+  void add(unsigned long tmeCurrentMillis, string line)
+  // Add a line to the line list. List is in reverse
+  //  order. most recent is top of list.
+  {
+    Text_Line tmp_line;
+
+    //  create a new console line from provided info. 
+    tmp_line.tmeTime_stamp = tmeCurrentMillis;
+    tmp_line.strLine = line;
+    tmp_line.printed = false;
+
+    LINES.push_front(tmp_line);  // Bring new console line to the front 
+                                //  of the list.
+
+    clear_outside_max();        // remove any old lines.
+  }
+
+  bool avail()
+  // Returns true if there is something to be printed.  
+  //  More specificly, will return the value of the printed status
+  //  of the most recent line added to the line list. 
+  {
+    if (Refresh_Text_Line_List == true)
+    {
+      Refresh_Text_Line_List = false;
+      return true;
+    }
+    else if (LINES.empty() == false)
+    {
+      if (LINES[0].printed == false)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  Text_Line get_line_to_print(int pos)
+  // Will return the line requested from the pos. 
+  //  pos 0 is the most recent line added to the console line list.
+  {
+    if (pos < LINES.size() && pos >= 0)
+    {
+      LINES[pos].printed = true;
+      return LINES[pos];
+    }
+    else
+    {
+      Text_Line tmp;
+      return tmp;
+    }
+  }
+};
+
+class Text_Box_Properties
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+  
+  Text_Line_List LINES;
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CLICKED = false;
+  bool CHANGED = false;
+};
+
+class Text_Box
+// Routines for create, draw, modify, and behavior.
+{
+  private:
+
+  WINDOW * winText_Box;
+
+  //Debug
+  bool CounterOn = false;
+  int Counter = 0;
+
+  // Types:
+  // -1 - Hidden
+  //  0 - Read Only
+
+  public:
+
+  Text_Box_Properties PROP;  
+
+  void modify(int id, string name, string label, int type, int color, int bcolor)
+  // Changes all button properties
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+
+    PROP.CHANGED = true;
+  }
+
+  void create(int id, string name, string label, int type, int color, int bcolor)
+  // Define button and behavior.  
+  // Like set but leaves off position and size details.
+  // Does not create window.
+
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+    PROP.BCOLOR = bcolor;
+
+    winText_Box = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    bool CHANGED = true;
+  }
+
+  void move_resize(int posY, int posX, int sizeY, int sizeX)
+  // Redefine text_box position and size.
+  {
+    PROP.POSX = posX;
+    PROP.POSY = posY;
+    PROP.SIZEX = sizeX;
+    PROP.SIZEY = sizeY;
+
+    winText_Box = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    refresh();
+
+    wborder(winText_Box,'|','|','-','-','+','+','+','+') ;
+
+    bool CHANGED = true;
+  }
+
+  bool changed()
+  // Returns true if any of the properties have changed.
+  {
+    return PROP.CHANGED;
+  }
+
+  void draw(bool Refresh)
+  // Draw the text_box on the screen if the value has changed or if  
+  //  the Refresh parameter is true.
+  {
+    if (PROP.CHANGED == true || Refresh == true)
+    {
+
+      Text_Line line;
+      int yCurPos = 0;
+
+      for( int y=0; y < PROP.SIZEY; y++ )
+      {
+        // line position on screen or window
+        yCurPos = PROP.SIZEY -y -1;
+
+        // get next line to print from the line history
+        line = PROP.LINES.get_line_to_print(y);
+
+        // print the line to the screen
+        wmove(winText_Box, PROP.POSY + yCurPos, PROP.POSX);  //move cursor to next line to print or clear.
+        wclrtoeol(winText_Box);            // clear line befor printing to it.
+        mvwprintw(winText_Box, PROP.POSY + yCurPos, PROP.POSX, "%s", line.strLine.c_str());  //print line.       
+      }
+
+      wrefresh(winText_Box);
+    }
+  }
+
+  void add_line(string Text_Line)
+  {
+    bool CHANGED = true;
+  }
+};
+
+// -------------------------------------------------------------------------------------
+// Button Classes
+
 class Button_Properties
+// Properties (duh)
 {
   public: 
 
@@ -75,10 +285,8 @@ class Button_Properties
   bool CHANGED = false;
 };
 
-
-// -------------------------------------------------------------------------------------
-// Button Variable
 class Button
+// Routines for create, draw, modify, and behavior.
 {
   private:
 
@@ -89,10 +297,10 @@ class Button
   int Counter = 0;
 
   // Types:
-  // -1 - dont show
-  //  0 - click
-  //  1 - toggle
-  //  2 - radio (for the zone) (Not Implemented)
+  // -1 - Hidden
+  //  0 - Single Click
+  //  1 - Toggle Button
+  //  2 - Radio Button (Zone)
 
   public:
 
@@ -113,65 +321,19 @@ class Button
     PROP.CHANGED = true;
   }
 
-  void create(int id, string name, string label, int value, int type, int color, int bcolor)
+  void create()
+  //void create(int id, string name, string label, int value, int type, int color, int bcolor)
   // Define button and behavior.  
   // Like set but leaves off position and size details.
   // Does not create window.
-
-  //      COLOR_BLACK   0
-  //      COLOR_RED     1
-  //      COLOR_GREEN   2
-  //      COLOR_YELLOW  3
-  //      COLOR_BLUE    4
-  //      COLOR_MAGENTA 5
-  //      COLOR_CYAN    6
-  //      COLOR_WHITE   7
-
   {
-    PROP.ID = id;
-    PROP.NAME = name;
-    PROP.LABEL = label;
-
-    PROP.VALUE = value;
-    PROP.TYPE = type;
-    PROP.COLOR = color;
-    PROP.BCOLOR = bcolor;
-
     winButton = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
-
-    bool CHANGED = true;
-  }
-
-  void set(int id, string name, string label, int posY, int posX, int sizeY, int sizeX, int value, int type, int color, int bcolor)
-  // Define button and behavior.
-  {
-    PROP.ID = id;
-    PROP.NAME = name;
-    PROP.LABEL = label;
-    PROP.POSX = posX;
-    PROP.POSY = posY;
-    PROP.SIZEX = sizeX;
-    PROP.SIZEY = sizeY;
-
-    PROP.VALUE = value;
-    PROP.TYPE = type;
-    PROP.COLOR = color;
-    PROP.BCOLOR = bcolor;
-
-    winButton = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
-
-    refresh();
-
-    wborder(winButton,'|','|','-','-','+','+','+','+') ;
-    wrefresh(winButton);
 
     bool CHANGED = true;
   }
 
   void move_resize(int posY, int posX, int sizeY, int sizeX)
-  // Define button and behavior.
-  // Like set but only allows pos and size to change.
-  // Recreates the window.
+  // Redefine button position and size.
   {
     PROP.POSX = posX;
     PROP.POSY = posY;
@@ -183,17 +345,19 @@ class Button
     refresh();
 
     wborder(winButton,'|','|','-','-','+','+','+','+') ;
-    //wrefresh(winButton);
 
     bool CHANGED = true;
   }
 
   bool changed()
+  // Returns true if any of the properties have changed.
   {
     return PROP.CHANGED;
   }
 
   void advance()
+  // Brings the value of the button up to its next value state
+  //  e.g. A simple button Off (value = 0) would advance to On (value = 1).
   {
     //LABEL = "clicked";
     if (PROP.TYPE == 0)  // Click Button
@@ -220,7 +384,8 @@ class Button
   }
 
   void draw(bool Refresh)
-  // draw
+  // Draw the button on the screen if the value has changed or if  
+  //  the Refresh parameter is true.
   {
     if (PROP.CHANGED == true || Refresh == true)
     {
@@ -416,11 +581,12 @@ class Button_Zone_Manager
     }
   }
 
-  void create_button()
+  void create_button(int Id, string Name, string Label, int Value, int Type, int Color, int BColor)
   {
     Button tmp_button;
 
-    tmp_button.create(0, "", "", 0, 0, 0, 0);
+    tmp_button.create();
+    tmp_button.modify(Id, Name, Label, Value, Type, Color, BColor);
     BUTTONS.push_back(tmp_button);
   }
 

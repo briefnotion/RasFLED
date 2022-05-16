@@ -23,7 +23,7 @@
 #include "system.h"
 #include "consoleanddata.h"
 #include "player.h"
-#include "buttons.h"
+#include "gadgets.h"
 
 using namespace std;
 
@@ -187,54 +187,19 @@ class Screen3
   Button_Zone_Manager bzTabs;
   Button_Zone_Manager bzRadio;
 
-  void buttons_Radio(system_data &sdSysData)
-  // Define Radio buttons and load them to the 
-  //  radio button zone.
-  {
-    bzRadio.modify(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-    bzRadio.modify(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.modify(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  }
-
-  void buttons_CPicker(system_data &sdSysData)
-  // Define Color Picker buttons and load them to the 
-  //  color picker button zone.
-  {
-    bzCPicker.modify(0, "RED", "%r", 0, 0, C_WHITE_RED, 0);
-    bzCPicker.modify(1, "GREEN", "%g", 0, 0, C_WHITE_GREEN, 0);
-    bzCPicker.modify(2, "BLUE", "%b", 0, 0, C_WHITE_BLUE, 0);
-    bzCPicker.modify(3, "PURPLE", "%u", 0, 0, C_WHITE_PURPLE, 0);
-    bzCPicker.modify(4, "YELLOW", "%y", 0, 0, C_WHITE_YELLOW, 0);
-    bzCPicker.modify(5, "CYAN", "%c", 0, 0, C_WHITE_CYAN, 0);
-    bzCPicker.modify(6, "ORANGE", "%n", 0, 0, C_WHITE_YELLOW, 0);
-    bzCPicker.modify(7, "WHITE", "%w", 0, 0, C_BLACK_WHITE, 0);
-  }
-
-  void buttons_Tabs(system_data &sdSysData)
-  // Define Tab buttons and load them to the 
-  //  button zone.
-  // Console Tab Buttons 
-  {
-    bzTabs.modify(0, "TABCONSOLE", "Console", 1, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.modify(1, "TABBLANKSCREEN", "Blank%Screen", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.modify(2, "TABPLAYER", "Player", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.modify(3, "TABCRAFT", "Craft%Stat", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.modify(4, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  }
-
   void buttons_menu_home(system_data &sdSysData)
   // Define control buttons and load them to the 
   //  button zone.
   // Main Buttons (Top)
   {
-    bzButtons.modify(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, C_WHITE_YELLOW, 0);
+    bzButtons.modify(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
-    //bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, C_WHITE_YELLOW, 0);
-    bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, C_WHITE_YELLOW, 0);
-    bzButtons.modify(3, "FLASH", "%Flash", 0, 0, C_WHITE_GREEN, 0);
+    //bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzButtons.modify(3, "FLASH", "%Flash", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
     bzButtons.modify(4, "", "", 0, -1, 6, 0);
-    bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, C_WHITE_GREEN, 0);
-    bzButtons.modify(6, "MENUCONTROL", "%...", 0, 0, C_WHITE_BLUE, 0);
+    bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzButtons.modify(6, "MENUCONTROL", "%...", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
   }
 
   void buttons_menu_control(system_data &sdSysData)
@@ -242,13 +207,13 @@ class Screen3
   //  button zone.
   // RasFLED settings
   {
-    bzButtons.modify(0, "HAZARD","%HAZARD", int(sdSysData.booHazardRunning), 1, C_WHITE_RED, 0);
+    bzButtons.modify(0, "HAZARD","%HAZARD", int(sdSysData.booHazardRunning), 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
-    bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, C_WHITE_GREEN, 0);
-    bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, C_WHITE_YELLOW, 0);
+    bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
     bzButtons.modify(4, "", "", 0, -1, 6, 0);
-    bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, C_WHITE_BLUE, 0);
-    bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // When first diplaying buttons, set its value to the value it represents.
     if (sdSysData.booDay_On == true)
@@ -266,13 +231,13 @@ class Screen3
   //  button zone.
   // RasFLED advanced settings
   {
-    bzButtons.modify(0, "EXIT", "%EXIT", 0, 0, C_WHITE_RED, 0);
-    bzButtons.modify(1, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, C_WHITE_RED, 0);
+    bzButtons.modify(0, "EXIT", "%EXIT", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzButtons.modify(1, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzButtons.modify(2, "", "", 0, -1, 6, 0);
-    bzButtons.modify(3, "DEBUG", "%DEBUG", 0, 0, C_WHITE_YELLOW, 0);
+    bzButtons.modify(3, "DEBUG", "%DEBUG", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
     bzButtons.modify(4, "", "", 0, -1, 6, 0);
     bzButtons.modify(5, "", "", 0, -1, 6, 0);
-    bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
   }
 
   void buttons_menu_overhead_color(system_data &sdSysData)
@@ -282,11 +247,11 @@ class Screen3
   {
     bzButtons.modify(0, "", "", 0, -1, 6, 0);
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
-    bzButtons.modify(2, "OVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, C_WHITE_GREEN, 0);
-    bzButtons.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, C_WHITE_YELLOW, 0);
-    bzButtons.modify(4, "", "", 0, -1, C_WHITE_BLUE, 0);
+    bzButtons.modify(2, "OVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzButtons.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzButtons.modify(4, "", "", 0, -1, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzButtons.modify(5, "", "", 0, -1, 6, 0);
-    bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, C_WHITE_BLUE, 0);
+    bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
   }
 
   void init()
@@ -320,40 +285,8 @@ class Screen3
       //  COLOR_CYAN
       //  COLOR_WHITE
 
-      /*
-      init_pair(C_RED_BLACK, COLOR_RED, COLOR_BLACK);
-      init_pair(C_YELLOW_BLACK, COLOR_YELLOW, COLOR_BLACK);
-      init_pair(C_GREEN_BLACK, COLOR_GREEN, COLOR_BLACK);
-      init_pair(C_BLUE_BLACK, COLOR_BLUE, COLOR_BLACK);
-      init_pair(C_WHITE_RED, COLOR_WHITE, COLOR_RED);
-      init_pair(C_WHITE_YELLOW, COLOR_WHITE, COLOR_YELLOW);
-      init_pair(C_WHITE_GREEN, COLOR_WHITE, COLOR_GREEN);
-      init_pair(C_WHITE_BLUE, COLOR_WHITE, COLOR_BLUE);
-      init_pair(C_WHITE_PURPLE, COLOR_WHITE, COLOR_MAGENTA);
-      init_pair(C_WHITE_CYAN, COLOR_WHITE, COLOR_CYAN);
-      init_pair(C_WHITE_BLACK, COLOR_WHITE, COLOR_BLACK);
-      init_pair(C_BLACK_WHITE, COLOR_BLACK, COLOR_WHITE);
-
-      init_pair(C_BLACK_RED, COLOR_BLACK, COLOR_RED);
-      init_pair(C_BLACK_YELLOW, COLOR_BLACK, COLOR_YELLOW);
-      init_pair(C_BLACK_GREEN, COLOR_BLACK, COLOR_GREEN);
-      init_pair(C_BLACK_BLUE, COLOR_BLACK, COLOR_BLUE);
-      init_pair(C_BLACK_PURPLE, COLOR_BLACK, COLOR_MAGENTA);
-      init_pair(C_BLACK_CYAN, COLOR_BLACK, COLOR_CYAN);
-      init_pair(C_BLACK_BLACK, COLOR_BLACK, COLOR_BLACK);
-      */
-
+      // Create a map of all color pair combinations for reference.
       CRT_init_all_pairs();
-
-      /*
-      //Redefine Colors
-      init_color(COLOR_RED,     700, 000, 000);
-      init_color(COLOR_GREEN,   000, 700, 000);
-      init_color(COLOR_BLUE,    000, 000, 700);
-      init_color(COLOR_YELLOW,  500, 500, 000);
-      init_color(COLOR_MAGENTA, 700, 000, 700);
-      init_color(COLOR_CYAN,    000, 700, 700);
-      */
     }
   }
 
@@ -365,40 +298,38 @@ class Screen3
     //      to be displayed.
 
     // Prep Buttons for Radio screen.
-    bzRadio.create_button();
-    bzRadio.create_button();
-    bzRadio.create_button();
-    buttons_Radio(sdSysData);
+    bzRadio.create_button(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.create_button(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Prep Control Buttons for program start.
-    bzButtons.create_button();
-    bzButtons.create_button();
-    bzButtons.create_button();
-    bzButtons.create_button();
-    bzButtons.create_button();
-    bzButtons.create_button();
-    bzButtons.create_button();
-    buttons_menu_home(sdSysData);
+    bzButtons.create_button(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzButtons.create_button(1, "", "", 0, -1, 6, 0);
+    bzButtons.create_button(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzButtons.create_button(3, "FLASH", "%Flash", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzButtons.create_button(4, "", "", 0, -1, 6, 0);
+    bzButtons.create_button(5, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzButtons.create_button(6, "MENUCONTROL", "%...", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Prep Color Picker Buttons, even thought they 
     //  aren't displayed at start.
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    bzCPicker.create_button();
-    buttons_CPicker(sdSysData);
+    bzCPicker.create_button(0, "RED", "%r", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzCPicker.create_button(1, "GREEN", "%g", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzCPicker.create_button(2, "BLUE", "%b", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzCPicker.create_button(3, "PURPLE", "%u", 0, 0, CRT_get_color_pair(COLOR_MAGENTA, COLOR_WHITE), 0);
+    bzCPicker.create_button(4, "YELLOW", "%y", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzCPicker.create_button(5, "CYAN", "%c", 0, 0, CRT_get_color_pair(COLOR_CYAN, COLOR_WHITE), 0);
+    bzCPicker.create_button(6, "ORANGE", "%n", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzCPicker.create_button(7, "WHITE", "%w", 0, 0, CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK), 0);
 
     // Prep Tab buttons for program first start
-    bzTabs.create_button();
-    bzTabs.create_button();
-    bzTabs.create_button();
-    bzTabs.create_button();
-    bzTabs.create_button();
-    buttons_Tabs(sdSysData);
+    bzTabs.create_button(0, "TABCONSOLE", "Console", 1, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(1, "TABBLANKSCREEN", "Blank%Screen", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(2, "TABPLAYER", "Player", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(3, "TABCRAFT", "Craft%Stat", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(4, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+
+    //buttons_Tabs(sdSysData);
 
     // Build any Gadgets that will be called.
 
@@ -559,7 +490,7 @@ class Screen3
       wrefresh(winStatus);
 
       // Set window color
-      //wbkgd(winStatus, COLOR_PAIR(C_WHITE_BLUE));
+      //wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
       wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
     }
 
@@ -603,7 +534,7 @@ class Screen3
       wrefresh(winDebug);
 
       // Set window color
-      wbkgd(winDebug, COLOR_PAIR(C_WHITE_RED));
+      wbkgd(winDebug, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
     }
 
     // ---------------------------------------------------------------------------------------
@@ -1010,7 +941,7 @@ class Screen3
     long remaining_time = 0;
 
     // Set window color
-    wbkgd(winTimer, COLOR_PAIR(C_WHITE_GREEN));
+    wbkgd(winTimer, COLOR_PAIR(CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE)));
 
     // Calculate
     duration_time = sdSysData.cdTIMER.duration();

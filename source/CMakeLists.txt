@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 #option(BUILD_RELEASE "Release Build" OFF)
 
-set(BUILD_RELEASE ON)
+set(BUILD_RELEASE OFF)
 
 if(BUILD_RELEASE)
       set(CMAKE_BUILD_TYPE Release)
@@ -38,7 +38,7 @@ add_executable(
   LEDstuff.h
   stringthings.h
   timedeventsystem.h
-  buttons.h
+  gadgets.h
   screen3.h
 )
 
