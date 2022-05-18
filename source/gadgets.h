@@ -123,7 +123,7 @@ class Title_Bar
     if (PROP.CHANGED == true || Refresh == true)
     {
       wattron(winTitle, A_REVERSE);
-      mvwprintw(winTitle, 0, 0, "CONSOLE");
+      mvwprintw(winTitle, 0, 0, PROP.LABEL.c_str());
       wattroff(winTitle, A_REVERSE);
 
       PROP.CHANGED = false;

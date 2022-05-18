@@ -1,3 +1,21 @@
+V 0.75A_220517
+  - Created class FILE_LOG_READER designed to watch a file and provide changes 
+      made through a get_next_line function when line_avail is true.
+    The class is inclomplete, not fully functional, and may go through several 
+      rewrites because I don't like how the routine to find file size changes 
+      work and data is being lost at certain situations.  The class is prone to 
+      fail, although functional.
+  - The FILE_LOG_READER (watcher) is monitoring "/var/log/daemon.log", which is 
+      where system errors and status changes are logged, then printing the 
+      log changes to a new Text_Box on the Radio screen. rtl_airband errors 
+      and status changes can be monitored until an api is created.
+  - The button on the Radio screen calls the following script:
+      "screen -dmS airband /usr/local/bin/rtl_airband -f -c /home/pi/rtlsdr/air_laf_s.conf >/dev/null"
+      named "/home/pi/rtlsdr/ras_lafs.sh".
+      paplay needs to be added to root group. I think the command was 
+      "sudo adduser root pulse-access".
+  - Title_Bar gadgets with corrosponding titles replaced the older title bars. 
+
 V 0.74A_220516
   - Completed implementation of the Text_Box gadget and replaced the console.
   - Created a new gadget called Title_Bar.  More functions will be added as 

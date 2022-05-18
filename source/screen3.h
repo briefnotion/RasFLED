@@ -60,7 +60,7 @@ class Screen3
   //   s  ||                            |  s  |   |
   //   o  ||                            |     |   |
   //   l  ||                            |     |   |
-  //   e  >|____________________________|_____|   <
+  //   e  >|____________________________|_____|   <tiStatus
   //                                    ^-----^ XButtons
   //       ^-------XStatus--------------^
   //
@@ -77,6 +77,7 @@ class Screen3
   int XStatusSize = -1;
 
   WINDOW * winStatus;
+  Title_Bar tiStatus;
 
   // Buttons Screen Variables --------------------
   int YButtonPos = 0;
@@ -95,6 +96,7 @@ class Screen3
   int XDebugSize = -1;
 
   WINDOW * winDebug;
+  Title_Bar tiDebug;
 
   // Player Debug Counters
   bool Player_Frame_Counter = false;
@@ -111,6 +113,7 @@ class Screen3
   int XTimerSize = -1;
 
   WINDOW * winTimer;
+  Title_Bar tiTimer;
 
   BAR Countdown_Timer;
 
@@ -162,6 +165,7 @@ class Screen3
   int XCraft_StatSize = -1;
 
   WINDOW * winCraft_Stat;
+  Title_Bar tiCraft_Stat;
 
   BAR Temp_Coolant;
   BAR Temp_Oil;
@@ -185,10 +189,14 @@ class Screen3
   int YBRadioSize = 2; // Radio Button Standard Sizes
   int XBRadioSize = 15;
 
+  int YTRadio_LogSize = 14;
+
   WINDOW * winRadio;
+  Title_Bar tiRadio;
 
   public:
-  Button_Zone_Manager bzRadio;  
+  Button_Zone_Manager bzRadio;
+  Text_Box            tbRadio_Log;
   private:
   
   // --------------------
@@ -316,14 +324,12 @@ class Screen3
 
     // Build any Gadgets that will be called.
 
+    // Prep Status Screen Text Box.
+    tiStatus.create(1, "STATUS", " STATUS", 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+
     // Prep Console Screen Text Box.
     tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-    tiConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-
-    // Prep Buttons for Radio screen.
-    bzRadio.create_button(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-    bzRadio.create_button(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.create_button(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    tiConsole.create(1, "CONSOLE", "CONSOLE", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     // Prep Control Buttons for program start.
     bzButtons.create_button(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
@@ -354,6 +360,8 @@ class Screen3
 
     // Countdown Screen
     // Countdown Timer
+    tiTimer.create(1, "TIMER", "  TIMER", 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+
     Countdown_Timer.label("Timer: ");
     Countdown_Timer.label_size(13);
     Countdown_Timer.size(15);
@@ -364,6 +372,8 @@ class Screen3
 
     // Debug Screen 
     // Compute Times
+    tiDebug.create(1, "DEBUG", "   DIAG", 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+
     Compute_Time.label("Compute: ");
     Compute_Time.label_size(13);
     Compute_Time.size(15);
@@ -404,6 +414,8 @@ class Screen3
 
     // Craft_Stat Screen
     // Engine
+    tiCraft_Stat.create(1, "CRAFT", "  CRAFT", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+
     Temp_Coolant.label("Coolant Temp: ");
     Temp_Coolant.label_size(15);
     Temp_Coolant.size(15);
@@ -460,6 +472,14 @@ class Screen3
     Othr_RP_Tire_PSI.label_size(15);
     Othr_RP_Tire_PSI.size(15);
     Othr_RP_Tire_PSI.max_value(75);
+   
+    // Prep Buttons for Radio screen.
+    tbRadio_Log.create(1, "RADIO", "RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiRadio.create(1, "RADIO", "  RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+
+    bzRadio.create_button(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.create_button(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Draw screen the entire screen.  reset is also 
     //  called when the screen is resized.  
@@ -502,6 +522,7 @@ class Screen3
 
       // Build Window
       winStatus = newwin(YStatusSize, XStatusSize, YStatusPos, XStatusPos);
+      tiStatus.move_resize(YStatusPos, XStatusPos, YStatusSize, XStatusSize);
       
       // Set Y Split
       YSplit = YSplit + YStatusSize;
@@ -546,6 +567,7 @@ class Screen3
 
       // Build Window
       winDebug = newwin(YDebugSize, XDebugSize, YDebugPos, XDebugPos);
+      tiDebug.move_resize(YDebugPos, XDebugPos, YDebugSize, XDebugSize);
       
       // Set Y Split
       YSplit = YSplit + YDebugSize;
@@ -594,7 +616,8 @@ class Screen3
 
       // Build Window
       winTimer = newwin(YTimerSize, XTimerSize, YTimerPos, XTimerPos);
-      
+      tiTimer.move_resize(YTimerPos, XTimerPos, YTimerSize, XTimerSize);
+
       // Set Y Split
       YSplit = YSplit + YTimerSize;
 
@@ -676,6 +699,7 @@ class Screen3
 
       // Build Window
       winCraft_Stat = newwin(YCraft_StatSize, XCraft_StatSize, YCraft_StatPos, XCraft_StatPos);
+      tiCraft_Stat.move_resize(YCraft_StatPos, XCraft_StatPos, YCraft_StatSize, XCraft_StatSize);
       
       // Set Y Split
       YSplit = YSplit + YCraft_StatSize;
@@ -707,6 +731,7 @@ class Screen3
 
       // Build Window
       winRadio = newwin(YRadioSize, XRadioSize, YRadioPos, XRadioPos);
+      tiRadio.move_resize(YRadioPos, XRadioPos, YRadioSize, XRadioSize);
       
       // Set Y Split
       YSplit = YSplit + YRadioSize;
@@ -728,6 +753,9 @@ class Screen3
       bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0+1), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
       bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1+2), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
       bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2+3), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
+
+      tbRadio_Log.move_resize(YRadioPos + YRadioSize - YTRadio_LogSize, 0, YTRadio_LogSize, XRadioSize);
+
     }
 
     // ---------------------------------------------------------------------------------------
@@ -862,13 +890,9 @@ class Screen3
       mvwprintw(winStatus, 1, XStatusSize - 12, "NA");
     }
 
-    // Screen Title
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 0, XStatusSize - 7, " STATUS");
-    wattroff(winStatus, A_REVERSE);
-
     // Commit all our changes to the status portion of the screen (winTop)
     wrefresh(winStatus);
+    tiStatus.draw(ScrStat.Needs_Refresh);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -939,12 +963,8 @@ class Screen3
     mvwprintw(winDebug, 1, XStatusSize - 14, "Mouse: %03d %03d",mouse.x(),mouse.y());
 
     //------------------------
-    // Screen Title
-    wattron(winDebug, A_REVERSE);
-    mvwprintw(winDebug, 0, XDebugSize - 7, "   DIAG");
-    wattroff(winDebug, A_REVERSE);
-
     wrefresh(winDebug);
+    tiDebug.draw(ScrStat.Needs_Refresh);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -972,12 +992,8 @@ class Screen3
     Countdown_Timer.progress_bar(winTimer, 1, 2, duration_time - elaped_time);
 
     //------------------------
-    // Screen Title
-    wattron(winTimer, A_REVERSE);
-    mvwprintw(winTimer, 0, XTimerSize - 7, "  TIMER");
-    wattroff(winTimer, A_REVERSE);
-
     wrefresh(winTimer);
+    tiTimer.draw(ScrStat.Needs_Refresh);
   }
   
   // ---------------------------------------------------------------------------------------
@@ -987,14 +1003,6 @@ class Screen3
   //    bandwith version will need to created.  Or, I put the console into its own 
   //    thread.  Whichever is necessary to develop or learn first.
   {
-
-    /*
-    // Screen Title
-    wattron(winConsole, A_REVERSE);
-    mvwprintw(winConsole, 0, XConsoleSize - 7, "CONSOLE");
-    wattroff(winConsole, A_REVERSE);
-    */
-
     if (tbConsole.PROP.CHANGED == true || ScrStat.Needs_Refresh == true)
     {
       tbConsole.draw(ScrStat.Needs_Refresh);
@@ -1008,13 +1016,6 @@ class Screen3
   // Shows the Player Window
   {
     int yCurPos = 0;
-
-    // Screen Title
-    /*
-    wattron(winPlayer, A_REVERSE);
-    mvwprintw(winPlayer, 0, XPlayerSize - 7, " PLAYER");
-    wattroff(winPlayer, A_REVERSE);
-    */
 
     // Refresh the window.
     // wrefresh(winPlayer);
@@ -1208,11 +1209,6 @@ class Screen3
   {
     int yCurPos = 0;
 
-    // Screen Title
-    wattron(winCraft_Stat, A_REVERSE);
-    mvwprintw(winCraft_Stat, 0, XCraft_StatSize - 7, "  CRAFT");
-    wattroff(winCraft_Stat, A_REVERSE);
-
     mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
 
     Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 99);
@@ -1238,25 +1234,24 @@ class Screen3
 
     // Refresh the window.
     wrefresh(winCraft_Stat);
-    
+    tiCraft_Stat.draw(ScrStat.Needs_Refresh);
   }
   
   // ---------------------------------------------------------------------------------------
   void radio(ScreenStatus &ScrStat)
   // Shows the Player Window
   {
+    tbRadio_Log.draw(ScrStat.Needs_Refresh);
+
+    bzRadio.draw(ScrStat.Needs_Refresh);
+
     if(ScrStat.Needs_Refresh == true)
     {
       int yCurPos = 0;
 
-      // Screen Title
-      wattron(winRadio, A_REVERSE);
-      mvwprintw(winRadio, 0, XRadioSize - 7, "  RADIO");
-      wattroff(winRadio, A_REVERSE);
-
-
       // Refresh the window.
       wrefresh(winRadio);
+      tiRadio.draw(ScrStat.Needs_Refresh);
     }
   }
 
@@ -1324,7 +1319,6 @@ class Screen3
     if (ScrStat.Window_Radio == true)
     {
       radio(ScrStat);
-      bzRadio.draw(ScrStat.Needs_Refresh);
     }
 
     // Buttons

@@ -708,6 +708,129 @@ bool load_playlist(Console &cons, system_data &sdSysData, string strFilename)
 }
 
 
+// -------------------------------------------------------------------------------------
+class FILE_LOG_READER
+// Watches a log file and returns lines added through the get_next_line function.
+//  !!! If the first character in the returned line is cr then the first 2 characters 
+//        will be removed in the get line return statement.
+{
+  private:
+  ifstream LOG_FILE;
+
+  string FILENAME = "";
+
+  int REMAINING = 0;
+  bool LINE_AVAIL = false;
+
+  streampos POSITION;
+
+  void close_then_reopen()
+  {
+    close();
+    open(FILENAME);
+  }
+
+  void reset()
+  {
+    close();
+    REMAINING = 0;
+    LINE_AVAIL = false;
+    POSITION = 0;
+    open(FILENAME);
+  }
+
+  bool remaining_changed()
+  // Returns true if remaining charateres value changed.
+  {
+    streampos end;
+
+    LOG_FILE.seekg (0, ios::end);
+    end = LOG_FILE.tellg();
+
+    REMAINING = end - POSITION;
+    
+    LOG_FILE.seekg(POSITION);
+
+    if ((REMAINING <0) || (LOG_FILE.fail() == true))
+    {
+      reset();
+      return false;
+    }
+    else if (REMAINING > 0)
+    {
+      LINE_AVAIL = true;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  public:
+
+  bool open(string Filename)
+  // Open the file for watching.
+  {
+    FILENAME = Filename;
+    LOG_FILE.open(FILENAME, ios::in);
+    return true;
+  }
+
+  bool close()
+  // Close the file.
+  {
+    LOG_FILE.close();
+    return true;
+  }
+
+  bool line_avail()
+  // Returns true if a line is available to be read.
+  {
+    LINE_AVAIL = remaining_changed();
+    
+    return LINE_AVAIL;
+  }
+
+  string get_next_line()
+  // Returns the newly added line of the watch file.
+  {
+    string str_read_line = "";
+    if (LINE_AVAIL == true)
+    {
+      LOG_FILE.seekg(POSITION);
+      getline(LOG_FILE, str_read_line);
+      POSITION = LOG_FILE.tellg();
+    }
+
+    /*
+    if (str_read_line.back() == 0)
+    {
+      POSITION = (int)POSITION -1;
+    }
+    */
+
+    if (LOG_FILE.eof())
+    {
+      //str_read_line = "EOF " + to_string((int)str_read_line.back()) + " " + to_string(POSITION) + " " + str_read_line;
+      LINE_AVAIL = false;
+      close_then_reopen();
+    }
+    else if (LOG_FILE.fail())
+    {
+      reset();
+    }
+    else
+    {
+      //str_read_line = "--- " + to_string((int)str_read_line.back()) + " " + to_string(POSITION) + " " + str_read_line;
+    }
+    
+    //return to_string((int)str_read_line.back()) + " " + to_string(POSITION) + " " + str_read_line;
+    return str_read_line;
+  }
+
+};
+
 
 
 #endif

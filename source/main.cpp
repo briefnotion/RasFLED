@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.74A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.75A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -328,6 +328,11 @@ int loop()
 
   // Console sub timer. Just a little faster to prevent blips.
   cons.Console_Display.set(SCREENUPDATEDELAY-1);
+
+  // LogFile Variables
+  FILE_LOG_READER watcher_daemon_log;
+  //watcher_daemon_log.open("/home/pi/test/test.log");
+  watcher_daemon_log.open("/var/log/daemon.log");
 
   // Disposable Variables
   int count  = 0;
@@ -776,6 +781,12 @@ int loop()
       // Read Hardware Status before printing to screen.
       sdSystem.read_hardware_status(1000);
 
+      // Read log files
+      while (watcher_daemon_log.line_avail() == true)
+      {
+        cons.Screen.tbRadio_Log.add_line(tmeCurrentMillis, watcher_daemon_log.get_next_line());
+      }
+      
       // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
       //cons.readkeyboardinput();
       cons.readkeyboardinput2();
@@ -909,6 +920,8 @@ int loop()
   // Shutdown RPI.
   shutdown();
 
+  // close open files
+  watcher_daemon_log.close();
 
   printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
