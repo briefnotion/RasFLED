@@ -1,3 +1,10 @@
+V 0.76A_220518
+  - Renamed FILE_LOG_READER to the more appropriate name of FILE_WATCH because 
+     of future plans.
+  - Rewrote FILE_WATCH so the routine can now survive a watched file deletion 
+      or nonexistant.  The routine no longer loses characters when text is 
+      added after a CR or LF or CRLF.
+
 V 0.75A_220517
   - Created class FILE_LOG_READER designed to watch a file and provide changes 
       made through a get_next_line function when line_avail is true.

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.75A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.76A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -330,7 +330,7 @@ int loop()
   cons.Console_Display.set(SCREENUPDATEDELAY-1);
 
   // LogFile Variables
-  FILE_LOG_READER watcher_daemon_log;
+  FILE_WATCH watcher_daemon_log;
   //watcher_daemon_log.open("/home/pi/test/test.log");
   watcher_daemon_log.open("/var/log/daemon.log");
 
