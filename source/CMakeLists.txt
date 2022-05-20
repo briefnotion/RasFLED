@@ -28,6 +28,7 @@ add_executable(
   hardware_status.h
   animations.h
   files.h
+  rasapi.h
   player.h
   consoleanddata.h
   definitions.h

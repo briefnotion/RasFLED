@@ -1,3 +1,8 @@
+V 0.77A_220519
+  - Created rasapi.h and included the FILE_WATCH class.
+  - Changed and implemented the gadget title bar Type property to a Size property.
+  - Title bar now displays in the correct color.
+
 V 0.76A_220518
   - Renamed FILE_LOG_READER to the more appropriate name of FILE_WATCH because 
      of future plans.

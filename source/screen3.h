@@ -60,7 +60,7 @@ class Screen3
   //   s  ||                            |  s  |   |
   //   o  ||                            |     |   |
   //   l  ||                            |     |   |
-  //   e  >|____________________________|_____|   <tiStatus
+  //   e  >|____________________________|_____|   <
   //                                    ^-----^ XButtons
   //       ^-------XStatus--------------^
   //
@@ -325,11 +325,11 @@ class Screen3
     // Build any Gadgets that will be called.
 
     // Prep Status Screen Text Box.
-    tiStatus.create(1, "STATUS", " STATUS", 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    tiStatus.create(1, "STATUS", " STATUS", 7, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Prep Console Screen Text Box.
     tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-    tiConsole.create(1, "CONSOLE", "CONSOLE", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiConsole.create(1, "CONSOLE", "CONSOLE", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     // Prep Control Buttons for program start.
     bzButtons.create_button(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
@@ -360,7 +360,7 @@ class Screen3
 
     // Countdown Screen
     // Countdown Timer
-    tiTimer.create(1, "TIMER", "  TIMER", 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    tiTimer.create(1, "TIMER", "  TIMER", 7, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
 
     Countdown_Timer.label("Timer: ");
     Countdown_Timer.label_size(13);
@@ -372,7 +372,7 @@ class Screen3
 
     // Debug Screen 
     // Compute Times
-    tiDebug.create(1, "DEBUG", "   DIAG", 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    tiDebug.create(1, "DEBUG", "   DIAG", 7, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
 
     Compute_Time.label("Compute: ");
     Compute_Time.label_size(13);
@@ -414,7 +414,7 @@ class Screen3
 
     // Craft_Stat Screen
     // Engine
-    tiCraft_Stat.create(1, "CRAFT", "  CRAFT", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiCraft_Stat.create(1, "CRAFT", "  CRAFT", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     Temp_Coolant.label("Coolant Temp: ");
     Temp_Coolant.label_size(15);
@@ -475,7 +475,7 @@ class Screen3
    
     // Prep Buttons for Radio screen.
     tbRadio_Log.create(1, "RADIO", "RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-    tiRadio.create(1, "RADIO", "  RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiRadio.create(1, "RADIO", "  RADIO", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     bzRadio.create_button(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzRadio.create_button(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);

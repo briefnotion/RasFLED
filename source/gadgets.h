@@ -34,7 +34,7 @@ class Title_Bar_Properties
   string NAME = "";
   string LABEL = "";
 
-  int TYPE = 0;
+  int SIZE = 0;
   int COLOR = 0;
   int BCOLOR = 0;
   
@@ -61,20 +61,20 @@ class Title_Bar
 
   Title_Bar_Properties PROP;  
 
-  void modify(int id, string name, string label, int type, int color, int bcolor)
+  void modify(int id, string name, string label, int size, int color, int bcolor)
   // Changes all properties
   {
     PROP.ID = id;
     PROP.NAME = name;
     PROP.LABEL = label;
 
-    PROP.TYPE = type;
+    PROP.SIZE = size;
     PROP.COLOR = color;
 
     PROP.CHANGED = true;
   }
 
-  void create(int id, string name, string label, int type, int color, int bcolor)
+  void create(int id, string name, string label, int size, int color, int bcolor)
   // Define and behavior.  
   // Like set but leaves off position and size details.
   // Does not create window.
@@ -84,7 +84,7 @@ class Title_Bar
     PROP.NAME = name;
     PROP.LABEL = label;
 
-    PROP.TYPE = type;
+    PROP.SIZE = size;
     PROP.COLOR = color;
     PROP.BCOLOR = bcolor;
 
@@ -101,7 +101,7 @@ class Title_Bar
     PROP.SIZEX = sizeX;
     PROP.SIZEY = sizeY;
 
-    winTitle = newwin(1, 7, PROP.POSY, sizeX - 7);
+    winTitle = newwin(1, PROP.SIZE, PROP.POSY, sizeX - PROP.SIZE);
 
     refresh();
 
@@ -122,6 +122,7 @@ class Title_Bar
   {
     if (PROP.CHANGED == true || Refresh == true)
     {
+      wbkgd(winTitle, COLOR_PAIR(PROP.COLOR));
       wattron(winTitle, A_REVERSE);
       mvwprintw(winTitle, 0, 0, PROP.LABEL.c_str());
       wattroff(winTitle, A_REVERSE);

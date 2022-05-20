@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.76A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.77A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -101,6 +101,7 @@
 #include "definitions.h"
 #include "helper.h"
 #include "files.h"
+#include "rasapi.h"
 #include "consoleanddata.h"
 #include "LEDstuff.h"
 #include "fledcore.h"
