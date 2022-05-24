@@ -18,6 +18,7 @@
 #include <string.h>
 #include <deque>
 
+#include "fled_time.h"
 #include "stringthings.h"
 #include "helper_ncurses.h"
 

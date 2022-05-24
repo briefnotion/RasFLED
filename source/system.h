@@ -22,6 +22,8 @@
 #include "commands.h"
 #include "hardware_status.h"
 
+#include "api_rtlairband.h"
+
 using namespace std;
 
 // ***************************************************************************************
@@ -141,8 +143,10 @@ class system_data
   // Event System
   deque<int> intCHANNEL_GROUP_EVENTS_COUNTS;
 
-  
   COMMAND_THREAD Command_Thread;
+
+  // Radio Variables
+  API_SQUELCH SQUELCH;
 
   // Console Display Variables from other
 

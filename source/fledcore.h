@@ -13,69 +13,12 @@
 #define FLEDCORE_H
 
 // Standard Header Files
-#include <chrono>
 #include "LEDstuff.h"
 
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
 // ***************************************************************************************
-
-// -------------------------------------------------------------------------------------
-// Keeps track of timing variables
-class FledTime
-{
-  private:
-  std::chrono::time_point<std::chrono::system_clock> tmeStart;
-  std::chrono::time_point<std::chrono::system_clock> tmeFrame;
-
-  public:
-
-  double tmeFrameMillis;
-
-  void set()
-  {
-    // Initialize as Start of Program Time.
-    tmeStart = std::chrono::system_clock::now();
-  }
-
-  double now()
-  {
-    // Returns now time in milliseconds.
-    // Should be Unsigned Long.
-    std::chrono::time_point<std::chrono::system_clock> tmeNow = std::chrono::system_clock::now();
-    std::chrono::duration<double>  dur = tmeNow - tmeStart;
-
-    double nowtime = dur.count();
-    nowtime = nowtime * 1000;
-    
-    return nowtime;
-  }
-
-  void setframetime()
-  {
-    // Sets the Start of a Frame Time to now. 
-    tmeFrame = std::chrono::system_clock::now();
-    std::chrono::duration<double>  dur = tmeFrame - tmeStart;
-
-    tmeFrameMillis = dur.count();
-    tmeFrameMillis = tmeFrameMillis * 1000;
-  }
-
-  double tmeFrameElapse()
-  {
-    // Returns, in milliseconds, the amount of time passed since frame time.
-    double elapsed;
-    std::chrono::time_point<std::chrono::system_clock> tmeNow = std::chrono::system_clock::now();
-    std::chrono::duration<double>  dur = tmeNow - tmeFrame;
-    
-    elapsed = dur.count();
-    elapsed = elapsed * 1000;
-
-    return elapsed;
-  }
-};
-
 
 // -------------------------------------------------------------------------------------
 // LedStrip Structures 

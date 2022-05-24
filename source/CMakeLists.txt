@@ -20,6 +20,10 @@ find_package(Curses REQUIRED)
 find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
 find_library(WS2811_LIBRARIES NAMES ws2811)
 find_library(PTHREAD_LIBRARIES NAMES pthread)
+find_library(LIBRT rt)
+
+find_package(Boost 1.74.0 COMPONENTS interprocess)
+INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(
   RasFLED
@@ -29,9 +33,9 @@ add_executable(
   animations.h
   files.h
   rasapi.h
-  player.h
   consoleanddata.h
   definitions.h
+  fled_time.h
   fledcore.h
   hardware_module_door.h
   helper.h
@@ -41,6 +45,16 @@ add_executable(
   timedeventsystem.h
   gadgets.h
   screen3.h
+  player.h
+  api_shared_memory.h
+  api_rtlairband.h
 )
 
-target_link_libraries(RasFLED ${WIRINGPI_LIBRARIES} ${WS2811_LIBRARIES} ${CURSES_LIBRARIES} ${PTHREAD_LIBRARIES})
+target_link_libraries(RasFLED 
+  ${WIRINGPI_LIBRARIES} 
+  ${WS2811_LIBRARIES} 
+  ${CURSES_LIBRARIES} 
+  ${PTHREAD_LIBRARIES}
+  ${LIBRT}
+  ${Boost_LIBRARIES}
+)

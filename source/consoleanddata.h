@@ -18,12 +18,20 @@
 #include <string.h>
 #include <deque>
 
+// Boost libraries
+#include <boost/interprocess/shared_memory_object.hpp>
+#include <boost/interprocess/mapped_region.hpp>
+
 // RASFled related header files
 #include "definitions.h"
+#include "fled_time.h"
 #include "helper.h"
 #include "system.h"
 #include "screen3.h"
 #include "player.h"
+
+#include "api_shared_memory.h"
+#include "api_rtlairband.h"
 
 using namespace std;
 
@@ -58,6 +66,13 @@ class Console
   PLAYER the_player;
 
   TIMED_IS_READY Console_Display;
+
+  API_CHANNEL_MEM API_CHANNEL;
+
+  void get_API_info(boost::interprocess::mapped_region &region, system_data &sdSysData)
+  {
+    API_CHANNEL.rasfled_receive(region, sdSysData.SQUELCH);
+  }
 
   bool load_reel(fstream &fsPlayer, string filename)
   // Loads next film into the player. 

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.77A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.79A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -73,7 +73,6 @@
 // Distros: Jeremy Garff <jer @ jers.net>
 //  Zips at https://github.com/jgarff/rpi_ws281x
 //static char VERSION[] = "XX.YY.ZZ";
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -87,7 +86,6 @@
 #include <stdarg.h>
 #include <getopt.h>
 
-
 #include "clk.h"
 #include "gpio.h"
 #include "dma.h"
@@ -95,6 +93,10 @@
 //#include "version.h"
 
 #include "ws2811.h"
+
+// Boost libraries
+#include <boost/interprocess/shared_memory_object.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 
 // RASFled related header files
@@ -104,6 +106,7 @@
 #include "rasapi.h"
 #include "consoleanddata.h"
 #include "LEDstuff.h"
+#include "fled_time.h"
 #include "fledcore.h"
 #include "timedeventsystem.h"
 #include "animations.h"
@@ -130,7 +133,7 @@
 // Display Materix Prepare.
 
 //  Copy the Prepared Matrix to the Display Matrix.
-void MatrixPrepare(Console cons, system_data &sdSysData, CRGB crgbPrepedMatrix[], int intLEDCOUNT, int* DisplayMatrix, int &mcount)
+void MatrixPrepare(Console &cons, system_data &sdSysData, CRGB crgbPrepedMatrix[], int intLEDCOUNT, int* DisplayMatrix, int &mcount)
 {
   for (int lcount = 0; lcount < intLEDCOUNT; lcount++)
   {
@@ -289,6 +292,11 @@ int loop()
 {
   using namespace std;
 
+  // Prepare Shared Memory Space.
+  boost::interprocess::shared_memory_object shdmem{boost::interprocess::open_or_create, "Airband", boost::interprocess::read_write};
+  shdmem.truncate(1024);
+  boost::interprocess::mapped_region region{shdmem, boost::interprocess::read_write};
+  
   // ---------------------------------------------------------------------------------------
   // Is_Ready varibles for main loop.
   TIMED_IS_READY  input_from_switches;    // Delay for the hardware switches.
@@ -374,7 +382,6 @@ int loop()
 
   cons.printi("Initializing Timer ...");
   FledTime tmeFled;
-  tmeFled.set();
 
   // Sleeping Loop Variables
   tmeFled.setframetime();
@@ -775,6 +782,8 @@ int loop()
     // all the lights, we will take the latter clock cycles to get keybord input and update 
     // console with status and so on.
 
+    // Get store information from APIs.
+    cons.get_API_info(region, sdSystem);
 
     // Is Keyboard or Mouse read ready -----------------
     if (input_from_user.is_ready(tmeCurrentMillis) == true)

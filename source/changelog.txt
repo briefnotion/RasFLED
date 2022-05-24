@@ -1,3 +1,25 @@
+V 0.79A_220523
+  - Spent the better part of a day coding an api via file transfer.
+  - Spent the better part of the next day getting a basic understanding 
+      of shared memory regions.
+  - Spent the better part of the next day trying to initialize shared 
+      memory region variables in the header portion of a class variable. 
+      I was unsucessful and the way these functions are called is new 
+      to me. 
+  - The API from rtl_airband is working and receiving the data of  
+      Frequency, Signal Level, Noise Level, Signal Outside of Filter, 
+      and, Channel open status.
+  - The data is printed as arrived on the Radio screen.
+  - the boost library 1.74.0 , from boost.org is and will from now on, 
+      be part of RasFLED.  I was avoiding pulling in references to 
+      more libraries to avoid the problems associated to required dependancies. 
+      I've decided to reference boost libraries because of the programmer 
+      community's excelent reviews, and the variety of useful functions provided. 
+
+V 0.78A_220520
+  - Created new class library fled_time.h.
+  - Moved time related class to fled_time.h.
+
 V 0.77A_220519
   - Created rasapi.h and included the FILE_WATCH class.
   - Changed and implemented the gadget title bar Type property to a Size property.

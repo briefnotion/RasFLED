@@ -189,7 +189,7 @@ class Screen3
   int YBRadioSize = 2; // Radio Button Standard Sizes
   int XBRadioSize = 15;
 
-  int YTRadio_LogSize = 14;
+  int YTRadio_LogSize = 7;
 
   WINDOW * winRadio;
   Title_Bar tiRadio;
@@ -1238,14 +1238,22 @@ class Screen3
   }
   
   // ---------------------------------------------------------------------------------------
-  void radio(ScreenStatus &ScrStat)
+  void radio(system_data &sdSysData, ScreenStatus &ScrStat)
   // Shows the Player Window
   {
+    // Write the Radio information to the screen.
+    mvwprintw(winRadio, 10, 1, "            FREQUENCY : %3.3f", ((float)sdSysData.SQUELCH.FREQUENCY / 1000000));
+    mvwprintw(winRadio, 11, 1, "          NOISE_LEVEL : %3.0f", sdSysData.SQUELCH.NOISE_LEVEL);
+    mvwprintw(winRadio, 12, 1, "         SIGNAL_LEVEL : %3.0f", sdSysData.SQUELCH.SIGNAL_LEVEL);
+    mvwprintw(winRadio, 13, 1, "SIGNAL_OUTSIDE_FILTER : %d", sdSysData.SQUELCH.SIGNAL_OUTSIDE_FILTER);
+    mvwprintw(winRadio, 14, 1, "         Channel Open : %d", (int)sdSysData.SQUELCH.IS_OPEN);
+    
     tbRadio_Log.draw(ScrStat.Needs_Refresh);
 
     bzRadio.draw(ScrStat.Needs_Refresh);
 
-    if(ScrStat.Needs_Refresh == true)
+    //if(ScrStat.Needs_Refresh == true)
+    if(true)
     {
       int yCurPos = 0;
 
@@ -1318,7 +1326,7 @@ class Screen3
     // Draw Radio window.
     if (ScrStat.Window_Radio == true)
     {
-      radio(ScrStat);
+      radio(sdSysData, ScrStat);
     }
 
     // Buttons
