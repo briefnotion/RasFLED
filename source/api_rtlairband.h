@@ -45,6 +45,9 @@ class API_SQUELCH
 
   // Is Channel Open
   bool IS_OPEN = false;
+
+  // Has Changed
+  bool CHANGED = false;
 };
 
 

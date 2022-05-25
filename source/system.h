@@ -22,7 +22,9 @@
 #include "commands.h"
 #include "hardware_status.h"
 
+#include "api_shared_memory.h"
 #include "api_rtlairband.h"
+#include "radio_channel_coordinator.h"
 
 using namespace std;
 
@@ -146,7 +148,9 @@ class system_data
   COMMAND_THREAD Command_Thread;
 
   // Radio Variables
-  API_SQUELCH SQUELCH;
+  API_SQUELCH RECEIVED_SQUELCH;
+  API_CHANNEL_MEM API_CHANNEL;
+  RADIO_CHANNEL_COORDINATOR RADIO_COORD;
 
   // Console Display Variables from other
 
@@ -163,6 +167,14 @@ class system_data
     Does not clean up after itself */
 
   // -------------------------------------------------------------------------------------
+
+
+  void get_API_info(boost::interprocess::mapped_region &region, system_data &sdSysData)
+  {
+    API_CHANNEL.rasfled_receive(region, RECEIVED_SQUELCH);
+    RADIO_COORD.process(RECEIVED_SQUELCH);
+  }
+
   void init()
   {
     for(int x=0; x<CONFIG.iNUM_SWITCHES; x++)

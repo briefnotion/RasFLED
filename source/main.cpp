@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.79A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.80A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -477,7 +477,7 @@ int loop()
 
   // Initialize Switches
   hardware_monitor tmpSwitch;
-  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, 50, true);
+  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, 150, true);
   for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
   {
     sdSystem.CONFIG.vhwDOORS.push_back(tmpSwitch);
@@ -783,7 +783,7 @@ int loop()
     // console with status and so on.
 
     // Get store information from APIs.
-    cons.get_API_info(region, sdSystem);
+    sdSystem.get_API_info(region, sdSystem);
 
     // Is Keyboard or Mouse read ready -----------------
     if (input_from_user.is_ready(tmeCurrentMillis) == true)

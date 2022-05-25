@@ -24,6 +24,7 @@
 #include "consoleanddata.h"
 #include "player.h"
 #include "gadgets.h"
+#include "radio_channel_coordinator.h"
 
 using namespace std;
 
@@ -189,7 +190,7 @@ class Screen3
   int YBRadioSize = 2; // Radio Button Standard Sizes
   int XBRadioSize = 15;
 
-  int YTRadio_LogSize = 7;
+  int YTRadio_LogSize = 5;
 
   WINDOW * winRadio;
   Title_Bar tiRadio;
@@ -1241,13 +1242,153 @@ class Screen3
   void radio(system_data &sdSysData, ScreenStatus &ScrStat)
   // Shows the Player Window
   {
+    // Print Channel Data Frequencies
+    /*
+    for (int pos = 0; pos < sdSysData.RADIO_COORD.size(); pos++)
     // Write the Radio information to the screen.
-    mvwprintw(winRadio, 10, 1, "            FREQUENCY : %3.3f", ((float)sdSysData.SQUELCH.FREQUENCY / 1000000));
-    mvwprintw(winRadio, 11, 1, "          NOISE_LEVEL : %3.0f", sdSysData.SQUELCH.NOISE_LEVEL);
-    mvwprintw(winRadio, 12, 1, "         SIGNAL_LEVEL : %3.0f", sdSysData.SQUELCH.SIGNAL_LEVEL);
-    mvwprintw(winRadio, 13, 1, "SIGNAL_OUTSIDE_FILTER : %d", sdSysData.SQUELCH.SIGNAL_OUTSIDE_FILTER);
-    mvwprintw(winRadio, 14, 1, "         Channel Open : %d", (int)sdSysData.SQUELCH.IS_OPEN);
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[pos].CHANGED == true)
+      {
+        mvwprintw(winRadio, 1, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY / 1000000));
+        mvwprintw(winRadio, 2, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[pos].NOISE_LEVEL);
+        mvwprintw(winRadio, 3, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[pos].SIGNAL_LEVEL);
+        mvwprintw(winRadio, 4, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[pos].SIGNAL_OUTSIDE_FILTER);
+        mvwprintw(winRadio, 5, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[pos].IS_OPEN);
+
+        sdSysData.RADIO_COORD.CHANNELS[pos].CHANGED = false;
+      }
+    }
+    */
+
+    int cha = 0;
+
+    cha = 0;
+    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattron(winRadio, A_REVERSE);
+      }
+      
+      mvwprintw(winRadio, 1, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
+      mvwprintw(winRadio, 2, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
+      mvwprintw(winRadio, 3, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
+      mvwprintw(winRadio, 4, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winRadio, 5, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
+      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
+      
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattroff(winRadio, A_REVERSE);
+      }
+    }
+
+    cha = 1;
+    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattron(winRadio, A_REVERSE);
+      }
+      
+      mvwprintw(winRadio, 1, 42, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
+      mvwprintw(winRadio, 2, 42, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
+      mvwprintw(winRadio, 3, 42, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
+      mvwprintw(winRadio, 4, 42, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winRadio, 5, 42, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
+      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
+      
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattroff(winRadio, A_REVERSE);
+      }
+    }
+
+    cha = 2;
+    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattron(winRadio, A_REVERSE);
+      }
+      
+      mvwprintw(winRadio, 7, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
+      mvwprintw(winRadio, 8, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
+      mvwprintw(winRadio, 9, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
+      mvwprintw(winRadio, 10, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winRadio, 11, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
+      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
+      
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattroff(winRadio, A_REVERSE);
+      }
+    }
+
+    cha = 3;
+    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattron(winRadio, A_REVERSE);
+      }
+      
+      mvwprintw(winRadio, 7, 42, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
+      mvwprintw(winRadio, 8, 42, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
+      mvwprintw(winRadio, 9, 42, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
+      mvwprintw(winRadio, 10, 42, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winRadio, 11, 42, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
+      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
+      
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattroff(winRadio, A_REVERSE);
+      }
+    }
+
+    cha = 4;
+    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattron(winRadio, A_REVERSE);
+      }
+      
+      mvwprintw(winRadio, 13, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
+      mvwprintw(winRadio, 14, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
+      mvwprintw(winRadio, 15, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
+      mvwprintw(winRadio, 16, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winRadio, 17, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
+      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
+      
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattroff(winRadio, A_REVERSE);
+      }
+    }
     
+    cha = 5;
+    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattron(winRadio, A_REVERSE);
+      }
+      
+      mvwprintw(winRadio, 13, 42, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
+      mvwprintw(winRadio, 14, 42, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
+      mvwprintw(winRadio, 15, 42, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
+      mvwprintw(winRadio, 16, 42, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winRadio, 17, 42, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
+      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
+      
+      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
+      {
+        wattroff(winRadio, A_REVERSE);
+      }
+    }
+
+
     tbRadio_Log.draw(ScrStat.Needs_Refresh);
 
     bzRadio.draw(ScrStat.Needs_Refresh);

@@ -1,3 +1,9 @@
+V 0.80A_220525
+  - Changed the radio page to display individual channels.
+  - Changed the Leeway time of the hardware switch monitor from 50 to 
+      150 to see if it will filter out noise and false positives during 
+      low voltage and or amplitude environements.
+
 V 0.79A_220523
   - Spent the better part of a day coding an api via file transfer.
   - Spent the better part of the next day getting a basic understanding 

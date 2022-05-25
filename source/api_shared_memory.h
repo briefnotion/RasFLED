@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.03A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.04A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,6 +56,33 @@ class API_CHANNEL_MEM
   {
     // Preperations have been made.
     FIRST_RUN = false;    
+  }
+
+  void int_set_if_changed(int &Store, int &Receive, bool &Changed)
+  {
+    if(Store != Receive)
+    {
+      Store = Receive;
+      Changed = true;
+    }
+  }
+
+  void float_set_if_changed(float &Store, float &Receive, bool &Changed)
+  {
+    if(Store != Receive)
+    {
+      Store = Receive;
+      Changed = true;
+    }
+  }
+
+  void bool_set_if_changed(bool &Store, bool &Receive, bool &Changed)
+  {
+    if(Store != Receive)
+    {
+      Store = Receive;
+      Changed = true;
+    }
   }
 
   public:
@@ -119,11 +146,11 @@ class API_CHANNEL_MEM
       {
         (*SQUELCH).HOLD = true;
 
-        API_Squelch.FREQUENCY = (*SQUELCH).FREQUENCY;
-        API_Squelch.NOISE_LEVEL = (*SQUELCH).NOISE_LEVEL;
-        API_Squelch.SIGNAL_LEVEL = (*SQUELCH).SIGNAL_LEVEL;
-        API_Squelch.SIGNAL_OUTSIDE_FILTER = (*SQUELCH).SIGNAL_OUTSIDE_FILTER;
-        API_Squelch.IS_OPEN = (*SQUELCH).IS_OPEN;
+        int_set_if_changed(API_Squelch.FREQUENCY, (*SQUELCH).FREQUENCY, API_Squelch.CHANGED);
+        float_set_if_changed(API_Squelch.NOISE_LEVEL, (*SQUELCH).NOISE_LEVEL, API_Squelch.CHANGED);
+        float_set_if_changed(API_Squelch.SIGNAL_LEVEL, (*SQUELCH).SIGNAL_LEVEL, API_Squelch.CHANGED);
+        bool_set_if_changed(API_Squelch.SIGNAL_OUTSIDE_FILTER, (*SQUELCH).SIGNAL_OUTSIDE_FILTER, API_Squelch.CHANGED);
+        bool_set_if_changed(API_Squelch.IS_OPEN, (*SQUELCH).IS_OPEN, API_Squelch.CHANGED);
 
         (*SQUELCH).HOLD = false;
       }
