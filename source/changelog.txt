@@ -1,3 +1,7 @@
+V 0.82A_220527
+  - Built and debuged the Radio_Channel gadget into a thing more like 
+      I originally envisioned it to be.
+
 V 0.81A_220526
   - Created a radio frequency channel gadget.  Really thought I would 
       have more done in one day.  Can't even settle on a name for the 

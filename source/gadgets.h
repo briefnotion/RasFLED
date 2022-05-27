@@ -887,6 +887,7 @@ class BAR
   int                   TIME_SLICE_COUNT = 5;   // Internal, could be exterenal.
   deque<BAR_TIME_SLICE> TIME_SLICES;            // Internal
   bool                  TIME_PROVIDED = false;  // Internal
+  
   unsigned long         FRAME_TIME;             // Internal
   int                   MIN_MAX_TIME_SPAN = 0;  // Span of time made by slices. In ms.
 
@@ -1165,17 +1166,17 @@ class BAR
       int step = 0;
       if (PRINT_MIN == true)
       {
-        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %03d ", get_min_value());
+        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %3d ", get_min_value());
         step ++;
       }
       if (PRINT_VALUE == true)
       {
-        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %03d ", VALUE);
+        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %3d ", VALUE);
         step ++;
       }
       if (PRINT_MAX == true)
       {
-        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %03d ", get_max_value());
+        mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %3d ", get_max_value());
         step ++;
       }
     }
@@ -1271,6 +1272,21 @@ class BAR
     draw_bar(1, winWindow);
   }
 
+  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time)
+  // Print progress bar in window at coords with value as progress.
+  // Also receives time value for max min fade away.
+  {
+    YPOS = YPos;
+    XPOS = XPos;
+    VALUE = value;
+
+    TIME_PROVIDED = true;
+    FRAME_TIME = tmeFrame_Time;
+
+    draw_bar(1, winWindow);
+    TIME_PROVIDED = false;
+  }
+
   void progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
   // Print progress bar in window at coords with value as progress.
   // Also, allows for other properties to be change.
@@ -1289,7 +1305,7 @@ class BAR
   //  Of size, the percentage of value to max_value will be filled
   //  with characters.
   void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value)
-  // Print progress bar in window at coords with value as progress.
+  // Print guage bar in window at coords with value as progress.
   {
     YPOS = YPos;
     XPOS = XPos;
@@ -1298,8 +1314,9 @@ class BAR
     draw_bar(2, winWindow);
   }
 
-    void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time)
-  // Print progress bar in window at coords with value as progress.
+  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time)
+  // Print guage bar in window at coords with value as progress.
+  // Also receives time value for max min fade away.
   {
     YPOS = YPos;
     XPOS = XPos;
@@ -1309,10 +1326,11 @@ class BAR
     FRAME_TIME = tmeFrame_Time;
 
     draw_bar(2, winWindow);
+    TIME_PROVIDED = false;
   }
 
   void guage_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
-  // Print progress bar in window at coords with value as progress.
+  // Print guage bar in window at coords with value as progress.
   // Also, allows for other properties to be change.
   {
     YPOS = YPos;
@@ -1356,7 +1374,22 @@ class Radio_Channel
 {
   private:
 
+  // Gadget window
   WINDOW * winFrequency;
+
+  // Show frequency levels in progress bars
+  BAR BAR_NOISE_LEVEL;
+  BAR BAR_SIGNAL_LEVEL;
+
+  // Time Provided
+  unsigned long FRAME_TIME;             // Internal
+
+  // Timing
+  TIMED_IS_READY LINGER_DIRTY_SIGNAL;
+  int LINGER_TIME = 5000;
+
+  // Touch
+  bool TOUCH = false;
 
   //Debug
   bool CounterOn = false;
@@ -1394,6 +1427,26 @@ class Radio_Channel
 
     winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
 
+    BAR_NOISE_LEVEL.label("NOISE: ");
+    BAR_NOISE_LEVEL.label_size(11);
+    BAR_NOISE_LEVEL.size(15);
+    BAR_NOISE_LEVEL.max_value(100);
+    BAR_NOISE_LEVEL.print_min(true);
+    BAR_NOISE_LEVEL.print_max(true);
+    BAR_NOISE_LEVEL.min_max(true);
+    BAR_NOISE_LEVEL.min_max_time_span(10000);
+
+    BAR_SIGNAL_LEVEL.label("SIGNAL: ");
+    BAR_SIGNAL_LEVEL.label_size(11);
+    BAR_SIGNAL_LEVEL.size(15);
+    BAR_SIGNAL_LEVEL.max_value(100);
+    BAR_SIGNAL_LEVEL.print_min(true);
+    BAR_SIGNAL_LEVEL.print_max(true);
+    BAR_SIGNAL_LEVEL.min_max(true);
+    BAR_SIGNAL_LEVEL.min_max_time_span(10000);
+
+    LINGER_DIRTY_SIGNAL.ENABLED = false;
+
     bool CHANGED = true;
   }
 
@@ -1410,7 +1463,7 @@ class Radio_Channel
     refresh();
 
     //wborder(winFrequency,'|','|','-','-','+','+','+','+') ;
-    wborder(winFrequency,' ',' ',' ','-',' ',' ',' ',' ') ;
+    wborder(winFrequency,' ',' ',' ',' ',' ',' ',' ',' ') ;
   }
 
   bool changed()
@@ -1430,36 +1483,96 @@ class Radio_Channel
     PROP.CHANGED = true;
     New_Value.CHANGED = false;
 
+    // Update touch - Alert indicator, when gadget is not active,
+    //  to show values have been changed.
+    TOUCH = true;
+
     // Enable gadget to display.
     PROP.TYPE = 0;
 
   }
 
-  void draw(bool Refresh)
+  void draw(bool Refresh, unsigned long tmeFrame_Time)
   // Draw the text_box on the screen if the value has changed or if  
   //  the Refresh parameter is true.
   {
-    if ((PROP.CHANGED == true || Refresh == true) && (PROP.TYPE >=0))
+    FRAME_TIME = tmeFrame_Time;
+
+    // Update if the Dirty Signal indicator has changed.
+    if (LINGER_DIRTY_SIGNAL.is_ready(FRAME_TIME) == true && 
+        LINGER_DIRTY_SIGNAL.ENABLED == true)
+    {
+      Refresh = true;
+      LINGER_DIRTY_SIGNAL.ENABLED = false;
+    }
+
+    if ((PROP.CHANGED == true || Refresh == true || TOUCH == true) && (PROP.TYPE >=0))
     {
 
+      // Set colors.
 
-      if (PROP.VALUE.IS_OPEN == false)
+      // Channel Open
+      if (PROP.VALUE.IS_OPEN == true)
       {
-        // Set color.
-        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, PROP.BCOLOR)));
+        LINGER_DIRTY_SIGNAL.set(FRAME_TIME, LINGER_TIME);
+        LINGER_DIRTY_SIGNAL.ENABLED = true;
       }
-      else
+      // Outside Filter
+      else if (PROP.VALUE.SIGNAL_OUTSIDE_FILTER == true)
+      {
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_YELLOW)));    
+        LINGER_DIRTY_SIGNAL.set(FRAME_TIME, LINGER_TIME);
+        LINGER_DIRTY_SIGNAL.ENABLED = true;
+      } 
+      // If lingering dirty signal.
+      else if ( LINGER_DIRTY_SIGNAL.ENABLED == true &&
+                LINGER_DIRTY_SIGNAL.is_ready(FRAME_TIME) == false)
+      {
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_YELLOW)));   
+      }
+      // Touched
+      else if (TOUCH == true)
       {
         wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN)));
       }
-      
-      mvwprintw(winFrequency, 0, 0, "   FREQUENCY : %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
-      mvwprintw(winFrequency, 1, 0, " NOISE_LEVEL : %3.0f", PROP.VALUE.NOISE_LEVEL);
-      mvwprintw(winFrequency, 2, 0, "SIGNAL_LEVEL : %3.0f", PROP.VALUE.SIGNAL_LEVEL);
-      mvwprintw(winFrequency, 1, 25, "       S_O_F : %d", PROP.VALUE.SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winFrequency, 2, 25, "Channel Open : %d", (int)PROP.VALUE.IS_OPEN);
-      PROP.CHANGED = false;
-      
+      // Listening
+      else
+      {
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      }
+
+      // Change color of bars if channel is open.
+      if (PROP.VALUE.IS_OPEN == true)
+      {
+        BAR_NOISE_LEVEL.color_background(COLOR_WHITE);
+        BAR_SIGNAL_LEVEL.color_background(COLOR_WHITE);
+      }
+      else
+      {
+        BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
+        BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
+      }
+
+      // Print Values
+      mvwprintw(winFrequency, 0, 0, "     FREQ:    %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
+
+      //Draw Bars
+
+      BAR_NOISE_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.NOISE_LEVEL), FRAME_TIME);
+      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.SIGNAL_LEVEL), FRAME_TIME);
+
+      // Clear Touch and changed
+      if (TOUCH == true)
+      {
+        TOUCH = false;
+        PROP.CHANGED = true;
+      }
+      else
+      {
+        PROP.CHANGED = false;
+      }
+
       // Draw the Gadget.
       wrefresh(winFrequency);
     }

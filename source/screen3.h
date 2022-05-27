@@ -187,13 +187,13 @@ class Screen3
   int YRadioSize = -1;
   int XRadioSize = -1;
 
-  int YBRadioSize = 2; // Radio Button Standard Sizes
-  int XBRadioSize = 15;
+  int YBRadioSize = 4; // Radio Button Standard Sizes
+  int XBRadioSize = 8;
 
   int YGadChannelSize = 4;  // Frequency Gadges Size
   int XGadChannelSize = -1;
   int YGadChannelPos = 1;  // Frequency Gadges Start Position
-  int XGadChannelPos = 18;
+  int XGadChannelPos = 8;
 
   int YTRadio_LogSize = 5;
 
@@ -491,17 +491,17 @@ class Screen3
     tbRadio_Log.create(1, "RADIO", "RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
     tiRadio.create(1, "RADIO", "  RADIO", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
-    bzRadio.create_button(0, "AIRSTOP", "OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-    bzRadio.create_button(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.create_button(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(0, "AIRSTOP", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(2, "LAFM", "AIR%LAF%MULTI", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Create Radio Channel Frequency gadgets.
-    Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_WHITE, COLOR_BLUE);
-    Radio_Channel_1.create(1, "FREQ_1", "Frequency 1", -1, COLOR_WHITE, COLOR_BLUE);
-    Radio_Channel_2.create(2, "FREQ_2", "Frequency 2", -1, COLOR_WHITE, COLOR_BLUE);
-    Radio_Channel_3.create(3, "FREQ_3", "Frequency 3", -1, COLOR_WHITE, COLOR_BLUE);
-    Radio_Channel_4.create(4, "FREQ_4", "Frequency 4", -1, COLOR_WHITE, COLOR_BLUE);
-    Radio_Channel_5.create(5, "FREQ_5", "Frequency 5", -1, COLOR_WHITE, COLOR_BLUE);
+    Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_BLUE, COLOR_BLACK);
+    Radio_Channel_1.create(1, "FREQ_1", "Frequency 1", -1, COLOR_BLUE, COLOR_BLACK);
+    Radio_Channel_2.create(2, "FREQ_2", "Frequency 2", -1, COLOR_BLUE, COLOR_BLACK);
+    Radio_Channel_3.create(3, "FREQ_3", "Frequency 3", -1, COLOR_BLUE, COLOR_BLACK);
+    Radio_Channel_4.create(4, "FREQ_4", "Frequency 4", -1, COLOR_BLUE, COLOR_BLACK);
+    Radio_Channel_5.create(5, "FREQ_5", "Frequency 5", -1, COLOR_BLUE, COLOR_BLACK);
 
     // Draw screen the entire screen.  reset is also 
     //  called when the screen is resized.  
@@ -772,9 +772,9 @@ class Screen3
       strBotLine = strBotLine.append(XRadioSize-1, '_');
 
       // Prep Radio Buttons
-      bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0+1), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
-      bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1+2), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
-      bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2+3), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0), XRadioPos, YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1), XRadioPos, YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
 
       // Display Channels
       Radio_Channel_0.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *0), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
@@ -934,10 +934,6 @@ class Screen3
     string strLevel = "";
 
     // Print Timings
-    //mvwprintw(winDebug, 0, 7, "Compute: %5.2fms  ", sdSysData.dblCOMPUTETIME.data);
-    //mvwprintw(winDebug, 1, 7, "  Sleep: %5.2fms  ", sdSysData.dblPREVSLEEPTIME.data);
-    //mvwprintw(winDebug, 2, 7, "  Cycle: %5.2fms  ", sdSysData.dblCYCLETIME.data);
-
     Compute_Time.label("Compute: " + to_string(sdSysData.dblCOMPUTETIME.data) + " ");
     Compute_Time.guage_bar(winDebug, 0, 7, sdSysData.dblCOMPUTETIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
     
@@ -947,18 +943,6 @@ class Screen3
     Cycle_Time.label("Cycle:   " + to_string(sdSysData.dblCYCLETIME.data) + " ");
     Cycle_Time.guage_bar(winDebug, 2, 7, sdSysData.dblCYCLETIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
     
-    // Not Very Usefule: mvwprintw(winDebug, 4, 47, "(m:%fms)", sdSysData.fltCYCLETIME.max);
-
-    /*  -- Needs Removal
-    if (sdSysData.booprintbuffer == true)
-    {
-      mvwprintw(winStatus, 4, 1, ":%s", sdSysData.strprintbuffer.c_str());
-    }
-    */
-
-    //Print Running Color
-    //mvwprintw(winDebug, 0, 26, "rc:%3i,%3i,%3i", sdSysData.running_color_list.color[0].r, sdSysData.running_color_list.color[0].g, sdSysData.running_color_list.color[0].b);
-
     //------------------------
     // Print LED Display Mode
     // Displaying LEDs selected to be displayed CYCLE selected.
@@ -1282,12 +1266,12 @@ class Screen3
     wrefresh(winRadio);
   
     // Print Channel Gadgets
-    Radio_Channel_0.draw(ScrStat.Needs_Refresh);
-    Radio_Channel_1.draw(ScrStat.Needs_Refresh);
-    Radio_Channel_2.draw(ScrStat.Needs_Refresh);
-    Radio_Channel_3.draw(ScrStat.Needs_Refresh);
-    Radio_Channel_4.draw(ScrStat.Needs_Refresh);
-    Radio_Channel_5.draw(ScrStat.Needs_Refresh);
+    Radio_Channel_0.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    Radio_Channel_1.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    Radio_Channel_2.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    Radio_Channel_3.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    Radio_Channel_4.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    Radio_Channel_5.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Title Bar
     tiRadio.draw(ScrStat.Needs_Refresh);

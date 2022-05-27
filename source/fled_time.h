@@ -105,6 +105,11 @@ class TIMED_IS_READY
 
   public:
 
+  // Simple variable that does nothing othere than keep track 
+  // a status.
+  // Functional for keeping track if the timer should be bypassed.
+  bool ENABLED = true;
+
   bool is_set()
   {
     if (TRIGGERED_TIME == 0)
