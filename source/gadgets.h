@@ -21,6 +21,7 @@
 #include "fled_time.h"
 #include "stringthings.h"
 #include "helper_ncurses.h"
+#include "api_rtlairband.h"
 
 using namespace std;
 
@@ -1324,6 +1325,146 @@ class BAR
   }
 };
 
+// -------------------------------------------------------------------------------------
+//  Radio_Channel Classes
+class Radio_Channel_Properties
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+  
+  API_SQUELCH VALUE;
+
+  int TYPE = -1; // Type -1 = Hidden. Automatic Enabling.
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CLICKED = false;
+  bool CHANGED = false;
+};
+
+class Radio_Channel
+// Routines for create, draw, modify, and behavior.
+{
+  private:
+
+  WINDOW * winFrequency;
+
+  //Debug
+  bool CounterOn = false;
+  int Counter = 0;
+
+  public:
+
+  Radio_Channel_Properties PROP;  
+
+  void modify(int id, string name, string label, int value, int type, int color, int bcolor)
+  // Changes all button properties
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+
+    PROP.CHANGED = true;
+  }
+
+  void create(int id, string name, string label, int type, int color, int bcolor)
+  // Define and behavior.  
+  // Like set but leaves off position and size details.
+  // Does not create window.
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+    PROP.BCOLOR = bcolor;
+
+    winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    bool CHANGED = true;
+  }
+
+  void move_resize(int posY, int posX, int sizeY, int sizeX)
+  // Redefine button position and size.
+  {
+    PROP.POSX = posX;
+    PROP.POSY = posY;
+    PROP.SIZEX = sizeX;
+    PROP.SIZEY = sizeY;
+
+    winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    refresh();
+
+    //wborder(winFrequency,'|','|','-','-','+','+','+','+') ;
+    wborder(winFrequency,' ',' ',' ','-',' ',' ',' ',' ') ;
+  }
+
+  bool changed()
+  // Returns true if any of the properties have changed.
+  {
+    return PROP.CHANGED;
+  }
+
+  void update_value(API_SQUELCH &New_Value)
+  {
+    PROP.VALUE.FREQUENCY = New_Value.FREQUENCY;
+    PROP.VALUE.NOISE_LEVEL = New_Value.NOISE_LEVEL;
+    PROP.VALUE.SIGNAL_LEVEL = New_Value.SIGNAL_LEVEL;
+    PROP.VALUE.SIGNAL_OUTSIDE_FILTER = New_Value.SIGNAL_OUTSIDE_FILTER;
+    PROP.VALUE.IS_OPEN = New_Value.IS_OPEN;
+
+    PROP.CHANGED = true;
+    New_Value.CHANGED = false;
+
+    // Enable gadget to display.
+    PROP.TYPE = 0;
+
+  }
+
+  void draw(bool Refresh)
+  // Draw the text_box on the screen if the value has changed or if  
+  //  the Refresh parameter is true.
+  {
+    if ((PROP.CHANGED == true || Refresh == true) && (PROP.TYPE >=0))
+    {
+
+
+      if (PROP.VALUE.IS_OPEN == false)
+      {
+        // Set color.
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      }
+      else
+      {
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN)));
+      }
+      
+      mvwprintw(winFrequency, 0, 0, "   FREQUENCY : %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
+      mvwprintw(winFrequency, 1, 0, " NOISE_LEVEL : %3.0f", PROP.VALUE.NOISE_LEVEL);
+      mvwprintw(winFrequency, 2, 0, "SIGNAL_LEVEL : %3.0f", PROP.VALUE.SIGNAL_LEVEL);
+      mvwprintw(winFrequency, 1, 25, "       S_O_F : %d", PROP.VALUE.SIGNAL_OUTSIDE_FILTER);
+      mvwprintw(winFrequency, 2, 25, "Channel Open : %d", (int)PROP.VALUE.IS_OPEN);
+      PROP.CHANGED = false;
+      
+      // Draw the Gadget.
+      wrefresh(winFrequency);
+    }
+  }
+};
 
 // ---------------------------------------------------------------------------------------
 // Gadgets functions

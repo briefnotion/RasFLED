@@ -190,6 +190,11 @@ class Screen3
   int YBRadioSize = 2; // Radio Button Standard Sizes
   int XBRadioSize = 15;
 
+  int YGadChannelSize = 4;  // Frequency Gadges Size
+  int XGadChannelSize = -1;
+  int YGadChannelPos = 1;  // Frequency Gadges Start Position
+  int XGadChannelPos = 18;
+
   int YTRadio_LogSize = 5;
 
   WINDOW * winRadio;
@@ -198,6 +203,14 @@ class Screen3
   public:
   Button_Zone_Manager bzRadio;
   Text_Box            tbRadio_Log;
+
+  Radio_Channel       Radio_Channel_0;
+  Radio_Channel       Radio_Channel_1;
+  Radio_Channel       Radio_Channel_2;
+  Radio_Channel       Radio_Channel_3;
+  Radio_Channel       Radio_Channel_4;
+  Radio_Channel       Radio_Channel_5;
+
   private:
   
   // --------------------
@@ -482,6 +495,14 @@ class Screen3
     bzRadio.create_button(1, "LAFS", "air_laf_scan", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzRadio.create_button(2, "LAFM", "air_laf_multi", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
+    // Create Radio Channel Frequency gadgets.
+    Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_WHITE, COLOR_BLUE);
+    Radio_Channel_1.create(1, "FREQ_1", "Frequency 1", -1, COLOR_WHITE, COLOR_BLUE);
+    Radio_Channel_2.create(2, "FREQ_2", "Frequency 2", -1, COLOR_WHITE, COLOR_BLUE);
+    Radio_Channel_3.create(3, "FREQ_3", "Frequency 3", -1, COLOR_WHITE, COLOR_BLUE);
+    Radio_Channel_4.create(4, "FREQ_4", "Frequency 4", -1, COLOR_WHITE, COLOR_BLUE);
+    Radio_Channel_5.create(5, "FREQ_5", "Frequency 5", -1, COLOR_WHITE, COLOR_BLUE);
+
     // Draw screen the entire screen.  reset is also 
     //  called when the screen is resized.  
     reset(ScrStat);
@@ -733,7 +754,7 @@ class Screen3
       // Build Window
       winRadio = newwin(YRadioSize, XRadioSize, YRadioPos, XRadioPos);
       tiRadio.move_resize(YRadioPos, XRadioPos, YRadioSize, XRadioSize);
-      
+
       // Set Y Split
       YSplit = YSplit + YRadioSize;
 
@@ -755,6 +776,15 @@ class Screen3
       bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1+2), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
       bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2+3), XRadioPos + (XBRadioSize * 0+1), YBRadioSize, XBRadioSize);
 
+      // Display Channels
+      Radio_Channel_0.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *0), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      Radio_Channel_1.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *1), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      Radio_Channel_2.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *2), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      Radio_Channel_3.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *3), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      Radio_Channel_4.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *4), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      Radio_Channel_5.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *5), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      
+      // Display OS Log
       tbRadio_Log.move_resize(YRadioPos + YRadioSize - YTRadio_LogSize, 0, YTRadio_LogSize, XRadioSize);
 
     }
@@ -1243,165 +1273,24 @@ class Screen3
   // Shows the Player Window
   {
     // Print Channel Data Frequencies
-    /*
-    for (int pos = 0; pos < sdSysData.RADIO_COORD.size(); pos++)
-    // Write the Radio information to the screen.
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[pos].CHANGED == true)
-      {
-        mvwprintw(winRadio, 1, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY / 1000000));
-        mvwprintw(winRadio, 2, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[pos].NOISE_LEVEL);
-        mvwprintw(winRadio, 3, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[pos].SIGNAL_LEVEL);
-        mvwprintw(winRadio, 4, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[pos].SIGNAL_OUTSIDE_FILTER);
-        mvwprintw(winRadio, 5, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[pos].IS_OPEN);
-
-        sdSysData.RADIO_COORD.CHANNELS[pos].CHANGED = false;
-      }
-    }
-    */
-
-    int cha = 0;
-
-    cha = 0;
-    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattron(winRadio, A_REVERSE);
-      }
-      
-      mvwprintw(winRadio, 1, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
-      mvwprintw(winRadio, 2, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
-      mvwprintw(winRadio, 3, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
-      mvwprintw(winRadio, 4, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winRadio, 5, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
-      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
-      
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattroff(winRadio, A_REVERSE);
-      }
-    }
-
-    cha = 1;
-    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattron(winRadio, A_REVERSE);
-      }
-      
-      mvwprintw(winRadio, 1, 42, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
-      mvwprintw(winRadio, 2, 42, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
-      mvwprintw(winRadio, 3, 42, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
-      mvwprintw(winRadio, 4, 42, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winRadio, 5, 42, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
-      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
-      
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattroff(winRadio, A_REVERSE);
-      }
-    }
-
-    cha = 2;
-    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattron(winRadio, A_REVERSE);
-      }
-      
-      mvwprintw(winRadio, 7, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
-      mvwprintw(winRadio, 8, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
-      mvwprintw(winRadio, 9, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
-      mvwprintw(winRadio, 10, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winRadio, 11, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
-      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
-      
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattroff(winRadio, A_REVERSE);
-      }
-    }
-
-    cha = 3;
-    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattron(winRadio, A_REVERSE);
-      }
-      
-      mvwprintw(winRadio, 7, 42, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
-      mvwprintw(winRadio, 8, 42, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
-      mvwprintw(winRadio, 9, 42, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
-      mvwprintw(winRadio, 10, 42, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winRadio, 11, 42, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
-      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
-      
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattroff(winRadio, A_REVERSE);
-      }
-    }
-
-    cha = 4;
-    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattron(winRadio, A_REVERSE);
-      }
-      
-      mvwprintw(winRadio, 13, 17, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
-      mvwprintw(winRadio, 14, 17, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
-      mvwprintw(winRadio, 15, 17, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
-      mvwprintw(winRadio, 16, 17, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winRadio, 17, 17, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
-      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
-      
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattroff(winRadio, A_REVERSE);
-      }
-    }
-    
-    cha = 5;
-    if ((sdSysData.RADIO_COORD.size() >=cha+1) && (sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED == true))
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattron(winRadio, A_REVERSE);
-      }
-      
-      mvwprintw(winRadio, 13, 42, "    FREQUENCY : %3.3f", ((float)sdSysData.RADIO_COORD.CHANNELS[cha].FREQUENCY / 1000000));
-      mvwprintw(winRadio, 14, 42, " NOISE_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].NOISE_LEVEL);
-      mvwprintw(winRadio, 15, 42, "SIGNAL_LEVEL : %3.0f", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_LEVEL);
-      mvwprintw(winRadio, 16, 42, "       S_O_F : %d", sdSysData.RADIO_COORD.CHANNELS[cha].SIGNAL_OUTSIDE_FILTER);
-      mvwprintw(winRadio, 17, 42, "Channel Open : %d", (int)sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN);
-      sdSysData.RADIO_COORD.CHANNELS[cha].CHANGED = false;
-      
-      if (sdSysData.RADIO_COORD.CHANNELS[cha].IS_OPEN == true)
-      {
-        wattroff(winRadio, A_REVERSE);
-      }
-    }
-
 
     tbRadio_Log.draw(ScrStat.Needs_Refresh);
 
     bzRadio.draw(ScrStat.Needs_Refresh);
 
-    //if(ScrStat.Needs_Refresh == true)
-    if(true)
-    {
-      int yCurPos = 0;
-
-      // Refresh the window.
-      wrefresh(winRadio);
-      tiRadio.draw(ScrStat.Needs_Refresh);
-    }
+    // Refresh the window.
+    wrefresh(winRadio);
+  
+    // Print Channel Gadgets
+    Radio_Channel_0.draw(ScrStat.Needs_Refresh);
+    Radio_Channel_1.draw(ScrStat.Needs_Refresh);
+    Radio_Channel_2.draw(ScrStat.Needs_Refresh);
+    Radio_Channel_3.draw(ScrStat.Needs_Refresh);
+    Radio_Channel_4.draw(ScrStat.Needs_Refresh);
+    Radio_Channel_5.draw(ScrStat.Needs_Refresh);
+  
+    // Print Title Bar
+    tiRadio.draw(ScrStat.Needs_Refresh);
   }
 
   // ---------------------------------------------------------------------------------------

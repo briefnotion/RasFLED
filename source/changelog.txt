@@ -1,3 +1,10 @@
+V 0.81A_220526
+  - Created a radio frequency channel gadget.  Really thought I would 
+      have more done in one day.  Can't even settle on a name for the 
+      gadget.
+  - World News:  Texas is really under the bus.  Anybody ever imagine 
+      there could be a govenor worse than Edwards?
+
 V 0.80A_220525
   - Changed the radio page to display individual channels.
   - Changed the Leeway time of the hardware switch monitor from 50 to 

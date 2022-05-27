@@ -169,7 +169,7 @@ class system_data
   // -------------------------------------------------------------------------------------
 
 
-  void get_API_info(boost::interprocess::mapped_region &region, system_data &sdSysData)
+  void get_API_info(boost::interprocess::mapped_region &region)
   {
     API_CHANNEL.rasfled_receive(region, RECEIVED_SQUELCH);
     RADIO_COORD.process(RECEIVED_SQUELCH);

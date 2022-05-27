@@ -61,7 +61,8 @@ class RADIO_CHANNEL_COORDINATOR
         CHANNELS[pos_found].IS_OPEN = Received_Squelch.IS_OPEN;
         CHANNELS[pos_found].CHANGED = true;
       }
-      else  // If not found, add it. 
+      else if (Received_Squelch.FREQUENCY != 0)  // If not found, add it. 
+      // Only add if not empty frequency.
       {
         CHANNELS.push_back(Received_Squelch);
       }

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.80A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.81A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -783,7 +783,7 @@ int loop()
     // console with status and so on.
 
     // Get store information from APIs.
-    sdSystem.get_API_info(region, sdSystem);
+    sdSystem.get_API_info(region);
 
     // Is Keyboard or Mouse read ready -----------------
     if (input_from_user.is_ready(tmeCurrentMillis) == true)
@@ -825,6 +825,9 @@ int loop()
         // so the console will not have to access any real data. 
         sdSystem.store_door_switch_states();
         store_event_counts(sdSystem, teEvents);
+
+        // Radio - Update all radio gadgets with new data.
+        cons.update_freqency_gadgets(sdSystem);
 
         // Redraw the console screen with what the screen determines needs to be displayed.
         cons.display(fsPlayer, sdSystem, tmeCurrentMillis);

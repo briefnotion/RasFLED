@@ -64,6 +64,59 @@ class Console
 
   TIMED_IS_READY Console_Display;
 
+  void update_freqency_gadgets(system_data &sdSysData)
+  // Update all radio gadgets with new frequency information.
+  {
+    if (sdSysData.RADIO_COORD.size() > 0)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[0].CHANGED == true)
+      {
+        Screen.Radio_Channel_0.update_value(sdSysData.RADIO_COORD.CHANNELS[0]);
+      }
+    }
+    
+    if (sdSysData.RADIO_COORD.size() > 1)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[1].CHANGED == true)
+      {
+        Screen.Radio_Channel_1.update_value(sdSysData.RADIO_COORD.CHANNELS[1]);
+      }
+    }
+    
+    if (sdSysData.RADIO_COORD.size() > 2)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[2].CHANGED == true)
+      {
+        Screen.Radio_Channel_2.update_value(sdSysData.RADIO_COORD.CHANNELS[2]);
+      }
+    }
+    
+    if (sdSysData.RADIO_COORD.size() > 3)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[3].CHANGED == true)
+      {
+        Screen.Radio_Channel_3.update_value(sdSysData.RADIO_COORD.CHANNELS[3]);
+      }
+    }
+    
+    if (sdSysData.RADIO_COORD.size() > 4)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[4].CHANGED == true)
+      {
+        Screen.Radio_Channel_4.update_value(sdSysData.RADIO_COORD.CHANNELS[4]);
+      }
+    }
+    
+    if (sdSysData.RADIO_COORD.size() > 5)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[5].CHANGED == true)
+      {
+        Screen.Radio_Channel_5.update_value(sdSysData.RADIO_COORD.CHANNELS[5]);
+      }
+    }
+    
+  }
+
   bool load_reel(fstream &fsPlayer, string filename)
   // Loads next film into the player. 
   //  This is basiclly a pass through routine to keep calls 
