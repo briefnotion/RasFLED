@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.03A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.05A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -35,7 +35,7 @@ class API_SQUELCH
   // Information to Send
   // Channel Info
   int FREQUENCY = 0;  // needs / 1000000.0
-  string label = "";
+  string LABEL = "";
 
   // Channel Squelch Info
   float NOISE_LEVEL = 0;
@@ -45,7 +45,7 @@ class API_SQUELCH
 
   // Is Channel Open
   bool IS_OPEN = false;
-
+  
   // Has Changed
   bool CHANGED = false;
 };

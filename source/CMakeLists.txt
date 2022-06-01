@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 #option(BUILD_RELEASE "Release Build" OFF)
 
-set(BUILD_RELEASE ON)
+set(BUILD_RELEASE OFF)
 
 if(BUILD_RELEASE)
       set(CMAKE_BUILD_TYPE Release)
@@ -22,7 +22,8 @@ find_library(WS2811_LIBRARIES NAMES ws2811)
 find_library(PTHREAD_LIBRARIES NAMES pthread)
 find_library(LIBRT rt)
 
-find_package(Boost 1.74.0 COMPONENTS interprocess)
+#find_package(Boost 1.74.0 COMPONENTS interprocess)
+find_package(Boost 1.74.0)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(

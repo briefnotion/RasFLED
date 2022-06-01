@@ -114,10 +114,13 @@ class API_CHANNEL_MEM
         (*SQUELCH).HOLD = true;
 
         (*SQUELCH).FREQUENCY = fparms->frequency;
-        (*SQUELCH).NOISE_LEVEL = fparms->squelch.noise_level();
-        (*SQUELCH).SIGNAL_LEVEL = fparms->squelch.signal_level();
+        //(*SQUELCH).LABEL = fparms->label;
+        (*SQUELCH).NOISE_LEVEL = level_to_dBFS(fparms->squelch.noise_level());
+        (*SQUELCH).SIGNAL_LEVEL = level_to_dBFS(fparms->squelch.signal_level());
         (*SQUELCH).SIGNAL_OUTSIDE_FILTER = fparms->squelch.signal_outside_filter();
         (*SQUELCH).IS_OPEN = fparms->squelch.is_open();
+
+        (*SQUELCH).CHANGED = true;
 
         (*SQUELCH).HOLD = false;
       }
@@ -151,6 +154,8 @@ class API_CHANNEL_MEM
         float_set_if_changed(API_Squelch.SIGNAL_LEVEL, (*SQUELCH).SIGNAL_LEVEL, API_Squelch.CHANGED);
         bool_set_if_changed(API_Squelch.SIGNAL_OUTSIDE_FILTER, (*SQUELCH).SIGNAL_OUTSIDE_FILTER, API_Squelch.CHANGED);
         bool_set_if_changed(API_Squelch.IS_OPEN, (*SQUELCH).IS_OPEN, API_Squelch.CHANGED);
+
+        (*SQUELCH).CHANGED = false;
 
         (*SQUELCH).HOLD = false;
       }

@@ -192,7 +192,7 @@ class Screen3
 
   int YGadChannelSize = 4;  // Frequency Gadges Size
   int XGadChannelSize = -1;
-  int YGadChannelPos = 1;  // Frequency Gadges Start Position
+  int YGadChannelPos = 0;  // Frequency Gadges Start Position
   int XGadChannelPos = 8;
 
   int YTRadio_LogSize = 5;
@@ -777,12 +777,12 @@ class Screen3
       bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
 
       // Display Channels
-      Radio_Channel_0.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *0), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
-      Radio_Channel_1.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *1), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
-      Radio_Channel_2.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *2), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
-      Radio_Channel_3.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *3), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
-      Radio_Channel_4.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *4), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
-      Radio_Channel_5.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *5), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos -1);
+      Radio_Channel_0.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *0), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
+      Radio_Channel_1.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *1), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
+      Radio_Channel_2.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *2), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
+      Radio_Channel_3.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *3), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
+      Radio_Channel_4.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *4), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
+      Radio_Channel_5.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *5), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
       
       // Display OS Log
       tbRadio_Log.move_resize(YRadioPos + YRadioSize - YTRadio_LogSize, 0, YTRadio_LogSize, XRadioSize);
@@ -1274,7 +1274,8 @@ class Screen3
     Radio_Channel_5.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Title Bar
-    tiRadio.draw(ScrStat.Needs_Refresh);
+    //    The redrawn part is because the gadget 0 overwrites the title bar.
+    tiRadio.draw(ScrStat.Needs_Refresh || Radio_Channel_0.was_redrawn() == true);
   }
 
   // ---------------------------------------------------------------------------------------

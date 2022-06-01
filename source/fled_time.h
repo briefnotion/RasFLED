@@ -105,11 +105,6 @@ class TIMED_IS_READY
 
   public:
 
-  // Simple variable that does nothing othere than keep track 
-  // a status.
-  // Functional for keeping track if the timer should be bypassed.
-  bool ENABLED = true;
-
   bool is_set()
   {
     if (TRIGGERED_TIME == 0)
@@ -200,5 +195,92 @@ class TIMED_IS_READY
     }
   }
 };
+
+// ---------------------------------------------------------------------------------------
+class TIMED_PING
+// Class to manage conditions of when something needs to be ran.
+//  Simplified version of is_ready_timer.
+{
+  private:
+  unsigned long READY_TIME      = 0;  //  Calculated time of when variable will be ready.
+  bool          ENABLED         = false;  // Determine if the timer is active.
+  bool          BLIP_POS        = false;
+  
+  public:
+
+  void ping_up(unsigned long current_time, int delay)
+  // Start the timer for the event that needs to be triggered.
+  {
+    READY_TIME      = current_time + delay;
+    ENABLED         = true;
+  }
+
+  bool ping_down(unsigned long current_time)
+  {
+    // Check for the event triggered time.
+    // Returns true if interval time has not passed, and ping is enabled.
+    //  Disables after returning false.
+    // Returns false if not enabled or time is passed.
+    if (ENABLED == true)
+    {
+      if (current_time < READY_TIME)
+      {
+        return true;
+      }
+      else
+      {
+        ENABLED = false;
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  bool blip_visible(unsigned long current_time)
+  {
+    // Check for the event triggered time.
+    // Returns true if interval time has not passed, and ping is enabled.
+    // Returns false if not enabled or time is passed.
+    if (ENABLED == true)
+    {
+      return (current_time < READY_TIME);
+    }
+    else
+    {
+      return false;
+    }
+  }
+  
+  bool blip_moved(unsigned long current_time)
+  // Check to see if return ping has changed from false to true or true to false.
+  // Returns true if changed.
+  // Returns false if not changed or not enabled.
+  {
+    if (ENABLED == true)
+    {
+      bool new_blip_pos = blip_visible(current_time);
+
+      if (new_blip_pos != BLIP_POS)
+      {
+        BLIP_POS = new_blip_pos;
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else 
+    {
+      return false;
+    }
+  }
+};
+
+
+
 
 #endif

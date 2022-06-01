@@ -1371,6 +1371,7 @@ class Radio_Channel_Properties
 
 class Radio_Channel
 // Routines for create, draw, modify, and behavior.
+// Note: Function needs frame time to function.
 {
   private:
 
@@ -1385,11 +1386,13 @@ class Radio_Channel
   unsigned long FRAME_TIME;             // Internal
 
   // Timing
-  TIMED_IS_READY LINGER_DIRTY_SIGNAL;
-  int LINGER_TIME = 5000;
+  TIMED_PING LINGER_DIRTY_SIGNAL;
+  TIMED_PING VISIBLE_UPDATE_SIGNAL;
+  int LINGER_TIME = 15000;
+  int VISIBLE_UPATE_TIME = 200;
 
-  // Touch
-  bool TOUCH = false;
+  // Was gadget redrawn during the previous draw cycle.
+  bool WAS_REDRAWN = false;
 
   //Debug
   bool CounterOn = false;
@@ -1434,7 +1437,7 @@ class Radio_Channel
     BAR_NOISE_LEVEL.print_min(true);
     BAR_NOISE_LEVEL.print_max(true);
     BAR_NOISE_LEVEL.min_max(true);
-    BAR_NOISE_LEVEL.min_max_time_span(10000);
+    BAR_NOISE_LEVEL.min_max_time_span(60000);
 
     BAR_SIGNAL_LEVEL.label("SIGNAL: ");
     BAR_SIGNAL_LEVEL.label_size(11);
@@ -1443,9 +1446,7 @@ class Radio_Channel
     BAR_SIGNAL_LEVEL.print_min(true);
     BAR_SIGNAL_LEVEL.print_max(true);
     BAR_SIGNAL_LEVEL.min_max(true);
-    BAR_SIGNAL_LEVEL.min_max_time_span(10000);
-
-    LINGER_DIRTY_SIGNAL.ENABLED = false;
+    BAR_SIGNAL_LEVEL.min_max_time_span(60000);
 
     bool CHANGED = true;
   }
@@ -1483,10 +1484,6 @@ class Radio_Channel
     PROP.CHANGED = true;
     New_Value.CHANGED = false;
 
-    // Update touch - Alert indicator, when gadget is not active,
-    //  to show values have been changed.
-    TOUCH = true;
-
     // Enable gadget to display.
     PROP.TYPE = 0;
 
@@ -1499,83 +1496,96 @@ class Radio_Channel
     FRAME_TIME = tmeFrame_Time;
 
     // Update if the Dirty Signal indicator has changed.
-    if (LINGER_DIRTY_SIGNAL.is_ready(FRAME_TIME) == true && 
-        LINGER_DIRTY_SIGNAL.ENABLED == true)
+    if (LINGER_DIRTY_SIGNAL.blip_moved(FRAME_TIME) == true ||
+        VISIBLE_UPDATE_SIGNAL.blip_moved(FRAME_TIME) == true)
     {
       Refresh = true;
-      LINGER_DIRTY_SIGNAL.ENABLED = false;
     }
 
-    if ((PROP.CHANGED == true || Refresh == true || TOUCH == true) && (PROP.TYPE >=0))
+    if ((PROP.CHANGED == true || Refresh == true) && (PROP.TYPE >=0))
     {
+
+      //
+      if (PROP.CHANGED == true)
+      {
+        VISIBLE_UPDATE_SIGNAL.ping_up(FRAME_TIME, VISIBLE_UPATE_TIME);
+      }
 
       // Set colors.
 
       // Channel Open
       if (PROP.VALUE.IS_OPEN == true)
       {
+        // Reset the linger timer.
+        LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
+
+        // Change Colors
         wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, PROP.BCOLOR)));
-        LINGER_DIRTY_SIGNAL.set(FRAME_TIME, LINGER_TIME);
-        LINGER_DIRTY_SIGNAL.ENABLED = true;
+        BAR_NOISE_LEVEL.color_background(COLOR_WHITE);
+        BAR_SIGNAL_LEVEL.color_background(COLOR_WHITE);
       }
       // Outside Filter
       else if (PROP.VALUE.SIGNAL_OUTSIDE_FILTER == true)
       {
-        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_YELLOW)));    
-        LINGER_DIRTY_SIGNAL.set(FRAME_TIME, LINGER_TIME);
-        LINGER_DIRTY_SIGNAL.ENABLED = true;
+        // Reset the linger timer.
+        LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
+
+        // Change the colors.
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, PROP.BCOLOR)));
+        BAR_NOISE_LEVEL.color_background(COLOR_YELLOW);
+        BAR_SIGNAL_LEVEL.color_background(COLOR_YELLOW);
       } 
       // If lingering dirty signal.
-      else if ( LINGER_DIRTY_SIGNAL.ENABLED == true &&
-                LINGER_DIRTY_SIGNAL.is_ready(FRAME_TIME) == false)
+      else if (LINGER_DIRTY_SIGNAL.ping_down(FRAME_TIME) == true)
       {
-        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_YELLOW)));   
+        // Change the colors.
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, PROP.BCOLOR)));
+        BAR_NOISE_LEVEL.color_background(COLOR_YELLOW);
+        BAR_SIGNAL_LEVEL.color_background(COLOR_YELLOW);  
       }
-      // Touched
-      else if (TOUCH == true)
+      // Updated
+      else if (VISIBLE_UPDATE_SIGNAL.ping_down(FRAME_TIME) == true)
       {
+        // Change the colors.
         wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN)));
+        BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
+        BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
       }
       // Listening
       else
       {
+        // Change the colors.
         wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
-      }
-
-      // Change color of bars if channel is open.
-      if (PROP.VALUE.IS_OPEN == true)
-      {
-        BAR_NOISE_LEVEL.color_background(COLOR_WHITE);
-        BAR_SIGNAL_LEVEL.color_background(COLOR_WHITE);
-      }
-      else
-      {
         BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
         BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
       }
 
       // Print Values
-      mvwprintw(winFrequency, 0, 0, "     FREQ:    %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
-
+      mvwprintw(winFrequency, 0, 0, "     FREQ:  %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
+      //mvwprintw(winFrequency, 3, 0, "Prop changed:    %d", (PROP.CHANGED));
       //Draw Bars
 
       BAR_NOISE_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.NOISE_LEVEL), FRAME_TIME);
       BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.SIGNAL_LEVEL), FRAME_TIME);
 
-      // Clear Touch and changed
-      if (TOUCH == true)
-      {
-        TOUCH = false;
-        PROP.CHANGED = true;
-      }
-      else
-      {
-        PROP.CHANGED = false;
-      }
+      // Reset Properties Changed.
+      PROP.CHANGED = false;
+      WAS_REDRAWN = true;
 
       // Draw the Gadget.
       wrefresh(winFrequency);
     }
+    else
+    {
+      // Set redrawn indicator
+      WAS_REDRAWN = false;
+    }
+  }
+
+  bool was_redrawn()
+  // Returns true if the gadget redrew itself during the previous cycle.
+  {
+    return WAS_REDRAWN;
   }
 };
 
