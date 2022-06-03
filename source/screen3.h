@@ -159,28 +159,6 @@ class Screen3
 
   WINDOW * winPlayer;
 
-  // Craft_Stat Screen Variables --------------------
-  int YCraft_StatPos = -1;
-  int XCraft_StatPos = 0;
-  int YCraft_StatSize = -1;
-  int XCraft_StatSize = -1;
-
-  WINDOW * winCraft_Stat;
-  Title_Bar tiCraft_Stat;
-
-  BAR Temp_Coolant;
-  BAR Temp_Oil;
-  BAR Temp_Trans;
-
-  BAR Perf_Speed;
-  BAR Perf_Acceleration;
-  BAR Perf_MPG;
-  
-  BAR Othr_FD_Tire_PSI;
-  BAR Othr_FP_Tire_PSI;
-  BAR Othr_RD_Tire_PSI;
-  BAR Othr_RP_Tire_PSI;
-
   // Radio Screen Variables --------------------
   int YRadioPos = -1;
   int XRadioPos = 0;
@@ -367,10 +345,8 @@ class Screen3
 
     // Prep Tab buttons for program first start
     bzTabs.create_button(0, "TABCONSOLE", "Console", 1, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.create_button(1, "TABBLANKSCREEN", "Blank%Screen", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.create_button(2, "TABPLAYER", "Player", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.create_button(3, "TABCRAFT", "Craft%Stat", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.create_button(4, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(1, "TABPLAYER", "Player", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(2, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Countdown Screen
     // Countdown Timer
@@ -425,67 +401,6 @@ class Screen3
     Cycle_Time.print_max(true);
     Cycle_Time.min_max(true);
     Cycle_Time.min_max_time_span(10000);
-
-    // Craft_Stat Screen
-    // Engine
-    tiCraft_Stat.create(1, "CRAFT", "  CRAFT", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-
-    Temp_Coolant.label("Coolant Temp: ");
-    Temp_Coolant.label_size(15);
-    Temp_Coolant.size(15);
-    Temp_Coolant.max_value(100);
-    Temp_Coolant.print_value(true);
-
-    Temp_Oil.label("Oil Temp: ");
-    Temp_Oil.label_size(15);
-    Temp_Oil.size(15);
-    Temp_Oil.max_value(100);
-    Temp_Oil.print_value(true);
-
-    Temp_Trans.label("Trans Temp: ");
-    Temp_Trans.label_size(15);
-    Temp_Trans.size(15);
-    Temp_Trans.max_value(75);
-    Temp_Trans.print_value(true);
-
-    // Performance
-    Perf_Speed.label("Speed: ");
-    Perf_Speed.label_size(15);
-    Perf_Speed.size(15);
-    Perf_Speed.max_value(75);
-
-    Perf_Acceleration.label("Acceleration: ");
-    Perf_Acceleration.label_size(15);
-    Perf_Acceleration.size(15);
-    Perf_Acceleration.max_value(75);
-
-    Perf_MPG.label("MPG: ");
-    Perf_MPG.label_size(15);
-    Perf_MPG.size(15);
-    Perf_MPG.max_value(75);
-    Perf_MPG.print_value(true);
-
-    // Other
-    Othr_FD_Tire_PSI.label("FD_Tire_PSI: ");
-    Othr_FD_Tire_PSI.label_size(15);
-    Othr_FD_Tire_PSI.size(15);
-    Othr_FD_Tire_PSI.max_value(100);
-
-    Othr_FP_Tire_PSI.label("FP_Tire_PSI: ");
-    Othr_FP_Tire_PSI.label_size(15);
-    Othr_FP_Tire_PSI.size(15);
-    Othr_FP_Tire_PSI.max_value(75);
-    Othr_FP_Tire_PSI.print_value(true);
-
-    Othr_RD_Tire_PSI.label("RD_Tire_PSI: ");
-    Othr_RD_Tire_PSI.label_size(15);
-    Othr_RD_Tire_PSI.size(15);
-    Othr_RD_Tire_PSI.max_value(75);
-
-    Othr_RP_Tire_PSI.label("RP_Tire_PSI: ");
-    Othr_RP_Tire_PSI.label_size(15);
-    Othr_RP_Tire_PSI.size(15);
-    Othr_RP_Tire_PSI.max_value(75);
    
     // Prep Buttons for Radio screen.
     tbRadio_Log.create(1, "RADIO", "RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
@@ -708,37 +623,6 @@ class Screen3
       strBotLine = strBotLine.append(XPlayerSize-1, '_');
     }
 
-    // ---------------------------------------------------------------------------------------
-    // Craft_Stat Panel
-    if (ScrStat.Window_Craft_Stat == true)
-    // Main Craft_Stat Screen
-    {
-      // Calculate Size and Position
-      YCraft_StatPos = YSplit;
-      XCraft_StatPos = XCraft_StatPos;
-      YCraft_StatSize = YMax - YSplit - YTabSize;
-      XCraft_StatSize =  XSplit;
-
-      // Build Window
-      winCraft_Stat = newwin(YCraft_StatSize, XCraft_StatSize, YCraft_StatPos, XCraft_StatPos);
-      tiCraft_Stat.move_resize(YCraft_StatPos, XCraft_StatPos, YCraft_StatSize, XCraft_StatSize);
-      
-      // Set Y Split
-      YSplit = YSplit + YCraft_StatSize;
-
-      // Craft_Stat Window Border
-      wborder(winCraft_Stat,' ',' ',' ',' ',' ',' ',' ',' ') ;
-
-      // Create Player Screen
-      wrefresh(winCraft_Stat);
-
-      // Set window color
-      wbkgd(winCraft_Stat, COLOR_PAIR(0));
-
-      // the bottom line of the Craft_Stat.
-      strBotLine = "";
-      strBotLine = strBotLine.append(XCraft_StatSize-1, '_');
-    }
     
     // ---------------------------------------------------------------------------------------
     // Radio Panel
@@ -803,8 +687,6 @@ class Screen3
       bzTabs.move_resize(0, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 0), YTabSize, XTabSize);
       bzTabs.move_resize(1, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize);
       bzTabs.move_resize(2, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), YTabSize, XTabSize);
-      bzTabs.move_resize(3, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), YTabSize, XTabSize);
-      bzTabs.move_resize(4, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4), YTabSize, XTabSize);
 
       // Set Y Split
       YSplit = YSplit + YTabSize;
@@ -1218,39 +1100,6 @@ class Screen3
     return strBuffer;
   }
 
-  // ---------------------------------------------------------------------------------------
-  void craft_stat(ScreenStatus &ScrStat)
-  // Shows the Player Window
-  {
-    int yCurPos = 0;
-
-    mvwprintw(winCraft_Stat, 1, 0, "Engine ---");
-
-    Temp_Coolant.progress_bar(winCraft_Stat, 3, 2, 99);
-    Temp_Oil.progress_bar(winCraft_Stat, 3, 50, 100);
-    Temp_Trans.progress_bar(winCraft_Stat, 5, 2, 35);
-
-    mvwprintw(winCraft_Stat, 7, 0, "Performance ---");
-
-    Perf_Speed.progress_bar(winCraft_Stat, 9, 2, -15);
-    Perf_Acceleration.progress_bar(winCraft_Stat, 9, 50, 100);
-    Perf_MPG.progress_bar(winCraft_Stat, 11, 2, -100);
-
-    mvwprintw(winCraft_Stat, 13, 0, "Other ---");
-
-    Othr_FD_Tire_PSI.progress_bar(winCraft_Stat, 15, 2, 100);
-    Othr_FP_Tire_PSI.progress_bar(winCraft_Stat, 15, 50, 0);
-    Othr_RD_Tire_PSI.progress_bar(winCraft_Stat, 17, 2, 35);
-    Othr_RP_Tire_PSI.progress_bar(winCraft_Stat, 17, 50, 35);
-
-    mvwprintw(winCraft_Stat, 19, 0, "Alerts ---");
-
-    mvwprintw(winCraft_Stat, 21, 0, "  NO ALERTS");
-
-    // Refresh the window.
-    wrefresh(winCraft_Stat);
-    tiCraft_Stat.draw(ScrStat.Needs_Refresh);
-  }
   
   // ---------------------------------------------------------------------------------------
   void radio(system_data &sdSysData, ScreenStatus &ScrStat)
@@ -1330,12 +1179,6 @@ class Screen3
     if (ScrStat.Window_Player == true)
     {
       the_player(ScrStat);
-    }
-
-    // Draw Craft_Stat window.
-    if (ScrStat.Window_Craft_Stat == true)
-    {
-      craft_stat(ScrStat);
     }
 
     // Draw Radio window.

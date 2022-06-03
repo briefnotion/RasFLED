@@ -1,3 +1,9 @@
+V 0.86A_220604
+  - Did away with the Blank Tab and the Craft Tab because neither 
+      were doing anything.
+  - API is paused if less than 2 clients attached is detected.
+  - Radio Coordinator paused if Radio screen not active.
+
 V 0.85A_220603
   - Attempting to clear memory on program shutdown.
   - The corrosponding versions are:

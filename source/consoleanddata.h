@@ -511,20 +511,9 @@ class Console
           printi("Tab Console");
           ScrStat.Window_Console_On();
           ScrStat.Window_Player_Off();
-          ScrStat.Window_Craft_Stat_Off();
           ScrStat.Window_Radio_Off();
           the_player.pause();
-        }
-
-        if(name.compare("TABBLANKSCREEN") == 0)
-        // Turn on Tab
-        {
-          printi("Tab Blank Screen");
-          ScrStat.Window_Console_Off();
-          ScrStat.Window_Player_Off();
-          ScrStat.Window_Craft_Stat_Off();
-          ScrStat.Window_Radio_Off();
-          the_player.pause();
+          sdSysData.RADIO_COORD.pause();
         }
 
         if(name.compare("TABPLAYER") == 0)
@@ -533,20 +522,9 @@ class Console
           printi("Tab Player");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_On();
-          ScrStat.Window_Craft_Stat_Off();
           ScrStat.Window_Radio_Off();
           the_player.play();
-        }
-
-        if(name.compare("TABCRAFT") == 0)
-        // Turn on Tab
-        {
-          printi("Tab Player");
-          ScrStat.Window_Console_Off();
-          ScrStat.Window_Player_Off();
-          ScrStat.Window_Craft_Stat_On();
-          ScrStat.Window_Radio_Off();
-          the_player.pause();
+          sdSysData.RADIO_COORD.pause();
         }
 
         if(name.compare("TABRADIO") == 0)
@@ -555,9 +533,9 @@ class Console
           printi("Tab Radio");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
-          ScrStat.Window_Craft_Stat_Off();
           ScrStat.Window_Radio_On();
           the_player.pause();
+          sdSysData.RADIO_COORD.play();
         }
 
         // Update changes to buttons

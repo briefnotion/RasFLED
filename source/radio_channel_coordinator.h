@@ -22,6 +22,9 @@ class RADIO_CHANNEL_COORDINATOR
 {
   private:
 
+  bool PLAY = false; // Radio Coordinator active when set to true. Pause when 
+                    //  set to false
+
   public:
 
   // Stores all the frequencies observed and parsed into frequencies.
@@ -39,36 +42,54 @@ class RADIO_CHANNEL_COORDINATOR
   //  If freqency data already exist, replaces.
   //  If freqency data doesn't exist, add to end of deque.
   {
-    if (Received_Squelch.CHANGED == true)
+    if (PLAY == true)
     {
-      int pos_found = -1;
+      if (Received_Squelch.CHANGED == true)
+      {
+        int pos_found = -1;
 
-      // Seach the Channels for existing Squelch Channel
-      for (int pos = 0; (pos < CHANNELS.size()) && (pos_found == -1); pos++)
-      {
-        if (CHANNELS[pos].FREQUENCY == Received_Squelch.FREQUENCY)
+        // Seach the Channels for existing Squelch Channel
+        for (int pos = 0; (pos < CHANNELS.size()) && (pos_found == -1); pos++)
         {
-          pos_found = pos;
+          if (CHANNELS[pos].FREQUENCY == Received_Squelch.FREQUENCY)
+          {
+            pos_found = pos;
+          }
         }
+        
+        if (pos_found >= 0) // If found, change the data.
+        {
+          CHANNELS[pos_found].FREQUENCY = Received_Squelch.FREQUENCY;
+          CHANNELS[pos_found].LABEL = Received_Squelch.LABEL;
+          CHANNELS[pos_found].NOISE_LEVEL = Received_Squelch.NOISE_LEVEL;
+          CHANNELS[pos_found].SIGNAL_LEVEL = Received_Squelch.SIGNAL_LEVEL;
+          CHANNELS[pos_found].SIGNAL_OUTSIDE_FILTER = Received_Squelch.SIGNAL_OUTSIDE_FILTER;
+          CHANNELS[pos_found].IS_OPEN = Received_Squelch.IS_OPEN;
+          CHANNELS[pos_found].CHANGED = true;
+        }
+        else if (Received_Squelch.FREQUENCY != 0)  // If not found, add it. 
+        // Only add if not empty frequency.
+        {
+          CHANNELS.push_back(Received_Squelch);
+        }
+        Received_Squelch.CHANGED = false;
       }
-      
-      if (pos_found >= 0) // If found, change the data.
-      {
-        CHANNELS[pos_found].FREQUENCY = Received_Squelch.FREQUENCY;
-        CHANNELS[pos_found].LABEL = Received_Squelch.LABEL;
-        CHANNELS[pos_found].NOISE_LEVEL = Received_Squelch.NOISE_LEVEL;
-        CHANNELS[pos_found].SIGNAL_LEVEL = Received_Squelch.SIGNAL_LEVEL;
-        CHANNELS[pos_found].SIGNAL_OUTSIDE_FILTER = Received_Squelch.SIGNAL_OUTSIDE_FILTER;
-        CHANNELS[pos_found].IS_OPEN = Received_Squelch.IS_OPEN;
-        CHANNELS[pos_found].CHANGED = true;
-      }
-      else if (Received_Squelch.FREQUENCY != 0)  // If not found, add it. 
-      // Only add if not empty frequency.
-      {
-        CHANNELS.push_back(Received_Squelch);
-      }
-      Received_Squelch.CHANGED = false;
     }
+  }
+
+  void pause()
+  {
+    PLAY = false;
+  }
+
+  void play()
+  {
+    PLAY = true;
+  }
+
+  bool is_paused()
+  {
+    return PLAY;
   }
 
 };

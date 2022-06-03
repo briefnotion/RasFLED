@@ -172,8 +172,12 @@ class system_data
   int get_API_info(boost::interprocess::mapped_region &region_scan)
   {
     int return_int = -1;
-    return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH);
-    RADIO_COORD.process(RECEIVED_SQUELCH);
+
+    if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
+    {
+      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH);
+      RADIO_COORD.process(RECEIVED_SQUELCH);
+    }
 
     return return_int;
   }
@@ -622,7 +626,6 @@ class ScreenStatus
   bool Window_Tabs = false;
   bool Window_Console = false;
   bool Window_Player = false;
-  bool Window_Craft_Stat = false;
   bool Window_Radio = false;
   
   // Refresh is set to true only if the value 
@@ -772,25 +775,7 @@ class ScreenStatus
     }
   }
 
-  void Window_Craft_Stat_On()
-  {
-    if (Window_Craft_Stat == false)
-    {
-      Window_Craft_Stat = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Craft_Stat_Off()
-  {
-    if (Window_Craft_Stat == true)
-    {
-      Window_Craft_Stat = false;
-      Needs_Refresh = true;
-    }
-  }
-
-    void Window_Radio_On()
+  void Window_Radio_On()
   {
     if (Window_Radio == false)
     {
