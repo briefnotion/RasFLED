@@ -1354,7 +1354,7 @@ class Radio_Channel_Properties
   string NAME = "";
   string LABEL = "";
   
-  API_SQUELCH VALUE;
+  API_SQUELCH_DESTINATION VALUE;
 
   int TYPE = -1; // Type -1 = Hidden. Automatic Enabling.
   int COLOR = 0;
@@ -1473,9 +1473,10 @@ class Radio_Channel
     return PROP.CHANGED;
   }
 
-  void update_value(API_SQUELCH &New_Value)
+  void update_value(API_SQUELCH_DESTINATION &New_Value)
   {
     PROP.VALUE.FREQUENCY = New_Value.FREQUENCY;
+    PROP.VALUE.LABEL = New_Value.LABEL;
     PROP.VALUE.NOISE_LEVEL = New_Value.NOISE_LEVEL;
     PROP.VALUE.SIGNAL_LEVEL = New_Value.SIGNAL_LEVEL;
     PROP.VALUE.SIGNAL_OUTSIDE_FILTER = New_Value.SIGNAL_OUTSIDE_FILTER;
@@ -1562,11 +1563,11 @@ class Radio_Channel
 
       // Print Values
       mvwprintw(winFrequency, 0, 0, "     FREQ:  %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
-      //mvwprintw(winFrequency, 3, 0, "Prop changed:    %d", (PROP.CHANGED));
+      mvwprintw(winFrequency, 0, 21, "%s", (PROP.VALUE.LABEL.c_str()));
       //Draw Bars
 
-      BAR_NOISE_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.NOISE_LEVEL), FRAME_TIME);
-      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.SIGNAL_LEVEL), FRAME_TIME);
+      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.SIGNAL_LEVEL), FRAME_TIME);
+      BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.NOISE_LEVEL), FRAME_TIME);
 
       // Reset Properties Changed.
       PROP.CHANGED = false;

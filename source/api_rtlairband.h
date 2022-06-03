@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.05A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.06A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -23,7 +23,17 @@
 using namespace std;
 //using namespace boost::filesystem;
 
-class API_SQUELCH
+class SILLY_STRING
+{
+  private:
+
+  public:
+  
+  int SIZE = 0;
+  char TEXT[50];
+};
+
+class API_SQUELCH_DESTINATION
 {
   public:
 
@@ -35,7 +45,38 @@ class API_SQUELCH
   // Information to Send
   // Channel Info
   int FREQUENCY = 0;  // needs / 1000000.0
-  string LABEL = "";
+
+  // Channel Label
+  string LABEL;
+
+  // Channel Squelch Info
+  float NOISE_LEVEL = 0;
+  float SIGNAL_LEVEL = 0;
+
+  bool SIGNAL_OUTSIDE_FILTER = false;
+
+  // Is Channel Open
+  bool IS_OPEN = false;
+  
+  // Has Changed
+  bool CHANGED = false;
+};
+
+class API_SQUELCH_SOURCE
+{
+  public:
+
+  // Hold variable prevents reading or writing, in case another program is accessing  
+  //  the data and a delay has occured. 
+
+  bool HOLD = false;
+
+  // Information to Send
+  // Channel Info
+  int FREQUENCY = 0;  // needs / 1000000.0
+
+  // Channel Label
+  SILLY_STRING LABEL;
 
   // Channel Squelch Info
   float NOISE_LEVEL = 0;

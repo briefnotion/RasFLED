@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.04A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.05A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -52,6 +52,36 @@ class API_CHANNEL_MEM
 
   bool FIRST_RUN = true;
 
+  int SIZE_TEXT_MAX = 50;
+
+  void put(SILLY_STRING &Destination, char *Source)
+  {
+    int size = 0;
+
+    for (int pos = 0; Source[pos] != 0 && pos < SIZE_TEXT_MAX; pos++)
+    {
+      size++;
+      Destination.TEXT[pos] = Source[pos];
+    }
+
+    Destination.SIZE = size;
+  }
+
+  string get(SILLY_STRING &Source)
+  {
+    int size = 0;
+    string return_string = "";
+
+    size = Source.SIZE;
+
+    for(int pos = 0; pos < size && pos < SIZE_TEXT_MAX; pos++)
+    {
+      return_string = return_string + Source.TEXT[pos];
+    }
+
+    return return_string;
+  }
+
   void prep()
   {
     // Preperations have been made.
@@ -85,14 +115,23 @@ class API_CHANNEL_MEM
     }
   }
 
+  void string_set_if_changed(string &Store, string &Receive, bool &Changed)
+  {
+    if(Store != Receive)
+    {
+      Store = Receive;
+      Changed = true;
+    }
+  }
+
   public:
 
   // Start or Stop the API.
   bool PAUSE = false;
 
+  /*
   // Copy information to shared variables
 
-  /*
   // rtl_airband Routines
   void rtl_airband_send(mapped_region &region, freq_t *fparms)
   {
@@ -106,7 +145,7 @@ class API_CHANNEL_MEM
       }
 
       // Get the address of the data
-      API_SQUELCH *SQUELCH = static_cast<API_SQUELCH*>(region.get_address());
+      API_SQUELCH_SOURCE *SQUELCH = static_cast<API_SQUELCH_SOURCE*>(region.get_address());
 
       if ((*SQUELCH).HOLD == false)
       // Prevent data being read if the packet hasn't been completely written.
@@ -114,7 +153,7 @@ class API_CHANNEL_MEM
         (*SQUELCH).HOLD = true;
 
         (*SQUELCH).FREQUENCY = fparms->frequency;
-        //(*SQUELCH).LABEL = fparms->label;
+        put((*SQUELCH).LABEL, fparms->label);
         (*SQUELCH).NOISE_LEVEL = level_to_dBFS(fparms->squelch.noise_level());
         (*SQUELCH).SIGNAL_LEVEL = level_to_dBFS(fparms->squelch.signal_level());
         (*SQUELCH).SIGNAL_OUTSIDE_FILTER = fparms->squelch.signal_outside_filter();
@@ -130,7 +169,7 @@ class API_CHANNEL_MEM
 
   
   // Ras_FLED Routines
-  void rasfled_receive(mapped_region &region, API_SQUELCH &API_Squelch)
+  void rasfled_receive(mapped_region &region, API_SQUELCH_DESTINATION &API_Squelch)
   {
     if (PAUSE == false)
     {
@@ -142,7 +181,7 @@ class API_CHANNEL_MEM
       }
 
       // Get the address of the data
-      API_SQUELCH *SQUELCH = static_cast<API_SQUELCH*>(region.get_address());
+      API_SQUELCH_SOURCE *SQUELCH = static_cast<API_SQUELCH_SOURCE*>(region.get_address());
 
       if ((*SQUELCH).HOLD == false)
       // Prevent data being read if the packet hasn't been completely written.
@@ -150,6 +189,10 @@ class API_CHANNEL_MEM
         (*SQUELCH).HOLD = true;
 
         int_set_if_changed(API_Squelch.FREQUENCY, (*SQUELCH).FREQUENCY, API_Squelch.CHANGED);
+
+        string not_silly = get((*SQUELCH).LABEL);
+        string_set_if_changed(API_Squelch.LABEL, not_silly, API_Squelch.CHANGED);
+        
         float_set_if_changed(API_Squelch.NOISE_LEVEL, (*SQUELCH).NOISE_LEVEL, API_Squelch.CHANGED);
         float_set_if_changed(API_Squelch.SIGNAL_LEVEL, (*SQUELCH).SIGNAL_LEVEL, API_Squelch.CHANGED);
         bool_set_if_changed(API_Squelch.SIGNAL_OUTSIDE_FILTER, (*SQUELCH).SIGNAL_OUTSIDE_FILTER, API_Squelch.CHANGED);
