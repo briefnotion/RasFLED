@@ -295,7 +295,7 @@ int loop()
   // Prepare Shared Memory Space.
   boost::interprocess::shared_memory_object shdmem{boost::interprocess::open_or_create, "Airband", boost::interprocess::read_write};
   shdmem.truncate(1024);
-  boost::interprocess::mapped_region region{shdmem, boost::interprocess::read_write};
+  boost::interprocess::mapped_region region_scan{shdmem, boost::interprocess::read_write};
   
   // ---------------------------------------------------------------------------------------
   // Is_Ready varibles for main loop.
@@ -327,6 +327,11 @@ int loop()
   int return_code = 0;
   Console cons;
   system_data sdSystem;
+
+  // Open Shared memory regions to manager
+  sdSystem.API_CHANNEL.open(region_scan);
+
+  // Initialize wiring pi
   int intRet = wiringPiSetup(); 
 
   // Set is_ready variables
@@ -783,7 +788,7 @@ int loop()
     // console with status and so on.
 
     // Get store information from APIs.
-    sdSystem.get_API_info(region);
+    sdSystem.get_API_info(region_scan);
 
     // Is Keyboard or Mouse read ready -----------------
     if (input_from_user.is_ready(tmeCurrentMillis) == true)
@@ -930,6 +935,25 @@ int loop()
     thread_output_running = false;
   }
 
+  // Remove Shared Memory (if not active)
+  sdSystem.API_CHANNEL.close(region_scan);
+
+  /*
+  if (sdSystem.API_CHANNEL.get_binds(region_scan) == 0)
+  {
+    cons.printi("Closing API.");
+    boost::interprocess::shared_memory_object::remove("Airband");
+  }
+  else
+  {
+    cons.printi("Leaving API.");
+  }
+  */
+
+  // Force removal becauese rtl_airband side not created
+  boost::interprocess::shared_memory_object::remove("Airband");
+
+  
   // Shutdown RPI.
   shutdown();
 

@@ -1,3 +1,8 @@
+V 0.85A_220603
+  - Attempting to clear memory on program shutdown.
+  - The corrosponding versions are:
+    RasFLED (V 0.85A_220603) <==> rtl_airband (V 0.06A_220603)
+
 V 0.84A_220602
   - rtl_airband supports labels for each frequency in the .conf file.
     The following line was added after the freqs = ... line.

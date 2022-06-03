@@ -169,10 +169,13 @@ class system_data
   // -------------------------------------------------------------------------------------
 
 
-  void get_API_info(boost::interprocess::mapped_region &region)
+  int get_API_info(boost::interprocess::mapped_region &region_scan)
   {
-    API_CHANNEL.rasfled_receive(region, RECEIVED_SQUELCH);
+    int return_int = -1;
+    return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH);
     RADIO_COORD.process(RECEIVED_SQUELCH);
+
+    return return_int;
   }
 
   void init()
