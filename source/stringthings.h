@@ -163,6 +163,27 @@ string linemerge_right_justify(int size, string line, string text)
   return return_string;
 }
 
+string right_justify(int size, string text)
+// Overlaps and right justifies text onto line.
+// Returns value at size. 
+{
+  string return_string = "";
+
+  if (text.size() > size)
+  {
+    return_string = text.erase(0, text.size()- size);
+  }
+  else if (text.size() == size)
+  {
+    return_string = text;
+  }
+  else
+  {
+    return_string = return_string.append(size - text.size() ,' ') + text;
+  }
+
+  return return_string;
+}
 
 
 #endif

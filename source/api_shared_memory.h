@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.09A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.10A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -75,6 +75,7 @@ class API_CHANNEL_MEM
     return return_string;
   }
 
+  /*
   void int_set_if_changed(int &Store, int &Receive, bool &Changed)
   // Set Store = Receive and set if Changed to true.
   {
@@ -114,17 +115,18 @@ class API_CHANNEL_MEM
       Changed = true;
     }
   }
+  */
 
   public:
 
   // Start or Stop the API.
   bool PAUSE = false;
 
-  /*
+  #ifndef RASFLED
   // Copy information to shared variables
 
   // rtl_airband Routines
-  void rtl_airband_send(mapped_region &region_scan, freq_t *fparms)
+  void rtl_airband_send_squelch(mapped_region &region_scan, freq_t *fparms)
   // Send freq info.
   // Will not send if PAUSE == true.
   // Will not send if Destination has not ACKed ready.
@@ -150,7 +152,35 @@ class API_CHANNEL_MEM
       }
     }
   }
-  */
+
+  void rtl_airband_send_device(mapped_region &region_scan, int Device, float Gain)
+  // Send freq info.
+  // Will not send if PAUSE == true.
+  // Will not send if Destination has not ACKed ready.
+  {
+    if (PAUSE == false)
+    {
+      // Get the address of the data
+      API_SQUELCH_SOURCE *SQUELCH = static_cast<API_SQUELCH_SOURCE*>(region_scan.get_address());
+      
+      if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == -1)
+      // Prevent data being read if the packet hasn't been completely written.
+      {
+        //(*SQUELCH).DEVICE.DEVICE = Device;
+        //(*SQUELCH).DEVICE.GAIN = Gain;
+
+        (*SQUELCH).DEVICE.DEVICE = 99;
+        (*SQUELCH).DEVICE.GAIN = 99;
+
+        (*SQUELCH).DEVICE.ACTIVE = true;
+
+        (*SQUELCH).DEVICE.CHANGED = true;
+        
+        (*SQUELCH).HANDOFF = 1;
+      }
+    }
+  }
+  #endif
 
   
   // Ras_FLED Routines
@@ -169,17 +199,33 @@ class API_CHANNEL_MEM
       if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == 1)
       // Prevent data being read if the packet hasn't been completely written.
       {
-        int_set_if_changed(API_Squelch.FREQUENCY, (*SQUELCH).FREQUENCY, API_Squelch.CHANGED);
+        if ((*SQUELCH).DEVICE.CHANGED == true)
+        {
+          // Device Information
+          API_Squelch.DEVICE.ACTIVE = (*SQUELCH).DEVICE.ACTIVE;
+          API_Squelch.DEVICE.DEVICE = (*SQUELCH).DEVICE.DEVICE;
+          API_Squelch.DEVICE.GAIN = (*SQUELCH).DEVICE.GAIN;
 
-        string not_silly = get((*SQUELCH).LABEL);
-        string_set_if_changed(API_Squelch.LABEL, not_silly, API_Squelch.CHANGED);
-        
-        float_set_if_changed(API_Squelch.NOISE_LEVEL, (*SQUELCH).NOISE_LEVEL, API_Squelch.CHANGED);
-        float_set_if_changed(API_Squelch.SIGNAL_LEVEL, (*SQUELCH).SIGNAL_LEVEL, API_Squelch.CHANGED);
-        bool_set_if_changed(API_Squelch.SIGNAL_OUTSIDE_FILTER, (*SQUELCH).SIGNAL_OUTSIDE_FILTER, API_Squelch.CHANGED);
-        bool_set_if_changed(API_Squelch.IS_OPEN, (*SQUELCH).IS_OPEN, API_Squelch.CHANGED);
+          API_Squelch.DEVICE.CHANGED = true;
+          (*SQUELCH).DEVICE.GAIN = false;
+        }
 
-        (*SQUELCH).CHANGED = false;
+        // Frequency Information
+        if ((*SQUELCH).DEVICE.CHANGED == true)
+        {
+          API_Squelch.FREQUENCY = (*SQUELCH).FREQUENCY;
+
+          string not_silly = get((*SQUELCH).LABEL);
+          API_Squelch.LABEL = not_silly;
+          
+          API_Squelch.NOISE_LEVEL = (*SQUELCH).NOISE_LEVEL;
+          API_Squelch.SIGNAL_LEVEL = (*SQUELCH).SIGNAL_LEVEL;
+          API_Squelch.SIGNAL_OUTSIDE_FILTER = (*SQUELCH).SIGNAL_OUTSIDE_FILTER;
+          API_Squelch.IS_OPEN = (*SQUELCH).IS_OPEN;
+
+          API_Squelch.CHANGED = true;
+          (*SQUELCH).CHANGED = false;
+        }
 
         (*SQUELCH).HANDOFF = -1;
 

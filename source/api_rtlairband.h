@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.08A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.09A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -41,10 +41,30 @@ class API_MANAGER
   int BINDS = 0;
 };
 
+class API_DEVICE
+{
+  public:
+
+  // Active
+  bool ACTIVE = false;
+
+  // Device #
+  int DEVICE = 0;
+
+  // Gain
+  float GAIN = 0;
+
+  // Changed
+  bool CHANGED = false;
+};
+
 class API_SQUELCH_DESTINATION
 // Sanitized API packet.
 {
   public:
+
+  // API Device
+  API_DEVICE  DEVICE;
 
   // Information to Send
   // Channel Info
@@ -73,6 +93,9 @@ class API_SQUELCH_SOURCE
  
   // API Manager
   API_MANAGER MANAGER;
+
+  // API Device
+  API_DEVICE  DEVICE;
   
   // Hold variable prevents reading or writing, in case another program is accessing  
   //  the data and a delay has occured. 

@@ -67,6 +67,9 @@ class Screen3
   //
 
   // ----------
+  // Title Size
+  int TitleSize = 10;
+
   // Screen Size Variables
   int YMax = 0;
   int XMax = 0;
@@ -188,6 +191,14 @@ class Screen3
   Radio_Channel       Radio_Channel_3;
   Radio_Channel       Radio_Channel_4;
   Radio_Channel       Radio_Channel_5;
+
+  // Radio Status
+  int YRadioStatusPos = -1;
+  int XRadioStatusPos = 0;
+  int YRadioStatusSize = 1;
+  int XRadioStatusSize = -1;
+
+  WINDOW * winRadioStatus;
 
   private:
   
@@ -317,11 +328,11 @@ class Screen3
     // Build any Gadgets that will be called.
 
     // Prep Status Screen Text Box.
-    tiStatus.create(1, "STATUS", " STATUS", 7, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    tiStatus.create(1, "STATUS", " STATUS", TitleSize, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Prep Console Screen Text Box.
     tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-    tiConsole.create(1, "CONSOLE", "CONSOLE", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiConsole.create(1, "CONSOLE", "CONSOLE", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     // Prep Control Buttons for program start.
     bzButtons.create_button(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
@@ -350,7 +361,7 @@ class Screen3
 
     // Countdown Screen
     // Countdown Timer
-    tiTimer.create(1, "TIMER", "  TIMER", 7, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    tiTimer.create(1, "TIMER", "TIMER", TitleSize, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
 
     Countdown_Timer.label("Timer: ");
     Countdown_Timer.label_size(13);
@@ -362,7 +373,7 @@ class Screen3
 
     // Debug Screen 
     // Compute Times
-    tiDebug.create(1, "DEBUG", "   DIAG", 7, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    tiDebug.create(1, "DEBUG", "DIAG", TitleSize, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
 
     Compute_Time.label("Compute: ");
     Compute_Time.label_size(13);
@@ -404,7 +415,7 @@ class Screen3
    
     // Prep Buttons for Radio screen.
     tbRadio_Log.create(1, "RADIO", "RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-    tiRadio.create(1, "RADIO", "  RADIO", 7, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    tiRadio.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     bzRadio.create_button(0, "AIRSTOP", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
@@ -629,15 +640,37 @@ class Screen3
     if (ScrStat.Window_Radio == true)
     // Main Radio Screen
     {
+      // Radio Status Window
+      // Calculate Size and Position
+      YRadioStatusPos = YSplit;
+      XRadioStatusPos = XRadioStatusPos;
+      YRadioStatusSize = YRadioStatusSize;
+      XRadioStatusSize =  XSplit;
+
+      // Build Window
+      winRadioStatus = newwin(YRadioStatusSize, XRadioStatusSize, YRadioStatusPos, XRadioStatusPos);
+      tiRadio.move_resize(YRadioStatusPos, XRadioStatusPos, YRadioStatusSize, XRadioStatusSize);
+      
+      // Set Y Split
+      YSplit = YSplit + YRadioStatusSize;
+
+      // Create Screen
+      wrefresh(winRadioStatus);
+
+      // Set window color
+      wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+
+      // Radio Window
       // Calculate Size and Position
       YRadioPos = YSplit;
       XRadioPos = XRadioPos;
       YRadioSize = YMax - YSplit - YTabSize;
       XRadioSize =  XSplit;
 
+      YSplit = YSplit + YRadioStatusSize;
+
       // Build Window
       winRadio = newwin(YRadioSize, XRadioSize, YRadioPos, XRadioPos);
-      tiRadio.move_resize(YRadioPos, XRadioPos, YRadioSize, XRadioSize);
 
       // Set Y Split
       YSplit = YSplit + YRadioSize;
@@ -645,7 +678,7 @@ class Screen3
       // Radio Window Border
       wborder(winRadio,' ',' ',' ',' ',' ',' ',' ',' ') ;
 
-      // Create Player Screen
+      // Create Screen
       wrefresh(winRadio);
 
       // Set window color
@@ -1105,14 +1138,46 @@ class Screen3
   void radio(system_data &sdSysData, ScreenStatus &ScrStat)
   // Shows the Player Window
   {
-    // Print Channel Data Frequencies
+    // Print Status
+    if(ScrStat.Needs_Refresh == true || sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED == true)
+    {
+      if (sdSysData.RADIO_COORD.DEVICE_STATUS.ACTIVE == false)
+      {
+        wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE)));
+      }
+      else
+      {
+        wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+      }
+
+      //mvwprintw(winRadioStatus, 0, 0, "%d", sdSysData.API_CHANNEL.get_binds());
+      //mvwprintw(winRadioStatus, 0, 0, "Binds: %d", sdSysData.RADIO_COORD.DEVICE_STATUS.ACTIVE);
+      //mvwprintw(winRadioStatus, 0, 20, "Status: %d", sdSysData.RADIO_COORD.DEVICE_STATUS.DEVICE);
+      mvwprintw(winRadioStatus, 0, 10, "Gain: %.1f", sdSysData.RADIO_COORD.DEVICE_STATUS.GAIN);
+
+      // Changes to Radio Coord device status cleared.
+      sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED = false;
+    }
+
+    if(ScrStat.Needs_Refresh == true || sdSysData.RADIO_COORD.CHANGED == true)
+    {
+      // Refresh the window.
+      wrefresh(winRadioStatus);
+
+      // Refresh the window.
+      wrefresh(winRadio);
+
+      // Print Title Bar
+      tiRadio.draw(ScrStat.Needs_Refresh);
+
+      // Changes to Radio Coord cleared.
+      sdSysData.RADIO_COORD.CHANGED = true;
+    }
+    // Print Radio Information
 
     tbRadio_Log.draw(ScrStat.Needs_Refresh);
 
     bzRadio.draw(ScrStat.Needs_Refresh);
-
-    // Refresh the window.
-    wrefresh(winRadio);
   
     // Print Channel Gadgets
     Radio_Channel_0.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
@@ -1122,9 +1187,9 @@ class Screen3
     Radio_Channel_4.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     Radio_Channel_5.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
-    // Print Title Bar
-    //    The redrawn part is because the gadget 0 overwrites the title bar.
-    tiRadio.draw(ScrStat.Needs_Refresh || Radio_Channel_0.was_redrawn() == true);
+
+
+
   }
 
   // ---------------------------------------------------------------------------------------

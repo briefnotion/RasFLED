@@ -1,3 +1,11 @@
+V 0.87A_220605
+  - Title bar text will right justify without leading spaces.
+  - Changed the Radio Gadget linger time from 15 to 7 seconds.
+  - Changed the way the api works again in an attept to find clean 
+    communication.
+  - The corrosponding versions are:
+    RasFLED (V 0.87A_220605) <==> rtl_airband (V 0.07A_220605)
+
 V 0.86A_220604
   - Did away with the Blank Tab and the Craft Tab because neither 
       were doing anything.

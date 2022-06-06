@@ -126,7 +126,7 @@ class Title_Bar
     {
       wbkgd(winTitle, COLOR_PAIR(PROP.COLOR));
       wattron(winTitle, A_REVERSE);
-      mvwprintw(winTitle, 0, 0, PROP.LABEL.c_str());
+      mvwprintw(winTitle, 0, 0, right_justify(PROP.SIZE, PROP.LABEL).c_str());
       wattroff(winTitle, A_REVERSE);
 
       PROP.CHANGED = false;
@@ -1388,7 +1388,7 @@ class Radio_Channel
   // Timing
   TIMED_PING LINGER_DIRTY_SIGNAL;
   TIMED_PING VISIBLE_UPDATE_SIGNAL;
-  int LINGER_TIME = 15000;
+  int LINGER_TIME = 7000;
   int VISIBLE_UPATE_TIME = 200;
 
   // Was gadget redrawn during the previous draw cycle.

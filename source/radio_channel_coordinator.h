@@ -27,6 +27,10 @@ class RADIO_CHANNEL_COORDINATOR
 
   public:
 
+  // Last know device status.
+  API_DEVICE DEVICE_STATUS;
+  bool CHANGED = false;
+
   // Stores all the frequencies observed and parsed into frequencies.
   deque<API_SQUELCH_DESTINATION> CHANNELS;
   
@@ -44,6 +48,19 @@ class RADIO_CHANNEL_COORDINATOR
   {
     if (PLAY == true)
     {
+      if (Received_Squelch.DEVICE.CHANGED == true)
+      {
+        // Store Status
+        DEVICE_STATUS.ACTIVE = Received_Squelch.DEVICE.ACTIVE;
+        DEVICE_STATUS.DEVICE = Received_Squelch.DEVICE.DEVICE;
+        DEVICE_STATUS.GAIN = Received_Squelch.DEVICE.GAIN;
+
+        Received_Squelch.DEVICE.CHANGED = false;
+        DEVICE_STATUS.CHANGED = true;
+        
+        CHANGED = true;
+      }
+
       if (Received_Squelch.CHANGED == true)
       {
         int pos_found = -1;
@@ -72,6 +89,7 @@ class RADIO_CHANNEL_COORDINATOR
         {
           CHANNELS.push_back(Received_Squelch);
         }
+        
         Received_Squelch.CHANGED = false;
       }
     }
