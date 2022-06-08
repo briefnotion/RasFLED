@@ -175,7 +175,8 @@ class system_data
 
     if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
     {
-      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH);
+      int dummy_command = 0;
+      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, dummy_command);
       RADIO_COORD.process(RECEIVED_SQUELCH);
     }
 

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.87A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.88A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -788,6 +788,7 @@ int loop()
     // console with status and so on.
 
     // Get store information from APIs.
+    //cons.printwait(to_string(sdSystem.get_API_info(region_scan)));
     sdSystem.get_API_info(region_scan);
 
     // Is Keyboard or Mouse read ready -----------------

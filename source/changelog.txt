@@ -1,3 +1,6 @@
+V 0.88A_220606
+  - Improving API Communication.
+
 V 0.87A_220605
   - Title bar text will right justify without leading spaces.
   - Changed the Radio Gadget linger time from 15 to 7 seconds.

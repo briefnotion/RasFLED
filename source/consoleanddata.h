@@ -640,19 +640,29 @@ class Console
       
         //Color Picker Window
         if(name.compare("AIRSTOP") == 0)
-        // Start Hazard Lights
+        // Turn Off Radio via kill command
         {
           keywatch.cmdInString(" airstop");
         }
         else if(name.compare("LAFS") == 0)
-        // Start Hazard Lights
+        // Lafayette Scan Script
         {
           keywatch.cmdInString(" lafs");
         }
         else if(name.compare("LAFM") == 0)
-        // Start Hazard Lights
+        // Lafayette Multi Script
         {
           keywatch.cmdInString(" lafm");
+        }
+        else if(name.compare("***") == 0)
+        // 
+        {
+          keywatch.cmdInString(" --- ");
+        }
+        else if(name.compare("***") == 0)
+        // 
+        {
+          keywatch.cmdInString(" --- ");
         }
       }
     }

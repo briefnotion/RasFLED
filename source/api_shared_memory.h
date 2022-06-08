@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.10A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.11A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -75,48 +75,6 @@ class API_CHANNEL_MEM
     return return_string;
   }
 
-  /*
-  void int_set_if_changed(int &Store, int &Receive, bool &Changed)
-  // Set Store = Receive and set if Changed to true.
-  {
-    if(Store != Receive)
-    {
-      Store = Receive;
-      Changed = true;
-    }
-  }
-
-  void float_set_if_changed(float &Store, float &Receive, bool &Changed)
-  // Set Store = Receive and set if Changed to true.
-  {
-    if(Store != Receive)
-    {
-      Store = Receive;
-      Changed = true;
-    }
-  }
-
-  void bool_set_if_changed(bool &Store, bool &Receive, bool &Changed)
-  // Set Store = Receive and set if Changed to true.
-  {
-    if(Store != Receive)
-    {
-      Store = Receive;
-      Changed = true;
-    }
-  }
-
-  void string_set_if_changed(string &Store, string &Receive, bool &Changed)
-  // Set Store = Receive and set if Changed to true.
-  {
-    if(Store != Receive)
-    {
-      Store = Receive;
-      Changed = true;
-    }
-  }
-  */
-
   public:
 
   // Start or Stop the API.
@@ -153,6 +111,31 @@ class API_CHANNEL_MEM
     }
   }
 
+  // rtl_airband Routines
+  void rtl_airband_send_squelch_2(mapped_region &region_scan, API_SQUELCH_SOURCE &API_Squelch, int &Send_Command)
+  // Send freq info.
+  // Will not send if PAUSE == true.
+  // Will not send if Destination has not ACKed ready.
+  {
+    if (PAUSE == false)
+    {
+      // Get the address of the data
+      API_SQUELCH_SOURCE *SQUELCH = static_cast<API_SQUELCH_SOURCE*>(region_scan.get_address());
+
+      if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == -1)
+      // Prevent data being read if the packet hasn't been completely written.
+      {
+        (*SQUELCH) = API_Squelch;
+
+        (*SQUELCH).DEVICE.COMMAND = Send_Command;
+
+        (*SQUELCH).CHANGED = true;
+
+        (*SQUELCH).HANDOFF = 1;
+      }
+    }
+  }
+
   void rtl_airband_send_device(mapped_region &region_scan, int Device, float Gain)
   // Send freq info.
   // Will not send if PAUSE == true.
@@ -166,11 +149,8 @@ class API_CHANNEL_MEM
       if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == -1)
       // Prevent data being read if the packet hasn't been completely written.
       {
-        //(*SQUELCH).DEVICE.DEVICE = Device;
-        //(*SQUELCH).DEVICE.GAIN = Gain;
-
-        (*SQUELCH).DEVICE.DEVICE = 99;
-        (*SQUELCH).DEVICE.GAIN = 99;
+        (*SQUELCH).DEVICE.DEVICE = Device;
+        (*SQUELCH).DEVICE.GAIN = Gain;
 
         (*SQUELCH).DEVICE.ACTIVE = true;
 
@@ -184,7 +164,7 @@ class API_CHANNEL_MEM
 
   
   // Ras_FLED Routines
-  int rasfled_receive(mapped_region &region_scan, API_SQUELCH_DESTINATION &API_Squelch)
+  int rasfled_receive(mapped_region &region_scan, API_SQUELCH_DESTINATION &API_Squelch, int &Send_Command)
   // Receive freq info.
   // Will not send if PAUSE == true.
   // Will not send if Source has not ACKed ready.
@@ -202,16 +182,14 @@ class API_CHANNEL_MEM
         if ((*SQUELCH).DEVICE.CHANGED == true)
         {
           // Device Information
-          API_Squelch.DEVICE.ACTIVE = (*SQUELCH).DEVICE.ACTIVE;
-          API_Squelch.DEVICE.DEVICE = (*SQUELCH).DEVICE.DEVICE;
-          API_Squelch.DEVICE.GAIN = (*SQUELCH).DEVICE.GAIN;
+          API_Squelch.DEVICE = (*SQUELCH).DEVICE;
 
           API_Squelch.DEVICE.CHANGED = true;
-          (*SQUELCH).DEVICE.GAIN = false;
+          (*SQUELCH).DEVICE.CHANGED = false;
         }
 
         // Frequency Information
-        if ((*SQUELCH).DEVICE.CHANGED == true)
+        if ((*SQUELCH).CHANGED == true)
         {
           API_Squelch.FREQUENCY = (*SQUELCH).FREQUENCY;
 
@@ -227,6 +205,10 @@ class API_CHANNEL_MEM
           (*SQUELCH).CHANGED = false;
         }
 
+        // Set Send Command
+        (*SQUELCH).DEVICE.COMMAND = Send_Command;
+
+        // Return Handoff
         (*SQUELCH).HANDOFF = -1;
 
         // return ok.

@@ -420,6 +420,8 @@ class Screen3
     bzRadio.create_button(0, "AIRSTOP", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzRadio.create_button(2, "LAFM", "AIR%LAF%MULTI", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(3, "E1", "", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(4, "E2", "", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Create Radio Channel Frequency gadgets.
     Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_BLUE, COLOR_BLACK);
@@ -692,6 +694,8 @@ class Screen3
       bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0), XRadioPos, YBRadioSize, XBRadioSize);
       bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1), XRadioPos, YBRadioSize, XBRadioSize);
       bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(3, YRadioPos + (YBRadioSize *3), XRadioPos, YBRadioSize, XBRadioSize);
+      bzRadio.move_resize(4, YRadioPos + (YBRadioSize *4), XRadioPos, YBRadioSize, XBRadioSize);
 
       // Display Channels
       Radio_Channel_0.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *0), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);

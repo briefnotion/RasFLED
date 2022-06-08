@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.09A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.11A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -38,6 +38,7 @@ class API_MANAGER
 {
   public:
 
+  // Number of programs interfacing with the API.
   int BINDS = 0;
 };
 
@@ -53,6 +54,10 @@ class API_DEVICE
 
   // Gain
   float GAIN = 0;
+
+  // Command to send to and from
+  int COMMAND = 0;
+  // -1 shutdown
 
   // Changed
   bool CHANGED = false;
