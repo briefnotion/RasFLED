@@ -69,7 +69,7 @@ class Console
   {
     if (sdSysData.RADIO_COORD.size() > 0)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[0].CHANGED == true)
+      if (sdSysData.RADIO_COORD.CHANNELS[0].FREQUENCY.CHANGED == true)
       {
         Screen.Radio_Channel_0.update_value(sdSysData.RADIO_COORD.CHANNELS[0]);
       }
@@ -77,7 +77,7 @@ class Console
     
     if (sdSysData.RADIO_COORD.size() > 1)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[1].CHANGED == true)
+      if (sdSysData.RADIO_COORD.CHANNELS[1].FREQUENCY.CHANGED == true)
       {
         Screen.Radio_Channel_1.update_value(sdSysData.RADIO_COORD.CHANNELS[1]);
       }
@@ -85,7 +85,7 @@ class Console
     
     if (sdSysData.RADIO_COORD.size() > 2)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[2].CHANGED == true)
+      if (sdSysData.RADIO_COORD.CHANNELS[2].FREQUENCY.CHANGED == true)
       {
         Screen.Radio_Channel_2.update_value(sdSysData.RADIO_COORD.CHANNELS[2]);
       }
@@ -93,7 +93,7 @@ class Console
     
     if (sdSysData.RADIO_COORD.size() > 3)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[3].CHANGED == true)
+      if (sdSysData.RADIO_COORD.CHANNELS[3].FREQUENCY.CHANGED == true)
       {
         Screen.Radio_Channel_3.update_value(sdSysData.RADIO_COORD.CHANNELS[3]);
       }
@@ -101,7 +101,7 @@ class Console
     
     if (sdSysData.RADIO_COORD.size() > 4)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[4].CHANGED == true)
+      if (sdSysData.RADIO_COORD.CHANNELS[4].FREQUENCY.CHANGED == true)
       {
         Screen.Radio_Channel_4.update_value(sdSysData.RADIO_COORD.CHANNELS[4]);
       }
@@ -109,7 +109,7 @@ class Console
     
     if (sdSysData.RADIO_COORD.size() > 5)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[5].CHANGED == true)
+      if (sdSysData.RADIO_COORD.CHANNELS[5].FREQUENCY.CHANGED == true)
       {
         Screen.Radio_Channel_5.update_value(sdSysData.RADIO_COORD.CHANNELS[5]);
       }
@@ -654,10 +654,10 @@ class Console
         {
           keywatch.cmdInString(" lafm");
         }
-        else if(name.compare("***") == 0)
+        else if(name.compare("RADIOOFF") == 0)
         // 
         {
-          keywatch.cmdInString(" --- ");
+          keywatch.cmdInString(" radoff");
         }
         else if(name.compare("***") == 0)
         // 

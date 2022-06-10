@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.11A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.12A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -56,10 +56,34 @@ class API_DEVICE
   float GAIN = 0;
 
   // Command to send to and from
-  int COMMAND = 0;
-  // -1 shutdown
+  int COMMAND_TO_RADIO = 0;     // -1 shutdown
+  int COMMAND_FROM_RADIO = 0;
 
   // Changed
+  bool CHANGED = false;
+};
+
+class API_FREQUENCY_SANI
+{
+  public:
+
+ // Information to Send
+  // Channel Info
+  int FREQUENCY = 0;  // needs / 1000000.0
+
+  // Channel Label
+  string LABEL;
+
+  // Channel Squelch Info
+  float NOISE_LEVEL = 0;
+  float SIGNAL_LEVEL = 0;
+
+  bool SIGNAL_OUTSIDE_FILTER = false;
+
+  // Is Channel Open
+  bool IS_OPEN = false;
+  
+  // Has Changed
   bool CHANGED = false;
 };
 
@@ -67,16 +91,27 @@ class API_SQUELCH_DESTINATION
 // Sanitized API packet.
 {
   public:
+  // API Manager
+  API_MANAGER MANAGER;
 
   // API Device
   API_DEVICE  DEVICE;
+
+  // Frequency Information.
+  API_FREQUENCY_SANI FREQUENCY;
+};
+
+
+class API_FREQUENCY
+{  
+  public:
 
   // Information to Send
   // Channel Info
   int FREQUENCY = 0;  // needs / 1000000.0
 
   // Channel Label
-  string LABEL;
+  SILLY_STRING LABEL;
 
   // Channel Squelch Info
   float NOISE_LEVEL = 0;
@@ -101,30 +136,18 @@ class API_SQUELCH_SOURCE
 
   // API Device
   API_DEVICE  DEVICE;
+
+  // Frequency Information.
+  API_FREQUENCY FREQUENCY;
   
   // Hold variable prevents reading or writing, in case another program is accessing  
   //  the data and a delay has occured. 
 
+  // Handoff 
+  // -1 - Direction to Display Program- Waiting for it to Receive.
+  // 0  - Direction Send Receive OPEN
+  // 1  - Direction to Radio Program - Message from Display Received.
   int HANDOFF = 0;
-
-  // Information to Send
-  // Channel Info
-  int FREQUENCY = 0;  // needs / 1000000.0
-
-  // Channel Label
-  SILLY_STRING LABEL;
-
-  // Channel Squelch Info
-  float NOISE_LEVEL = 0;
-  float SIGNAL_LEVEL = 0;
-
-  bool SIGNAL_OUTSIDE_FILTER = false;
-
-  // Is Channel Open
-  bool IS_OPEN = false;
-  
-  // Has Changed
-  bool CHANGED = false;
 };
 
 

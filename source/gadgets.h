@@ -630,7 +630,10 @@ class Button
       }
 
       wattroff(winButton, A_REVERSE);
-      wrefresh(winButton);
+      if (PROP.TYPE != -1)
+      {
+        wrefresh(winButton);
+      }
 
       // If the button is simple click, reset its value to 0 and
       //  leave the changed property on so that it can be redrawn off
@@ -1475,15 +1478,15 @@ class Radio_Channel
 
   void update_value(API_SQUELCH_DESTINATION &New_Value)
   {
-    PROP.VALUE.FREQUENCY = New_Value.FREQUENCY;
-    PROP.VALUE.LABEL = New_Value.LABEL;
-    PROP.VALUE.NOISE_LEVEL = New_Value.NOISE_LEVEL;
-    PROP.VALUE.SIGNAL_LEVEL = New_Value.SIGNAL_LEVEL;
-    PROP.VALUE.SIGNAL_OUTSIDE_FILTER = New_Value.SIGNAL_OUTSIDE_FILTER;
-    PROP.VALUE.IS_OPEN = New_Value.IS_OPEN;
+    PROP.VALUE.FREQUENCY.FREQUENCY = New_Value.FREQUENCY.FREQUENCY;
+    PROP.VALUE.FREQUENCY.LABEL = New_Value.FREQUENCY.LABEL;
+    PROP.VALUE.FREQUENCY.NOISE_LEVEL = New_Value.FREQUENCY.NOISE_LEVEL;
+    PROP.VALUE.FREQUENCY.SIGNAL_LEVEL = New_Value.FREQUENCY.SIGNAL_LEVEL;
+    PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER = New_Value.FREQUENCY.SIGNAL_OUTSIDE_FILTER;
+    PROP.VALUE.FREQUENCY.IS_OPEN = New_Value.FREQUENCY.IS_OPEN;
 
     PROP.CHANGED = true;
-    New_Value.CHANGED = false;
+    New_Value.FREQUENCY.CHANGED = false;
 
     // Enable gadget to display.
     PROP.TYPE = 0;
@@ -1515,7 +1518,7 @@ class Radio_Channel
       // Set colors.
 
       // Channel Open
-      if (PROP.VALUE.IS_OPEN == true)
+      if (PROP.VALUE.FREQUENCY.IS_OPEN == true)
       {
         // Reset the linger timer.
         LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
@@ -1526,7 +1529,7 @@ class Radio_Channel
         BAR_SIGNAL_LEVEL.color_background(COLOR_WHITE);
       }
       // Outside Filter
-      else if (PROP.VALUE.SIGNAL_OUTSIDE_FILTER == true)
+      else if (PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER == true)
       {
         // Reset the linger timer.
         LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
@@ -1562,12 +1565,12 @@ class Radio_Channel
       }
 
       // Print Values
-      mvwprintw(winFrequency, 0, 0, "     FREQ:  %3.3f", ((float)PROP.VALUE.FREQUENCY / 1000000));
-      mvwprintw(winFrequency, 0, 21, "%s", (PROP.VALUE.LABEL.c_str()));
+      mvwprintw(winFrequency, 0, 0, "     FREQ:  %3.3f", ((float)PROP.VALUE.FREQUENCY.FREQUENCY / 1000000));
+      mvwprintw(winFrequency, 0, 21, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
       //Draw Bars
 
-      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.SIGNAL_LEVEL), FRAME_TIME);
-      BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.NOISE_LEVEL), FRAME_TIME);
+      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), FRAME_TIME);
+      BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
 
       // Reset Properties Changed.
       PROP.CHANGED = false;

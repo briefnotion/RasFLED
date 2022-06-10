@@ -173,10 +173,10 @@ class system_data
   {
     int return_int = -1;
 
-    if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
+    //if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
     {
-      int dummy_command = 0;
-      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, dummy_command);
+      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, RADIO_COORD.command_to_send());
+      RADIO_COORD.command_to_send_reset();
       RADIO_COORD.process(RECEIVED_SQUELCH);
     }
 

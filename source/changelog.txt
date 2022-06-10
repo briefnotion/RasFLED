@@ -1,3 +1,8 @@
+V 0.89A_220609
+  - Improving API Communication.
+  - Sending an "OFF" command, through the API, to rtl_airband is 
+      now successful in shutting down the radio without calling a system command.
+
 V 0.88A_220606
   - Improving API Communication.
 

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.11A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.12A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -84,39 +84,27 @@ class API_CHANNEL_MEM
   // Copy information to shared variables
 
   // rtl_airband Routines
-  void rtl_airband_send_squelch(mapped_region &region_scan, freq_t *fparms)
-  // Send freq info.
-  // Will not send if PAUSE == true.
-  // Will not send if Destination has not ACKed ready.
+  void rtl_airband_get_squelch(API_SQUELCH_SOURCE &API_Squelch, freq_t *fparms)
+  // Get freq info.
   {
-    if (PAUSE == false)
-    {
-      // Get the address of the data
-      API_SQUELCH_SOURCE *SQUELCH = static_cast<API_SQUELCH_SOURCE*>(region_scan.get_address());
 
-      if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == -1)
-      // Prevent data being read if the packet hasn't been completely written.
-      {
-        (*SQUELCH).FREQUENCY = fparms->frequency;
-        put((*SQUELCH).LABEL, fparms->label);
-        (*SQUELCH).NOISE_LEVEL = level_to_dBFS(fparms->squelch.noise_level());
-        (*SQUELCH).SIGNAL_LEVEL = level_to_dBFS(fparms->squelch.signal_level());
-        (*SQUELCH).SIGNAL_OUTSIDE_FILTER = fparms->squelch.signal_outside_filter();
-        (*SQUELCH).IS_OPEN = fparms->squelch.is_open();
+    API_Squelch.FREQUENCY.FREQUENCY = fparms->frequency;
+    put(API_Squelch.FREQUENCY.LABEL, fparms->label);
+    API_Squelch.FREQUENCY.NOISE_LEVEL = level_to_dBFS(fparms->squelch.noise_level());
+    API_Squelch.FREQUENCY.SIGNAL_LEVEL = level_to_dBFS(fparms->squelch.signal_level());
+    API_Squelch.FREQUENCY.SIGNAL_OUTSIDE_FILTER = fparms->squelch.signal_outside_filter();
+    API_Squelch.FREQUENCY.IS_OPEN = fparms->squelch.is_open();
 
-        (*SQUELCH).CHANGED = true;
-
-        (*SQUELCH).HANDOFF = 1;
-      }
-    }
   }
 
   // rtl_airband Routines
-  void rtl_airband_send_squelch_2(mapped_region &region_scan, API_SQUELCH_SOURCE &API_Squelch, int &Send_Command)
+  int rtl_airband_send_squelch(mapped_region &region_scan, API_SQUELCH_SOURCE &API_Squelch, int Command)
   // Send freq info.
   // Will not send if PAUSE == true.
   // Will not send if Destination has not ACKed ready.
   {
+    int deminishing = 0;
+
     if (PAUSE == false)
     {
       // Get the address of the data
@@ -125,15 +113,27 @@ class API_CHANNEL_MEM
       if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == -1)
       // Prevent data being read if the packet hasn't been completely written.
       {
-        (*SQUELCH) = API_Squelch;
 
-        (*SQUELCH).DEVICE.COMMAND = Send_Command;
+        (*SQUELCH).FREQUENCY.FREQUENCY = API_Squelch.FREQUENCY.FREQUENCY;
+        (*SQUELCH).FREQUENCY.LABEL = API_Squelch.FREQUENCY.LABEL;
+        (*SQUELCH).FREQUENCY.NOISE_LEVEL = API_Squelch.FREQUENCY.SIGNAL_LEVEL;
+        (*SQUELCH).FREQUENCY.SIGNAL_LEVEL = API_Squelch.FREQUENCY.SIGNAL_LEVEL;
+        (*SQUELCH).FREQUENCY.SIGNAL_OUTSIDE_FILTER = API_Squelch.FREQUENCY.SIGNAL_OUTSIDE_FILTER;
+        (*SQUELCH).FREQUENCY.IS_OPEN = API_Squelch.FREQUENCY.IS_OPEN;
 
-        (*SQUELCH).CHANGED = true;
+        deminishing = (*SQUELCH).DEVICE.COMMAND_TO_RADIO;
+        (*SQUELCH).DEVICE.COMMAND_TO_RADIO = 0;
+
+        (*SQUELCH).DEVICE.COMMAND_FROM_RADIO = Command;
+
+        (*SQUELCH).FREQUENCY.CHANGED = true;
 
         (*SQUELCH).HANDOFF = 1;
       }
     }
+
+    return deminishing;
+
   }
 
   void rtl_airband_send_device(mapped_region &region_scan, int Device, float Gain)
@@ -164,7 +164,7 @@ class API_CHANNEL_MEM
 
   
   // Ras_FLED Routines
-  int rasfled_receive(mapped_region &region_scan, API_SQUELCH_DESTINATION &API_Squelch, int &Send_Command)
+  int rasfled_receive(mapped_region &region_scan, API_SQUELCH_DESTINATION &API_Squelch, int Send_Command)
   // Receive freq info.
   // Will not send if PAUSE == true.
   // Will not send if Source has not ACKed ready.
@@ -179,34 +179,39 @@ class API_CHANNEL_MEM
       if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == 1)
       // Prevent data being read if the packet hasn't been completely written.
       {
+        API_Squelch.MANAGER.BINDS = (*SQUELCH).MANAGER.BINDS;
+
         if ((*SQUELCH).DEVICE.CHANGED == true)
         {
           // Device Information
-          API_Squelch.DEVICE = (*SQUELCH).DEVICE;
+          API_Squelch.DEVICE.DEVICE = (*SQUELCH).DEVICE.DEVICE;
+          API_Squelch.DEVICE.ACTIVE = (*SQUELCH).DEVICE.ACTIVE;
+          API_Squelch.DEVICE.GAIN = (*SQUELCH).DEVICE.GAIN;
 
           API_Squelch.DEVICE.CHANGED = true;
+
           (*SQUELCH).DEVICE.CHANGED = false;
         }
 
         // Frequency Information
-        if ((*SQUELCH).CHANGED == true)
+        if ((*SQUELCH).FREQUENCY.CHANGED == true)
         {
-          API_Squelch.FREQUENCY = (*SQUELCH).FREQUENCY;
+          API_Squelch.FREQUENCY.FREQUENCY = (*SQUELCH).FREQUENCY.FREQUENCY;
 
-          string not_silly = get((*SQUELCH).LABEL);
-          API_Squelch.LABEL = not_silly;
+          string not_silly = get((*SQUELCH).FREQUENCY.LABEL);
+          API_Squelch.FREQUENCY.LABEL = not_silly;
           
-          API_Squelch.NOISE_LEVEL = (*SQUELCH).NOISE_LEVEL;
-          API_Squelch.SIGNAL_LEVEL = (*SQUELCH).SIGNAL_LEVEL;
-          API_Squelch.SIGNAL_OUTSIDE_FILTER = (*SQUELCH).SIGNAL_OUTSIDE_FILTER;
-          API_Squelch.IS_OPEN = (*SQUELCH).IS_OPEN;
+          API_Squelch.FREQUENCY.NOISE_LEVEL = (*SQUELCH).FREQUENCY.NOISE_LEVEL;
+          API_Squelch.FREQUENCY.SIGNAL_LEVEL = (*SQUELCH).FREQUENCY.SIGNAL_LEVEL;
+          API_Squelch.FREQUENCY.SIGNAL_OUTSIDE_FILTER = (*SQUELCH).FREQUENCY.SIGNAL_OUTSIDE_FILTER;
+          API_Squelch.FREQUENCY.IS_OPEN = (*SQUELCH).FREQUENCY.IS_OPEN;
 
-          API_Squelch.CHANGED = true;
-          (*SQUELCH).CHANGED = false;
+          API_Squelch.FREQUENCY.CHANGED = true;
+          (*SQUELCH).FREQUENCY.CHANGED = false;
         }
 
         // Set Send Command
-        (*SQUELCH).DEVICE.COMMAND = Send_Command;
+        (*SQUELCH).DEVICE.COMMAND_TO_RADIO = Send_Command;
 
         // Return Handoff
         (*SQUELCH).HANDOFF = -1;
@@ -259,6 +264,9 @@ class API_CHANNEL_MEM
 // Tell API access has ended to track when memory should be cleared.
   {
     API_SQUELCH_SOURCE *SQUELCH = static_cast<API_SQUELCH_SOURCE*>(region_scan.get_address());
+    (*SQUELCH).DEVICE.ACTIVE = false;
+    (*SQUELCH).DEVICE.CHANGED = true;
+    
     (*SQUELCH).MANAGER.BINDS--;
   }
 };

@@ -25,11 +25,13 @@ class RADIO_CHANNEL_COORDINATOR
   bool PLAY = false; // Radio Coordinator active when set to true. Pause when 
                     //  set to false
 
+  int COMMAND = 0;
+
   public:
 
   // Last know device status.
   API_DEVICE DEVICE_STATUS;
-  bool CHANGED = false;
+  int LAST_READ_BIND_COUNT = 0;
 
   // Stores all the frequencies observed and parsed into frequencies.
   deque<API_SQUELCH_DESTINATION> CHANNELS;
@@ -48,6 +50,8 @@ class RADIO_CHANNEL_COORDINATOR
   {
     if (PLAY == true)
     {
+      LAST_READ_BIND_COUNT = Received_Squelch.MANAGER.BINDS;
+
       if (Received_Squelch.DEVICE.CHANGED == true)
       {
         // Store Status
@@ -55,20 +59,19 @@ class RADIO_CHANNEL_COORDINATOR
         DEVICE_STATUS.DEVICE = Received_Squelch.DEVICE.DEVICE;
         DEVICE_STATUS.GAIN = Received_Squelch.DEVICE.GAIN;
 
-        Received_Squelch.DEVICE.CHANGED = false;
         DEVICE_STATUS.CHANGED = true;
-        
-        CHANGED = true;
+
+        Received_Squelch.DEVICE.CHANGED = false;
       }
 
-      if (Received_Squelch.CHANGED == true)
+      if (Received_Squelch.FREQUENCY.CHANGED == true)
       {
         int pos_found = -1;
 
         // Seach the Channels for existing Squelch Channel
         for (int pos = 0; (pos < CHANNELS.size()) && (pos_found == -1); pos++)
         {
-          if (CHANNELS[pos].FREQUENCY == Received_Squelch.FREQUENCY)
+          if (CHANNELS[pos].FREQUENCY.FREQUENCY == Received_Squelch.FREQUENCY.FREQUENCY)
           {
             pos_found = pos;
           }
@@ -77,20 +80,16 @@ class RADIO_CHANNEL_COORDINATOR
         if (pos_found >= 0) // If found, change the data.
         {
           CHANNELS[pos_found].FREQUENCY = Received_Squelch.FREQUENCY;
-          CHANNELS[pos_found].LABEL = Received_Squelch.LABEL;
-          CHANNELS[pos_found].NOISE_LEVEL = Received_Squelch.NOISE_LEVEL;
-          CHANNELS[pos_found].SIGNAL_LEVEL = Received_Squelch.SIGNAL_LEVEL;
-          CHANNELS[pos_found].SIGNAL_OUTSIDE_FILTER = Received_Squelch.SIGNAL_OUTSIDE_FILTER;
-          CHANNELS[pos_found].IS_OPEN = Received_Squelch.IS_OPEN;
-          CHANNELS[pos_found].CHANGED = true;
+          CHANNELS[pos_found].FREQUENCY.CHANGED = true;
+
         }
-        else if (Received_Squelch.FREQUENCY != 0)  // If not found, add it. 
+        else if (Received_Squelch.FREQUENCY.FREQUENCY != 0)  // If not found, add it. 
         // Only add if not empty frequency.
         {
           CHANNELS.push_back(Received_Squelch);
         }
         
-        Received_Squelch.CHANGED = false;
+        Received_Squelch.FREQUENCY.CHANGED = false;
       }
     }
   }
@@ -108,6 +107,21 @@ class RADIO_CHANNEL_COORDINATOR
   bool is_paused()
   {
     return PLAY;
+  }
+
+  void command_send(int Command)
+  {
+    COMMAND = Command;
+  }
+
+  int command_to_send()
+  {
+    return COMMAND;
+  }
+
+  void command_to_send_reset()
+  {
+    COMMAND = 0;
   }
 
 };

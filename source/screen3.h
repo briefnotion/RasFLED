@@ -417,11 +417,12 @@ class Screen3
     tbRadio_Log.create(1, "RADIO", "RADIO", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
     tiRadio.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
-    bzRadio.create_button(0, "AIRSTOP", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.create_button(0, "RADIOOFF", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    //bzRadio.create_button(0, "AIRSTOP", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzRadio.create_button(2, "LAFM", "AIR%LAF%MULTI", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.create_button(3, "E1", "", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.create_button(4, "E2", "", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(3, "AIRSTOP", "%STOP", 0, -1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.create_button(4, "E2", "", 0, -1, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Create Radio Channel Frequency gadgets.
     Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_BLUE, COLOR_BLACK);
@@ -1154,16 +1155,13 @@ class Screen3
         wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
       }
 
-      //mvwprintw(winRadioStatus, 0, 0, "%d", sdSysData.API_CHANNEL.get_binds());
-      //mvwprintw(winRadioStatus, 0, 0, "Binds: %d", sdSysData.RADIO_COORD.DEVICE_STATUS.ACTIVE);
-      //mvwprintw(winRadioStatus, 0, 20, "Status: %d", sdSysData.RADIO_COORD.DEVICE_STATUS.DEVICE);
       mvwprintw(winRadioStatus, 0, 10, "Gain: %.1f", sdSysData.RADIO_COORD.DEVICE_STATUS.GAIN);
-
-      // Changes to Radio Coord device status cleared.
-      sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED = false;
+      mvwprintw(winRadioStatus, 0, 0, "A%d", sdSysData.RADIO_COORD.DEVICE_STATUS.ACTIVE);
+      mvwprintw(winRadioStatus, 0, 3, "C%d", sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED);
+      mvwprintw(winRadioStatus, 0, 6, "B%d", sdSysData.RADIO_COORD.LAST_READ_BIND_COUNT);
     }
 
-    if(ScrStat.Needs_Refresh == true || sdSysData.RADIO_COORD.CHANGED == true)
+    if(ScrStat.Needs_Refresh == true || sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED == true)
     {
       // Refresh the window.
       wrefresh(winRadioStatus);
@@ -1175,7 +1173,7 @@ class Screen3
       tiRadio.draw(ScrStat.Needs_Refresh);
 
       // Changes to Radio Coord cleared.
-      sdSysData.RADIO_COORD.CHANGED = true;
+      sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED = false;
     }
     // Print Radio Information
 
@@ -1190,10 +1188,7 @@ class Screen3
     Radio_Channel_3.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     Radio_Channel_4.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     Radio_Channel_5.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-  
-
-
-
+    
   }
 
   // ---------------------------------------------------------------------------------------
