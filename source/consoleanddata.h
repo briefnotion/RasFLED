@@ -64,57 +64,64 @@ class Console
 
   TIMED_IS_READY Console_Display;
 
+  void update_freqency_gadgets_QF(system_data &sdSysData, int num, Radio_Channel &Gad_Freq)
+  {
+    if (sdSysData.RADIO_COORD.size() > num)
+    {
+      if (sdSysData.RADIO_COORD.CHANNELS[num].FREQUENCY.CHANGED == true)
+      {
+        Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[num]);
+      }
+    }
+  }
+
   void update_freqency_gadgets(system_data &sdSysData)
   // Update all radio gadgets with new frequency information.
   {
-    if (sdSysData.RADIO_COORD.size() > 0)
+    if (ScrStat.Window_Radio == true)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[0].FREQUENCY.CHANGED == true)
-      {
-        Screen.Radio_Channel_0.update_value(sdSysData.RADIO_COORD.CHANNELS[0]);
-      }
+      update_freqency_gadgets_QF(sdSysData, 0, Screen.Radio_Channel_0);
+      update_freqency_gadgets_QF(sdSysData, 1, Screen.Radio_Channel_1);
+      update_freqency_gadgets_QF(sdSysData, 2, Screen.Radio_Channel_2);
+      update_freqency_gadgets_QF(sdSysData, 3, Screen.Radio_Channel_3);
+      update_freqency_gadgets_QF(sdSysData, 4, Screen.Radio_Channel_4);
+      update_freqency_gadgets_QF(sdSysData, 5, Screen.Radio_Channel_5);
     }
-    
-    if (sdSysData.RADIO_COORD.size() > 1)
+
+    if (ScrStat.Window_Many_Radio == true)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[1].FREQUENCY.CHANGED == true)
-      {
-        Screen.Radio_Channel_1.update_value(sdSysData.RADIO_COORD.CHANNELS[1]);
-      }
+      update_freqency_gadgets_QF(sdSysData, 0, Screen.Many_Radio_Channel_0);
+      update_freqency_gadgets_QF(sdSysData, 1, Screen.Many_Radio_Channel_1);
+      update_freqency_gadgets_QF(sdSysData, 2, Screen.Many_Radio_Channel_2);
+      update_freqency_gadgets_QF(sdSysData, 3, Screen.Many_Radio_Channel_3);
+      update_freqency_gadgets_QF(sdSysData, 4, Screen.Many_Radio_Channel_4);
+      update_freqency_gadgets_QF(sdSysData, 5, Screen.Many_Radio_Channel_5);
+      update_freqency_gadgets_QF(sdSysData, 6, Screen.Many_Radio_Channel_6);
+      update_freqency_gadgets_QF(sdSysData, 7, Screen.Many_Radio_Channel_7);
+      update_freqency_gadgets_QF(sdSysData, 8, Screen.Many_Radio_Channel_8);
+      update_freqency_gadgets_QF(sdSysData, 9, Screen.Many_Radio_Channel_9);
+      update_freqency_gadgets_QF(sdSysData, 10, Screen.Many_Radio_Channel_10);
+      update_freqency_gadgets_QF(sdSysData, 11, Screen.Many_Radio_Channel_11);
+      update_freqency_gadgets_QF(sdSysData, 12, Screen.Many_Radio_Channel_12);
+      update_freqency_gadgets_QF(sdSysData, 13, Screen.Many_Radio_Channel_13);
+      update_freqency_gadgets_QF(sdSysData, 14, Screen.Many_Radio_Channel_14);
+      update_freqency_gadgets_QF(sdSysData, 15, Screen.Many_Radio_Channel_15);
+      update_freqency_gadgets_QF(sdSysData, 16, Screen.Many_Radio_Channel_16);
+      update_freqency_gadgets_QF(sdSysData, 17, Screen.Many_Radio_Channel_17);
+      update_freqency_gadgets_QF(sdSysData, 18, Screen.Many_Radio_Channel_18);
+      update_freqency_gadgets_QF(sdSysData, 19, Screen.Many_Radio_Channel_19);
+      update_freqency_gadgets_QF(sdSysData, 20, Screen.Many_Radio_Channel_20);
+      update_freqency_gadgets_QF(sdSysData, 21, Screen.Many_Radio_Channel_21);
+      update_freqency_gadgets_QF(sdSysData, 22, Screen.Many_Radio_Channel_22);
+      update_freqency_gadgets_QF(sdSysData, 23, Screen.Many_Radio_Channel_23);
+      update_freqency_gadgets_QF(sdSysData, 24, Screen.Many_Radio_Channel_24);
+      update_freqency_gadgets_QF(sdSysData, 25, Screen.Many_Radio_Channel_25);
+      update_freqency_gadgets_QF(sdSysData, 26, Screen.Many_Radio_Channel_26);
+      update_freqency_gadgets_QF(sdSysData, 27, Screen.Many_Radio_Channel_27);
+      update_freqency_gadgets_QF(sdSysData, 28, Screen.Many_Radio_Channel_28);
+      update_freqency_gadgets_QF(sdSysData, 29, Screen.Many_Radio_Channel_29);
     }
-    
-    if (sdSysData.RADIO_COORD.size() > 2)
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[2].FREQUENCY.CHANGED == true)
-      {
-        Screen.Radio_Channel_2.update_value(sdSysData.RADIO_COORD.CHANNELS[2]);
-      }
-    }
-    
-    if (sdSysData.RADIO_COORD.size() > 3)
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[3].FREQUENCY.CHANGED == true)
-      {
-        Screen.Radio_Channel_3.update_value(sdSysData.RADIO_COORD.CHANNELS[3]);
-      }
-    }
-    
-    if (sdSysData.RADIO_COORD.size() > 4)
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[4].FREQUENCY.CHANGED == true)
-      {
-        Screen.Radio_Channel_4.update_value(sdSysData.RADIO_COORD.CHANNELS[4]);
-      }
-    }
-    
-    if (sdSysData.RADIO_COORD.size() > 5)
-    {
-      if (sdSysData.RADIO_COORD.CHANNELS[5].FREQUENCY.CHANGED == true)
-      {
-        Screen.Radio_Channel_5.update_value(sdSysData.RADIO_COORD.CHANNELS[5]);
-      }
-    }
-    
+
   }
 
   bool load_reel(fstream &fsPlayer, string filename)
@@ -512,6 +519,7 @@ class Console
           ScrStat.Window_Console_On();
           ScrStat.Window_Player_Off();
           ScrStat.Window_Radio_Off();
+          ScrStat.Window_Many_Radio_Off();
           the_player.pause();
           sdSysData.RADIO_COORD.pause();
         }
@@ -523,6 +531,7 @@ class Console
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_On();
           ScrStat.Window_Radio_Off();
+          ScrStat.Window_Many_Radio_Off();
           the_player.play();
           sdSysData.RADIO_COORD.pause();
         }
@@ -534,10 +543,22 @@ class Console
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
           ScrStat.Window_Radio_On();
+          ScrStat.Window_Many_Radio_Off();
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
 
+        if(name.compare("TABMANYRADIO") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Radio Multi");
+          ScrStat.Window_Console_Off();
+          ScrStat.Window_Player_Off();
+          ScrStat.Window_Radio_Off();
+          ScrStat.Window_Many_Radio_On();
+          the_player.pause();
+          sdSysData.RADIO_COORD.play();
+        }
         // Update changes to buttons
         //Screen.update_tabs();
 
@@ -653,6 +674,11 @@ class Console
         // Lafayette Multi Script
         {
           keywatch.cmdInString(" lafm");
+        }
+        else if(name.compare("CBS") == 0)
+        // CB Scan Script
+        {
+          keywatch.cmdInString(" cbs");
         }
         else if(name.compare("RADIOOFF") == 0)
         // 

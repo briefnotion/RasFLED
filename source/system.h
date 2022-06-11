@@ -628,6 +628,7 @@ class ScreenStatus
   bool Window_Console = false;
   bool Window_Player = false;
   bool Window_Radio = false;
+  bool Window_Many_Radio = false;
   
   // Refresh is set to true only if the value 
   //  of displaying the window has changed. 
@@ -790,6 +791,24 @@ class ScreenStatus
     if (Window_Radio == true)
     {
       Window_Radio = false;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Many_Radio_On()
+  {
+    if (Window_Many_Radio == false)
+    {
+      Window_Many_Radio = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Many_Radio_Off()
+  {
+    if (Window_Many_Radio == true)
+    {
+      Window_Many_Radio = false;
       Needs_Refresh = true;
     }
   }

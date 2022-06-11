@@ -458,10 +458,18 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
     }
 
+    if (check_command(cons, " cbs", "CB Channel Scan"))
+    {
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_cbs.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
     if (check_command(cons, " radoff", "Turn Off Radio"))
     {
       // Call command.
-      //sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafs.sh");
       sdSysData.RADIO_COORD.command_send(-1);
 
       // Start Power Down Animation
