@@ -1,3 +1,6 @@
+V 0.91A_220611
+  - Made a few changes to how the Frequency Gadget is displayed.
+
 V 0.90A_220611
   - Created a new Radio screen capable of showing 30 frequencies.
 

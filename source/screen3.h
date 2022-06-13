@@ -207,7 +207,7 @@ class Screen3
   int XManyRadioSize = -1;
 
   int YManyGadChannelSize = 2;  // Frequency Gadges Size
-  int XManyGadChannelSize = 29;
+  int XManyGadChannelSize = 27;
   int YManyGadChannelPos = 0;  // Frequency Gadges Start Position
   int XManyGadChannelPos = 8;
 
@@ -487,6 +487,47 @@ class Screen3
 
     // Prep Buttons for Many Radio screen.
     tiRadio.create(1, "RADIOM", "(multi) RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+
+    // Radio Channel Frequency gadgets Properties for Multi Screen.
+    Radio_Channel_Properties tmp_radio_channel_props;
+
+    tmp_radio_channel_props.SHOW_FREQUENCY = false;
+    tmp_radio_channel_props.BAR_SIZE = 15;
+    tmp_radio_channel_props.SHOW_MIN_MAX = false;
+    tmp_radio_channel_props.SHOW_SIGNAL = true;
+    tmp_radio_channel_props.SIGNAL_LABEL = "  sig: ";
+    tmp_radio_channel_props.SHOW_NOISE = false;
+
+    Many_Radio_Channel_0.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_1.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_2.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_3.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_4.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_5.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_6.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_7.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_8.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_9.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_10.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_11.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_12.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_13.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_14.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_15.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_16.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_17.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_18.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_19.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_20.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_21.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_22.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_23.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_24.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_25.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_26.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_27.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_28.PROP = tmp_radio_channel_props;
+    Many_Radio_Channel_29.PROP = tmp_radio_channel_props;
 
     // Create Radio Channel Frequency gadgets.
     Many_Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_BLUE, COLOR_BLACK);
@@ -850,69 +891,69 @@ class Screen3
       // Display Channels
       int x=0;  int y=0;
       // First Colum of Radio Gadgets.
-      Many_Radio_Channel_0.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_0.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_1.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_1.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_2.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_2.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_3.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_3.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_4.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_4.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_5.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_5.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_6.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_6.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_7.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_7.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_8.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_8.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_9.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_9.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
 
       // Second Colum of Radio Gadgets.
       x++; y=0;
-      Many_Radio_Channel_10.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_10.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_11.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_11.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_12.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_12.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_13.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_13.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_14.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_14.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_15.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_15.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_16.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_16.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_17.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_17.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_18.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_18.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_19.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_19.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
 
       // Third Colum of Radio Gadgets.
       x++; y=0;
-      Many_Radio_Channel_20.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_20.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_21.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_21.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_22.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_22.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_23.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_23.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_24.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_24.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_25.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_25.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_26.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_26.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_27.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_27.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_28.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_28.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
       y++;
-      Many_Radio_Channel_29.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      Many_Radio_Channel_29.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
 
     }
 

@@ -900,8 +900,8 @@ class BAR
   string LABEL = "";        // Displayed left of the gadget.
   int LABEL_SIZE = 0;       // Character size of label.
 
-  int YPOS = 0;             // Y start position of gaudget in window.
-  int XPOS = 0;             // X start position of gaudget in window.
+  int YPOS = 0;             // Y start position of gadget in window.
+  int XPOS = 0;             // X start position of gadget in window.
 
   int SIZE = 0;             // Size of bar in gadget.
 
@@ -1370,6 +1370,18 @@ class Radio_Channel_Properties
 
   bool CLICKED = false;
   bool CHANGED = false;
+
+  bool SHOW_FREQUENCY = true;
+  string FREQUENCY_LABEL = "  FREQ:";
+  
+  int BAR_SIZE = 15;
+  bool SHOW_MIN_MAX = true;
+
+  bool SHOW_SIGNAL = true;
+  string SIGNAL_LABEL = "SIGNAL: ";
+
+  bool SHOW_NOISE = true;
+  string NOISE_LABEL = " NOISE: ";
 };
 
 class Radio_Channel
@@ -1433,21 +1445,21 @@ class Radio_Channel
 
     winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
 
-    BAR_NOISE_LEVEL.label("NOISE: ");
-    BAR_NOISE_LEVEL.label_size(11);
-    BAR_NOISE_LEVEL.size(15);
+    BAR_NOISE_LEVEL.label(PROP.NOISE_LABEL);
+    BAR_NOISE_LEVEL.label_size(PROP.NOISE_LABEL.size());
+    BAR_NOISE_LEVEL.size(PROP.BAR_SIZE);
     BAR_NOISE_LEVEL.max_value(100);
-    BAR_NOISE_LEVEL.print_min(true);
-    BAR_NOISE_LEVEL.print_max(true);
+    BAR_NOISE_LEVEL.print_min(PROP.SHOW_MIN_MAX);
+    BAR_NOISE_LEVEL.print_max(PROP.SHOW_MIN_MAX);
     BAR_NOISE_LEVEL.min_max(true);
     BAR_NOISE_LEVEL.min_max_time_span(60000);
 
-    BAR_SIGNAL_LEVEL.label("SIGNAL: ");
-    BAR_SIGNAL_LEVEL.label_size(11);
-    BAR_SIGNAL_LEVEL.size(15);
+    BAR_SIGNAL_LEVEL.label(PROP.SIGNAL_LABEL);
+    BAR_SIGNAL_LEVEL.label_size(PROP.SIGNAL_LABEL.size());
+    BAR_SIGNAL_LEVEL.size(PROP.BAR_SIZE);
     BAR_SIGNAL_LEVEL.max_value(100);
-    BAR_SIGNAL_LEVEL.print_min(true);
-    BAR_SIGNAL_LEVEL.print_max(true);
+    BAR_SIGNAL_LEVEL.print_min(PROP.SHOW_MIN_MAX);
+    BAR_SIGNAL_LEVEL.print_max(PROP.SHOW_MIN_MAX);
     BAR_SIGNAL_LEVEL.min_max(true);
     BAR_SIGNAL_LEVEL.min_max_time_span(60000);
 
@@ -1565,12 +1577,25 @@ class Radio_Channel
       }
 
       // Print Values
-      mvwprintw(winFrequency, 0, 0, "     FREQ:  %3.3f", ((float)PROP.VALUE.FREQUENCY.FREQUENCY / 1000000));
-      mvwprintw(winFrequency, 0, 21, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
-      //Draw Bars
+      if (PROP.SHOW_FREQUENCY == true)
+      {
+        mvwprintw(winFrequency, 0, 0, "%s %3.3f", PROP.FREQUENCY_LABEL.c_str(), ((float)PROP.VALUE.FREQUENCY.FREQUENCY / 1000000));
+        mvwprintw(winFrequency, 0, 17, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
+      }
+      else
+      {
+        mvwprintw(winFrequency, 0, 0, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
+      }
 
-      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), FRAME_TIME);
-      BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
+      //Draw Bars
+      if (PROP.SHOW_SIGNAL == true)
+      {
+        BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), FRAME_TIME);
+      }
+      if (PROP.SHOW_NOISE == true)
+      {
+        BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
+      }
 
       // Reset Properties Changed.
       PROP.CHANGED = false;
