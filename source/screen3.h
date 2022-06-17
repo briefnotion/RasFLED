@@ -1427,7 +1427,7 @@ class Screen3
 
     tbRadio_Log.draw(ScrStat.Needs_Refresh);
 
-    bzRadio.draw(ScrStat.Needs_Refresh);
+    bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Channel Gadgets
     Radio_Channel_0.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
@@ -1448,7 +1448,7 @@ class Screen3
 
     // Print Radio Information
 
-    bzRadio.draw(ScrStat.Needs_Refresh);
+    bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Channel Gadgets
     Many_Radio_Channel_0.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
@@ -1555,19 +1555,19 @@ class Screen3
     // Draw Tabs.
     if (ScrStat.Window_Tabs == true)
     {
-      bzTabs.draw(ScrStat.Needs_Refresh);
+      bzTabs.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     }
 
     // Draw buttons on buttons window.
     if (ScrStat.Window_Buttons == true)
     {
-      bzButtons.draw(ScrStat.Needs_Refresh);
+      bzButtons.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     }
 
     // Draw Color Picker window.
     if (ScrStat.Window_CPicker == true)
     {
-      bzCPicker.draw(ScrStat.Needs_Refresh);
+      bzCPicker.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     }
 
     // Draw Statuses

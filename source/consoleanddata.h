@@ -70,7 +70,8 @@ class Console
     {
       if (sdSysData.RADIO_COORD.CHANNELS[num].FREQUENCY.CHANGED == true)
       {
-        Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[num]);
+        Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[num], sdSysData.tmeCURRENT_FRAME_TIME);
+        sdSysData.RADIO_COORD.CHANNELS[num].FREQUENCY.CHANGED = false;
       }
     }
   }

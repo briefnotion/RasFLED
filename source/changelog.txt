@@ -1,3 +1,6 @@
+V 0.92A_220617
+  - Corrected some Radio Gadget display situations.
+
 V 0.91A_220611
   - Made a few changes to how the Frequency Gadget is displayed.
 

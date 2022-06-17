@@ -43,7 +43,7 @@ class RADIO_CHANNEL_COORDINATOR
     //return 2;
   }
 
-  void process(API_SQUELCH_DESTINATION Received_Squelch)
+  void process(API_SQUELCH_DESTINATION &Received_Squelch)
   // Stores fresh frequency squelch received into CHANNELS deque.
   //  If freqency data already exist, replaces.
   //  If freqency data doesn't exist, add to end of deque.
@@ -80,8 +80,6 @@ class RADIO_CHANNEL_COORDINATOR
         if (pos_found >= 0) // If found, change the data.
         {
           CHANNELS[pos_found].FREQUENCY = Received_Squelch.FREQUENCY;
-          CHANNELS[pos_found].FREQUENCY.CHANGED = true;
-
         }
         else if (Received_Squelch.FREQUENCY.FREQUENCY != 0)  // If not found, add it. 
         // Only add if not empty frequency.

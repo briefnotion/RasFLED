@@ -56,7 +56,6 @@ class Title_Bar
   WINDOW * winTitle;
 
   //Debug
-  bool CounterOn = false;
   int Counter = 0;
 
   public:
@@ -269,8 +268,7 @@ class Text_Box
 
   WINDOW * winText_Box;
 
-  //Debug
-  bool CounterOn = false;
+  // DEBUG_COUNTER
   int Counter = 0;
 
   // Types:
@@ -407,8 +405,10 @@ class Button
 
   WINDOW * winButton;
 
-  //Debug
-  bool CounterOn = false;
+  TIMED_PING BUTTON_PRESSED;
+  int VISIBLE_UPATE_TIME = 500;
+
+  //Debug DEBUG_COUNTER
   int Counter = 0;
 
   // Types:
@@ -498,10 +498,15 @@ class Button
     PROP.CHANGED = true;
   }
 
-  void draw(bool Refresh)
+  void draw(bool Refresh, unsigned long tmeFrame_Time)
   // Draw the button on the screen if the value has changed or if  
   //  the Refresh parameter is true.
   {
+    if (BUTTON_PRESSED.blip_moved(tmeFrame_Time) == true)
+    {
+      Refresh = true;
+    }
+
     if (PROP.CHANGED == true || Refresh == true)
     {
       string top = "";
@@ -558,8 +563,8 @@ class Button
         mid = " " + mid.append(PROP.SIZEX -2, ' ') + " ";
         bot = " " + bot.append(PROP.SIZEX -2, '_') + " ";
 
-        if (PROP.VALUE == 0)
-        // Just reverse the colors if Button is on
+        if (PROP.VALUE == 0 && BUTTON_PRESSED.ping_down(tmeFrame_Time) == false)
+        // Dont reverse the colors if Button off or no ping
         {
           wattroff(winButton, A_REVERSE);
         }
@@ -619,34 +624,31 @@ class Button
         x++;
       }
 
-      //Debug -- displays dedraw count and other variables
-      if (CounterOn == true)
+      //Debug -- displays dedraw count and other variables.
+      if (true == DEBUG_COUNTER)
       {
-
         Counter++;
-        mvwprintw(winButton, 0, 0, to_string(Counter).c_str());
-        mvwprintw(winButton, 1, 0, to_string(PROP.SIZEY).c_str());
-        mvwprintw(winButton, 2, 0, to_string(PROP.SIZEX).c_str());
+        mvwprintw(winButton, 0, 0, "%d ", Counter);
+        //mvwprintw(winButton, 1, 0, "%d ", BUTTON_PRESSED.ping_down(tmeFrame_Time));
       }
 
       wattroff(winButton, A_REVERSE);
+
+      // Draw button if type not -1
       if (PROP.TYPE != -1)
       {
         wrefresh(winButton);
       }
 
-      // If the button is simple click, reset its value to 0 and
-      //  leave the changed property on so that it can be redrawn off
-      //  at next pass.
+      // If the button is simple click, reset its value
       if (PROP.TYPE == 0 && PROP.VALUE == 1)
       {
         PROP.VALUE = 0;
-        PROP.CHANGED == true;
+        BUTTON_PRESSED.ping_up(tmeFrame_Time, VISIBLE_UPATE_TIME);
       }
-      else
-      {
-        PROP.CHANGED = false;
-      }
+
+      PROP.CHANGED = false;
+
     }
   }
 };
@@ -725,13 +727,13 @@ class Button_Zone_Manager
     BUTTONS[Id].move_resize(posY, posX, sizeY, sizeX);
   }
 
-  void draw(bool Refresh)
+  void draw(bool Refresh, unsigned long tmeFrame_Time)
   {
     if (BUTTONS.size() >0)
     {
       for (int pos = 0; pos < BUTTONS.size(); pos++)
       {
-        BUTTONS[pos].draw(Refresh);
+        BUTTONS[pos].draw(Refresh, tmeFrame_Time);
       }
     }
   }
@@ -1404,13 +1406,12 @@ class Radio_Channel
   TIMED_PING LINGER_DIRTY_SIGNAL;
   TIMED_PING VISIBLE_UPDATE_SIGNAL;
   int LINGER_TIME = 7000;
-  int VISIBLE_UPATE_TIME = 200;
+  int VISIBLE_UPATE_TIME = 500;
 
   // Was gadget redrawn during the previous draw cycle.
   bool WAS_REDRAWN = false;
 
   //Debug
-  bool CounterOn = false;
   int Counter = 0;
 
   public:
@@ -1488,7 +1489,7 @@ class Radio_Channel
     return PROP.CHANGED;
   }
 
-  void update_value(API_SQUELCH_DESTINATION &New_Value)
+  void update_value(API_SQUELCH_DESTINATION &New_Value, unsigned long tmeFrame_Time)
   {
     PROP.VALUE.FREQUENCY.FREQUENCY = New_Value.FREQUENCY.FREQUENCY;
     PROP.VALUE.FREQUENCY.LABEL = New_Value.FREQUENCY.LABEL;
@@ -1496,6 +1497,8 @@ class Radio_Channel
     PROP.VALUE.FREQUENCY.SIGNAL_LEVEL = New_Value.FREQUENCY.SIGNAL_LEVEL;
     PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER = New_Value.FREQUENCY.SIGNAL_OUTSIDE_FILTER;
     PROP.VALUE.FREQUENCY.IS_OPEN = New_Value.FREQUENCY.IS_OPEN;
+
+    VISIBLE_UPDATE_SIGNAL.ping_up(FRAME_TIME, VISIBLE_UPATE_TIME);
 
     PROP.CHANGED = true;
     New_Value.FREQUENCY.CHANGED = false;
@@ -1520,13 +1523,6 @@ class Radio_Channel
 
     if ((PROP.CHANGED == true || Refresh == true) && (PROP.TYPE >=0))
     {
-
-      //
-      if (PROP.CHANGED == true)
-      {
-        VISIBLE_UPDATE_SIGNAL.ping_up(FRAME_TIME, VISIBLE_UPATE_TIME);
-      }
-
       // Set colors.
 
       // Channel Open
@@ -1595,6 +1591,14 @@ class Radio_Channel
       if (PROP.SHOW_NOISE == true)
       {
         BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
+      }
+
+      //Debug -- displays dedraw count and other variables.
+      if (true == DEBUG_COUNTER)
+      {
+        Counter++;
+        mvwprintw(winFrequency, 0, 0, "%d ", Counter);
+        mvwprintw(winFrequency, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
       }
 
       // Reset Properties Changed.
