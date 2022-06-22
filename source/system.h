@@ -171,12 +171,12 @@ class system_data
 
   int get_API_info(boost::interprocess::mapped_region &region_scan)
   {
+    API_COMMAND command_from_radio;
     int return_int = -1;
-
+    
     //if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
     {
-      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, RADIO_COORD.command_to_send());
-      RADIO_COORD.command_to_send_reset();
+      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, RADIO_COORD.COMMAND_TO_RADIO, command_from_radio);
       RADIO_COORD.process(RECEIVED_SQUELCH);
     }
 

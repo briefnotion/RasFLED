@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.12A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.13A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -42,6 +42,16 @@ class API_MANAGER
   int BINDS = 0;
 };
 
+class API_COMMAND
+{
+  public:
+
+  int COMMAND = 0;
+  int PARAMETER = 0;
+
+  bool CHANGED = false;
+};
+
 class API_DEVICE
 {
   public:
@@ -54,10 +64,6 @@ class API_DEVICE
 
   // Gain
   float GAIN = 0;
-
-  // Command to send to and from
-  int COMMAND_TO_RADIO = 0;     // -1 shutdown
-  int COMMAND_FROM_RADIO = 0;
 
   // Changed
   bool CHANGED = false;
@@ -134,6 +140,11 @@ class API_SQUELCH_SOURCE
   // API Manager
   API_MANAGER MANAGER;
 
+  // Command to send to and from
+  API_COMMAND COMMAND_TO_RADIO;       // -1 shutdown
+
+  API_COMMAND COMMAND_FROM_RADIO;     // 1 - Skip Frequency
+                                      // 2 - Hold Frequency
   // API Device
   API_DEVICE  DEVICE;
 

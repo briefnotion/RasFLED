@@ -25,9 +25,9 @@ class RADIO_CHANNEL_COORDINATOR
   bool PLAY = false; // Radio Coordinator active when set to true. Pause when 
                     //  set to false
 
-  int COMMAND = 0;
-
   public:
+  
+  API_COMMAND COMMAND_TO_RADIO;
 
   // Last know device status.
   API_DEVICE DEVICE_STATUS;
@@ -107,19 +107,11 @@ class RADIO_CHANNEL_COORDINATOR
     return PLAY;
   }
 
-  void command_send(int Command)
+  void command_send(int Command, int Parameter)
   {
-    COMMAND = Command;
-  }
-
-  int command_to_send()
-  {
-    return COMMAND;
-  }
-
-  void command_to_send_reset()
-  {
-    COMMAND = 0;
+    COMMAND_TO_RADIO.COMMAND = Command;
+    COMMAND_TO_RADIO.PARAMETER = Parameter;
+    COMMAND_TO_RADIO.CHANGED = true;
   }
 
 };

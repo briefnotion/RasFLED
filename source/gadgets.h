@@ -1602,6 +1602,8 @@ class Radio_Channel
       }
 
       // Reset Properties Changed.
+      PROP.VALUE.FREQUENCY.IS_OPEN = false;
+      PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER = false;
       PROP.CHANGED = false;
       WAS_REDRAWN = true;
 

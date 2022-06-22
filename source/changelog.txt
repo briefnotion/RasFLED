@@ -1,3 +1,12 @@
+V 0.93A_220622
+  - Made changes to API to put tighter control over the Command Send and Command 
+      Receive channels.
+  - Radio frequencies can now be set to hold, or skip with " rh######" or " rs######"
+      command.
+  - Radio frequency hold or skips can be cleared with the " rclear" command.
+  - The corrosponding versions are:
+      RasFLED (V 0.93A_220622) <==> rtl_airband (V 0.11A_220622)
+
 V 0.92A_220617
   - Corrected some Radio Gadget display situations.
 

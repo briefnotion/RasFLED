@@ -313,11 +313,34 @@ bool check_command(Console &cons, string command, string description)
 
 }
 
+bool check_command_with_num_param(Console &cons, string command, string description, int num_start, int num_len, int &Parameter)
+{
+  bool boo_return = false;
+  if (cons.keywatch.Command.COMMANDLINE.length() == command.length())
+  {
+    if(cons.keywatch.Command.COMMANDLINE.substr(0,num_start) == command.substr(0,num_start))
+    {
+      try
+      {
+        Parameter = stoi(cons.keywatch.Command.COMMANDLINE.substr(num_start, num_len));
+        boo_return = check_command(cons, cons.keywatch.Command.COMMANDLINE, description);
+      }
+      catch(const std::exception& e)
+      {
+        cons.keywatch.cmdClear();
+      }
+    }
+  }
+
+  return boo_return;  
+}
+
 
 // Process and call routines as entered on the command line.
 void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
   COMMANDS command;
+  int parameter = 0;
           
   if(cons.keywatch.cmdPressed() == true)
   {
@@ -449,6 +472,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
     }
 
+    // Radio Call Airband Lafayette Scan Script Command
     if (check_command(cons, " lafs", "Airband Lafayette Scan"))
     {
       // Call command.
@@ -458,6 +482,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
     }
 
+    // Radio Call CB Channel Scan Script Command
     if (check_command(cons, " cbs", "CB Channel Scan"))
     {
       // Call command.
@@ -467,10 +492,40 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
     }
 
+    // Radio Shutdown Channel Command
     if (check_command(cons, " radoff", "Turn Off Radio"))
     {
       // Call command.
-      sdSysData.RADIO_COORD.command_send(-1);
+      sdSysData.RADIO_COORD.command_send(-1, 0);
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
+    // Radio Shutdown Channel Command
+    if (check_command(cons, " rclear", "Radio Clear Holds and Skips"))
+    {
+      // Call command.
+      sdSysData.RADIO_COORD.command_send(3, 0);
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
+    // Radio Skip Channel Command
+    if (check_command_with_num_param(cons, " rs######", "Radio Skip Channel", 3, 6, parameter))
+    {
+      // Call command.
+      sdSysData.RADIO_COORD.command_send(1, parameter);
+      cons.printi("Skip Channel: " + to_string(parameter)); // eg  rs118500
+    }
+
+    // Radio Hold Channel Command
+    if (check_command_with_num_param(cons, " rh######", "Radio Hold Channel", 3, 6, parameter))
+    {
+      // Call command.
+      sdSysData.RADIO_COORD.command_send(2, parameter);
+      cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
 
       // Start Power Down Animation
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));

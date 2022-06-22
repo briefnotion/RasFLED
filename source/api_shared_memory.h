@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.12A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.13A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -98,13 +98,11 @@ class API_CHANNEL_MEM
   }
 
   // rtl_airband Routines
-  int rtl_airband_send_squelch(mapped_region &region_scan, API_SQUELCH_SOURCE &API_Squelch, int Command)
+  void rtl_airband_send_squelch(mapped_region &region_scan, API_SQUELCH_SOURCE &API_Squelch, API_COMMAND &Command_Send, API_COMMAND &Command_Recv)
   // Send freq info.
   // Will not send if PAUSE == true.
   // Will not send if Destination has not ACKed ready.
   {
-    int deminishing = 0;
-
     if (PAUSE == false)
     {
       // Get the address of the data
@@ -113,7 +111,6 @@ class API_CHANNEL_MEM
       if ((*SQUELCH).HANDOFF == 0 || (*SQUELCH).HANDOFF == -1)
       // Prevent data being read if the packet hasn't been completely written.
       {
-
         (*SQUELCH).FREQUENCY.FREQUENCY = API_Squelch.FREQUENCY.FREQUENCY;
         (*SQUELCH).FREQUENCY.LABEL = API_Squelch.FREQUENCY.LABEL;
         (*SQUELCH).FREQUENCY.NOISE_LEVEL = API_Squelch.FREQUENCY.SIGNAL_LEVEL;
@@ -121,18 +118,31 @@ class API_CHANNEL_MEM
         (*SQUELCH).FREQUENCY.SIGNAL_OUTSIDE_FILTER = API_Squelch.FREQUENCY.SIGNAL_OUTSIDE_FILTER;
         (*SQUELCH).FREQUENCY.IS_OPEN = API_Squelch.FREQUENCY.IS_OPEN;
 
-        deminishing = (*SQUELCH).DEVICE.COMMAND_TO_RADIO;
-        (*SQUELCH).DEVICE.COMMAND_TO_RADIO = 0;
-
-        (*SQUELCH).DEVICE.COMMAND_FROM_RADIO = Command;
-
         (*SQUELCH).FREQUENCY.CHANGED = true;
+
+        // Send out command.
+        if (Command_Send.CHANGED == true)
+        {
+          (*SQUELCH).DEVICE.COMMAND_FROM_RADIO.COMMAND = Command_Send.COMMAND;
+          (*SQUELCH).DEVICE.COMMAND_FROM_RADIO.PARAMETER = Command_Send.PARAMETER;
+
+          (*SQUELCH).DEVICE.COMMAND_FROM_RADIO.CHANGED = true;
+          Command_Send.CHANGED = false
+        }
+
+        // Receive Command
+        if ((*SQUELCH).DEVICE.COMMAND_TO_RADIO.CHANGED == true)
+        {
+        Command_Recv.COMMAND = (*SQUELCH).DEVICE.COMMAND_TO_RADIO.COMMAND;
+        Command_Recv.PARAMETER = (*SQUELCH).DEVICE.COMMAND_TO_RADIO.PARAMETER;
+
+        Command_Recv.CHANGED = true;
+        (*SQUELCH).DEVICE.COMMAND_TO_RADIO.CHANGED = false;
+        }
 
         (*SQUELCH).HANDOFF = 1;
       }
     }
-
-    return deminishing;
 
   }
 
@@ -164,7 +174,7 @@ class API_CHANNEL_MEM
 
   
   // Ras_FLED Routines
-  int rasfled_receive(mapped_region &region_scan, API_SQUELCH_DESTINATION &API_Squelch, int Send_Command)
+  int rasfled_receive(mapped_region &region_scan, API_SQUELCH_DESTINATION &API_Squelch, API_COMMAND &Command_Send, API_COMMAND &Command_Recv)
   // Receive freq info.
   // Will not send if PAUSE == true.
   // Will not send if Source has not ACKed ready.
@@ -189,7 +199,6 @@ class API_CHANNEL_MEM
           API_Squelch.DEVICE.GAIN = (*SQUELCH).DEVICE.GAIN;
 
           API_Squelch.DEVICE.CHANGED = true;
-
           (*SQUELCH).DEVICE.CHANGED = false;
         }
 
@@ -210,8 +219,25 @@ class API_CHANNEL_MEM
           (*SQUELCH).FREQUENCY.CHANGED = false;
         }
 
-        // Set Send Command
-        (*SQUELCH).DEVICE.COMMAND_TO_RADIO = Send_Command;
+        // Receive Command
+        if ((*SQUELCH).COMMAND_FROM_RADIO.CHANGED == true)
+        {
+          Command_Recv.COMMAND = (*SQUELCH).COMMAND_FROM_RADIO.COMMAND;
+          Command_Recv.PARAMETER = (*SQUELCH).COMMAND_FROM_RADIO.PARAMETER;
+          
+          Command_Recv.CHANGED = true;
+          (*SQUELCH).COMMAND_FROM_RADIO.CHANGED = false;
+        }
+
+        // Send Command
+        if (Command_Send.CHANGED == true)
+        {
+          (*SQUELCH).COMMAND_TO_RADIO.COMMAND = Command_Send.COMMAND;
+          (*SQUELCH).COMMAND_TO_RADIO.PARAMETER = Command_Send.PARAMETER;
+
+          (*SQUELCH).COMMAND_TO_RADIO.CHANGED = true;
+          Command_Send.CHANGED = false;
+        }
 
         // Return Handoff
         (*SQUELCH).HANDOFF = -1;
