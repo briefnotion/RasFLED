@@ -1,3 +1,7 @@
+V 0.94A_220626
+  - Channels in the radio screen can now be Held, Skipped, or Cleared by clicking
+      on the Radio Frequency Gadget.
+
 V 0.93A_220622
   - Made changes to API to put tighter control over the Command Send and Command 
       Receive channels.

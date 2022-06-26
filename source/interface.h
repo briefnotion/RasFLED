@@ -526,9 +526,14 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // Call command.
       sdSysData.RADIO_COORD.command_send(2, parameter);
       cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
+    }
 
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    // Radio Clear Channel Command
+    if (check_command_with_num_param(cons, " rc######", "Radio Hold Channel", 3, 6, parameter))
+    {
+      // Call command.
+      sdSysData.RADIO_COORD.command_send(4, parameter);
+      cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
     }
 
     // -------------------------------------------------------------------------------------

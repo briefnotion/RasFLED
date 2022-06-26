@@ -81,46 +81,20 @@ class Console
   {
     if (ScrStat.Window_Radio == true)
     {
-      update_freqency_gadgets_QF(sdSysData, 0, Screen.Radio_Channel_0);
-      update_freqency_gadgets_QF(sdSysData, 1, Screen.Radio_Channel_1);
-      update_freqency_gadgets_QF(sdSysData, 2, Screen.Radio_Channel_2);
-      update_freqency_gadgets_QF(sdSysData, 3, Screen.Radio_Channel_3);
-      update_freqency_gadgets_QF(sdSysData, 4, Screen.Radio_Channel_4);
-      update_freqency_gadgets_QF(sdSysData, 5, Screen.Radio_Channel_5);
+      // Update Radio_Channels with new info
+      for(int pos = 0; pos < Screen.Radio_Channel_Count; pos++)
+      {
+        update_freqency_gadgets_QF(sdSysData, pos, Screen.Radio_Channels[pos]);
+      }
     }
 
     if (ScrStat.Window_Many_Radio == true)
     {
-      update_freqency_gadgets_QF(sdSysData, 0, Screen.Many_Radio_Channel_0);
-      update_freqency_gadgets_QF(sdSysData, 1, Screen.Many_Radio_Channel_1);
-      update_freqency_gadgets_QF(sdSysData, 2, Screen.Many_Radio_Channel_2);
-      update_freqency_gadgets_QF(sdSysData, 3, Screen.Many_Radio_Channel_3);
-      update_freqency_gadgets_QF(sdSysData, 4, Screen.Many_Radio_Channel_4);
-      update_freqency_gadgets_QF(sdSysData, 5, Screen.Many_Radio_Channel_5);
-      update_freqency_gadgets_QF(sdSysData, 6, Screen.Many_Radio_Channel_6);
-      update_freqency_gadgets_QF(sdSysData, 7, Screen.Many_Radio_Channel_7);
-      update_freqency_gadgets_QF(sdSysData, 8, Screen.Many_Radio_Channel_8);
-      update_freqency_gadgets_QF(sdSysData, 9, Screen.Many_Radio_Channel_9);
-      update_freqency_gadgets_QF(sdSysData, 10, Screen.Many_Radio_Channel_10);
-      update_freqency_gadgets_QF(sdSysData, 11, Screen.Many_Radio_Channel_11);
-      update_freqency_gadgets_QF(sdSysData, 12, Screen.Many_Radio_Channel_12);
-      update_freqency_gadgets_QF(sdSysData, 13, Screen.Many_Radio_Channel_13);
-      update_freqency_gadgets_QF(sdSysData, 14, Screen.Many_Radio_Channel_14);
-      update_freqency_gadgets_QF(sdSysData, 15, Screen.Many_Radio_Channel_15);
-      update_freqency_gadgets_QF(sdSysData, 16, Screen.Many_Radio_Channel_16);
-      update_freqency_gadgets_QF(sdSysData, 17, Screen.Many_Radio_Channel_17);
-      update_freqency_gadgets_QF(sdSysData, 18, Screen.Many_Radio_Channel_18);
-      update_freqency_gadgets_QF(sdSysData, 19, Screen.Many_Radio_Channel_19);
-      update_freqency_gadgets_QF(sdSysData, 20, Screen.Many_Radio_Channel_20);
-      update_freqency_gadgets_QF(sdSysData, 21, Screen.Many_Radio_Channel_21);
-      update_freqency_gadgets_QF(sdSysData, 22, Screen.Many_Radio_Channel_22);
-      update_freqency_gadgets_QF(sdSysData, 23, Screen.Many_Radio_Channel_23);
-      update_freqency_gadgets_QF(sdSysData, 24, Screen.Many_Radio_Channel_24);
-      update_freqency_gadgets_QF(sdSysData, 25, Screen.Many_Radio_Channel_25);
-      update_freqency_gadgets_QF(sdSysData, 26, Screen.Many_Radio_Channel_26);
-      update_freqency_gadgets_QF(sdSysData, 27, Screen.Many_Radio_Channel_27);
-      update_freqency_gadgets_QF(sdSysData, 28, Screen.Many_Radio_Channel_28);
-      update_freqency_gadgets_QF(sdSysData, 29, Screen.Many_Radio_Channel_29);
+      // Update Many_Radio_Channels with new info
+      for(int pos = 0; pos < Screen.Many_Radio_Channel_Count; pos++)
+      {
+        update_freqency_gadgets_QF(sdSysData, pos, Screen.Many_Radio_Channels[pos]);
+      }
     }
 
   }
@@ -651,47 +625,103 @@ class Console
         }
       }
 
-      if (Screen.bzRadio.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
-      // Check for any clicked buttons or if it was just empty space.
-      //  If anything was clicked, the list in the bzRadio will be updated.
+      // -----------------------------------
+      if(ScrStat.Window_Radio == true || ScrStat.Window_Many_Radio == true)
       {
-        string name = "empty";
-        int value = 0;
-        name = Screen.bzRadio.get_clicked_name();
-        value = Screen.bzRadio.get_clicked_value(name);
-      
-        //Color Picker Window
-        if(name.compare("AIRSTOP") == 0)
-        // Turn Off Radio via kill command
+        if (Screen.bzRadio.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+        // Check for any clicked buttons or if it was just empty space.
+        //  If anything was clicked, the list in the bzRadio will be updated.
         {
-          keywatch.cmdInString(" airstop");
-        }
-        else if(name.compare("LAFS") == 0)
-        // Lafayette Scan Script
-        {
-          keywatch.cmdInString(" lafs");
-        }
-        else if(name.compare("LAFM") == 0)
-        // Lafayette Multi Script
-        {
-          keywatch.cmdInString(" lafm");
-        }
-        else if(name.compare("CBS") == 0)
-        // CB Scan Script
-        {
-          keywatch.cmdInString(" cbs");
-        }
-        else if(name.compare("RADIOOFF") == 0)
-        // 
-        {
-          keywatch.cmdInString(" radoff");
-        }
-        else if(name.compare("***") == 0)
-        // 
-        {
-          keywatch.cmdInString(" --- ");
+          string name = "empty";
+          int value = 0;
+          name = Screen.bzRadio.get_clicked_name();
+          value = Screen.bzRadio.get_clicked_value(name);
+        
+          //Color Picker Window
+          if(name.compare("AIRSTOP") == 0)
+          // Turn Off Radio via kill command
+          {
+            keywatch.cmdInString(" airstop");
+          }
+          else if(name.compare("LAFS") == 0)
+          // Lafayette Scan Script
+          {
+            keywatch.cmdInString(" lafs");
+          }
+          else if(name.compare("LAFM") == 0)
+          // Lafayette Multi Script
+          {
+            keywatch.cmdInString(" lafm");
+          }
+          else if(name.compare("CBS") == 0)
+          // CB Scan Script
+          {
+            keywatch.cmdInString(" cbs");
+          }
+          else if(name.compare("RADIOOFF") == 0)
+          // 
+          {
+            keywatch.cmdInString(" radoff");
+          }
+          else if(name.compare("***") == 0)
+          // 
+          {
+            keywatch.cmdInString(" --- ");
+          }
         }
       }
+
+      // -----------------------------------
+      // Check Gadgets for Clicked
+      if(ScrStat.Window_Radio == true)
+      // Check the Radio_Frequencies Radio_Channel Gadgets
+      {
+        string name = "empty";
+        for(int pos = 0; pos < Screen.Radio_Channel_Count; pos++)
+        {
+          if(Screen.Radio_Channels[pos].check_click(mouse.x_clicked(),mouse.y_clicked(), name) == true)
+          {
+            if(name == "HOLD")
+            {
+              keywatch.cmdInString(" rh" + (to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))); //Gotta have the .0
+            }
+            else if(name == "SKIP")
+            {
+              keywatch.cmdInString(" rs" + (to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+            }
+            else if(name == "CLEAR")
+            {
+              keywatch.cmdInString(" rc" + (to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+            }
+          }
+        }
+      }
+
+      if(ScrStat.Window_Many_Radio == true)
+      // Check the Radio_Frequencies Radio_Channel Gadgets
+      {
+        string name = "empty";
+        for(int pos = 0; pos < Screen.Many_Radio_Channel_Count; pos++)
+        {
+          if(Screen.Many_Radio_Channels[pos].check_click(mouse.x_clicked(),mouse.y_clicked(), name) == true)
+          {
+            if(name == "HOLD")
+            {
+              keywatch.cmdInString(" rh" + (to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+            }
+            else if(name == "SKIP")
+            {
+              keywatch.cmdInString(" rs" + (to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+            }
+            else if(name == "CLEAR")
+            {
+              keywatch.cmdInString(" rc" + (to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+            }
+          }
+        }
+      }
+      // Check the Radio_Frequencies Many_Radio_Channel Gadgets
+
     }
   }  
 

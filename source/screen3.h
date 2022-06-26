@@ -182,15 +182,12 @@ class Screen3
   Title_Bar tiRadio;
 
   public:
+  // Radio Frequency Gadgets for Radio Screen
   Button_Zone_Manager bzRadio;
   Text_Box            tbRadio_Log;
 
-  Radio_Channel       Radio_Channel_0;
-  Radio_Channel       Radio_Channel_1;
-  Radio_Channel       Radio_Channel_2;
-  Radio_Channel       Radio_Channel_3;
-  Radio_Channel       Radio_Channel_4;
-  Radio_Channel       Radio_Channel_5;
+  int Radio_Channel_Count = 6;
+  deque<Radio_Channel> Radio_Channels;
 
   // Radio Status
   int YRadioStatusPos = -1;
@@ -215,39 +212,9 @@ class Screen3
   Title_Bar tiManyRadio;
 
   public:
-  Button_Zone_Manager bzManyRadio;
-  Text_Box            tbManyRadio_Log;
-
-  Radio_Channel       Many_Radio_Channel_0;
-  Radio_Channel       Many_Radio_Channel_1;
-  Radio_Channel       Many_Radio_Channel_2;
-  Radio_Channel       Many_Radio_Channel_3;
-  Radio_Channel       Many_Radio_Channel_4;
-  Radio_Channel       Many_Radio_Channel_5;
-  Radio_Channel       Many_Radio_Channel_6;
-  Radio_Channel       Many_Radio_Channel_7;
-  Radio_Channel       Many_Radio_Channel_8;
-  Radio_Channel       Many_Radio_Channel_9;
-  Radio_Channel       Many_Radio_Channel_10;
-  Radio_Channel       Many_Radio_Channel_11;
-  Radio_Channel       Many_Radio_Channel_12;
-  Radio_Channel       Many_Radio_Channel_13;
-  Radio_Channel       Many_Radio_Channel_14;
-  Radio_Channel       Many_Radio_Channel_15;
-  Radio_Channel       Many_Radio_Channel_16;
-  Radio_Channel       Many_Radio_Channel_17;
-  Radio_Channel       Many_Radio_Channel_18;
-  Radio_Channel       Many_Radio_Channel_19;
-  Radio_Channel       Many_Radio_Channel_20;
-  Radio_Channel       Many_Radio_Channel_21;
-  Radio_Channel       Many_Radio_Channel_22;
-  Radio_Channel       Many_Radio_Channel_23;
-  Radio_Channel       Many_Radio_Channel_24;
-  Radio_Channel       Many_Radio_Channel_25;
-  Radio_Channel       Many_Radio_Channel_26;
-  Radio_Channel       Many_Radio_Channel_27;
-  Radio_Channel       Many_Radio_Channel_28;
-  Radio_Channel       Many_Radio_Channel_29;
+  // Radio Frequency Gadgets for Many_Radio Screen
+  int Many_Radio_Channel_Count = 30;
+  deque<Radio_Channel> Many_Radio_Channels;
 
   private:
   
@@ -476,90 +443,39 @@ class Screen3
     bzRadio.create_button(3, "AIRSTOP", "%STOP", 0, -1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzRadio.create_button(4, "E2", "", 0, -1, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
-    // Create Radio Channel Frequency gadgets.
-    Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_BLUE, COLOR_BLACK);
-    Radio_Channel_1.create(1, "FREQ_1", "Frequency 1", -1, COLOR_BLUE, COLOR_BLACK);
-    Radio_Channel_2.create(2, "FREQ_2", "Frequency 2", -1, COLOR_BLUE, COLOR_BLACK);
-    Radio_Channel_3.create(3, "FREQ_3", "Frequency 3", -1, COLOR_BLUE, COLOR_BLACK);
-    Radio_Channel_4.create(4, "FREQ_4", "Frequency 4", -1, COLOR_BLUE, COLOR_BLACK);
-    Radio_Channel_5.create(5, "FREQ_5", "Frequency 5", -1, COLOR_BLUE, COLOR_BLACK);
+    // Radio Channel Frequency gadgets Properties for Multi Screen.
+    Radio_Channel tmp_radio_channel;  // Leaving defaults
+    //Radio_Channel_Properties tmp_radio_channel_props;  // Leaving defaults
 
+    // Create Radio Channel Frequency gadgets.
+    for (int x = 0; x < Radio_Channel_Count; x++)
+    {
+      Radio_Channels.push_back(tmp_radio_channel);
+      Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
+    }
 
     // Prep Buttons for Many Radio screen.
     tiRadio.create(1, "RADIOM", "(multi) RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     // Radio Channel Frequency gadgets Properties for Multi Screen.
-    Radio_Channel_Properties tmp_radio_channel_props;
+    Radio_Channel tmp_many_radio_channel;
+    Radio_Channel_Properties tmp_many_radio_channel_props;
 
-    tmp_radio_channel_props.SHOW_FREQUENCY = false;
-    tmp_radio_channel_props.BAR_SIZE = 15;
-    tmp_radio_channel_props.SHOW_MIN_MAX = false;
-    tmp_radio_channel_props.SHOW_SIGNAL = true;
-    tmp_radio_channel_props.SIGNAL_LABEL = "  sig: ";
-    tmp_radio_channel_props.SHOW_NOISE = false;
+    tmp_many_radio_channel_props.SHOW_FREQUENCY = false;
+    tmp_many_radio_channel_props.BAR_SIZE = 15;
+    tmp_many_radio_channel_props.SHOW_MIN_MAX = false;
+    tmp_many_radio_channel_props.SHOW_SIGNAL = true;
+    tmp_many_radio_channel_props.SIGNAL_LABEL = "  sig: ";
+    tmp_many_radio_channel_props.SHOW_NOISE = false;
 
-    Many_Radio_Channel_0.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_1.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_2.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_3.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_4.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_5.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_6.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_7.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_8.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_9.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_10.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_11.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_12.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_13.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_14.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_15.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_16.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_17.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_18.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_19.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_20.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_21.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_22.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_23.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_24.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_25.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_26.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_27.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_28.PROP = tmp_radio_channel_props;
-    Many_Radio_Channel_29.PROP = tmp_radio_channel_props;
+    tmp_many_radio_channel.PROP = tmp_many_radio_channel_props;
 
     // Create Radio Channel Frequency gadgets.
-    Many_Radio_Channel_0.create(0, "FREQ_0", "Frequency 0", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_1.create(1, "FREQ_1", "Frequency 1", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_2.create(2, "FREQ_2", "Frequency 2", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_3.create(3, "FREQ_3", "Frequency 3", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_4.create(4, "FREQ_4", "Frequency 4", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_5.create(5, "FREQ_5", "Frequency 5", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_6.create(6, "FREQ_6", "Frequency 6", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_7.create(7, "FREQ_7", "Frequency 7", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_8.create(8, "FREQ_8", "Frequency 8", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_9.create(9, "FREQ_9", "Frequency 9", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_10.create(10, "FREQ_10", "Frequency 10", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_11.create(11, "FREQ_11", "Frequency 11", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_12.create(12, "FREQ_12", "Frequency 12", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_13.create(13, "FREQ_13", "Frequency 13", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_14.create(14, "FREQ_14", "Frequency 14", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_15.create(15, "FREQ_15", "Frequency 15", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_16.create(16, "FREQ_16", "Frequency 16", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_17.create(17, "FREQ_17", "Frequency 17", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_18.create(18, "FREQ_18", "Frequency 18", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_19.create(19, "FREQ_19", "Frequency 19", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_20.create(20, "FREQ_20", "Frequency 20", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_21.create(21, "FREQ_21", "Frequency 21", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_22.create(22, "FREQ_22", "Frequency 22", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_23.create(23, "FREQ_23", "Frequency 23", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_24.create(24, "FREQ_24", "Frequency 24", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_25.create(25, "FREQ_25", "Frequency 25", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_26.create(26, "FREQ_26", "Frequency 26", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_27.create(27, "FREQ_27", "Frequency 27", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_28.create(28, "FREQ_28", "Frequency 28", -1, COLOR_BLUE, COLOR_BLACK);
-    Many_Radio_Channel_29.create(29, "FREQ_29", "Frequency 29", -1, COLOR_BLUE, COLOR_BLACK);
+    for (int x = 0; x < Many_Radio_Channel_Count; x++)
+    {
+      Many_Radio_Channels.push_back(tmp_many_radio_channel);
+      Many_Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
+    }
 
     // Draw screen the entire screen.  reset is also 
     //  called when the screen is resized.  
@@ -834,12 +750,14 @@ class Screen3
       bzRadio.move_resize(4, YRadioPos + (YBRadioSize *4), XRadioPos, YBRadioSize, XBRadioSize);
 
       // Display Channels
-      Radio_Channel_0.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *0), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
-      Radio_Channel_1.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *1), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
-      Radio_Channel_2.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *2), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
-      Radio_Channel_3.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *3), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
-      Radio_Channel_4.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *4), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
-      Radio_Channel_5.move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *5), XRadioPos + XGadChannelPos, YGadChannelSize, XRadioSize - XGadChannelPos);
+      int pos = 0;
+      for(int y=0; y< Radio_Channel_Count; y++) // Row
+      {
+        Radio_Channels[pos].move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *y), 
+                                              XRadioPos + XGadChannelPos, 
+                                              YGadChannelSize, XRadioSize - XGadChannelPos);
+        pos++;
+      }
       
       // Display OS Log
       tbRadio_Log.move_resize(YRadioPos + YRadioSize - YTRadio_LogSize, 0, YTRadio_LogSize, XRadioSize);
@@ -889,71 +807,17 @@ class Screen3
       bzRadio.move_resize(4, YManyRadioPos + (YBRadioSize *4), XManyRadioPos, YBRadioSize, XBRadioSize);
 
       // Display Channels
-      int x=0;  int y=0;
-      // First Colum of Radio Gadgets.
-      Many_Radio_Channel_0.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_1.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_2.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_3.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_4.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_5.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_6.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_7.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_8.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_9.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-
-      // Second Colum of Radio Gadgets.
-      x++; y=0;
-      Many_Radio_Channel_10.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_11.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_12.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_13.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_14.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_15.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_16.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_17.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_18.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_19.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-
-      // Third Colum of Radio Gadgets.
-      x++; y=0;
-      Many_Radio_Channel_20.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_21.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_22.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_23.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_24.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_25.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_26.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_27.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_28.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
-      y++;
-      Many_Radio_Channel_29.move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), YManyGadChannelSize, XManyGadChannelSize);
+      int pos = 0;
+      for(int x=0; x<3; x++)  // Colum
+      {
+        for(int y=0; y<10; y++) // Row
+        {
+          Many_Radio_Channels[pos].move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 
+                                                1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), 
+                                                YManyGadChannelSize, XManyGadChannelSize);
+          pos++;
+        }
+      }
 
     }
 
@@ -1430,13 +1294,10 @@ class Screen3
     bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Channel Gadgets
-    Radio_Channel_0.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Radio_Channel_1.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Radio_Channel_2.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Radio_Channel_3.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Radio_Channel_4.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Radio_Channel_5.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    
+    for(int pos = 0; pos < Radio_Channel_Count; pos++)
+    {
+      Radio_Channels[pos].draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    }   
   }
   
   // ---------------------------------------------------------------------------------------
@@ -1451,37 +1312,10 @@ class Screen3
     bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Channel Gadgets
-    Many_Radio_Channel_0.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_1.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_2.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_3.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_4.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_5.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_6.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_7.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_8.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_9.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_10.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_11.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_12.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_13.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_14.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_15.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_16.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_17.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_18.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_19.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_20.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_21.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_22.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_23.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_24.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_25.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_26.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_27.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_28.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    Many_Radio_Channel_29.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    
+    for(int pos = 0; pos < Many_Radio_Channel_Count; pos++)
+    {
+      Many_Radio_Channels[pos].draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    }
   }
 
   // ---------------------------------------------------------------------------------------
