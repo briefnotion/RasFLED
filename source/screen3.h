@@ -440,8 +440,8 @@ class Screen3
     bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     //bzRadio.create_button(2, "LAFM", "AIR%LAF%MULTI", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzRadio.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.create_button(3, "AIRSTOP", "%STOP", 0, -1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-    bzRadio.create_button(4, "E2", "", 0, -1, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.create_button(3, "AIRSTOP", "%STOP", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.create_button(4, "E2", "E2", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Radio Channel Frequency gadgets Properties for Multi Screen.
     Radio_Channel tmp_radio_channel;  // Leaving defaults
@@ -748,6 +748,10 @@ class Screen3
       bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
       bzRadio.move_resize(3, YRadioPos + (YBRadioSize *3), XRadioPos, YBRadioSize, XBRadioSize);
       bzRadio.move_resize(4, YRadioPos + (YBRadioSize *4), XRadioPos, YBRadioSize, XBRadioSize);
+
+      // Hide unneeded buttons.
+      bzRadio.change_enabled("AIRSTOP", false);
+      bzRadio.change_enabled("E2", false);
 
       // Display Channels
       int pos = 0;

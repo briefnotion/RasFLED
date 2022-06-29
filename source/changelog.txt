@@ -1,3 +1,8 @@
+V 0.95A_220628
+  - Small Changes.
+  - Buttons now have Hidden and Enabled properties.
+  - Radio stations less than 100.000 mhz can now be held, skipped, or cleared.
+
 V 0.94A_220626
   - Channels in the radio screen can now be Held, Skipped, or Cleared by clicking
       on the Radio Frequency Gadget.

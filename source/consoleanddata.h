@@ -683,15 +683,15 @@ class Console
           {
             if(name == "HOLD")
             {
-              keywatch.cmdInString(" rh" + (to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))); //Gotta have the .0
+              keywatch.cmdInString(" rh" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))))); //Gotta have the .0
             }
             else if(name == "SKIP")
             {
-              keywatch.cmdInString(" rs" + (to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+              keywatch.cmdInString(" rs" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
             }
             else if(name == "CLEAR")
             {
-              keywatch.cmdInString(" rc" + (to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+              keywatch.cmdInString(" rc" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
             }
           }
         }
@@ -707,15 +707,15 @@ class Console
           {
             if(name == "HOLD")
             {
-              keywatch.cmdInString(" rh" + (to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+              keywatch.cmdInString(" rh" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
             }
             else if(name == "SKIP")
             {
-              keywatch.cmdInString(" rs" + (to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+              keywatch.cmdInString(" rs" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
             }
             else if(name == "CLEAR")
             {
-              keywatch.cmdInString(" rc" + (to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))));
+              keywatch.cmdInString(" rc" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
             }
           }
         }

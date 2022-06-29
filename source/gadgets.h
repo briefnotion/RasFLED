@@ -388,6 +388,9 @@ class Button_Properties
   int TYPE = 0;
   int COLOR = 0;
   int BCOLOR = 0;
+
+  bool HIDDEN = false;
+  bool ENABLED = true;
   
   int POSY = 0;
   int POSX = 0;
@@ -554,7 +557,7 @@ class Button
       */
 
       //Set Color, Set Reverse if On, Draw Sencils for Buttons
-      if (PROP.TYPE == -1 || PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2)
+      if (PROP.ENABLED == true && (PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2))
       {
 
         // Start by setting button color.
@@ -636,14 +639,14 @@ class Button
 
       wattroff(winButton, A_REVERSE);
 
-      // Draw button if type not -1
-      if (PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2)
+      // Draw button if type not hidden and enabled.
+      if (PROP.ENABLED == true && PROP.HIDDEN == false)
       {
         wrefresh(winButton);
       }
 
       // If the button is simple click, reset its value
-      if ((PROP.TYPE == -1 || PROP.TYPE == 0) && PROP.VALUE == 1)
+      if (PROP.TYPE == 0 && PROP.VALUE == 1)
       {
         PROP.VALUE = 0;
         BUTTON_PRESSED.ping_up(tmeFrame_Time, VISIBLE_UPATE_TIME);
@@ -688,7 +691,7 @@ class Button_Zone_Manager
 
   void click_advance(int Id)
   {
-    if (BUTTONS[Id].PROP.TYPE == -1 || BUTTONS[Id].PROP.TYPE == 0 || BUTTONS[Id].PROP.TYPE == 1)
+    if (BUTTONS[Id].PROP.TYPE == 0 || BUTTONS[Id].PROP.TYPE == 1)
     {
       BUTTONS[Id].advance();
     }
@@ -770,15 +773,32 @@ class Button_Zone_Manager
     }
   }
 
-  void change_type(string name, int type)
+  void change_enabled(string Name, bool Enabled)
+  // Change Property by Name.
   {
     for(int pos=0; pos<BUTTONS.size(); pos++)
     {
-      if (BUTTONS[pos].PROP.NAME == name)
+      if (BUTTONS[pos].PROP.NAME == Name)
       {
-        if (BUTTONS[pos].PROP.TYPE != type)
+        if (BUTTONS[pos].PROP.ENABLED != Enabled)
         {
-          BUTTONS[pos].PROP.TYPE = type;
+          BUTTONS[pos].PROP.ENABLED = Enabled;
+          BUTTONS[pos].PROP.CHANGED = true;
+        }
+      }
+    }
+  }
+
+  void change_hidden(string Name, bool Hidden)
+  // Change Property by Name.
+  {
+    for(int pos=0; pos<BUTTONS.size(); pos++)
+    {
+      if (BUTTONS[pos].PROP.NAME == Name)
+      {
+        if (BUTTONS[pos].PROP.HIDDEN != Hidden)
+        {
+          BUTTONS[pos].PROP.HIDDEN = Hidden;
           BUTTONS[pos].PROP.CHANGED = true;
         }
       }
@@ -822,10 +842,10 @@ class Button_Zone_Manager
   {
     bool clicked = false;
 
-    // Check each button in zone for clicked coords within
+    // Check each enabled button in zone for clicked coords within
     for(int pos=0; pos<BUTTONS.size(); pos++)
     {
-      if(BUTTONS[pos].PROP.TYPE == -1 || BUTTONS[pos].PROP.TYPE == 0 || BUTTONS[pos].PROP.TYPE == 1 || BUTTONS[pos].PROP.TYPE == 2)
+      if(BUTTONS[pos].PROP.ENABLED == true && (BUTTONS[pos].PROP.TYPE == 0 || BUTTONS[pos].PROP.TYPE == 1 || BUTTONS[pos].PROP.TYPE == 2))
       // Only update known button types or not disabled button type.
       {
         if(x >= BUTTONS[pos].PROP.POSX && x <= (BUTTONS[pos].PROP.POSX + BUTTONS[pos].PROP.SIZEX -1) &&
@@ -1418,8 +1438,8 @@ class Radio_Channel
   WINDOW * winFrequency;
 
   Button_Zone_Manager bzGadget;
-  int YSize = 2;
-  int XSize = 7;
+  int YSize = 3;
+  int XSize = 9;
 
   // Show frequency levels in progress bars
   BAR BAR_NOISE_LEVEL;
@@ -1474,11 +1494,18 @@ class Radio_Channel
     winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
 
     // Create Button Zone for Gadget
-    bzGadget.create_button (0, "GADGET", "Gadget", 0, -1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzGadget.create_button (0, "GADGET", "%Gadget", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
     
-    bzGadget.create_button (1, "SKIP", "SKIP", 0, -2, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-    bzGadget.create_button (2, "HOLD", "HOLD", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzGadget.create_button (3, "CLEAR", "CLEAR", 0, -2, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzGadget.create_button (1, "SKIP", "%SKIP", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzGadget.create_button (2, "HOLD", "%HOLD", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzGadget.create_button (3, "CLEAR", "%CLEAR", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+
+    bzGadget.change_hidden("GADGET", true);
+
+    bzGadget.change_enabled("GADGET", false);
+    bzGadget.change_enabled("HOLD", false);
+    bzGadget.change_enabled("SKIP", false);
+    bzGadget.change_enabled("CLEAR", false);
     
     // Create Noise Level Bar
     BAR_NOISE_LEVEL.label(PROP.NOISE_LABEL);
@@ -1547,7 +1574,11 @@ class Radio_Channel
     New_Value.FREQUENCY.CHANGED = false;
 
     // Enable gadget to display.
-    PROP.TYPE = 0;
+    if(PROP.TYPE == -1)
+    {
+      PROP.TYPE = 0;
+      bzGadget.change_enabled("GADGET", true);
+    }
 
   }
 
@@ -1682,41 +1713,41 @@ class Radio_Channel
 
       if(Name == "GADGET")
       {
-        bzGadget.change_type("GADGET", -2);
+        bzGadget.change_enabled("GADGET", false);
 
-        bzGadget.change_type("HOLD", 0);
-        bzGadget.change_type("SKIP", 0);
-        bzGadget.change_type("CLEAR", 0);
+        bzGadget.change_enabled("HOLD", true);
+        bzGadget.change_enabled("SKIP", true);
+        bzGadget.change_enabled("CLEAR", true);
 
         return_check_click = true;
       }
       else if(Name == "HOLD")
       {
-        bzGadget.change_type("GADGET", -1);
+        bzGadget.change_enabled("GADGET", true);
 
-        bzGadget.change_type("HOLD", -2);
-        bzGadget.change_type("SKIP", -2);
-        bzGadget.change_type("CLEAR", -2);
+        bzGadget.change_enabled("HOLD", false);
+        bzGadget.change_enabled("SKIP", false);
+        bzGadget.change_enabled("CLEAR", false);
 
         return_check_click = true;
       }
       else if(Name == "SKIP")
       {
-        bzGadget.change_type("GADGET", -1);
+        bzGadget.change_enabled("GADGET", true);
 
-        bzGadget.change_type("HOLD", -2);
-        bzGadget.change_type("SKIP", -2);
-        bzGadget.change_type("CLEAR", -2);
+        bzGadget.change_enabled("HOLD", false);
+        bzGadget.change_enabled("SKIP", false);
+        bzGadget.change_enabled("CLEAR", false);
 
         return_check_click = true;
       }
       else if(Name == "CLEAR")
       {
-        bzGadget.change_type("GADGET", -1);
+        bzGadget.change_enabled("GADGET", true);
 
-        bzGadget.change_type("HOLD", -2);
-        bzGadget.change_type("SKIP", -2);
-        bzGadget.change_type("CLEAR", -2);
+        bzGadget.change_enabled("HOLD", false);
+        bzGadget.change_enabled("SKIP", false);
+        bzGadget.change_enabled("CLEAR", false);
         
         return_check_click = true;
       }
