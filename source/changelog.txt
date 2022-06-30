@@ -1,3 +1,7 @@
+V 0.96A_220629
+  - Small changes and improvements.
+  - Moved the system logs into its on screen.
+
 V 0.95A_220628
   - Small Changes.
   - Buttons now have Hidden and Enabled properties.

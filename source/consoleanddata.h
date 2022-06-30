@@ -64,31 +64,37 @@ class Console
 
   TIMED_IS_READY Console_Display;
 
-  void update_freqency_gadgets_QF(system_data &sdSysData, int num, Radio_Channel &Gad_Freq)
+  void update_freqency_gadgets_QF(system_data &sdSysData, int pos, Radio_Channel &Gad_Freq)
   {
-    if (sdSysData.RADIO_COORD.size() > num)
+    if (sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED == true)
     {
-      if (sdSysData.RADIO_COORD.CHANNELS[num].FREQUENCY.CHANGED == true)
-      {
-        Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[num], sdSysData.tmeCURRENT_FRAME_TIME);
-        sdSysData.RADIO_COORD.CHANNELS[num].FREQUENCY.CHANGED = false;
-      }
+      Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[pos], sdSysData.tmeCURRENT_FRAME_TIME);
     }
   }
 
   void update_freqency_gadgets(system_data &sdSysData)
   // Update all radio gadgets with new frequency information.
   {
-    if (ScrStat.Window_Radio == true)
+    //if (ScrStat.Window_Radio == true)
     {
       // Update Radio_Channels with new info
-      for(int pos = 0; pos < Screen.Radio_Channel_Count; pos++)
+      //for(int pos = 0; pos < Screen.Radio_Channel_Count; pos++)
+      for(int pos = 0; pos < sdSysData.RADIO_COORD.size(); pos++)
       {
-        update_freqency_gadgets_QF(sdSysData, pos, Screen.Radio_Channels[pos]);
+        if(pos < Screen.Radio_Channels.size())
+        {
+          update_freqency_gadgets_QF(sdSysData, pos, Screen.Radio_Channels[pos]);
+        }
+        if(pos < Screen.Many_Radio_Channels.size())
+        {
+          update_freqency_gadgets_QF(sdSysData, pos, Screen.Many_Radio_Channels[pos]);
+        }
+        sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED = false;
       }
     }
 
-    if (ScrStat.Window_Many_Radio == true)
+    /*
+    //if (ScrStat.Window_Many_Radio == true)
     {
       // Update Many_Radio_Channels with new info
       for(int pos = 0; pos < Screen.Many_Radio_Channel_Count; pos++)
@@ -96,7 +102,7 @@ class Console
         update_freqency_gadgets_QF(sdSysData, pos, Screen.Many_Radio_Channels[pos]);
       }
     }
-
+    */
   }
 
   bool load_reel(fstream &fsPlayer, string filename)
@@ -493,8 +499,10 @@ class Console
           printi("Tab Console");
           ScrStat.Window_Console_On();
           ScrStat.Window_Player_Off();
+          ScrStat.Window_Radio_Buttons_Off();
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
+          ScrStat.Window_Log_Screen_Off();
           the_player.pause();
           sdSysData.RADIO_COORD.pause();
         }
@@ -505,8 +513,10 @@ class Console
           printi("Tab Player");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_On();
+          ScrStat.Window_Radio_Buttons_Off();
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
+          ScrStat.Window_Log_Screen_Off();
           the_player.play();
           sdSysData.RADIO_COORD.pause();
         }
@@ -517,8 +527,10 @@ class Console
           printi("Tab Radio");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
+          ScrStat.Window_Radio_Buttons_On();
           ScrStat.Window_Radio_On();
           ScrStat.Window_Many_Radio_Off();
+          ScrStat.Window_Log_Screen_Off();
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
@@ -529,8 +541,23 @@ class Console
           printi("Tab Radio Multi");
           ScrStat.Window_Console_Off();
           ScrStat.Window_Player_Off();
+          ScrStat.Window_Radio_Buttons_On();
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_On();
+          ScrStat.Window_Log_Screen_Off();
+          the_player.pause();
+          sdSysData.RADIO_COORD.play();
+        }
+
+        if(name.compare("TAB_LOG_SCREEN") == 0)
+        // Turn on Tab
+        {
+          printi("Tab Radio Multi");
+          ScrStat.Window_Console_Off();
+          ScrStat.Window_Player_Off();
+          ScrStat.Window_Radio_Off();
+          ScrStat.Window_Many_Radio_Off();
+          ScrStat.Window_Log_Screen_On();
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
@@ -663,10 +690,15 @@ class Console
           {
             keywatch.cmdInString(" radoff");
           }
-          else if(name.compare("***") == 0)
+          else if(name.compare("NOAA") == 0)
           // 
           {
-            keywatch.cmdInString(" --- ");
+            keywatch.cmdInString(" rnoaa");
+          }
+          else if(name.compare("EMERGENCY") == 0)
+          // 
+          {
+            keywatch.cmdInString(" remergenc");
           }
         }
       }

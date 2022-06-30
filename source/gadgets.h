@@ -391,6 +391,8 @@ class Button_Properties
 
   bool HIDDEN = false;
   bool ENABLED = true;
+
+  //bool CLEAR = false;
   
   int POSY = 0;
   int POSX = 0;
@@ -507,6 +509,15 @@ class Button
   // Draw the button on the screen if the value has changed or if  
   //  the Refresh parameter is true.
   {
+    /*
+    if (PROP.CLEAR == true)
+    {
+      werase(winButton);
+      wrefresh(winButton);
+      PROP.CLEAR = false;
+    }
+    */
+
     if (BUTTON_PRESSED.blip_moved(tmeFrame_Time) == true)
     {
       Refresh = true;
@@ -653,7 +664,6 @@ class Button
       }
 
       PROP.CHANGED = false;
-
     }
   }
 };
@@ -783,6 +793,14 @@ class Button_Zone_Manager
         if (BUTTONS[pos].PROP.ENABLED != Enabled)
         {
           BUTTONS[pos].PROP.ENABLED = Enabled;
+
+          /*
+          if(Enabled == true)
+          {
+            BUTTONS[pos].PROP.CLEAR = true;
+          }
+          */
+
           BUTTONS[pos].PROP.CHANGED = true;
         }
       }
@@ -799,6 +817,14 @@ class Button_Zone_Manager
         if (BUTTONS[pos].PROP.HIDDEN != Hidden)
         {
           BUTTONS[pos].PROP.HIDDEN = Hidden;
+
+          /*
+          if(Hidden == true)
+          {
+            BUTTONS[pos].PROP.CLEAR = true;
+          }
+          */
+
           BUTTONS[pos].PROP.CHANGED = true;
         }
       }
@@ -1438,8 +1464,8 @@ class Radio_Channel
   WINDOW * winFrequency;
 
   Button_Zone_Manager bzGadget;
-  int YSize = 3;
-  int XSize = 9;
+  int Button_YSize = 3;
+  int Button_XSize = 9;
 
   // Show frequency levels in progress bars
   BAR BAR_NOISE_LEVEL;
@@ -1548,9 +1574,17 @@ class Radio_Channel
     // Move Resize Buttons
     bzGadget.move_resize(0, PROP.POSY, PROP.POSX, PROP.SIZEY, PROP.SIZEX);
     
-    bzGadget.move_resize(1, PROP.POSY + (YSize *0), PROP.POSX + (XSize *0), YSize, XSize);
-    bzGadget.move_resize(2, PROP.POSY + (YSize *0), PROP.POSX + (XSize *1), YSize, XSize);
-    bzGadget.move_resize(3, PROP.POSY + (YSize *0), PROP.POSX + (XSize *2), YSize, XSize);
+    if(Button_YSize > PROP.SIZEY)
+    {
+      Button_YSize = PROP.SIZEY;
+      bzGadget.change_label("SKIP", "SKIP");
+      bzGadget.change_label("HOLD", "HOLD");
+      bzGadget.change_label("CLEAR", "CLEAR");
+    }
+
+    bzGadget.move_resize(1, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *0), Button_YSize, Button_XSize);
+    bzGadget.move_resize(2, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *1), Button_YSize, Button_XSize);
+    bzGadget.move_resize(3, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *2), Button_YSize, Button_XSize);
   }
 
   bool changed()
@@ -1571,7 +1605,7 @@ class Radio_Channel
     VISIBLE_UPDATE_SIGNAL.ping_up(FRAME_TIME, VISIBLE_UPATE_TIME);
 
     PROP.CHANGED = true;
-    New_Value.FREQUENCY.CHANGED = false;
+    //New_Value.FREQUENCY.CHANGED = false;
 
     // Enable gadget to display.
     if(PROP.TYPE == -1)
@@ -1719,6 +1753,8 @@ class Radio_Channel
         bzGadget.change_enabled("SKIP", true);
         bzGadget.change_enabled("CLEAR", true);
 
+        PROP.CHANGED = true;
+
         return_check_click = true;
       }
       else if(Name == "HOLD")
@@ -1728,6 +1764,8 @@ class Radio_Channel
         bzGadget.change_enabled("HOLD", false);
         bzGadget.change_enabled("SKIP", false);
         bzGadget.change_enabled("CLEAR", false);
+
+        PROP.CHANGED = true;
 
         return_check_click = true;
       }
@@ -1739,6 +1777,9 @@ class Radio_Channel
         bzGadget.change_enabled("SKIP", false);
         bzGadget.change_enabled("CLEAR", false);
 
+        PROP.CHANGED == true;
+        
+
         return_check_click = true;
       }
       else if(Name == "CLEAR")
@@ -1748,6 +1789,8 @@ class Radio_Channel
         bzGadget.change_enabled("HOLD", false);
         bzGadget.change_enabled("SKIP", false);
         bzGadget.change_enabled("CLEAR", false);
+
+        PROP.CHANGED == true;
         
         return_check_click = true;
       }

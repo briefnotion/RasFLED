@@ -627,8 +627,10 @@ class ScreenStatus
   bool Window_Tabs = false;
   bool Window_Console = false;
   bool Window_Player = false;
+  bool Window_Radio_Buttons = false;
   bool Window_Radio = false;
   bool Window_Many_Radio = false;
+  bool Window_Log_Screen = false;
   
   // Refresh is set to true only if the value 
   //  of displaying the window has changed. 
@@ -777,6 +779,24 @@ class ScreenStatus
     }
   }
 
+  void Window_Radio_Buttons_On()
+  {
+    if (Window_Radio_Buttons == false)
+    {
+      Window_Radio_Buttons = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Radio_Buttons_Off()
+  {
+    if (Window_Radio_Buttons == true)
+    {
+      Window_Radio_Buttons = false;
+      Needs_Refresh = true;
+    }
+  }
+  
   void Window_Radio_On()
   {
     if (Window_Radio == false)
@@ -809,6 +829,24 @@ class ScreenStatus
     if (Window_Many_Radio == true)
     {
       Window_Many_Radio = false;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Log_Screen_On()
+  {
+    if (Window_Log_Screen == false)
+    {
+      Window_Log_Screen = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_Log_Screen_Off()
+  {
+    if (Window_Log_Screen == true)
+    {
+      Window_Log_Screen = false;
       Needs_Refresh = true;
     }
   }

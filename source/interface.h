@@ -492,6 +492,26 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
     }
 
+    // Radio Call NOAA Channel Scan Script Command
+    if (check_command(cons, " rnoaa", "NOAA Channel Scan"))
+    {
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_noaa.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
+    // Radio Call Emergency Channel Scan Script Command
+    if (check_command(cons, " remergenc", "Emergency Channel Scan"))
+    {
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_emergency.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(25, 0, 0));
+    }
+
     // Radio Shutdown Channel Command
     if (check_command(cons, " radoff", "Turn Off Radio"))
     {
