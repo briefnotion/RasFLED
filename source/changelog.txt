@@ -1,3 +1,6 @@
+V 0.97A_220630
+  - Small changes and improvements.
+
 V 0.96A_220629
   - Small changes and improvements.
   - Moved the system logs into its on screen.

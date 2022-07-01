@@ -172,7 +172,7 @@ class Screen3
   int XBRadioSize = 8;
 
   int YGadChannelSize = 4;  // Frequency Gadges Size
-  int XGadChannelSize = -1;
+  int XGadChannelSize = 40;
   int YGadChannelPos = 0;  // Frequency Gadges Start Position
   int XGadChannelPos = 8;
 
@@ -183,7 +183,8 @@ class Screen3
   // Radio Frequency Gadgets for Radio Screen
   Button_Zone_Manager bzRadio;
 
-  int Radio_Channel_Count = 6;
+  int Radio_Channel_Count = 30;
+  int Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Radio_Channels;
 
   // Radio Status
@@ -211,6 +212,7 @@ class Screen3
   public:
   // Radio Frequency Gadgets for Many_Radio Screen
   int Many_Radio_Channel_Count = 30;
+  int Many_Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Many_Radio_Channels;
 
   // Log Screen Variables --------------------
@@ -776,18 +778,32 @@ class Screen3
 
       // the bottom line of the Radio.
       strBotLine = "";
-      strBotLine = strBotLine.append(XRadioSize-1, '_');
+      strBotLine = strBotLine.append(XRadioSize-1, '_');  // meh!
 
       // Display Channels
+      // Try to not fill, and not exceed, the screen with Radio Gadgets.
+      int in_max_col = (XRadioSize - XGadChannelPos) / XGadChannelSize;
+      int in_max_row = YRadioSize / YGadChannelSize ;
       int pos = 0;
-      for(int y=0; y< Radio_Channel_Count; y++) // Row
+      Radio_Channel_Max_Display_Count = 0;
+
+      for(int x=0; x<in_max_col && pos < Radio_Channel_Count; x++)  // Colum
       {
-        Radio_Channels[pos].move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *y), 
-                                              XRadioPos + XGadChannelPos, 
-                                              YGadChannelSize, XRadioSize - XGadChannelPos);
-        pos++;
+        for(int y=0; y<in_max_row && pos < Radio_Channel_Count; y++) // Row
+        {
+          Radio_Channels[pos].move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *y), 
+                                                1 + XRadioPos + XGadChannelPos + (XGadChannelSize *x), 
+                                                YGadChannelSize, XGadChannelSize);
+          pos++;
+          Radio_Channel_Max_Display_Count++;
+        }
       }
-      
+
+      // Turn off remaining Gadgets
+      for(int rem_pos = Radio_Channel_Max_Display_Count; rem_pos < Radio_Channel_Count; rem_pos++)
+      {
+        Radio_Channels[rem_pos].PROP.TYPE = -1;
+      }
     }
 
     // ---------------------------------------------------------------------------------------
@@ -827,16 +843,28 @@ class Screen3
       strBotLine = strBotLine.append(XManyRadioSize-1, '_');
 
       // Display Channels
+      // Try to not fill, and not exceed, the screen with Radio Gadgets.
+      int in_max_col = (XManyRadioSize - XManyGadChannelPos) / XManyGadChannelSize;
+      int in_max_row = YManyRadioSize / YManyGadChannelSize ;
       int pos = 0;
-      for(int x=0; x<3; x++)  // Colum
+      Many_Radio_Channel_Max_Display_Count = 0;
+
+      for(int x=0; x<in_max_col && pos < Many_Radio_Channel_Count; x++)  // Colum
       {
-        for(int y=0; y<10; y++) // Row
+        for(int y=0; y<in_max_row && pos < Many_Radio_Channel_Count; y++) // Row
         {
           Many_Radio_Channels[pos].move_resize(YManyRadioPos + YManyGadChannelPos + (YManyGadChannelSize *y), 
                                                 1 + XManyRadioPos + XManyGadChannelPos + (XManyGadChannelSize *x), 
                                                 YManyGadChannelSize, XManyGadChannelSize);
           pos++;
+          Many_Radio_Channel_Max_Display_Count++;
         }
+      }
+      
+      // Turn off remaining Gadgets
+      for(int rem_pos = Many_Radio_Channel_Max_Display_Count; rem_pos < Many_Radio_Channel_Count; rem_pos++)
+      {
+        Many_Radio_Channels[rem_pos].PROP.TYPE = -1;
       }
     }
 
@@ -1350,7 +1378,7 @@ class Screen3
     bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Channel Gadgets
-    for(int pos = 0; pos < Radio_Channel_Count; pos++)
+    for(int pos = 0; pos < Radio_Channel_Max_Display_Count; pos++)
     {
       Radio_Channels[pos].draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     }   
@@ -1368,7 +1396,7 @@ class Screen3
     bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   
     // Print Channel Gadgets
-    for(int pos = 0; pos < Many_Radio_Channel_Count; pos++)
+    for(int pos = 0; pos < Many_Radio_Channel_Max_Display_Count; pos++)
     {
       Many_Radio_Channels[pos].draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
     }
