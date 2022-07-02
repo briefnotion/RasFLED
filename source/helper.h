@@ -419,6 +419,10 @@ int get_frame_interval(int Frames_Per_Second)
   return (1000 / Frames_Per_Second);
 }
 
+int radio_translate_to_frequency_6(float Frequency)
+{
+  return (int)round(Frequency / 1000.0);
+}
 
 
 

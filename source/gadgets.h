@@ -1438,6 +1438,9 @@ class Radio_Channel_Properties
   int SIZEY = 0;
   int SIZEX = 0;
 
+  bool SKIP = false;
+  bool HELD = false;
+
   bool CLICKED = false;
   bool CHANGED = false;
 
@@ -1633,8 +1636,15 @@ class Radio_Channel
     {
       // Set colors.
 
-      // Channel Open
-      if (PROP.VALUE.FREQUENCY.IS_OPEN == true)
+      // Skipped
+      if (PROP.SKIP == true)
+      {
+        // Change the colors.
+        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_MAGENTA)));
+        BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
+        BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
+      } 
+      else if (PROP.VALUE.FREQUENCY.IS_OPEN == true)
       {
         // Reset the linger timer.
         LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
@@ -1667,7 +1677,15 @@ class Radio_Channel
       else if (VISIBLE_UPDATE_SIGNAL.ping_down(FRAME_TIME) == true)
       {
         // Change the colors.
-        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN)));
+        if(PROP.HELD == false)
+        {
+          wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN)));
+        }
+        else
+        {
+          wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_WHITE)));
+        }
+        
         BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
         BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
       }

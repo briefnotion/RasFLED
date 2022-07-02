@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.13A
+// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.14A
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -93,6 +93,18 @@ class API_FREQUENCY_SANI
   bool CHANGED = false;
 };
 
+class CHANNEL_PROPERTIES
+// Channel Properties
+{
+  public:
+
+  bool HELD = false;
+  bool SKIP = false;
+  
+  bool CHANGED = false;
+
+};
+
 class API_SQUELCH_DESTINATION
 // Sanitized API packet.
 {
@@ -105,6 +117,9 @@ class API_SQUELCH_DESTINATION
 
   // Frequency Information.
   API_FREQUENCY_SANI FREQUENCY;
+
+  // Channel Properties
+  CHANNEL_PROPERTIES PROP;
 };
 
 
@@ -145,6 +160,8 @@ class API_SQUELCH_SOURCE
 
   API_COMMAND COMMAND_FROM_RADIO;     // 1 - Skip Frequency
                                       // 2 - Hold Frequency
+                                      // 3 - Clear All Hold and Skips
+                                      // 4 - Clear Frequency
   // API Device
   API_DEVICE  DEVICE;
 

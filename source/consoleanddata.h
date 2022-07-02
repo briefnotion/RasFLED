@@ -65,8 +65,19 @@ class Console
   TIMED_IS_READY Console_Display;
 
   void update_freqency_gadgets_QF(system_data &sdSysData, int pos, Radio_Channel &Gad_Freq)
-  {
+  { 
+    if (sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED == true)
+    // Update channel property changes from coordinator to gadget.
+    {
+      Gad_Freq.PROP.SKIP = sdSysData.RADIO_COORD.CHANNELS[pos].PROP.SKIP;
+      Gad_Freq.PROP.HELD = sdSysData.RADIO_COORD.CHANNELS[pos].PROP.HELD;
+      Gad_Freq.PROP.CHANGED = true;
+
+      sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED = false;
+    }
+
     if (sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED == true)
+    // Update channel frequency changes from coordinator to gadget.
     {
       Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[pos], sdSysData.tmeCURRENT_FRAME_TIME);
     }

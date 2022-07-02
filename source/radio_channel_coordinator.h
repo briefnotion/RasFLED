@@ -43,6 +43,61 @@ class RADIO_CHANNEL_COORDINATOR
     //return 2;
   }
 
+  void process_command_received(API_COMMAND &Command_Received)
+  // Process command recieved into radio coordinator
+  {
+    if (Command_Received.CHANGED == true)
+    {
+
+      if (Command_Received.COMMAND == 1 || Command_Received.COMMAND == 2 || Command_Received.COMMAND == 4)
+      {
+
+        int pos_found = -1;
+
+        // Seach the Channels for existing Squelch Channel
+        for (int pos = 0; (pos < CHANNELS.size()) && (pos_found == -1); pos++)
+        {
+          if (radio_translate_to_frequency_6(CHANNELS[pos].FREQUENCY.FREQUENCY) == Command_Received.PARAMETER)
+          {
+            pos_found = pos;
+          }
+        }
+
+        if (pos_found > -1)
+        {
+          if (Command_Received.COMMAND == 1)
+          {
+            CHANNELS[pos_found].PROP.SKIP = true;
+            CHANNELS[pos_found].PROP.CHANGED = true;
+          }
+          else if (Command_Received.COMMAND == 2)
+          {
+            CHANNELS[pos_found].PROP.HELD = true;
+            CHANNELS[pos_found].PROP.CHANGED = true;
+          }          
+          else if (Command_Received.COMMAND == 4)
+          {
+            CHANNELS[pos_found].PROP.SKIP = false;
+            CHANNELS[pos_found].PROP.HELD = false;
+            CHANNELS[pos_found].PROP.CHANGED = true;
+          }
+        }
+      }
+      else if (Command_Received.COMMAND == 3)
+      {
+        // Seach the Channels for existing Squelch Channel
+        for (int pos = 0; pos < CHANNELS.size(); pos++)
+        {
+          CHANNELS[pos].PROP.SKIP = false;
+          CHANNELS[pos].PROP.HELD = false;
+          CHANNELS[pos].PROP.CHANGED = true;
+        }
+      }
+
+      Command_Received.CHANGED = false;
+    }
+  }
+
   void process(API_SQUELCH_DESTINATION &Received_Squelch)
   // Stores fresh frequency squelch received into CHANNELS deque.
   //  If freqency data already exist, replaces.
