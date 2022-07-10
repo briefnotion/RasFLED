@@ -9,8 +9,8 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-// *  PROJECTID: gi6$b*E>*q%;    Revision: 00000000.98A
-// *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000000.99A"
+/* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
 // *  Programmer Notes:

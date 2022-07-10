@@ -72,8 +72,6 @@ class Console
       Gad_Freq.PROP.SKIP = sdSysData.RADIO_COORD.CHANNELS[pos].PROP.SKIP;
       Gad_Freq.PROP.HELD = sdSysData.RADIO_COORD.CHANNELS[pos].PROP.HELD;
       Gad_Freq.PROP.CHANGED = true;
-
-      sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED = false;
     }
 
     if (sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED == true)
@@ -101,6 +99,7 @@ class Console
           update_freqency_gadgets_QF(sdSysData, pos, Screen.Many_Radio_Channels[pos]);
         }
         sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED = false;
+        sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED = false;
       }
     }
 

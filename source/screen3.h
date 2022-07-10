@@ -183,7 +183,7 @@ class Screen3
   // Radio Frequency Gadgets for Radio Screen
   Button_Zone_Manager bzRadio;
 
-  int Radio_Channel_Count = 30;
+  int Radio_Channel_Count = 50;   // Remove this limit in future if needed.
   int Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Radio_Channels;
 
@@ -211,7 +211,7 @@ class Screen3
 
   public:
   // Radio Frequency Gadgets for Many_Radio Screen
-  int Many_Radio_Channel_Count = 30;
+  int Many_Radio_Channel_Count = 50;  // Remove this limit in future if needed.
   int Many_Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Many_Radio_Channels;
 
@@ -1028,6 +1028,9 @@ class Screen3
       }
     }
     */
+
+    // Display Version
+    mvwprintw(winStatus, 0, XStatusSize - 14 - TitleSize , "v%s", Revision);
 
     // Display CPU Temp
     if (sdSysData.hsHardware_Status.enabled() == true)
