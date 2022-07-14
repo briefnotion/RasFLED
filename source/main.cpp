@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000000.99A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.00A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -940,7 +940,7 @@ int loop()
   sdSystem.API_CHANNEL.close(region_scan);
 
   /*
-  if (sdSystem.API_CHANNEL.get_binds(region_scan) == 0)
+  if (sdSystem.API_CHANNEL.get_binds(region_scan) == 0) // FIXME Reenable at some point.
   {
     cons.printi("Closing API.");
     boost::interprocess::shared_memory_object::remove("Airband");

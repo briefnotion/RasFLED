@@ -50,7 +50,7 @@ class configuration
   // -------------------------------------------------------------------------------------
   // LED rpi_ws281x Variables
   int iBRIGHTNESS         = 96;  //96  Using Example Code.  Max unknown
-  int iFRAMES_PER_SECOND  = 50; // Will not be necessary, but keeping, for now, just in 
+  int iFRAMES_PER_SECOND  = LED_FPS; // Will not be necessary, but keeping, for now, just in 
                                 //  case.
 
   // -------------------------------------------------------------------------------------

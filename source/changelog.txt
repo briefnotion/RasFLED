@@ -1,3 +1,10 @@
+V 1.00A_220713
+  - Added a FPS Config Default to track RF interference.  Changed to 25, 65, and 
+      back to 50.  Failed to stop the interference.  Will try to shield cable in 
+      future.  Will add a LED Lights off command in future.  For the time being, 
+      will switch to DIAGs mode in radio sensitive areas.  Wish I could test 
+      the range of the problem.
+
 V 0.99A_220710
   - Small changes and improvements.
 

@@ -50,6 +50,8 @@
 // Default Timer
 #define DEFAULTTIMER      5   //Minutes
 
+#define LED_FPS           50  // Compile time LED Frames per Second, frams/second.
+
 // -------------------------------------------------------------------------------------
 // LED Strip Declarations
 
