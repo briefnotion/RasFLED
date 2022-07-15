@@ -507,12 +507,17 @@ class Console
         // Turn on Tab
         {
           printi("Tab Console");
-          ScrStat.Window_Console_On();
-          ScrStat.Window_Player_Off();
+          ScrStat.Window_Console_On();        // Console
+          ScrStat.Window_Player_Off();        // Player
+
           ScrStat.Window_Radio_Buttons_Off();
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
-          ScrStat.Window_Log_Screen_Off();
+
+          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
+          ScrStat.Window_ABSB_Screen_Off();
+
+          ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
           sdSysData.RADIO_COORD.pause();
         }
@@ -521,12 +526,17 @@ class Console
         // Turn on Tab
         {
           printi("Tab Player");
-          ScrStat.Window_Console_Off();
-          ScrStat.Window_Player_On();
-          ScrStat.Window_Radio_Buttons_Off();
+          ScrStat.Window_Console_Off();       // Console
+          ScrStat.Window_Player_On();         // Player
+
+          ScrStat.Window_Radio_Buttons_Off(); // Radio
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
-          ScrStat.Window_Log_Screen_Off();
+
+          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
+          ScrStat.Window_ABSB_Screen_Off();
+
+          ScrStat.Window_Log_Screen_Off();    // Log
           the_player.play();
           sdSysData.RADIO_COORD.pause();
         }
@@ -535,12 +545,17 @@ class Console
         // Turn on Tab
         {
           printi("Tab Radio");
-          ScrStat.Window_Console_Off();
-          ScrStat.Window_Player_Off();
-          ScrStat.Window_Radio_Buttons_On();
+          ScrStat.Window_Console_Off();       // Console
+          ScrStat.Window_Player_Off();        // Player
+          
+          ScrStat.Window_Radio_Buttons_On();  // Radio
           ScrStat.Window_Radio_On();
           ScrStat.Window_Many_Radio_Off();
-          ScrStat.Window_Log_Screen_Off();
+
+          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
+          ScrStat.Window_ABSB_Screen_Off();
+
+          ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
@@ -549,12 +564,36 @@ class Console
         // Turn on Tab
         {
           printi("Tab Radio Multi");
-          ScrStat.Window_Console_Off();
-          ScrStat.Window_Player_Off();
-          ScrStat.Window_Radio_Buttons_On();
+          ScrStat.Window_Console_Off();       // Console
+          ScrStat.Window_Player_Off();        // Player
+
+          ScrStat.Window_Radio_Buttons_On();  // Radio
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_On();
-          ScrStat.Window_Log_Screen_Off();
+
+          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
+          ScrStat.Window_ABSB_Screen_Off();
+
+          ScrStat.Window_Log_Screen_Off();    // Log
+          the_player.pause();
+          sdSysData.RADIO_COORD.play();
+        }
+
+        if(name.compare("TAB_ABSB_SCREEN") == 0)
+        // Turn on Tab
+        {
+          printi("Tab ABS-B");
+          ScrStat.Window_Console_Off();       // Console
+          ScrStat.Window_Player_Off();        // Player
+
+          ScrStat.Window_Radio_Buttons_Off(); // Radio
+          ScrStat.Window_Radio_Off();
+          ScrStat.Window_Many_Radio_Off();
+
+          ScrStat.Window_ABSB_Buttons_On();   // ABSB
+          ScrStat.Window_ABSB_Screen_On();
+
+          ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
@@ -563,14 +602,21 @@ class Console
         // Turn on Tab
         {
           printi("Tab Radio Multi");
-          ScrStat.Window_Console_Off();
-          ScrStat.Window_Player_Off();
+          ScrStat.Window_Console_Off();       // Console
+          ScrStat.Window_Player_Off();        // Player
+
+          ScrStat.Window_Radio_Buttons_Off(); // Radio
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
-          ScrStat.Window_Log_Screen_On();
+
+          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
+          ScrStat.Window_ABSB_Screen_Off();
+
+          ScrStat.Window_Log_Screen_On();     // Log
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
+
         // Update changes to buttons
         //Screen.update_tabs();
 
@@ -762,8 +808,31 @@ class Console
           }
         }
       }
-      // Check the Radio_Frequencies Many_Radio_Channel Gadgets
 
+      // -----------------------------------
+      if(ScrStat.Window_ABSB_Screen == true)
+      {
+        if (Screen.bzABSB.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+        // Check for any clicked buttons or if it was just empty space.
+        //  If anything was clicked, the list in the bzzABSB will be updated.
+        {
+          string name = "empty";
+          int value = 0;
+          name = Screen.bzABSB.get_clicked_name();
+          value = Screen.bzABSB.get_clicked_value(name);
+        
+          if(name.compare("ABSBON") == 0)
+          // Turn On ABSB Receiver
+          {
+            keywatch.cmdInString(" absbon");
+          }
+          else if(name.compare("ABSBOFF") == 0)
+          // Turn Off ABSB Receiver
+          {
+            keywatch.cmdInString(" absboff");
+          }
+        }
+      }
     }
   }  
 

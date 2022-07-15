@@ -215,6 +215,24 @@ class Screen3
   int Many_Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Many_Radio_Channels;
 
+  // ABSB Screen Variables --------------------
+
+  // ABSB Buttons
+  Button_Zone_Manager bzABSB;
+
+  int YABSB_ScreenPos = -1;
+  int XABSB_ScreenPos = 0;
+  int YABSB_ScreenSize = -1;
+  int XABSB_ScreenSize = -1;
+
+  int YBABSBSize = 4; // ABSB Button Standard Sizes
+  int XBABSBSize = 8;
+
+  WINDOW * winABSB_Screen;
+  Title_Bar tiABSB_Screen;
+
+  public:
+
   // Log Screen Variables --------------------
   int YLog_ScreenPos = -1;
   int XLog_ScreenPos = 0;
@@ -390,7 +408,9 @@ class Screen3
     bzTabs.create_button(3, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(4, "TABMANYRADIO", "Radio%(Multi)", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(5, "TABBLANK2", "Blank 2", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.create_button(6, "TAB_LOG_SCREEN", "Log%Screen", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(6, "TAB_ABSB_SCREEN", "ABSB", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(7, "TABBLANK3", "Blank 3", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(8, "TAB_LOG_SCREEN", "Log", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
     // Countdown Screen
     // Countdown Timer
@@ -447,7 +467,7 @@ class Screen3
     Cycle_Time.min_max_time_span(10000);
    
    
-    // Prep Buttons for Radio screen.
+    // Prep Gadgets for Radio screen.
     tiRadio.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     bzRadio.create_button(0, "RADIOOFF", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
@@ -489,6 +509,15 @@ class Screen3
       Many_Radio_Channels.push_back(tmp_many_radio_channel);
       Many_Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
     }
+
+    // Prep Gadgets for ABSB screen.
+    tiABSB_Screen.create(1, "ABS-B", "ABS-B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+
+    bzABSB.create_button(0, "ABSBON", "%ABS-B%ON", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzABSB.create_button(1, "ABSBOFF", "%ABS-B%OFF", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    //bzABSB.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    //bzABSB.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    //bzABSB.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
 
     // Create Log Screen Text Box
     tiLog_Screen.create(1, "LOGS", "LOGS", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
@@ -899,7 +928,59 @@ class Screen3
     
       // Display OS Log
       tbRadio_Log.move_resize(YLog_ScreenPos, XLog_ScreenPos, YLog_ScreenSize, XLog_ScreenSize);
-    
+    }
+
+    // ---------------------------------------------------------------------------------------
+    // Color ABSB Buttons Panel
+    if (ScrStat.Window_ABSB_Buttons == true)
+    {
+      // Recreate XSplit Size
+      //XSplit = XSplit - XCPickerSize * 2;
+
+      // Calculate Size and Position
+      YABSB_ScreenPos = YSplit;
+      XABSB_ScreenPos = 0;
+
+      // Prep ABSB Buttons
+      bzABSB.move_resize(0, YABSB_ScreenPos + (YBABSBSize *0), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
+      bzABSB.move_resize(1, YABSB_ScreenPos + (YBABSBSize *1), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
+      //bzABSB.move_resize(2, YABSB_ScreenPos + (YBABSBSize *2), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
+      //bzABSB.move_resize(3, YABSB_ScreenPos + (YBABSBSize *3), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
+      //bzABSB.move_resize(4, YABSB_ScreenPos + (YBABSBSize *4), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
+
+      // Hide unneeded buttons.
+      //bzABSB.change_enabled("AIRSTOP", false);
+      //bzABSB.change_enabled("E2", false);
+    }
+
+    if (ScrStat.Window_ABSB_Screen == true)
+    {
+      // ABSB Window
+      // Calculate Size and Position
+      YABSB_ScreenPos = YSplit;
+      XABSB_ScreenPos = XABSB_ScreenPos;
+      YABSB_ScreenSize = YMax - YSplit - YTabSize;
+      XABSB_ScreenSize =  XSplit;
+
+      // Build Window
+      winABSB_Screen = newwin(YABSB_ScreenSize, XABSB_ScreenSize, YABSB_ScreenPos, XABSB_ScreenPos);
+      tiABSB_Screen.move_resize(YABSB_ScreenPos, XABSB_ScreenPos, YABSB_ScreenSize, XABSB_ScreenSize);
+
+      // Set Y Split      
+      YSplit = YSplit + YLog_ScreenSize;
+
+      // ABSB Window Border
+      wborder(winABSB_Screen,' ',' ',' ',' ',' ',' ',' ',' ') ;
+
+      // Create Screen
+      wrefresh(winABSB_Screen);
+
+      // Set window color
+      wbkgd(winABSB_Screen, COLOR_PAIR(0));
+
+      // the bottom line of the ABSB.
+      strBotLine = "";
+      strBotLine = strBotLine.append(XABSB_ScreenSize-1, '_');
     }
 
     // ---------------------------------------------------------------------------------------
@@ -913,16 +994,25 @@ class Screen3
       XTabPos = XTabPos;
 
       // Prep Tab Buttons
-      bzTabs.move_resize(0, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 0), YTabSize, XTabSize);
-      bzTabs.move_resize(1, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize);
-      bzTabs.move_resize(2, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), YTabSize, XTabSize);
-      bzTabs.move_resize(3, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), YTabSize, XTabSize);
-      bzTabs.move_resize(4, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4), YTabSize, XTabSize);
-      bzTabs.move_resize(5, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 5), YTabSize, XTabSize);
-      bzTabs.move_resize(6, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 6), YTabSize, XTabSize);
+      bzTabs.move_resize(0, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 0), YTabSize, XTabSize); // Console
+      bzTabs.move_resize(1, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize); // Player
+      
+      bzTabs.move_resize(2, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), 2, 2); //    Blank
+      
+      bzTabs.move_resize(3, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2 +2), YTabSize, XTabSize); // Radio
+      bzTabs.move_resize(4, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3 +2), YTabSize, XTabSize); // Radio (MULTI)
+      
+      bzTabs.move_resize(5, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), 2, 2); //    Blank
+      
+      bzTabs.move_resize(6, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4 +4), YTabSize, XTabSize); // ABSB
+      
+      bzTabs.move_resize(7, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4), 2, 2); //    Blank
+      
+      bzTabs.move_resize(8, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 5 +6), YTabSize, XTabSize); // Log
 
       bzTabs.change_enabled("TABBLANK1", false);
       bzTabs.change_enabled("TABBLANK2", false);
+      bzTabs.change_enabled("TABBLANK3", false);
 
       // Set Y Split
       YSplit = YSplit + YTabSize;
@@ -1405,6 +1495,18 @@ class Screen3
     }
   }
 
+
+  // ---------------------------------------------------------------------------------------
+  void absb_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+  // Shows the Player Window
+  {
+    // Print ABSB Information
+    bzABSB.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+
+    // Print Title
+    tiABSB_Screen.draw(ScrStat.Needs_Refresh);
+  }
+
   // ---------------------------------------------------------------------------------------
   void log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   // Shows the Player Window
@@ -1483,10 +1585,17 @@ class Screen3
     }
 
     // Draw Log Screen window.
+    if (ScrStat.Window_ABSB_Screen == true)
+    {
+      absb_screen(sdSysData, ScrStat);
+    }
+
+    // Draw Log Screen window.
     if (ScrStat.Window_Log_Screen == true)
     {
       log_screen(sdSysData, ScrStat);
     }
+
     // Buttons
 
     // Draw Tabs.

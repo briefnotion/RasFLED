@@ -1,0 +1,5 @@
+This folder will contain the scripts I am calling to execute routines.  
+
+These scripts are mostly untested, but work for me. 
+
+The locations of these scripts need to be found in the source code.  At this time, these scripts are undocumented.

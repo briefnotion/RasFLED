@@ -631,6 +631,8 @@ class ScreenStatus
   bool Window_Radio_Buttons = false;
   bool Window_Radio = false;
   bool Window_Many_Radio = false;
+  bool Window_ABSB_Buttons = false;
+  bool Window_ABSB_Screen = false;
   bool Window_Log_Screen = false;
   
   // Refresh is set to true only if the value 
@@ -830,6 +832,42 @@ class ScreenStatus
     if (Window_Many_Radio == true)
     {
       Window_Many_Radio = false;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_ABSB_Buttons_On()
+  {
+    if (Window_ABSB_Buttons == false)
+    {
+      Window_ABSB_Buttons = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_ABSB_Buttons_Off()
+  {
+    if (Window_ABSB_Buttons == true)
+    {
+      Window_ABSB_Buttons = false;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_ABSB_Screen_On()
+  {
+    if (Window_ABSB_Screen == false)
+    {
+      Window_ABSB_Screen = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_ABSB_Screen_Off()
+  {
+    if (Window_ABSB_Screen == true)
+    {
+      Window_ABSB_Screen = false;
       Needs_Refresh = true;
     }
   }

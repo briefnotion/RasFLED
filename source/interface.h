@@ -452,6 +452,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // -------------------------------------------------------------------------------------
     // Threadable Commands with from command prompt   
 
+    // Radio -------------
     // Command Line (load air_m)
     if (check_command(cons, " airstop", "Airband Stop"))
     { 
@@ -556,6 +557,27 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
     }
 
+    // -------------------------------------------------------------------------------------
+    // ABS-B -------------
+    // Command Line (load fastart.sh)
+    if (check_command(cons, " absbon", "ABS-B On"))
+    { 
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/flightaware/fastart.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(15, 15, 0));
+    }
+
+    // Command Line (load fastop.sh)
+    if (check_command(cons, " absboff", "ABS-B Off"))
+    {
+      // Call command.
+      sdSysData.Command_Thread.run_command("/home/pi/flightaware/fastop.sh");
+
+      // Start Power Down Animation
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(15, 15, 0));
+    }
     // -------------------------------------------------------------------------------------
     // PLAYLIST
 

@@ -1,3 +1,10 @@
+V 1.01A_220714
+  - Created an empty (placeholder) ABS-B screen.
+  - Added simple buttons to start and stop Flightaware services.
+  - Included the scripts to start and stop Flightaware services in the 
+      support/flightaware directory.  Copy the flightaware directory to your 
+      ~/ or /home/pi directory.
+
 V 1.00A_220713
   - Added a FPS Config Default to track RF interference.  Changed to 25, 65, and 
       back to 50.  Failed to stop the interference.  Will try to shield cable in 
