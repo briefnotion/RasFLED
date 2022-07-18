@@ -236,6 +236,11 @@ class Text_Line_List
       return tmp;
     }
   }
+
+  void clear()
+  {
+    LINES.clear();
+  }
 };
 
 class Text_Box_Properties
@@ -352,9 +357,19 @@ class Text_Box
         line = PROP.LINES.get_line_to_print(y);
 
         // print the line to the screen
-        wmove(winText_Box, yCurPos, PROP.POSX);  //move cursor to next line to print or clear.
+        wmove(winText_Box, yCurPos, 0);  //move cursor to next line to print or clear.
         wclrtoeol(winText_Box);            // clear line befor printing to it.
-        mvwprintw(winText_Box, yCurPos, PROP.POSX, "%s", line.strLine.c_str());  //print line.       
+
+        // If line doesnt fit, put ">>" on the end of whats visible.
+        if (line.strLine.size() > PROP.SIZEX)
+        {
+          string truncated_line = line.strLine.substr(0, PROP.SIZEX -2) + ">>";
+          mvwprintw(winText_Box, yCurPos, 0, "%s", truncated_line.c_str());  //print line.
+        }
+        else
+        {
+          mvwprintw(winText_Box, yCurPos, 0, "%s", line.strLine.c_str());  //print line.
+        }
       }
 
       PROP.CHANGED = false;
@@ -368,6 +383,11 @@ class Text_Box
   {
     PROP.LINES.add(Time_Milli, Text);
     PROP.CHANGED = true;
+  }
+
+  void clear_text()
+  {
+    PROP.LINES.clear();
   }
 };
 

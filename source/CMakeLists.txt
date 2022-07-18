@@ -23,7 +23,9 @@ find_library(PTHREAD_LIBRARIES NAMES pthread)
 find_library(LIBRT rt)
 
 #find_package(Boost 1.74.0 COMPONENTS interprocess)
-find_package(Boost 1.74.0)
+#find_package(Boost 1.74.0)
+find_package(Boost COMPONENTS system thread filesystem REQUIRED)
+
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(

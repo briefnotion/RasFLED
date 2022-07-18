@@ -1,3 +1,11 @@
+V 1.02A_220718
+  - ADS-B is an acronym for Automatic Dependent Surveillance–Broadcast.
+      Went throgh the code and changed all absb variable names to ads_b.
+  - Aircraft RAW Data information will be displayed to the Placeholder 
+      ADS-B Screen.
+  - Small changes made to Text_Box gadget.
+  - Added functionality to rasapi file_watch.
+
 V 1.01A_220714
   - Created an empty (placeholder) ABS-B screen.
   - Added simple buttons to start and stop Flightaware services.

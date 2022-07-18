@@ -91,8 +91,8 @@ class Screen3
 
   public:
   Button_Zone_Manager bzButtons;
+  
   private:
-
   // Debug Screen Variables --------------------
   int YDebugPos = -1;
   int XDebugPos = 0;
@@ -131,8 +131,8 @@ class Screen3
 
   public:
   Button_Zone_Manager bzCPicker;
+  
   private:
-
   // Tabs Variables --------------------
   int YTabPos = -1;
   int XTabPos = 0;
@@ -141,19 +141,19 @@ class Screen3
 
   public:
   Button_Zone_Manager bzTabs;
+  
   private:
-
   // Console Screen Variables --------------------
   int YConsolePos = -1;
   int XConsolePos = 0;
   int YConsoleSize = -1;
   int XConsoleSize = -1;
+  Title_Bar tiConsole;
 
   public:
   Text_Box tbConsole;
+  
   private:
-  Title_Bar tiConsole;
-
   // Player Screen Variables --------------------
   int YPlayerPos = -1;
   int XPlayerPos = 0;
@@ -187,6 +187,7 @@ class Screen3
   int Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Radio_Channels;
 
+  private:
   // Radio Status
   int YRadioStatusPos = -1;
   int XRadioStatusPos = 0;
@@ -215,24 +216,28 @@ class Screen3
   int Many_Radio_Channel_Max_Display_Count = -1;
   deque<Radio_Channel> Many_Radio_Channels;
 
-  // ABSB Screen Variables --------------------
+  private:
+  // ADS_B Screen Variables --------------------
 
-  // ABSB Buttons
-  Button_Zone_Manager bzABSB;
+  int YADS_B_ScreenPos = -1;
+  int XADS_B_ScreenPos = 0;
+  int YADS_B_ScreenSize = -1;
+  int XADS_B_ScreenSize = -1;
 
-  int YABSB_ScreenPos = -1;
-  int XABSB_ScreenPos = 0;
-  int YABSB_ScreenSize = -1;
-  int XABSB_ScreenSize = -1;
+  int YBADS_BSize = 4; // ADS_B Button Standard Sizes
+  int XBADS_BSize = 8;
 
-  int YBABSBSize = 4; // ABSB Button Standard Sizes
-  int XBABSBSize = 8;
-
-  WINDOW * winABSB_Screen;
-  Title_Bar tiABSB_Screen;
+  WINDOW * winADS_B_Screen;
+  Title_Bar tiADS_B_Screen;
 
   public:
+  // ADS_B Buttons
+  Button_Zone_Manager bzADS_B;
 
+  // ADS_B Text Box Data
+  Text_Box tbads_b_Data;
+
+  private:
   // Log Screen Variables --------------------
   int YLog_ScreenPos = -1;
   int XLog_ScreenPos = 0;
@@ -248,7 +253,6 @@ class Screen3
   Text_Box  tbRadio_Log;
 
   private:
-  
   // --------------------
   // NCurses Window Variables
   string strBotLine;
@@ -262,7 +266,6 @@ class Screen3
   public:
 
   bool buffer_active = false; // Set to true when a buffer has a new movie frame. 
-
 
   void buttons_menu_home(system_data &sdSysData)
   // Define control buttons and load them to the 
@@ -408,7 +411,7 @@ class Screen3
     bzTabs.create_button(3, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(4, "TABMANYRADIO", "Radio%(Multi)", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(5, "TABBLANK2", "Blank 2", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzTabs.create_button(6, "TAB_ABSB_SCREEN", "ABSB", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzTabs.create_button(6, "TAB_ADS_B_SCREEN", "ADS-B", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(7, "TABBLANK3", "Blank 3", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzTabs.create_button(8, "TAB_LOG_SCREEN", "Log", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
@@ -510,14 +513,16 @@ class Screen3
       Many_Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
     }
 
-    // Prep Gadgets for ABSB screen.
-    tiABSB_Screen.create(1, "ABS-B", "ABS-B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+    // Prep Gadgets for ADS_B screen.
+    tiADS_B_Screen.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
-    bzABSB.create_button(0, "ABSBON", "%ABS-B%ON", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    bzABSB.create_button(1, "ABSBOFF", "%ABS-B%OFF", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    //bzABSB.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    //bzABSB.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-    //bzABSB.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzADS_B.create_button(0, "ADS_BON", "%ADS_B%ON", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    //bzADS_B.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    //bzADS_B.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    //bzADS_B.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+
+    tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
     // Create Log Screen Text Box
     tiLog_Screen.create(1, "LOGS", "LOGS", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
@@ -931,56 +936,59 @@ class Screen3
     }
 
     // ---------------------------------------------------------------------------------------
-    // Color ABSB Buttons Panel
-    if (ScrStat.Window_ABSB_Buttons == true)
+    // Color ADS_B Buttons Panel
+    if (ScrStat.Window_ADS_B_Buttons == true)
     {
       // Recreate XSplit Size
       //XSplit = XSplit - XCPickerSize * 2;
 
       // Calculate Size and Position
-      YABSB_ScreenPos = YSplit;
-      XABSB_ScreenPos = 0;
+      YADS_B_ScreenPos = YSplit;
+      XADS_B_ScreenPos = 0;
 
-      // Prep ABSB Buttons
-      bzABSB.move_resize(0, YABSB_ScreenPos + (YBABSBSize *0), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
-      bzABSB.move_resize(1, YABSB_ScreenPos + (YBABSBSize *1), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
-      //bzABSB.move_resize(2, YABSB_ScreenPos + (YBABSBSize *2), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
-      //bzABSB.move_resize(3, YABSB_ScreenPos + (YBABSBSize *3), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
-      //bzABSB.move_resize(4, YABSB_ScreenPos + (YBABSBSize *4), XABSB_ScreenPos, YBABSBSize, XBABSBSize);
+      // Prep ADS_B Buttons
+      bzADS_B.move_resize(0, YADS_B_ScreenPos + (YBADS_BSize *0), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+      bzADS_B.move_resize(1, YADS_B_ScreenPos + (YBADS_BSize *1), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+      //bzADS_B.move_resize(2, YADS_B_ScreenPos + (YBADS_BSize *2), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+      //bzADS_B.move_resize(3, YADS_B_ScreenPos + (YBADS_BSize *3), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+      //bzADS_B.move_resize(4, YADS_B_ScreenPos + (YBADS_BSize *4), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
 
       // Hide unneeded buttons.
-      //bzABSB.change_enabled("AIRSTOP", false);
-      //bzABSB.change_enabled("E2", false);
+      //bzADS_B.change_enabled("AIRSTOP", false);
+      //bzADS_B.change_enabled("E2", false);
     }
 
-    if (ScrStat.Window_ABSB_Screen == true)
+    if (ScrStat.Window_ADS_B_Screen == true)
     {
-      // ABSB Window
+      // ADS_B Window
       // Calculate Size and Position
-      YABSB_ScreenPos = YSplit;
-      XABSB_ScreenPos = XABSB_ScreenPos;
-      YABSB_ScreenSize = YMax - YSplit - YTabSize;
-      XABSB_ScreenSize =  XSplit;
+      YADS_B_ScreenPos = YSplit;
+      XADS_B_ScreenPos = XADS_B_ScreenPos;
+      YADS_B_ScreenSize = YMax - YSplit - YTabSize;
+      XADS_B_ScreenSize =  XSplit;
 
       // Build Window
-      winABSB_Screen = newwin(YABSB_ScreenSize, XABSB_ScreenSize, YABSB_ScreenPos, XABSB_ScreenPos);
-      tiABSB_Screen.move_resize(YABSB_ScreenPos, XABSB_ScreenPos, YABSB_ScreenSize, XABSB_ScreenSize);
+      winADS_B_Screen = newwin(YADS_B_ScreenSize, XADS_B_ScreenSize, YADS_B_ScreenPos, XADS_B_ScreenPos);
+      tiADS_B_Screen.move_resize(YADS_B_ScreenPos, XADS_B_ScreenPos, YADS_B_ScreenSize, XADS_B_ScreenSize);
 
       // Set Y Split      
       YSplit = YSplit + YLog_ScreenSize;
 
-      // ABSB Window Border
-      wborder(winABSB_Screen,' ',' ',' ',' ',' ',' ',' ',' ') ;
+      // ADS_B Window Border
+      wborder(winADS_B_Screen,' ',' ',' ',' ',' ',' ',' ',' ') ;
 
       // Create Screen
-      wrefresh(winABSB_Screen);
+      wrefresh(winADS_B_Screen);
 
       // Set window color
-      wbkgd(winABSB_Screen, COLOR_PAIR(0));
+      wbkgd(winADS_B_Screen, COLOR_PAIR(0));
 
-      // the bottom line of the ABSB.
+      // the bottom line of the ADS_B.
       strBotLine = "";
-      strBotLine = strBotLine.append(XABSB_ScreenSize-1, '_');
+      strBotLine = strBotLine.append(XADS_B_ScreenSize-1, '_');
+
+      // Display ADSB Log
+      tbads_b_Data.move_resize(YADS_B_ScreenPos, XADS_B_ScreenPos + XBADS_BSize, YADS_B_ScreenSize, XADS_B_ScreenSize - XBADS_BSize);
     }
 
     // ---------------------------------------------------------------------------------------
@@ -1004,7 +1012,7 @@ class Screen3
       
       bzTabs.move_resize(5, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), 2, 2); //    Blank
       
-      bzTabs.move_resize(6, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4 +4), YTabSize, XTabSize); // ABSB
+      bzTabs.move_resize(6, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4 +4), YTabSize, XTabSize); // ADS_B
       
       bzTabs.move_resize(7, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4), 2, 2); //    Blank
       
@@ -1497,14 +1505,17 @@ class Screen3
 
 
   // ---------------------------------------------------------------------------------------
-  void absb_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+  void ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   // Shows the Player Window
   {
-    // Print ABSB Information
-    bzABSB.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    // Print Log File
+    tbads_b_Data.draw(ScrStat.Needs_Refresh);
+
+    // Print ADS_B Information
+    bzADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
 
     // Print Title
-    tiABSB_Screen.draw(ScrStat.Needs_Refresh);
+    tiADS_B_Screen.draw(ScrStat.Needs_Refresh);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1585,9 +1596,9 @@ class Screen3
     }
 
     // Draw Log Screen window.
-    if (ScrStat.Window_ABSB_Screen == true)
+    if (ScrStat.Window_ADS_B_Screen == true)
     {
-      absb_screen(sdSysData, ScrStat);
+      ads_b_screen(sdSysData, ScrStat);
     }
 
     // Draw Log Screen window.

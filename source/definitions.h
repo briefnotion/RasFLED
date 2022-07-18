@@ -34,6 +34,9 @@
 #define FILES_RUNNING_STATE_SAVE  "runningstate.cfg"
 #define FILES_PLAYLIST            "playlist.cfg"
 
+#define FILES_DEAMON_LOG          "/var/log/daemon.log"             // Raspi System Log
+#define FILES_AIRCRAFT_JSON       "/run/dump1090-fa/aircraft.json"  // FlightAware Aircraft JSON File
+
 // Key Mapping
 #define KEYEXIT           'X'
 #define KEYRESIZE         '*' // Key Resize

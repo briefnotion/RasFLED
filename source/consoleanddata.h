@@ -514,8 +514,8 @@ class Console
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
 
-          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
-          ScrStat.Window_ABSB_Screen_Off();
+          ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
+          ScrStat.Window_ADS_B_Screen_Off();
 
           ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
@@ -533,8 +533,8 @@ class Console
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
 
-          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
-          ScrStat.Window_ABSB_Screen_Off();
+          ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
+          ScrStat.Window_ADS_B_Screen_Off();
 
           ScrStat.Window_Log_Screen_Off();    // Log
           the_player.play();
@@ -552,8 +552,8 @@ class Console
           ScrStat.Window_Radio_On();
           ScrStat.Window_Many_Radio_Off();
 
-          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
-          ScrStat.Window_ABSB_Screen_Off();
+          ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
+          ScrStat.Window_ADS_B_Screen_Off();
 
           ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
@@ -571,18 +571,18 @@ class Console
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_On();
 
-          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
-          ScrStat.Window_ABSB_Screen_Off();
+          ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
+          ScrStat.Window_ADS_B_Screen_Off();
 
           ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
           sdSysData.RADIO_COORD.play();
         }
 
-        if(name.compare("TAB_ABSB_SCREEN") == 0)
+        if(name.compare("TAB_ADS_B_SCREEN") == 0)
         // Turn on Tab
         {
-          printi("Tab ABS-B");
+          printi("Tab ADS_B");
           ScrStat.Window_Console_Off();       // Console
           ScrStat.Window_Player_Off();        // Player
 
@@ -590,8 +590,8 @@ class Console
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
 
-          ScrStat.Window_ABSB_Buttons_On();   // ABSB
-          ScrStat.Window_ABSB_Screen_On();
+          ScrStat.Window_ADS_B_Buttons_On();   // ADS_B
+          ScrStat.Window_ADS_B_Screen_On();
 
           ScrStat.Window_Log_Screen_Off();    // Log
           the_player.pause();
@@ -609,8 +609,8 @@ class Console
           ScrStat.Window_Radio_Off();
           ScrStat.Window_Many_Radio_Off();
 
-          ScrStat.Window_ABSB_Buttons_Off();  // ABSB
-          ScrStat.Window_ABSB_Screen_Off();
+          ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
+          ScrStat.Window_ADS_B_Screen_Off();
 
           ScrStat.Window_Log_Screen_On();     // Log
           the_player.pause();
@@ -810,24 +810,24 @@ class Console
       }
 
       // -----------------------------------
-      if(ScrStat.Window_ABSB_Screen == true)
+      if(ScrStat.Window_ADS_B_Screen == true)
       {
-        if (Screen.bzABSB.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
+        if (Screen.bzADS_B.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
         // Check for any clicked buttons or if it was just empty space.
-        //  If anything was clicked, the list in the bzzABSB will be updated.
+        //  If anything was clicked, the list in the bzzADS_B will be updated.
         {
           string name = "empty";
           int value = 0;
-          name = Screen.bzABSB.get_clicked_name();
-          value = Screen.bzABSB.get_clicked_value(name);
+          name = Screen.bzADS_B.get_clicked_name();
+          value = Screen.bzADS_B.get_clicked_value(name);
         
-          if(name.compare("ABSBON") == 0)
-          // Turn On ABSB Receiver
+          if(name.compare("ADS_BON") == 0)
+          // Turn On ADS_B Receiver
           {
             keywatch.cmdInString(" absbon");
           }
-          else if(name.compare("ABSBOFF") == 0)
-          // Turn Off ABSB Receiver
+          else if(name.compare("ADS_BOFF") == 0)
+          // Turn Off ADS_B Receiver
           {
             keywatch.cmdInString(" absboff");
           }

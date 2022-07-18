@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.01A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.02A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -343,10 +343,16 @@ int loop()
   // Console sub timer. Just a little faster to prevent blips.
   cons.Console_Display.set(SCREENUPDATEDELAY-1);
 
-  // LogFile Variables
+  // System LogFile Variables
   FILE_WATCH watcher_daemon_log;
-  //watcher_daemon_log.open("/home/pi/test/test.log");
-  watcher_daemon_log.open("/var/log/daemon.log");
+  watcher_daemon_log.start(FILES_DEAMON_LOG);
+
+  // System LogFile Variables
+  FILE_WATCH watcher_aircraft_json;
+  watcher_aircraft_json.PROP.READ_FROM_BEGINNING = true;
+  watcher_aircraft_json.PROP.WATCH_SIZE_CHANGE = false;
+  watcher_aircraft_json.PROP.WATCH_TIME_CHANGE = true;
+  watcher_aircraft_json.start(FILES_AIRCRAFT_JSON);
 
   // Disposable Variables
   int count  = 0;
@@ -797,10 +803,21 @@ int loop()
       // Read Hardware Status before printing to screen.
       sdSystem.read_hardware_status(1000);
 
-      // Read log files
+      // Read System log files
       while (watcher_daemon_log.line_avail() == true)
       {
         cons.Screen.tbRadio_Log.add_line(tmeCurrentMillis, watcher_daemon_log.get_next_line());
+      }
+
+      // Read ADS-B Aircraft JSON
+      if (watcher_aircraft_json.line_avail() == true)
+      {
+        cons.Screen.tbads_b_Data.clear_text();        // Clear screen with new data arival.
+      }
+
+      while (watcher_aircraft_json.line_avail() == true)
+      {
+        cons.Screen.tbads_b_Data.add_line(tmeCurrentMillis, watcher_aircraft_json.get_next_line());
       }
       
       // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
@@ -959,7 +976,7 @@ int loop()
   shutdown();
 
   // close open files
-  watcher_daemon_log.close();
+  watcher_daemon_log.stop();
 
   printf("\033[?1003l\n"); // Disable mouse movement events, as l = low
 
