@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-#option(BUILD_RELEASE "Release Build" OFF)
+#option(BUILD_RELEASE "Release Build" ON)
+
+add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
 set(BUILD_RELEASE ON)
 
@@ -51,6 +53,8 @@ add_executable(
   player.h
   api_shared_memory.h
   api_rtlairband.h
+  radio_channel_coordinator.h
+  aircraft_coordinator.h
 )
 
 target_link_libraries(RasFLED 

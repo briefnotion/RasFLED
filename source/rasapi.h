@@ -40,8 +40,9 @@ class FILE_WATCH_Properties
                                     //  read last line read on file change or start 
                                     //  next line from beginning on file change.
 
-  bool ACTIVE = true;     // Indicates if routine is in good status and working.
-  bool ENABLED = true;    // turn on and off routine.  (Not Yet Implemented)
+  bool FILE_EXIST = false;  // Indicates existance of file on last file check.
+  bool ACTIVE = true;       // Indicates if routine is in good status and working.
+  bool ENABLED = true;      // turn on and off routine.  (Not Yet Implemented)
 
   bool WATCH_SIZE_CHANGE = true;  // New line indicated if File Size changed.
   bool WATCH_TIME_CHANGE = false; // New line indicated if File Write Time changed.
@@ -110,10 +111,12 @@ class FILE_WATCH
   {
     if (boost::filesystem::exists(FILENAME) == false)
     {
+      PROP.FILE_EXIST = false;
       close();
     }
     else if(LOG_FILE.is_open() != true)
     {
+      PROP.FILE_EXIST = true;
       open();
     }
 

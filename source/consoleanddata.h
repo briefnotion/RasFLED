@@ -26,6 +26,7 @@
 #include "definitions.h"
 #include "fled_time.h"
 #include "helper.h"
+#include "stringthings.h"
 #include "system.h"
 #include "screen3.h"
 #include "player.h"
@@ -113,6 +114,56 @@ class Console
       }
     }
     */
+  }
+
+  void update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
+  {
+    string tmp_line = "";
+    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, sdSysData.AIRCRAFT_COORD.DATA.NOW);
+    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, sdSysData.AIRCRAFT_COORD.DATA.MESSAGES);
+    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
+
+    tmp_line = "Messages: " + to_string(sdSysData.AIRCRAFT_COORD.DATA.MESSAGES);
+    Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);
+    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
+
+    tmp_line = 
+                  right_justify(6, "SWK") + 
+                  //right_justify(8, "HEX") + 
+                  right_justify(9, "FLIGHT") + 
+
+                  right_justify(8, "G SPEED") +
+                  right_justify(8, "ALT") + 
+                  right_justify(7, "V RT") + 
+                  right_justify(7, "TRACK") + 
+                  
+                  right_justify(8, "SN POS") + 
+                  right_justify(6, "MSGS") + 
+                  right_justify(6, "SEEN") + 
+                  right_justify(7, "RSSI")        
+                  ;
+    Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);  
+
+    for (int x = 0; x < sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS.size(); x++)
+    {
+       tmp_line = 
+                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SQUAWK) + 
+                      //right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].HEX) + 
+                      right_justify(9, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].FLIGHT) +
+
+                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SPEED) +
+                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].ALTITUDE) + 
+                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].VERT_RATE) + 
+                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].TRACK) + 
+
+                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN_POS) + 
+                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].MESSAGES) + 
+                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN) + 
+                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].RSSI) 
+                      ;
+
+      Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);
+    }
   }
 
   bool load_reel(fstream &fsPlayer, string filename)
@@ -836,7 +887,7 @@ class Console
     }
   }  
 
-  void update_displayed_time(unsigned long time)
+  void update_displayed_time(unsigned long &time)
   // Set the consoles last redraw time, a now should be passed in.
   {
     Update_Time = time;

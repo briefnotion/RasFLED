@@ -25,6 +25,7 @@
 #include "api_shared_memory.h"
 #include "api_rtlairband.h"
 #include "radio_channel_coordinator.h"
+#include "aircraft_coordinator.h"
 
 using namespace std;
 
@@ -151,6 +152,8 @@ class system_data
   API_SQUELCH_DESTINATION RECEIVED_SQUELCH;
   API_CHANNEL_MEM API_CHANNEL;
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
+  AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
+
 
   // Console Display Variables from other
 

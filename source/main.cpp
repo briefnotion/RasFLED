@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.02A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.03A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -813,13 +813,19 @@ int loop()
       if (watcher_aircraft_json.line_avail() == true)
       {
         cons.Screen.tbads_b_Data.clear_text();        // Clear screen with new data arival.
+        while (watcher_aircraft_json.line_avail() == true)
+        {
+          string dummy = watcher_aircraft_json.get_next_line();
+          //cons.Screen.tbads_b_Data.add_line(tmeCurrentMillis, watcher_aircraft_json.get_next_line());
+        }
+
+        if (sdSystem.AIRCRAFT_COORD.process() == true)
+        {
+          cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
+        }
+        
       }
 
-      while (watcher_aircraft_json.line_avail() == true)
-      {
-        cons.Screen.tbads_b_Data.add_line(tmeCurrentMillis, watcher_aircraft_json.get_next_line());
-      }
-      
       // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
       //cons.readkeyboardinput();
       cons.readkeyboardinput2();

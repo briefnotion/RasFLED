@@ -1,3 +1,8 @@
+V 1.03A_220723
+  - Successfully parsing FlightAware API.
+  - Printing partial ADS-B data set to the ADS-B screen for testing.  No 
+      calulations or conversion is being made on the data.
+
 V 1.02A_220718
   - ADS-B is an acronym for Automatic Dependent Surveillance–Broadcast.
       Went throgh the code and changed all absb variable names to ads_b.
