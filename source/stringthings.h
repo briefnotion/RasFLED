@@ -185,5 +185,107 @@ string right_justify(int size, string text)
   return return_string;
 }
 
+bool string_to_int(string String_Value, int &Int_Value)
+// Convert in String_Value number to out Int_Value.
+//  Returns true if value sucessful.
+{
+  try
+  {
+    Int_Value = stoi(String_Value);
+    return true;
+  }
+  catch(const std::exception& e)
+  {
+    Int_Value = 0;
+    return false;
+  }
+}
+
+bool string_to_float(string String_Value, float &Float_Value)
+// Convert in String_Value number to out Float_Value.
+//  Returns true if value sucessful.
+{
+  try
+  {
+    Float_Value = stof(String_Value);
+    return true;
+  }
+  catch(const std::exception& e)
+  {
+    Float_Value = 0;
+    return false;
+  }
+}
+
+class STRING_INT
+// Variable stores original string number and converted value.
+// Sets error if conversion unsucessful.
+{
+  private:
+  string  STR_VALUE = "";
+  int     INT_VALUE = 0;
+  bool    CONVERSION_ERROR = false;
+
+  public:
+  void store(string str_value)
+  {
+    STR_VALUE = str_value;
+    CONVERSION_ERROR = string_to_int(str_value, INT_VALUE);
+  }
+
+  string get_str_value()
+  // Return original number string value.
+  {
+    return STR_VALUE;
+  }
+
+  int get_int_value()
+  // Return converted number string value.
+  {
+    return INT_VALUE;
+  }
+
+  bool error()
+  // Returns true if conversion was unsucessful.
+  {
+    return CONVERSION_ERROR;
+  }
+};
+
+class STRING_FLOAT
+// Variable stores original string number and converted value.
+// Sets error if conversion unsucessful.
+{
+  private:
+  string  STR_VALUE = "";
+  float   FLOAT_VALUE = 0;
+  bool    CONVERSION_ERROR = false;
+
+  public:
+  void store(string str_value)
+  {
+    STR_VALUE = str_value;
+    CONVERSION_ERROR = string_to_float(str_value, FLOAT_VALUE);
+  }
+  
+  string get_str_value()
+  // Return original number string value.
+  {
+    return STR_VALUE;
+  }
+
+  float get_float_value()
+  // Return converted number string value.
+  {
+    return FLOAT_VALUE;
+  }
+
+  bool error()
+  // Returns true if conversion was unsucessful.
+  {
+    return CONVERSION_ERROR;
+  }
+};
+
 
 #endif

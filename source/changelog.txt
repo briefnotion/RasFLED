@@ -1,3 +1,7 @@
+V 1.04A_220726
+  - Started organizing data pulled in from ADS-B receiver.
+  - This build is untested in field.
+
 V 1.03A_220723
   - Successfully parsing FlightAware API.
   - Printing partial ADS-B data set to the ADS-B screen for testing.  No 

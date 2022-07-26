@@ -147,19 +147,19 @@ class Console
     for (int x = 0; x < sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS.size(); x++)
     {
        tmp_line = 
-                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SQUAWK) + 
+                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SQUAWK.get_str_value()) + 
                       //right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].HEX) + 
                       right_justify(9, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].FLIGHT) +
 
-                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SPEED) +
-                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].ALTITUDE) + 
-                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].VERT_RATE) + 
-                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].TRACK) + 
+                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SPEED.get_str_value()) +
+                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].ALTITUDE.get_str_value()) + 
+                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].VERT_RATE.get_str_value()) + 
+                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].TRACK.get_str_value()) + 
 
-                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN_POS) + 
-                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].MESSAGES) + 
-                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN) + 
-                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].RSSI) 
+                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN_POS.get_str_value()) + 
+                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].MESSAGES.get_str_value()) + 
+                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN.get_str_value()) + 
+                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].RSSI.get_str_value()) 
                       ;
 
       Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);

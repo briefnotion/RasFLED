@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.03A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.04A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -819,7 +819,7 @@ int loop()
           //cons.Screen.tbads_b_Data.add_line(tmeCurrentMillis, watcher_aircraft_json.get_next_line());
         }
 
-        if (sdSystem.AIRCRAFT_COORD.process() == true)
+        if (sdSystem.AIRCRAFT_COORD.process(FILES_AIRCRAFT_JSON) == true)
         {
           cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
         }

@@ -14,6 +14,8 @@
 
 #include <deque>
 
+#include <string.h>
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
@@ -47,42 +49,58 @@ using namespace boost::property_tree;
 class GLOBAL_POSITION
 {
   public:
-  string LATITUDE = "";
-  string LONGITUDE = "";
+  STRING_FLOAT LATITUDE;
+  STRING_FLOAT LONGITUDE;
 };
 
 class AIRCRAFT
 {
   public:
-  /*
-  string HEX = "";
-  long SQUAWK = 0;
-  string FLIGHT = "";
-  GLOBAL_POSITION POSITION;
-  string NUCP = "";
-  long SEEN_POS = 0;
-  long ALTITUDE = 0;
-  long VERT_RATE = 0;
-  long TRACK = 0;
-  long SPEED = 0;
-  long MESSAGES = 0;
-  long SEEN = 0;
-  long RSSI = 0;
-  */
 
-  string HEX = "";
-  string SQUAWK = "";
-  string FLIGHT = "";
-  GLOBAL_POSITION POSITION;
-  string NUCP = "";
-  string SEEN_POS = "";
-  string ALTITUDE = "";
-  string VERT_RATE = "";
-  string TRACK = "";
-  string SPEED = "";
-  string MESSAGES = "";
-  string SEEN = "";
-  string RSSI = "";
+  // VARIABLES            // DESCRIPTION                                EXAMPLE
+  // Idents
+  string HEX;             // Hex Identifier                             "hex":"a8e85f"
+  STRING_INT SQUAWK;      // Squawk Code Identifier                     "squawk":"4327"
+  string FLIGHT = "";     // Flight Code                                "flight":"RLC673  "
+  STRING_INT VERSION;     // ADS-B Version                              "version":2
+
+  // Speed Rate Positions
+  STRING_FLOAT SPEED;     // Ground Speed                               "gs":135.1
+  STRING_FLOAT SEEN_POS;  // Seen Pos                                   "seen_pos":6.6
+  STRING_INT ALTITUDE;    // Aircaft Altitude from Sea Level            "alt_baro":300
+  STRING_INT ALTITUDE_GEOM;  // UNKNOWN                                 "alt_geom":425
+  STRING_INT VERT_RATE;   // Vertical Assend or Desend Rate             "baro_rate":0
+  STRING_INT GEOM_RATE;   // UNKNOWN                                    "geom_rate":-384
+  STRING_FLOAT TRACK;       // Track (magnetic or polar?)               "track":315.9
+
+  GLOBAL_POSITION POSITION; // Lat Lon Position                         "lat":30.121399
+                            //                                          "lon":-92.435033
+
+  // Aircraft Configuration
+  STRING_INT SIL;         // UNKNOWN                                    "sil":3
+  string SIL_TYPE = "";   // UNKNOWN                                    "sil_type":"perhour"
+  string EMERGENCY = "";  // UNKNOWN                                    "emergency":"none"
+  string CATAGORY = "";   // UNKNOWN                                    "category":"A7"
+  STRING_FLOAT NAV_QNH;   // Selected Sea Level Pressure (MSLP)         "nav_qnh":1012.8
+  STRING_FLOAT NAV_HEADING;// Selected Nav Heading                      "nav_heading":347.3
+  STRING_INT NAV_ALTITUDE_MCP; // UNKNOWN                               "nav_altitude_mcp":36992
+  string NAV_MODES;       // UNKNOWN                                    "nav_modes":["autopilot","althold","tcas"]
+  STRING_INT NIC ;        // UNKNOWN                                    "nic":8
+  STRING_INT RC;          // UNKNOWN                                    "rc":186
+  STRING_FLOAT NIC_BARO;  // UNKNOWN                                    "nic_baro":0
+  STRING_INT NAC_P;       // Aircraft Operational                       "nac_p":10
+  STRING_INT NAC_V;       // Airborne Velocity                          "nac_v":2
+  STRING_INT GVA;         // Airborne Operational                       "gva":2
+  STRING_INT SDA;         // UNKNOWN                                    "sda":2
+  string MLAT = "";       // UNKNOWN                                    "mlat":[]
+  string TISB = "";       // UNKNOWN                                    "tisb":[]
+
+  // Radio Information
+  STRING_INT MESSAGES;    // Message Count Received.                    "messages":261
+  STRING_INT SEEN;        // Seconds since last                         "messages":261
+                          //  received message (300 second expiration)
+  STRING_FLOAT RSSI;      // Signal Strength                            "rssi":-28.4
+
 };
 
 class AIRCRAFT_DATA
@@ -104,15 +122,15 @@ class AIRCRAFT_COORDINATOR
   string data = "";
 
   private:
-  bool read_json_file()
+  bool read_json_file(string &JSON_Filename)
+  // Read JSON file into Property Tree
   {
     bool boo_return = false;
-    
-    //PROPERTY_TREE.clear();
 
+    // No easy way to avoid all types of errors.
     try
     {
-      read_json(FILES_AIRCRAFT_JSON, PROPERTY_TREE);
+      read_json(JSON_Filename, PROPERTY_TREE);
       boo_return = true;
     }
     catch (std::exception const& e)
@@ -123,7 +141,10 @@ class AIRCRAFT_COORDINATOR
   }
 
   string tree_value(string First, ptree::value_type &Branch)
+  // Search for First and return value from property tree.
   {
+    // No easy way to avoid all types of errors.
+    //  Exception thrown if First cant be found.
     try
     {
       return Branch.second.get<string>(First);
@@ -134,46 +155,15 @@ class AIRCRAFT_COORDINATOR
     }
   }
 
-/*
-{ "now" : 1658364366.8,
-  "messages" : 65,
-  "aircraft" : [
-    {
-      "hex":"ae0113",
-      "alt_baro":23000,
-      "version":2,
-      "nic_baro":1,
-      "nac_p":10,
-      "sil":3,
-      "sil_type":"perhour",
-      "gva":2,
-      "sda":2,
-      "mlat":[],
-      "tisb":[],
-      "messages":9,
-      "seen":4.9,
-      "rssi":-28.8
-    },  
-    {
-      "hex":"a84dce",
-      "version":0,
-      "mlat":[],
-      "tisb":[],
-      "messages":11,
-      "seen":111.7,
-      "rssi":-29.8
-    }
-  ]
-}
-*/
-
   public:
-  bool process()
+  bool process(string JSON_Filename)
+  // Read JSON Aircraft file, parse data, and store data to the Aircraft Data list.
+  //  Returns true if sucessfule
+  //  Returns false if fails.
+  //    Possible reason for fail is if file not found.
   {
-    if (read_json_file() == true)
+    if (read_json_file(JSON_Filename) == true)
     {
-      
-
       DATA.AIRCRAFTS.clear();
 
       DATA.NOW = PROPERTY_TREE.get<float>("now");
@@ -190,59 +180,41 @@ class AIRCRAFT_COORDINATOR
         string tmp = "";
         string version = "";
 
+        // Idents
         tmpAircraft.HEX = tree_value("hex", aircraft);
-        tmpAircraft.MESSAGES = tree_value("messages", aircraft);
-        tmpAircraft.SEEN = tree_value("seen", aircraft);
-        tmpAircraft.RSSI = tree_value("rssi", aircraft);
-
-        tmpAircraft.SQUAWK = tree_value("squawk", aircraft);
+        tmpAircraft.SQUAWK.store(tree_value("squawk", aircraft));
         tmpAircraft.FLIGHT = tree_value("flight", aircraft);
-        tmpAircraft.NUCP = tree_value("nucp", aircraft);
+        tmpAircraft.VERSION.store(tree_value("version", aircraft));
 
-        //tmpAircraft.POSITION = tree_value("mlat[]", aircraft);
-        tmpAircraft.SEEN_POS = tree_value("seen_pos", aircraft);
-        tmpAircraft.ALTITUDE = tree_value("alt_baro", aircraft);
-        //tmpAircraft.ALTITUDE = tree_value("alt_geom", aircraft);
-        //tmpAircraft.VERT_RATE = tree_value("vert_rate", aircraft);
-        tmpAircraft.VERT_RATE = tree_value("baro_rate", aircraft);
-        tmpAircraft.TRACK = tree_value("track", aircraft);
-        tmpAircraft.SPEED = tree_value("speed", aircraft);
-        tmpAircraft.SPEED = tree_value("gs", aircraft);
+
+        // Speed Rate Positions
+        tmpAircraft.SPEED.store(tree_value("gs", aircraft));
+        tmpAircraft.SEEN_POS.store(tree_value("seen_pos", aircraft));
+        tmpAircraft.ALTITUDE.store(tree_value("alt_baro", aircraft));
+        tmpAircraft.ALTITUDE_GEOM.store(tree_value("alt_geom", aircraft));
+        tmpAircraft.VERT_RATE.store(tree_value("baro_rate", aircraft));
+        tmpAircraft.GEOM_RATE.store(tree_value("geom_rate", aircraft));
+        tmpAircraft.TRACK.store(tree_value("track", aircraft));
+        tmpAircraft.POSITION.LATITUDE.store(tree_value("lat", aircraft));
+        tmpAircraft.POSITION.LONGITUDE.store(tree_value("lon", aircraft));
         
-        //tmpAircraft.SPEED = tree_value("gs", aircraft);
-        //tmpAircraft.SPEED = tree_value("baro_rate", aircraft);
-        //tmpAircraft.SPEED = tree_value("version", aircraft);
-        //tmpAircraft.SPEED = tree_value("nac_p", aircraft);
-        //tmpAircraft.SPEED = tree_value("sil", aircraft);
-        //tmpAircraft.SPEED = tree_value("sil_type", aircraft);
+        // Aircraft Configuration
+        tmpAircraft.EMERGENCY = tree_value("emergency", aircraft);
+        /*  Not yet grabbing all data.
+              .
+              .
+              .
+        */
 
-        //tmpAircraft.SPEED = tree_value("gs", aircraft);
-        //tmpAircraft.SPEED = tree_value("tisb[]", aircraft);
-        //tmpAircraft.SPEED = tree_value("flight", aircraft);
-        //tmpAircraft.SPEED = tree_value("category", aircraft);
-        //tmpAircraft.SPEED = tree_value("nav_qnh", aircraft);
-        //tmpAircraft.SPEED = tree_value("nav_heading", aircraft);
-        //tmpAircraft.SPEED = tree_value("nic_baro", aircraft);
-        //tmpAircraft.SPEED = tree_value("nac_p", aircraft);
-        //tmpAircraft.SPEED = tree_value("nac_v", aircraft);
+        // Radio Information
+        tmpAircraft.MESSAGES.store(tree_value("messages", aircraft));
+        tmpAircraft.SEEN.store(tree_value("seen", aircraft));
+        tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
 
-        //tmpAircraft.SPEED = tree_value("gva", aircraft);
-        //tmpAircraft.SPEED = tree_value("sda", aircraft);
-        //tmpAircraft.SPEED = tree_value("flight", aircraft);
-        //tmpAircraft.SPEED = tree_value("category", aircraft);
-        //tmpAircraft.SPEED = tree_value("nav_qnh", aircraft);
-        //tmpAircraft.SPEED = tree_value("nav_heading", aircraft);
-        //tmpAircraft.SPEED = tree_value("nic_baro", aircraft);
-        //tmpAircraft.SPEED = tree_value("nac_p", aircraft);
-        //tmpAircraft.SPEED = tree_value("nac_v", aircraft);
-
-
-
+        // Store Aircraft ADS-B Data into list.
         DATA.AIRCRAFTS.push_back(tmpAircraft);
       }
       
-
-
       return true;
     }
     else
