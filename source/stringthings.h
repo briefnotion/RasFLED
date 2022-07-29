@@ -185,6 +185,28 @@ string right_justify(int size, string text)
   return return_string;
 }
 
+string left_justify(int size, string text)
+// Overlaps and left justifies text onto line.
+// Returns value at size. 
+{
+  string return_string = "";
+
+  if (text.size() > size)
+  {
+    return_string = text.erase(0, text.size()- size);
+  }
+  else if (text.size() == size)
+  {
+    return_string = text;
+  }
+  else
+  {
+    return_string = text + return_string.append(size - text.size() ,' ');
+  }
+
+  return return_string;
+}
+
 bool string_to_int(string String_Value, int &Int_Value)
 // Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.
@@ -224,13 +246,13 @@ class STRING_INT
   private:
   string  STR_VALUE = "";
   int     INT_VALUE = 0;
-  bool    CONVERSION_ERROR = false;
+  bool    CONVERSION_SUCCESS = false;
 
   public:
   void store(string str_value)
   {
     STR_VALUE = str_value;
-    CONVERSION_ERROR = string_to_int(str_value, INT_VALUE);
+    CONVERSION_SUCCESS = string_to_int(str_value, INT_VALUE);
   }
 
   string get_str_value()
@@ -245,10 +267,10 @@ class STRING_INT
     return INT_VALUE;
   }
 
-  bool error()
+  bool conversion_success()
   // Returns true if conversion was unsucessful.
   {
-    return CONVERSION_ERROR;
+    return CONVERSION_SUCCESS;
   }
 };
 
@@ -259,13 +281,13 @@ class STRING_FLOAT
   private:
   string  STR_VALUE = "";
   float   FLOAT_VALUE = 0;
-  bool    CONVERSION_ERROR = false;
+  bool    CONVERSION_SUCCESS = false;
 
   public:
   void store(string str_value)
   {
     STR_VALUE = str_value;
-    CONVERSION_ERROR = string_to_float(str_value, FLOAT_VALUE);
+    CONVERSION_SUCCESS = string_to_float(str_value, FLOAT_VALUE);
   }
   
   string get_str_value()
@@ -280,10 +302,10 @@ class STRING_FLOAT
     return FLOAT_VALUE;
   }
 
-  bool error()
+  bool conversion_success()
   // Returns true if conversion was unsucessful.
   {
-    return CONVERSION_ERROR;
+    return CONVERSION_SUCCESS;
   }
 };
 

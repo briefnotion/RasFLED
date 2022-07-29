@@ -118,52 +118,11 @@ class Console
 
   void update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
   {
-    string tmp_line = "";
-    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, sdSysData.AIRCRAFT_COORD.DATA.NOW);
-    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, sdSysData.AIRCRAFT_COORD.DATA.MESSAGES);
-    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
-
-    tmp_line = "Messages: " + to_string(sdSysData.AIRCRAFT_COORD.DATA.MESSAGES);
-    Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);
-    //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
-
-    tmp_line = 
-                  right_justify(6, "SWK") + 
-                  //right_justify(8, "HEX") + 
-                  right_justify(9, "FLIGHT") + 
-
-                  right_justify(8, "G SPEED") +
-                  right_justify(8, "ALT") + 
-                  right_justify(7, "V RT") + 
-                  right_justify(7, "TRACK") + 
-                  
-                  right_justify(8, "SN POS") + 
-                  right_justify(6, "MSGS") + 
-                  right_justify(6, "SEEN") + 
-                  right_justify(7, "RSSI")        
-                  ;
-    Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);  
-
-    for (int x = 0; x < sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS.size(); x++)
+    if(sdSysData.AIRCRAFT_COORD.DATA.CHANGED == true)
     {
-       tmp_line = 
-                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SQUAWK.get_str_value()) + 
-                      //right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].HEX) + 
-                      right_justify(9, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].FLIGHT) +
-
-                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SPEED.get_str_value()) +
-                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].ALTITUDE.get_str_value()) + 
-                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].VERT_RATE.get_str_value()) + 
-                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].TRACK.get_str_value()) + 
-
-                      right_justify(8, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN_POS.get_str_value()) + 
-                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].MESSAGES.get_str_value()) + 
-                      right_justify(6, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].SEEN.get_str_value()) + 
-                      right_justify(7, sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[x].RSSI.get_str_value()) 
-                      ;
-
-      Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);
+      Screen.tbads_b_Data.update(sdSysData);
     }
+
   }
 
   bool load_reel(fstream &fsPlayer, string filename)

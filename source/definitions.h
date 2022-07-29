@@ -36,7 +36,7 @@
 
 #define FILES_DEAMON_LOG          "/var/log/daemon.log"             // Raspi System Log
 #define FILES_AIRCRAFT_JSON       "/run/dump1090-fa/aircraft.json"  // FlightAware Aircraft JSON File
-//#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // FlightAware Aircraft JSON File
+//#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // FlightAware Aircraft JSON File for testing.
 
 // Key Mapping
 #define KEYEXIT           'X'

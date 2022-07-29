@@ -23,6 +23,8 @@
 #include "helper_ncurses.h"
 #include "api_rtlairband.h"
 
+#include "aircraft_coordinator.h"
+
 using namespace std;
 
 // -------------------------------------------------------------------------------------
@@ -388,6 +390,240 @@ class Text_Box
   void clear_text()
   {
     PROP.LINES.clear();
+  }
+};
+
+class ADS_B_List_Box_Properties
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+
+  AIRCRAFT_DATA VALUE;
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CHANGED = false;
+};
+
+class ADS_B_List_Box
+// Routines for create, draw, modify, and behavior.
+{
+  private:
+
+  WINDOW * ADS_B_List_Box;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  // Types:
+  // -1 - Hidden
+  //  0 - Read Only
+
+  public:
+
+  ADS_B_List_Box_Properties PROP;  
+
+  void modify(int id, string name, string label, int type, int color, int bcolor)
+  // Changes all properties
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+
+    PROP.CHANGED = true;
+  }
+
+  void create(int id, string name, string label, int type, int color, int bcolor)
+  // Define and behavior.  
+  // Like set but leaves off position and size details.
+  // Does not create window.
+
+  {
+    PROP.ID = id;
+    PROP.NAME = name;
+    PROP.LABEL = label;
+
+    PROP.TYPE = type;
+    PROP.COLOR = color;
+    PROP.BCOLOR = bcolor;
+
+    ADS_B_List_Box = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    bool CHANGED = true;
+  }
+
+  void move_resize(int posY, int posX, int sizeY, int sizeX)
+  // Redefine position and size.
+  {
+    PROP.POSX = posX;
+    PROP.POSY = posY;
+    PROP.SIZEX = sizeX;
+    PROP.SIZEY = sizeY;
+
+    ADS_B_List_Box = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+    refresh();
+
+    wborder(ADS_B_List_Box,'|','|','-','-','+','+','+','+') ;
+
+    bool CHANGED = true;
+  }
+
+  bool changed()
+  // Returns true if any of the properties have changed.
+  {
+    return PROP.CHANGED;
+  }
+
+  void draw(bool Refresh)
+  // Draw the text_box on the screen if the value has changed or if  
+  //  the Refresh parameter is true.
+  {
+    if (PROP.CHANGED == true || Refresh == true)
+    {
+      Text_Line line;
+      int yCurPos = 0;
+      string tmp_line = "";
+
+      int color_pair = 0;
+
+      tmp_line = "Messages: " + to_string(PROP.VALUE.MESSAGES);
+      
+      wattron(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+
+      wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+      wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+      mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", left_justify(PROP.SIZEX, tmp_line).c_str());
+      yCurPos++;
+      
+      //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
+
+      tmp_line = 
+                    right_justify(6, "SWK") + 
+                    //right_justify(8, "HEX") + 
+                    right_justify(9, "FLIGHT") + 
+
+                    right_justify(8, "G SPEED") +
+                    right_justify(8, "ALT") + 
+                    right_justify(7, "V RT") + 
+                    right_justify(7, "TRACK") + 
+                    
+                    right_justify(8, "SN POS") + 
+                    right_justify(6, "MSGS") + 
+                    right_justify(6, "SEEN") + 
+                    right_justify(7, "RSSI")        
+                    ;
+      //Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);  
+
+      wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+      wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+      mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", left_justify(PROP.SIZEX, tmp_line).c_str());
+      yCurPos++;
+
+      wattroff(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+
+      //----------------
+
+      for (int y = 0; y < PROP.VALUE.AIRCRAFTS.size() &&
+                      y < PROP.SIZEY -2; y++)
+      {
+        tmp_line = 
+                        right_justify(6, PROP.VALUE.AIRCRAFTS[y].SQUAWK.get_str_value()) + 
+                        //right_justify(8, VALUE.AIRCRAFTS[x].HEX) + 
+                        right_justify(9, PROP.VALUE.AIRCRAFTS[y].FLIGHT) +
+
+                        right_justify(8, PROP.VALUE.AIRCRAFTS[y].SPEED.get_str_value()) +
+                        right_justify(8, PROP.VALUE.AIRCRAFTS[y].ALTITUDE.get_str_value()) + 
+                        right_justify(7, PROP.VALUE.AIRCRAFTS[y].VERT_RATE.get_str_value()) + 
+                        right_justify(7, PROP.VALUE.AIRCRAFTS[y].TRACK.get_str_value()) + 
+
+                        right_justify(8, PROP.VALUE.AIRCRAFTS[y].SEEN_POS.get_str_value()) + 
+                        right_justify(6, PROP.VALUE.AIRCRAFTS[y].MESSAGES.get_str_value()) + 
+                        right_justify(6, PROP.VALUE.AIRCRAFTS[y].SEEN.get_str_value()) + 
+                        right_justify(7, PROP.VALUE.AIRCRAFTS[y].RSSI.get_str_value())
+                        ;
+
+        // Determine Color
+        if(PROP.VALUE.AIRCRAFTS[y].data_count() >0)
+        {
+          
+          if(PROP.VALUE.AIRCRAFTS[y].POSITION.LATITUDE.conversion_success() == true && 
+              PROP.VALUE.AIRCRAFTS[y].POSITION.LONGITUDE.conversion_success() == true)
+            {
+              color_pair = CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE);
+            }
+            else
+            {
+              color_pair = CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR);
+            }
+        }
+        else
+        {
+          color_pair = CRT_get_color_pair(PROP.BCOLOR, COLOR_MAGENTA);
+        }
+
+        // Turn On Color
+        wattron(ADS_B_List_Box, COLOR_PAIR(color_pair));
+
+        // Print Line
+        wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+        wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+        mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", tmp_line.c_str());
+
+        // Turn Off Color
+        wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
+
+        yCurPos++;
+      }
+
+      //----------------
+
+      // Clear remaining part of screen
+      if (yCurPos < PROP.SIZEY)
+      {
+        for(int y = yCurPos; y < PROP.SIZEY; y++)
+        {
+          wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+          wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+          yCurPos++;
+        }
+      }
+    
+
+      PROP.CHANGED = false;
+      
+      wrefresh(ADS_B_List_Box);
+    }
+  }
+
+  void add_line(unsigned long Time_Milli, string Text)
+  // Add a line of text to Text_Box.
+  {
+
+  }
+
+  void update(system_data &sdSysData)
+  {
+
+    PROP.VALUE = sdSysData.AIRCRAFT_COORD.DATA;
+
+    sdSysData.AIRCRAFT_COORD.DATA.CHANGED = false;
+
+    PROP.CHANGED = true;
   }
 };
 

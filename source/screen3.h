@@ -235,7 +235,7 @@ class Screen3
   Button_Zone_Manager bzADS_B;
 
   // ADS_B Text Box Data
-  Text_Box tbads_b_Data;
+  ADS_B_List_Box tbads_b_Data;
 
   private:
   // Log Screen Variables --------------------
@@ -250,7 +250,7 @@ class Screen3
   Title_Bar tiLog_Screen;
 
   public:
-  Text_Box  tbRadio_Log;
+  ADS_B_List_Box  tbRadio_Log;
 
   private:
   // --------------------
@@ -1508,14 +1508,17 @@ class Screen3
   void ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   // Shows the Player Window
   {
-    // Print Log File
-    tbads_b_Data.draw(ScrStat.Needs_Refresh);
-
     // Print ADS_B Information
     bzADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
 
-    // Print Title
-    tiADS_B_Screen.draw(ScrStat.Needs_Refresh);
+    if(tbads_b_Data.PROP.CHANGED == true || ScrStat.Needs_Refresh == true)
+    {
+      // Print Log File
+      tbads_b_Data.draw(ScrStat.Needs_Refresh);
+
+      // Print Title
+      tiADS_B_Screen.draw(true);
+    }
   }
 
   // ---------------------------------------------------------------------------------------

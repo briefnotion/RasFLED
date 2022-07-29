@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.04A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.05A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -810,24 +810,12 @@ int loop()
       }
 
       // Read ADS-B Aircraft JSON
-      if (watcher_aircraft_json.line_avail() == true)
+      if (watcher_aircraft_json.changed() == true)
       {
-        cons.Screen.tbads_b_Data.clear_text();        // Clear screen with new data arival.
-        while (watcher_aircraft_json.line_avail() == true)
-        {
-          string dummy = watcher_aircraft_json.get_next_line();
-          //cons.Screen.tbads_b_Data.add_line(tmeCurrentMillis, watcher_aircraft_json.get_next_line());
-        }
-
-        if (sdSystem.AIRCRAFT_COORD.process(FILES_AIRCRAFT_JSON) == true)
-        {
-          cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
-        }
-        
+        sdSystem.AIRCRAFT_COORD.process(FILES_AIRCRAFT_JSON);
       }
 
       // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
-      //cons.readkeyboardinput();
       cons.readkeyboardinput2();
 
       // Process keyboard info before displaying the screen.
@@ -857,6 +845,9 @@ int loop()
 
         // Radio - Update all radio gadgets with new data.
         cons.update_freqency_gadgets(sdSystem);
+
+        // ADS-B - Update all ADS-B gadgets with new data.
+        cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
 
         // Redraw the console screen with what the screen determines needs to be displayed.
         cons.display(fsPlayer, sdSystem, tmeCurrentMillis);

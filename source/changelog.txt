@@ -1,3 +1,6 @@
+V 1.05A_220729
+  - Started building the ADS-B gadget.
+
 V 1.04A_220726
   - Started organizing data pulled in from ADS-B receiver.
   - This build is untested in field.

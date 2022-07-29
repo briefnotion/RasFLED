@@ -55,6 +55,10 @@ class GLOBAL_POSITION
 
 class AIRCRAFT
 {
+  private:
+  // Data Status
+  int DATA_COUNT = 0;
+
   public:
 
   // VARIABLES            // DESCRIPTION                                EXAMPLE
@@ -101,6 +105,44 @@ class AIRCRAFT
                           //  received message (300 second expiration)
   STRING_FLOAT RSSI;      // Signal Strength                            "rssi":-28.4
 
+  int data_count()
+  {
+    return DATA_COUNT;
+  }
+
+  void count_data()
+  {
+    DATA_COUNT =  SQUAWK.conversion_success() +
+                  (FLIGHT.length() > 0) +
+                  //VERSION.conversion_success() +
+                  SPEED.conversion_success() +
+                  SEEN_POS.conversion_success() +
+                  ALTITUDE.conversion_success() +
+                  ALTITUDE_GEOM.conversion_success() +
+                  VERT_RATE.conversion_success() +
+                  GEOM_RATE.conversion_success() +
+                  TRACK.conversion_success() +
+                  POSITION.LATITUDE.conversion_success() +
+                  POSITION.LONGITUDE.conversion_success() +
+                  SIL.conversion_success() +
+                  //(SIL_TYPE.length() > 0) +
+                  (EMERGENCY.length() > 0) +
+                  //(CATAGORY.length() > 0) +
+                  NAV_QNH.conversion_success() +
+                  NAV_HEADING.conversion_success() +
+                  NAV_ALTITUDE_MCP.conversion_success() +
+                  (NAV_MODES.length() > 0) +
+                  NIC.conversion_success() +
+                  RC.conversion_success() +
+                  NIC_BARO.conversion_success() +
+                  NAC_P.conversion_success() +
+                  NAC_V.conversion_success() +
+                  GVA.conversion_success() +
+                  SDA.conversion_success() +
+                  (MLAT.length() > 0) +
+                  (TISB.length() > 0)
+                  ;
+  }
 };
 
 class AIRCRAFT_DATA
@@ -109,6 +151,8 @@ class AIRCRAFT_DATA
   float NOW = 0;
   long MESSAGES = 0;
   deque<AIRCRAFT> AIRCRAFTS;
+  
+  bool CHANGED = false;
 };
 
 class AIRCRAFT_COORDINATOR
@@ -211,9 +255,13 @@ class AIRCRAFT_COORDINATOR
         tmpAircraft.SEEN.store(tree_value("seen", aircraft));
         tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
 
+        tmpAircraft.count_data();
+
         // Store Aircraft ADS-B Data into list.
         DATA.AIRCRAFTS.push_back(tmpAircraft);
       }
+
+      DATA.CHANGED = true;
       
       return true;
     }

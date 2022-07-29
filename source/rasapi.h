@@ -256,6 +256,19 @@ class FILE_WATCH
     return LINE_AVAIL;
   }
 
+  bool changed()
+  // Returns true if file changed.
+  {
+    if (file_changed() == true)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
   string get_next_line()
   // Returns the newly added line of the watch file.
   {
