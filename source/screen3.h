@@ -250,7 +250,7 @@ class Screen3
   Title_Bar tiLog_Screen;
 
   public:
-  ADS_B_List_Box  tbRadio_Log;
+  Text_Box  tbRadio_Log;
 
   private:
   // --------------------

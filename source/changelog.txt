@@ -1,3 +1,9 @@
+V 1.06A_220730
+  - Corrected a mislabled variable that made the log screen think it as an 
+      ADS-B screen. 
+  - More work done towards ADS-B gadget.  Left the Index to verify data not being 
+      dropped.
+  
 V 1.05A_220729
   - Started building the ADS-B gadget.
 

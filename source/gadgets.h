@@ -420,15 +420,116 @@ class ADS_B_List_Box
 // Routines for create, draw, modify, and behavior.
 {
   private:
+  class AIRCRAFT_INDEX_INFORMATION
+  {
+    public:
+    string HEX = "";
+    int POSITION = -1;
+    int DATA_COUNT = 0;
+    bool UPDATED = false;
+  };
 
   WINDOW * ADS_B_List_Box;
 
   // DEBUG_COUNTER
   int Counter = 0;
 
+  deque<AIRCRAFT_INDEX_INFORMATION> AIRCRAFT_INDEX_LIST;
+
   // Types:
   // -1 - Hidden
   //  0 - Read Only
+
+  private:
+
+  int get_first_empty_pos()
+  {
+    int return_int = -1;
+    for(int x=0; (x < AIRCRAFT_INDEX_LIST.size()) && (return_int == -1); x++)
+    {
+      if(AIRCRAFT_INDEX_LIST[x].HEX == "")
+      {
+        return_int = x;
+      }
+    }
+    return return_int;
+  }
+
+  int find_HEX(string Hex)
+  {
+    int return_int = -1;
+    for(int x=0; (x < AIRCRAFT_INDEX_LIST.size()) && (return_int == -1); x++)
+    {
+      if(AIRCRAFT_INDEX_LIST[x].HEX == Hex)
+      {
+        return_int = x;
+      }
+    }
+    return return_int;
+  }
+  
+  void sort_index()
+  {
+    // Clear the Updated Flag
+    for(int x=0; x < AIRCRAFT_INDEX_LIST.size(); x++)
+    {
+      AIRCRAFT_INDEX_LIST[x].UPDATED = false;
+    }
+
+    // Populate the Index
+    for(int x=0; x < PROP.VALUE.AIRCRAFTS.size(); x++)
+    {
+      // Check list to see if aircraft is in it
+      int pos = find_HEX(PROP.VALUE.AIRCRAFTS[x].HEX);
+      if (pos == -1)
+      // Add to list if not in list.
+      {
+        // Find first empty position
+        int first_empty = get_first_empty_pos();
+
+        if(first_empty == -1)
+        // No empty positions.
+        //  Add to end of list.
+        {
+          AIRCRAFT_INDEX_INFORMATION tmp_index;
+        
+          tmp_index.POSITION = x;
+          tmp_index.HEX = PROP.VALUE.AIRCRAFTS[x].HEX;
+          tmp_index.DATA_COUNT = PROP.VALUE.AIRCRAFTS[x].data_count();
+          tmp_index.UPDATED = true;
+
+          AIRCRAFT_INDEX_LIST.push_back(tmp_index);
+        }
+        else
+        // Add item to empty position.        // Add to first available position
+        {
+          AIRCRAFT_INDEX_LIST[first_empty].POSITION = x;
+          AIRCRAFT_INDEX_LIST[first_empty].HEX = PROP.VALUE.AIRCRAFTS[x].HEX;
+          AIRCRAFT_INDEX_LIST[first_empty].DATA_COUNT = PROP.VALUE.AIRCRAFTS[x].data_count();
+          AIRCRAFT_INDEX_LIST[first_empty].UPDATED = true;
+        }
+      }
+      else
+      // Update List entry if already available
+      {
+        AIRCRAFT_INDEX_LIST[pos].POSITION = x;
+        AIRCRAFT_INDEX_LIST[pos].DATA_COUNT = PROP.VALUE.AIRCRAFTS[x].data_count();
+        AIRCRAFT_INDEX_LIST[pos].UPDATED = true;
+      }
+    }
+
+    // Go through list again and mark non updated with empty.
+    for(int x=0; x < AIRCRAFT_INDEX_LIST.size(); x++)
+    {
+      if(AIRCRAFT_INDEX_LIST[x].UPDATED == false)
+      {
+        AIRCRAFT_INDEX_LIST[x].HEX = "";
+      }
+    }
+    
+    // Move active entrys that are off screen up on list.
+    
+  }
 
   public:
 
@@ -525,7 +626,8 @@ class ADS_B_List_Box
                     right_justify(8, "SN POS") + 
                     right_justify(6, "MSGS") + 
                     right_justify(6, "SEEN") + 
-                    right_justify(7, "RSSI")        
+                    right_justify(7, "RSSI") +     
+                    right_justify(7, "Idx:" + to_string(PROP.VALUE.AIRCRAFTS.size()))
                     ;
       //Screen.tbads_b_Data.add_line(tmeCurrentMillis, tmp_line);  
 
@@ -538,56 +640,70 @@ class ADS_B_List_Box
 
       //----------------
 
-      for (int y = 0; y < PROP.VALUE.AIRCRAFTS.size() &&
-                      y < PROP.SIZEY -2; y++)
+      // Display Aircraft data in the order of the index.
+      for (int y = 0; y < AIRCRAFT_INDEX_LIST.size() &&
+                  yCurPos +2 < PROP.SIZEY; y++)
       {
-        tmp_line = 
-                        right_justify(6, PROP.VALUE.AIRCRAFTS[y].SQUAWK.get_str_value()) + 
-                        //right_justify(8, VALUE.AIRCRAFTS[x].HEX) + 
-                        right_justify(9, PROP.VALUE.AIRCRAFTS[y].FLIGHT) +
-
-                        right_justify(8, PROP.VALUE.AIRCRAFTS[y].SPEED.get_str_value()) +
-                        right_justify(8, PROP.VALUE.AIRCRAFTS[y].ALTITUDE.get_str_value()) + 
-                        right_justify(7, PROP.VALUE.AIRCRAFTS[y].VERT_RATE.get_str_value()) + 
-                        right_justify(7, PROP.VALUE.AIRCRAFTS[y].TRACK.get_str_value()) + 
-
-                        right_justify(8, PROP.VALUE.AIRCRAFTS[y].SEEN_POS.get_str_value()) + 
-                        right_justify(6, PROP.VALUE.AIRCRAFTS[y].MESSAGES.get_str_value()) + 
-                        right_justify(6, PROP.VALUE.AIRCRAFTS[y].SEEN.get_str_value()) + 
-                        right_justify(7, PROP.VALUE.AIRCRAFTS[y].RSSI.get_str_value())
-                        ;
-
-        // Determine Color
-        if(PROP.VALUE.AIRCRAFTS[y].data_count() >0)
+        if(AIRCRAFT_INDEX_LIST[y].HEX == "")
         {
-          
-          if(PROP.VALUE.AIRCRAFTS[y].POSITION.LATITUDE.conversion_success() == true && 
-              PROP.VALUE.AIRCRAFTS[y].POSITION.LONGITUDE.conversion_success() == true)
-            {
-              color_pair = CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE);
-            }
-            else
-            {
-              color_pair = CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR);
-            }
+          tmp_line = "";
+          wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+          wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+          yCurPos++;
         }
         else
         {
-          color_pair = CRT_get_color_pair(PROP.BCOLOR, COLOR_MAGENTA);
-        }
+          tmp_line = 
+                          right_justify(6, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].SQUAWK.get_str_value()) + 
+                          //right_justify(8, VALUE.AIRCRAFTS[x].HEX) + 
+                          right_justify(9, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].FLIGHT) +
 
-        // Turn On Color
-        wattron(ADS_B_List_Box, COLOR_PAIR(color_pair));
+                          right_justify(8, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].SPEED.get_str_value()) +
+                          right_justify(8, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].ALTITUDE.get_str_value()) + 
+                          right_justify(7, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].VERT_RATE.get_str_value()) + 
+                          right_justify(7, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].TRACK.get_str_value()) + 
 
-        // Print Line
-        wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
-        wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
-        mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", tmp_line.c_str());
+                          right_justify(8, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].SEEN_POS.get_str_value()) + 
+                          right_justify(6, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].MESSAGES.get_str_value()) + 
+                          right_justify(6, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].SEEN.get_str_value()) + 
+                          right_justify(7, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].RSSI.get_str_value()) +
 
-        // Turn Off Color
-        wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
+                          right_justify(7, to_string(AIRCRAFT_INDEX_LIST[y].POSITION))
+                          //right_justify(7, PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].RSSI.get_str_value()) +
+                          ;
 
-        yCurPos++;
+          // Determine Color
+          if(PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].data_count() >0)
+          {
+            
+            if(PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].POSITION.LATITUDE.conversion_success() == true && 
+                PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION].POSITION.LONGITUDE.conversion_success() == true)
+              {
+                color_pair = CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE);
+              }
+              else
+              {
+                color_pair = CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR);
+              }
+          }
+          else
+          {
+            color_pair = CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN);
+          }
+
+          // Turn On Color
+          wattron(ADS_B_List_Box, COLOR_PAIR(color_pair));
+
+          // Print Line
+          wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+          wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+          mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", tmp_line.c_str());
+
+          // Turn Off Color
+          wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
+
+          yCurPos++;
+        }  
       }
 
       //----------------
@@ -610,16 +726,13 @@ class ADS_B_List_Box
     }
   }
 
-  void add_line(unsigned long Time_Milli, string Text)
-  // Add a line of text to Text_Box.
-  {
-
-  }
-
   void update(system_data &sdSysData)
   {
-
+    // Get new list of Aircraft.
     PROP.VALUE = sdSysData.AIRCRAFT_COORD.DATA;
+
+    // Prepare list to display.
+    sort_index();
 
     sdSysData.AIRCRAFT_COORD.DATA.CHANGED = false;
 
