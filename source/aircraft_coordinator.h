@@ -58,14 +58,15 @@ class AIRCRAFT
   private:
   // Data Status
   int DATA_COUNT = 0;
+  bool ALERT = false;
 
   public:
 
   // VARIABLES            // DESCRIPTION                                EXAMPLE
   // Idents
-  string HEX;             // Hex Identifier                             "hex":"a8e85f"
+  STRING_STRING HEX;      // Hex Identifier                             "hex":"a8e85f"
   STRING_INT SQUAWK;      // Squawk Code Identifier                     "squawk":"4327"
-  string FLIGHT = "";     // Flight Code                                "flight":"RLC673  "
+  STRING_STRING FLIGHT;   // Flight Code                                "flight":"RLC673  "
   STRING_INT VERSION;     // ADS-B Version                              "version":2
 
   // Speed Rate Positions
@@ -75,20 +76,20 @@ class AIRCRAFT
   STRING_INT ALTITUDE_GEOM;  // UNKNOWN                                 "alt_geom":425
   STRING_INT VERT_RATE;   // Vertical Assend or Desend Rate             "baro_rate":0
   STRING_INT GEOM_RATE;   // UNKNOWN                                    "geom_rate":-384
-  STRING_FLOAT TRACK;       // Track (magnetic or polar?)               "track":315.9
+  STRING_FLOAT TRACK;     // Track (magnetic or polar?)                 "track":315.9
 
   GLOBAL_POSITION POSITION; // Lat Lon Position                         "lat":30.121399
                             //                                          "lon":-92.435033
 
   // Aircraft Configuration
   STRING_INT SIL;         // UNKNOWN                                    "sil":3
-  string SIL_TYPE = "";   // UNKNOWN                                    "sil_type":"perhour"
-  string EMERGENCY = "";  // UNKNOWN                                    "emergency":"none"
-  string CATAGORY = "";   // UNKNOWN                                    "category":"A7"
-  STRING_FLOAT NAV_QNH;   // Selected Sea Level Pressure (MSLP)         "nav_qnh":1012.8
-  STRING_FLOAT NAV_HEADING;// Selected Nav Heading                      "nav_heading":347.3
+  STRING_STRING SIL_TYPE; // UNKNOWN                                    "sil_type":"perhour"
+  STRING_STRING EMERGENCY;// UNKNOWN                                    "emergency":"none"
+  STRING_STRING CATAGORY; // UNKNOWN                                    "category":"A7"
+  STRING_FLOAT NAV_QNH;     // Selected Sea Level Pressure (MSLP)       "nav_qnh":1012.8
+  STRING_FLOAT NAV_HEADING; // Selected Nav Heading                      "nav_heading":347.3
   STRING_INT NAV_ALTITUDE_MCP; // UNKNOWN                               "nav_altitude_mcp":36992
-  string NAV_MODES;       // UNKNOWN                                    "nav_modes":["autopilot","althold","tcas"]
+  STRING_STRING NAV_MODES;  // UNKNOWN                                  "nav_modes":["autopilot","althold","tcas"]
   STRING_INT NIC ;        // UNKNOWN                                    "nic":8
   STRING_INT RC;          // UNKNOWN                                    "rc":186
   STRING_FLOAT NIC_BARO;  // UNKNOWN                                    "nic_baro":0
@@ -96,12 +97,12 @@ class AIRCRAFT
   STRING_INT NAC_V;       // Airborne Velocity                          "nac_v":2
   STRING_INT GVA;         // Airborne Operational                       "gva":2
   STRING_INT SDA;         // UNKNOWN                                    "sda":2
-  string MLAT = "";       // UNKNOWN                                    "mlat":[]
-  string TISB = "";       // UNKNOWN                                    "tisb":[]
+  STRING_STRING MLAT;     // UNKNOWN                                    "mlat":[]
+  STRING_STRING TISB;     // UNKNOWN                                    "tisb":[]
 
   // Radio Information
   STRING_INT MESSAGES;    // Message Count Received.                    "messages":261
-  STRING_INT SEEN;        // Seconds since last                         "messages":261
+  STRING_FLOAT SEEN;        // Seconds since last                         "seen":209.0
                           //  received message (300 second expiration)
   STRING_FLOAT RSSI;      // Signal Strength                            "rssi":-28.4
 
@@ -113,7 +114,7 @@ class AIRCRAFT
   void count_data()
   {
     DATA_COUNT =  SQUAWK.conversion_success() +
-                  (FLIGHT.length() > 0) +
+                  //FLIGHT.conversion_success() +
                   //VERSION.conversion_success() +
                   SPEED.conversion_success() +
                   SEEN_POS.conversion_success() +
@@ -126,21 +127,21 @@ class AIRCRAFT
                   POSITION.LONGITUDE.conversion_success() +
                   SIL.conversion_success() +
                   //(SIL_TYPE.length() > 0) +
-                  (EMERGENCY.length() > 0) +
+                  //EMERGENCY.conversion_success() +
                   //(CATAGORY.length() > 0) +
                   NAV_QNH.conversion_success() +
                   NAV_HEADING.conversion_success() +
                   NAV_ALTITUDE_MCP.conversion_success() +
-                  (NAV_MODES.length() > 0) +
+                  //NAV_MODES.conversion_success() +
                   NIC.conversion_success() +
                   RC.conversion_success() +
                   NIC_BARO.conversion_success() +
                   NAC_P.conversion_success() +
                   NAC_V.conversion_success() +
                   GVA.conversion_success() +
-                  SDA.conversion_success() +
-                  (MLAT.length() > 0) +
-                  (TISB.length() > 0)
+                  SDA.conversion_success() 
+                  //MLAT.conversion_success() +
+                  //TISB.conversion_success()
                   ;
   }
 };
@@ -160,12 +161,15 @@ class AIRCRAFT_COORDINATOR
   private:
   ptree PROPERTY_TREE;
 
+  //bool PREPARED = false;
+
   public:
   AIRCRAFT_DATA DATA;
 
   string data = "";
 
   private:
+
   bool read_json_file(string &JSON_Filename)
   // Read JSON file into Property Tree
   {
@@ -208,8 +212,10 @@ class AIRCRAFT_COORDINATOR
   {
     if (read_json_file(JSON_Filename) == true)
     {
+      // Clear the current list for new list replacement.
       DATA.AIRCRAFTS.clear();
 
+      // Read data from property tree.
       DATA.NOW = PROPERTY_TREE.get<float>("now");
       DATA.MESSAGES = PROPERTY_TREE.get<long>("messages");
       
@@ -225,9 +231,9 @@ class AIRCRAFT_COORDINATOR
         string version = "";
 
         // Idents
-        tmpAircraft.HEX = tree_value("hex", aircraft);
+        tmpAircraft.HEX.store(tree_value("hex", aircraft));
         tmpAircraft.SQUAWK.store(tree_value("squawk", aircraft));
-        tmpAircraft.FLIGHT = tree_value("flight", aircraft);
+        tmpAircraft.FLIGHT.store(tree_value("flight", aircraft));
         tmpAircraft.VERSION.store(tree_value("version", aircraft));
 
 
@@ -243,7 +249,7 @@ class AIRCRAFT_COORDINATOR
         tmpAircraft.POSITION.LONGITUDE.store(tree_value("lon", aircraft));
         
         // Aircraft Configuration
-        tmpAircraft.EMERGENCY = tree_value("emergency", aircraft);
+        tmpAircraft.EMERGENCY.store(tree_value("emergency", aircraft));
         /*  Not yet grabbing all data.
               .
               .

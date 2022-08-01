@@ -239,6 +239,36 @@ bool string_to_float(string String_Value, float &Float_Value)
   }
 }
 
+class STRING_STRING
+// Variable stores original string number and converted value.
+// Sets error if conversion unsucessful.
+{
+  private:
+  string  STR_VALUE = "";
+  bool    CONVERSION_SUCCESS = false;
+
+  public:
+
+  void store(string str_value)
+  {
+    STR_VALUE = str_value;
+    CONVERSION_SUCCESS = true;
+  }
+
+  string get_str_value()
+  // Return original number string value.
+  {
+    return STR_VALUE;
+  }
+
+  bool conversion_success()
+  // Returns true if conversion was unsucessful.
+  {
+    return CONVERSION_SUCCESS;
+  }
+
+};
+
 class STRING_INT
 // Variable stores original string number and converted value.
 // Sets error if conversion unsucessful.
@@ -249,6 +279,7 @@ class STRING_INT
   bool    CONVERSION_SUCCESS = false;
 
   public:
+
   void store(string str_value)
   {
     STR_VALUE = str_value;
@@ -272,6 +303,7 @@ class STRING_INT
   {
     return CONVERSION_SUCCESS;
   }
+
 };
 
 class STRING_FLOAT
@@ -284,6 +316,7 @@ class STRING_FLOAT
   bool    CONVERSION_SUCCESS = false;
 
   public:
+
   void store(string str_value)
   {
     STR_VALUE = str_value;

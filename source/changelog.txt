@@ -1,3 +1,6 @@
+V 1.07A_220801
+  - More work done towards ADS-B gadget.
+
 V 1.06A_220730
   - Corrected a mislabled variable that made the log screen think it as an 
       ADS-B screen. 
