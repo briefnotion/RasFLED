@@ -61,6 +61,9 @@ class AIRCRAFT
   bool ALERT = false;
 
   public:
+  
+  // Alert List
+  deque<string> ALERT_LIST;
 
   // VARIABLES            // DESCRIPTION                                EXAMPLE
   // Idents
@@ -111,6 +114,51 @@ class AIRCRAFT
     return DATA_COUNT;
   }
 
+  void check_alerts()
+  {
+    if(SQUAWK.conversion_success() == true)
+    {
+      
+      if (SQUAWK.get_int_value() == 0020)
+      {
+        ALERT_LIST.push_back("Special Purpose Code - Emergency");
+        ALERT= true;
+      }
+
+      if (SQUAWK.get_int_value() >= 1301 && SQUAWK.get_int_value() <= 1327)
+      {
+        ALERT_LIST.push_back("NATO - Air Policing - Quick Reaction Alert");
+        ALERT= true;
+      }
+
+      if (SQUAWK.get_int_value() >= 4701 && SQUAWK.get_int_value() <= 4777)
+      {
+        ALERT_LIST.push_back("Special Eents - NOTAM");
+        ALERT= true;
+      }
+
+      if (SQUAWK.get_int_value() == 7500)
+      {
+        ALERT_LIST.push_back("Special Purpose Code - Hi-Jacking");
+        ALERT= true;
+      }
+
+      if (SQUAWK.get_int_value() == 7600)
+      {
+        ALERT_LIST.push_back("Special Purpose Code - Radio Failure");
+        ALERT= true;
+      }
+
+      if (SQUAWK.get_int_value() == 7700)
+      {
+        ALERT_LIST.push_back("Special Purpose Code - Emergency");
+        ALERT= true;
+      }
+
+
+    }
+  }
+
   void count_data()
   {
     DATA_COUNT =  SQUAWK.conversion_success() +
@@ -143,6 +191,11 @@ class AIRCRAFT
                   //MLAT.conversion_success() +
                   //TISB.conversion_success()
                   ;
+  }
+
+  bool alert()
+  {
+    return ALERT;
   }
 };
 
@@ -262,6 +315,7 @@ class AIRCRAFT_COORDINATOR
         tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
 
         tmpAircraft.count_data();
+        tmpAircraft.check_alerts();
 
         // Store Aircraft ADS-B Data into list.
         DATA.AIRCRAFTS.push_back(tmpAircraft);

@@ -1,3 +1,7 @@
+V 1.08A_220802
+  - Changes made to the displayed colors on the ADS-B gadget.
+  - Started work on the ADS-B Alerts.
+
 V 1.07A_220801
   - More work done towards ADS-B gadget.
 
