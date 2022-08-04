@@ -121,41 +121,45 @@ class AIRCRAFT
       
       if (SQUAWK.get_int_value() == 0020)
       {
-        ALERT_LIST.push_back("Special Purpose Code - Emergency");
+        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Emergency");
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() >= 1301 && SQUAWK.get_int_value() <= 1327)
       {
-        ALERT_LIST.push_back("NATO - Air Policing - Quick Reaction Alert");
+        ALERT_LIST.push_back("   SQUAWK ALERT: NATO - Air Policing - Quick Reaction Alert");
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() >= 4701 && SQUAWK.get_int_value() <= 4777)
       {
-        ALERT_LIST.push_back("Special Eents - NOTAM");
+        ALERT_LIST.push_back("   SQUAWK ALERT: Special Eents - NOTAM");
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() == 7500)
       {
-        ALERT_LIST.push_back("Special Purpose Code - Hi-Jacking");
+        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Hi-Jacking");
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() == 7600)
       {
-        ALERT_LIST.push_back("Special Purpose Code - Radio Failure");
+        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Radio Failure");
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() == 7700)
       {
-        ALERT_LIST.push_back("Special Purpose Code - Emergency");
+        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Emergency");
         ALERT= true;
       }
+    }
 
-
+    if (EMERGENCY.get_str_value() != "" && EMERGENCY.get_str_value() != "none")
+    {
+        ALERT_LIST.push_back("EMERGENCY ALERT: " + EMERGENCY.get_str_value());
+        ALERT= true;
     }
   }
 

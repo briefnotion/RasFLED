@@ -629,10 +629,11 @@ class ADS_B_List_Box
     xCurPos = xCurPos + Size;
   }
 
-  void dsp_text(int &yCurPos, int &xCurPos, int Size, STRING_STRING &Text, int Text_Color, int Color_Value, 
+  void dsp_text(int &yCurPos, int &xCurPos, int Size, STRING_STRING &Text, int Text_Color, bool Inverse_Colors, int Color_Value, 
                   int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4)
   {
     int color_pair = 0;
+    int background_color = 0;
 
     string display_text = "";
 
@@ -640,25 +641,36 @@ class ADS_B_List_Box
     {
       if (Color_Scale_Type == 0)
       {
-        color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+        background_color = COLOR_GREEN;
+        //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
       }
       else if (Color_Scale_Type == 1)
       {
-        color_pair = CRT_get_color_pair(color_range(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
+        background_color = color_range(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4);
+        //color_pair = CRT_get_color_pair(color_range(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
       else // Color_Scale_Type == 2
       {
-        color_pair = CRT_get_color_pair(color_scale(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
+        background_color = color_scale(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4);
+        //color_pair = CRT_get_color_pair(color_scale(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
     }
     else
     {
-      color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+      background_color = COLOR_GREEN;
+      //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+    }
+
+    if(Inverse_Colors == false)
+    {
+      color_pair = CRT_get_color_pair(background_color, Text_Color);
+    }
+    else
+    {
+      color_pair = CRT_get_color_pair(Text_Color, background_color);
     }
 
     // Turn On Color
-    color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
-
     wattron(ADS_B_List_Box, COLOR_PAIR(color_pair));
 
     // Print Line
@@ -671,8 +683,21 @@ class ADS_B_List_Box
       display_text = right_justify(Size, Text.get_str_value());
     }
 
+    /*
+    if(Inverse_Colors == true)
+    {
+      wattron(ADS_B_List_Box, A_REVERSE);
+    }
+    */
+
     mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "%s", display_text.c_str());
-    //mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "thing");
+
+    /*
+    if(Inverse_Colors == true)
+    {
+      wattroff(ADS_B_List_Box, A_REVERSE);
+    }
+    */
 
     // Turn Off Color
     wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
@@ -680,7 +705,7 @@ class ADS_B_List_Box
     xCurPos = xCurPos + Size;
   }
 
-  void dsp_intg(int &yCurPos, int &xCurPos, int Size, STRING_INT &Text, int Text_Color, 
+  void dsp_intg(int &yCurPos, int &xCurPos, int Size, STRING_INT &Text, int Text_Color, bool Inverse_Colors, 
                   int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4)
 
   // Scale Types:
@@ -689,6 +714,7 @@ class ADS_B_List_Box
   //  2 = Scaler  - Zero Green
   {
     int color_pair = 0;
+    int background_color = 0;
 
     string display_text = "";
 
@@ -696,20 +722,33 @@ class ADS_B_List_Box
     {
       if (Color_Scale_Type == 0)
       {
-        color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+        background_color = COLOR_GREEN;
+        //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
       }
       else if (Color_Scale_Type == 1)
       {
-        color_pair = CRT_get_color_pair(color_range(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
+        background_color = color_range(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
+        //color_pair = CRT_get_color_pair(color_range(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
       else // Color_Scale_Type == 2
       {
-        color_pair = CRT_get_color_pair(color_scale(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
+        background_color = color_scale(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
+        //color_pair = CRT_get_color_pair(color_scale(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
     }
     else
     {
-      color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+      background_color = COLOR_GREEN;
+      //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+    }
+
+    if(Inverse_Colors == false)
+    {
+      color_pair = CRT_get_color_pair(background_color, Text_Color);
+    }
+    else
+    {
+      color_pair = CRT_get_color_pair(Text_Color, background_color);
     }
 
     // Turn On Color
@@ -718,14 +757,28 @@ class ADS_B_List_Box
     // Print Line
     if(Text.conversion_success() == false || Text.get_str_value() == "")
     {
-      display_text = right_justify(Size, "");
+      display_text = right_justify(Size, Text.get_str_value());
     }
     else
     {
       display_text = right_justify(Size, Text.get_str_value());
     }
+    
+    /*
+    if(Inverse_Colors == true)
+    {
+      wattron(ADS_B_List_Box, A_REVERSE);
+    }
+    */
 
     mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "%s", display_text.c_str());
+
+    /*
+    if(Inverse_Colors == true)
+    {
+      wattroff(ADS_B_List_Box, A_REVERSE);
+    }
+    */
 
     // Turn Off Color
     wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
@@ -733,7 +786,7 @@ class ADS_B_List_Box
     xCurPos = xCurPos + Size;
   }
 
-  void dsp_floa(int &yCurPos, int &xCurPos, int Size, STRING_FLOAT &Text, int Text_Color, 
+  void dsp_floa(int &yCurPos, int &xCurPos, int Size, STRING_FLOAT &Text, int Text_Color, bool Inverse_Colors, 
                   int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4)
   // Scale Types:
   //  0 = off;
@@ -741,6 +794,7 @@ class ADS_B_List_Box
   //  2 = Scaler  - Zero Green
   {
     int color_pair = 0;
+    int background_color = 0;
 
     string display_text = "";
 
@@ -748,20 +802,33 @@ class ADS_B_List_Box
     {
       if (Color_Scale_Type == 0)
       {
-        color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+        background_color = COLOR_GREEN;
+        //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
       }
       else if (Color_Scale_Type == 1)
       {
-        color_pair = CRT_get_color_pair(color_range(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
+        background_color = color_range(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
+        //color_pair = CRT_get_color_pair(color_range(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
       else // Color_Scale_Type == 2
       {
-        color_pair = CRT_get_color_pair(color_scale(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
+        background_color = color_scale(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
+        //color_pair = CRT_get_color_pair(color_scale(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
     }
     else
     {
-      color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+      background_color = COLOR_GREEN;
+      //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+    }
+
+    if(Inverse_Colors == false)
+    {
+      color_pair = CRT_get_color_pair(background_color, Text_Color);
+    }
+    else
+    {
+      color_pair = CRT_get_color_pair(Text_Color, background_color);
     }
 
     // Turn On Color
@@ -770,14 +837,28 @@ class ADS_B_List_Box
     // Print Line
     if(Text.conversion_success() == false || Text.get_str_value() == "")
     {
-      display_text = right_justify(Size, "");
+      display_text = right_justify(Size, Text.get_str_value());
     }
     else
     {
       display_text = right_justify(Size, Text.get_str_value());
     }
 
+    /*
+    if(Inverse_Colors == true)
+    {
+      wattron(ADS_B_List_Box, A_REVERSE);
+    }
+    */
+
     mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "%s", display_text.c_str());
+
+    /*
+    if(Inverse_Colors == true)
+    {
+      wattroff(ADS_B_List_Box, A_REVERSE);
+    }
+    */
 
     // Turn Off Color
     wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
@@ -853,12 +934,16 @@ class ADS_B_List_Box
       int yCurPos = 0;
       int xCurPos = 0;
 
+      int space_size = 0;
+
       string tmp_line = "";
+      STRING_STRING blank_text;
 
       int color_pair = 0;
       int text_color = COLOR_WHITE;
+      bool inverse_colors = false;
 
-      tmp_line = "Messages: " + to_string(PROP.VALUE.MESSAGES);
+      tmp_line = "Messages: " + to_string(PROP.VALUE.MESSAGES) + "     Aircraft Count: " + to_string(PROP.VALUE.AIRCRAFTS.size());
       
       wattron(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
 
@@ -869,6 +954,13 @@ class ADS_B_List_Box
       
       //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
 
+      // Calculate Space Size
+      space_size = PROP.SIZEX - 72;
+      if(space_size < 0)
+      {
+        space_size = 0;
+      }
+
       // Print Header Line
       clear_line(yCurPos, xCurPos);
       print_to_line(yCurPos, xCurPos, 6, right_justify(6, "SWK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
@@ -878,6 +970,8 @@ class ADS_B_List_Box
       print_to_line(yCurPos, xCurPos, 8, right_justify(8, "ALT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
       print_to_line(yCurPos, xCurPos, 7, right_justify(7, "V RT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
       print_to_line(yCurPos, xCurPos, 7, right_justify(7, "TRACK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+
+      print_to_line(yCurPos, xCurPos, space_size, right_justify(space_size, ""), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
 
       print_to_line(yCurPos, xCurPos, 8, right_justify(8, "SN POS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
       print_to_line(yCurPos, xCurPos, 6, right_justify(6, "MSGS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
@@ -906,15 +1000,18 @@ class ADS_B_List_Box
               display_aircraft.POSITION.LONGITUDE.conversion_success() == true)
             {
               text_color = COLOR_WHITE;
+              inverse_colors = false;
             }
             else
             {
               text_color = COLOR_BLACK;
+              inverse_colors = false;
             }
         }
         else
         {
           text_color = COLOR_BLACK;
+          inverse_colors = true;
         }
 
         // 1 - Range Level
@@ -925,29 +1022,35 @@ class ADS_B_List_Box
       
         // Print Aircraft Info Line
         clear_line(yCurPos, xCurPos);
-        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.SQUAWK, text_color, 0, 0, 0, 0, 0, 0);
-        dsp_text(yCurPos, xCurPos, 9, display_aircraft.FLIGHT, text_color, 1, 2, 1, 2, 3, 4, 5);
+        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.SQUAWK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
+        dsp_text(yCurPos, xCurPos, 9, display_aircraft.FLIGHT, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
 
-        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, text_color, 1, 60, 80, 100, 250, 600);
-        dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, text_color, 1, 50, 500, 3000, 12000, 40000);
-        dsp_intg(yCurPos, xCurPos, 7, display_aircraft.VERT_RATE, text_color, 2, 100, 1200, 3000, 4000, 5000);
-        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, text_color, 0, 0, 0, 0, 0, 0);
+        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, text_color, inverse_colors, 1, 60, 80, 100, 250, 600);
+        dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, text_color, inverse_colors, 1, 50, 500, 3000, 12000, 40000);
+        dsp_intg(yCurPos, xCurPos, 7, display_aircraft.VERT_RATE, text_color, inverse_colors, 2, 100, 1200, 3000, 4000, 5000);
+        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
+
+        dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
+        //print_to_line(yCurPos, xCurPos, space_size, right_justify(space_size, ""), CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE));
         
-        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, 2, 4, 10, 290, 299, 0);
-        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, 2, 100, 5000, 10000, 20000, 40000);
-        dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, 2, 10, 290, 299, 0, 0);
-        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, 1, 10, 25, 28, 30, 32);
+        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, 2, 4, 10, 290, 299, 0);
+        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, 2, 100, 5000, 10000, 20000, 40000);
+        dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, 2, 10, 290, 299, 0, 0);
+        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 1, 10, 25, 28, 30, 32);
 
         //print_to_line(yCurPos, xCurPos, 7, right_justify(7, to_string(AIRCRAFT_INDEX_LIST[y].POSITION)), color_pair);
         //print_to_line(yCurPos, xCurPos, 7, right_justify(7, to_string(display_aircraft.data_count())), color_pair);
 
         if(display_aircraft.alert() == true)
         {
-          yCurPos++;
-          if (yCurPos < PROP.SIZEY)
+          for (int alerts_pos = 0; alerts_pos < display_aircraft.ALERT_LIST.size(); alerts_pos++)
           {
-            clear_line(yCurPos, xCurPos);
-            print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, "ALERT: "), CRT_get_color_pair(COLOR_RED, COLOR_WHITE));
+            if (yCurPos < PROP.SIZEY)
+            {
+              yCurPos++;
+              clear_line(yCurPos, xCurPos);
+              print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].c_str()), CRT_get_color_pair(COLOR_RED, COLOR_WHITE));
+            }
           }
         }
 
