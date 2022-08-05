@@ -518,8 +518,8 @@ class Screen3
 
     bzADS_B.create_button(0, "ADS_BON", "%ADS_B%ON", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
     bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    //bzADS_B.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    //bzADS_B.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzADS_B.create_button(2, "BLANK", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzADS_B.create_button(3, "ADS_B_SNAPSHOT", "%Snap%Shot", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     //bzADS_B.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
 
     tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
@@ -949,8 +949,8 @@ class Screen3
       // Prep ADS_B Buttons
       bzADS_B.move_resize(0, YADS_B_ScreenPos + (YBADS_BSize *0), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
       bzADS_B.move_resize(1, YADS_B_ScreenPos + (YBADS_BSize *1), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-      //bzADS_B.move_resize(2, YADS_B_ScreenPos + (YBADS_BSize *2), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-      //bzADS_B.move_resize(3, YADS_B_ScreenPos + (YBADS_BSize *3), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+      bzADS_B.move_resize(2, YADS_B_ScreenPos + (YBADS_BSize *2), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+      bzADS_B.move_resize(3, YADS_B_ScreenPos + (YBADS_BSize *3), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
       //bzADS_B.move_resize(4, YADS_B_ScreenPos + (YBADS_BSize *4), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
 
       // Hide unneeded buttons.
@@ -1114,6 +1114,32 @@ class Screen3
     else
     {
       mvwprintw(winStatus, 1, 29, " TIMER "); 
+    }
+
+    // Display Radio Indicator
+    /*
+    if(true)
+    {
+      wattron(winStatus, A_REVERSE);
+      mvwprintw(winStatus, 0, 53, " RADIO ");
+      wattroff(winStatus, A_REVERSE);
+    }
+    else
+    {
+      mvwprintw(winStatus, 0, 53, "       "); 
+    }
+    */
+
+    // Display ADS-B Indicaor
+    if(sdSysData.AIRCRAFT_COORD.is_active() == true)
+    {
+      wattron(winStatus, A_REVERSE);
+      mvwprintw(winStatus, 1, 53, " ADS-B ");
+      wattroff(winStatus, A_REVERSE);
+    }
+    else
+    {
+      mvwprintw(winStatus, 1, 53, "       "); 
     }
 
     /*

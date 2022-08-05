@@ -841,6 +841,11 @@ class Console
           {
             keywatch.cmdInString(" absboff");
           }
+          else if(name.compare("ADS_B_SNAPSHOT") == 0)
+          // Turn Off ADS_B Receiver
+          {
+            keywatch.cmdInString(" adsbsnap");
+          }
         }
       }
     }

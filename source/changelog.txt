@@ -1,3 +1,8 @@
+V 1.10A_220805
+  - Changes made to the ADS-B gadget.
+  - ADS-B Indicator added to Status.
+  - ADS-B snapshot button added.
+
 V 1.09A_220803
   - Changes made to the displayed colors on the ADS-B gadget.
   - Progressed work on the ADS-B Alerts.

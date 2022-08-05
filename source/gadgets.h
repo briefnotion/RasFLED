@@ -436,6 +436,9 @@ class ADS_B_List_Box
 
   deque<AIRCRAFT_INDEX_INFORMATION> AIRCRAFT_INDEX_LIST;
 
+  
+  bool IS_ACTIVE = false;
+
   // Types:
   // -1 - Hidden
   //  0 - Read Only
@@ -642,23 +645,19 @@ class ADS_B_List_Box
       if (Color_Scale_Type == 0)
       {
         background_color = COLOR_GREEN;
-        //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
       }
       else if (Color_Scale_Type == 1)
       {
         background_color = color_range(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4);
-        //color_pair = CRT_get_color_pair(color_range(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
       else // Color_Scale_Type == 2
       {
         background_color = color_scale(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4);
-        //color_pair = CRT_get_color_pair(color_scale(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
     }
     else
     {
       background_color = COLOR_GREEN;
-      //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
     }
 
     if(Inverse_Colors == false)
@@ -683,21 +682,7 @@ class ADS_B_List_Box
       display_text = right_justify(Size, Text.get_str_value());
     }
 
-    /*
-    if(Inverse_Colors == true)
-    {
-      wattron(ADS_B_List_Box, A_REVERSE);
-    }
-    */
-
     mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "%s", display_text.c_str());
-
-    /*
-    if(Inverse_Colors == true)
-    {
-      wattroff(ADS_B_List_Box, A_REVERSE);
-    }
-    */
 
     // Turn Off Color
     wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
@@ -723,17 +708,14 @@ class ADS_B_List_Box
       if (Color_Scale_Type == 0)
       {
         background_color = COLOR_GREEN;
-        //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
       }
       else if (Color_Scale_Type == 1)
       {
         background_color = color_range(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
-        //color_pair = CRT_get_color_pair(color_range(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
       else // Color_Scale_Type == 2
       {
         background_color = color_scale(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
-        //color_pair = CRT_get_color_pair(color_scale(Text.get_int_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
     }
     else
@@ -763,23 +745,9 @@ class ADS_B_List_Box
     {
       display_text = right_justify(Size, Text.get_str_value());
     }
-    
-    /*
-    if(Inverse_Colors == true)
-    {
-      wattron(ADS_B_List_Box, A_REVERSE);
-    }
-    */
 
     mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "%s", display_text.c_str());
-
-    /*
-    if(Inverse_Colors == true)
-    {
-      wattroff(ADS_B_List_Box, A_REVERSE);
-    }
-    */
-
+    
     // Turn Off Color
     wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
 
@@ -803,23 +771,19 @@ class ADS_B_List_Box
       if (Color_Scale_Type == 0)
       {
         background_color = COLOR_GREEN;
-        //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
       }
       else if (Color_Scale_Type == 1)
       {
         background_color = color_range(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
-        //color_pair = CRT_get_color_pair(color_range(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
       else // Color_Scale_Type == 2
       {
         background_color = color_scale(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4);
-        //color_pair = CRT_get_color_pair(color_scale(Text.get_float_value(), Level_0, Level_1, Level_2, Level_3, Level_4), Text_Color);
       }
     }
     else
     {
       background_color = COLOR_GREEN;
-      //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
     }
 
     if(Inverse_Colors == false)
@@ -844,21 +808,7 @@ class ADS_B_List_Box
       display_text = right_justify(Size, Text.get_str_value());
     }
 
-    /*
-    if(Inverse_Colors == true)
-    {
-      wattron(ADS_B_List_Box, A_REVERSE);
-    }
-    */
-
     mvwprintw(ADS_B_List_Box, yCurPos, xCurPos, "%s", display_text.c_str());
-
-    /*
-    if(Inverse_Colors == true)
-    {
-      wattroff(ADS_B_List_Box, A_REVERSE);
-    }
-    */
 
     // Turn Off Color
     wattroff(ADS_B_List_Box, COLOR_PAIR(color_pair));
@@ -943,117 +893,142 @@ class ADS_B_List_Box
       int text_color = COLOR_WHITE;
       bool inverse_colors = false;
 
-      tmp_line = "Messages: " + to_string(PROP.VALUE.MESSAGES) + "     Aircraft Count: " + to_string(PROP.VALUE.AIRCRAFTS.size());
-      
-      wattron(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
-
-      wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
-      wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
-      mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", left_justify(PROP.SIZEX, tmp_line).c_str());
-      yCurPos++;
-      
-      //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
-
-      // Calculate Space Size
-      space_size = PROP.SIZEX - 72;
-      if(space_size < 0)
+      if(IS_ACTIVE == true)
       {
-        space_size = 0;
-      }
-
-      // Print Header Line
-      clear_line(yCurPos, xCurPos);
-      print_to_line(yCurPos, xCurPos, 6, right_justify(6, "SWK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 9, right_justify(9, "FLIGHT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-
-      print_to_line(yCurPos, xCurPos, 8, right_justify(8, "G SPEED"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 8, right_justify(8, "ALT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 7, right_justify(7, "V RT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 7, right_justify(7, "TRACK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-
-      print_to_line(yCurPos, xCurPos, space_size, right_justify(space_size, ""), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-
-      print_to_line(yCurPos, xCurPos, 8, right_justify(8, "SN POS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 6, right_justify(6, "MSGS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 6, right_justify(6, "SEEN"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      print_to_line(yCurPos, xCurPos, 7, right_justify(7, "RSSI"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
-      
-      yCurPos++;
-
-      //----------------
-
-      // Display Aircraft data in the order of the index.
-      for (int y = 0; y < AIRCRAFT_INDEX_LIST.size() &&
-                  yCurPos < PROP.SIZEY; y++)
-      {
-        AIRCRAFT display_aircraft;
-
-        if(AIRCRAFT_INDEX_LIST[y].HEX != "")
-        {
-          display_aircraft = PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION];
-        }
-
-        // Determine Color
-        if(display_aircraft.data_count() >0)
-        {
-          if(display_aircraft.POSITION.LATITUDE.conversion_success() == true && 
-              display_aircraft.POSITION.LONGITUDE.conversion_success() == true)
-            {
-              text_color = COLOR_WHITE;
-              inverse_colors = false;
-            }
-            else
-            {
-              text_color = COLOR_BLACK;
-              inverse_colors = false;
-            }
-        }
-        else
-        {
-          text_color = COLOR_BLACK;
-          inverse_colors = true;
-        }
-
-        // 1 - Range Level
-        // Magenta  Red  Yellow  Green  Blue  Cyan
-
-        // 2 - Scale Level
-        // Green  Yellow  Red  Magenta  Blue  Cyan
-      
-        // Print Aircraft Info Line
-        clear_line(yCurPos, xCurPos);
-        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.SQUAWK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
-        dsp_text(yCurPos, xCurPos, 9, display_aircraft.FLIGHT, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
-
-        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, text_color, inverse_colors, 1, 60, 80, 100, 250, 600);
-        dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, text_color, inverse_colors, 1, 50, 500, 3000, 12000, 40000);
-        dsp_intg(yCurPos, xCurPos, 7, display_aircraft.VERT_RATE, text_color, inverse_colors, 2, 100, 1200, 3000, 4000, 5000);
-        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
-
-        dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
-        //print_to_line(yCurPos, xCurPos, space_size, right_justify(space_size, ""), CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE));
+        tmp_line = "Messages: " + PROP.VALUE.MESSAGES.get_str_value() + "     Now: " + PROP.VALUE.NOW.get_str_value() + "     Aircraft Count: " + to_string(PROP.VALUE.AIRCRAFTS.size());
         
-        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, 2, 4, 10, 290, 299, 0);
-        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, 2, 100, 5000, 10000, 20000, 40000);
-        dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, 2, 10, 290, 299, 0, 0);
-        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 1, 10, 25, 28, 30, 32);
+        wattron(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
 
-        //print_to_line(yCurPos, xCurPos, 7, right_justify(7, to_string(AIRCRAFT_INDEX_LIST[y].POSITION)), color_pair);
-        //print_to_line(yCurPos, xCurPos, 7, right_justify(7, to_string(display_aircraft.data_count())), color_pair);
+        wmove(ADS_B_List_Box, yCurPos, 0);  //move cursor to next line to print or clear.
+        wclrtoeol(ADS_B_List_Box);            // clear line befor printing to it.
+        mvwprintw(ADS_B_List_Box, yCurPos, 0, "%s", left_justify(PROP.SIZEX, tmp_line).c_str());
+        yCurPos++;
+        
+        //Screen.tbads_b_Data.add_line(tmeCurrentMillis, "");
 
-        if(display_aircraft.alert() == true)
+        // Calculate Space Size
+        space_size = PROP.SIZEX - 75;
+        if(space_size < 0)
         {
-          for (int alerts_pos = 0; alerts_pos < display_aircraft.ALERT_LIST.size(); alerts_pos++)
+          space_size = 0;
+        }
+
+        // Print Header Line
+        clear_line(yCurPos, xCurPos);
+        print_to_line(yCurPos, xCurPos, 6, right_justify(6, "SWK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 9, right_justify(9, "FLIGHT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+
+        print_to_line(yCurPos, xCurPos, 3, right_justify(3, ""), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+
+        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "G SPEED"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "ALT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 7, right_justify(7, "V RT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 7, right_justify(7, "TRACK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+
+        print_to_line(yCurPos, xCurPos, space_size, right_justify(space_size, ""), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+
+        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "SN POS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 6, right_justify(6, "MSGS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 6, right_justify(6, "SEEN"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 7, right_justify(7, "RSSI"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        
+        wattroff(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+
+        yCurPos++;
+
+        //----------------
+
+        // Display Aircraft data in the order of the index.
+        for (int y = 0; y < AIRCRAFT_INDEX_LIST.size() &&
+                    yCurPos < PROP.SIZEY; y++)
+        {
+          AIRCRAFT display_aircraft;
+
+          if(AIRCRAFT_INDEX_LIST[y].HEX != "")
           {
-            if (yCurPos < PROP.SIZEY)
+            display_aircraft = PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[y].POSITION];
+          }
+
+          // Determine Color
+          if(display_aircraft.data_count() >0)
+          {
+            if(display_aircraft.POSITION.LATITUDE.conversion_success() == true && 
+                display_aircraft.POSITION.LONGITUDE.conversion_success() == true)
+              {
+                text_color = COLOR_WHITE;
+                inverse_colors = false;
+              }
+              else
+              {
+                text_color = COLOR_BLACK;
+                inverse_colors = false;
+              }
+          }
+          else
+          {
+            text_color = COLOR_BLACK;
+            inverse_colors = true;
+          }
+
+          // 1 - Range Level
+          // Magenta  Red  Yellow  Green  Blue  Cyan
+
+          // 2 - Scale Level
+          // Green  Yellow  Red  Magenta  Blue  Cyan
+        
+          // Print Aircraft Info Line
+          clear_line(yCurPos, xCurPos);
+          dsp_intg(yCurPos, xCurPos, 6, display_aircraft.SQUAWK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
+          dsp_text(yCurPos, xCurPos, 9, display_aircraft.FLIGHT, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
+
+          dsp_text(yCurPos, xCurPos, 3, blank_text, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
+
+          dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, text_color, inverse_colors, 1, 60, 80, 100, 250, 600);
+          dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, text_color, inverse_colors, 1, 50, 500, 3000, 12000, 40000);
+          dsp_intg(yCurPos, xCurPos, 7, display_aircraft.VERT_RATE, text_color, inverse_colors, 2, 100, 1200, 3000, 4000, 5000);
+          dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
+
+          dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
+          
+          dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, 2, 4, 10, 290, 299, 0);
+          dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, 2, 100, 5000, 10000, 20000, 40000);
+          dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, 2, 10, 290, 299, 0, 0);
+          dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 1, 10, 25, 28, 30, 32);
+
+          if(display_aircraft.alert() == true)
+          {
+            for (int alerts_pos = 0; alerts_pos < display_aircraft.ALERT_LIST.size(); alerts_pos++)
             {
-              yCurPos++;
-              clear_line(yCurPos, xCurPos);
-              print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].c_str()), CRT_get_color_pair(COLOR_RED, COLOR_WHITE));
+              if (yCurPos < PROP.SIZEY)
+              {
+                yCurPos++;
+                clear_line(yCurPos, xCurPos);
+                print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].c_str()), CRT_get_color_pair(COLOR_RED, COLOR_WHITE));
+              }
             }
           }
-        }
 
+          yCurPos++;
+        }
+      }
+      else  // Not Active
+      {
+        //tmp_line = "  ADS-B System Not Active";
+        
+        //wattron(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE)));
+
+        clear_line(yCurPos, xCurPos);
+        print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, ""), CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE));
+
+        yCurPos++;
+        clear_line(yCurPos, xCurPos);
+        print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, "  ADS-B System Not Active"), CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE));
+        
+        yCurPos++;
+        clear_line(yCurPos, xCurPos);
+        print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, ""), CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE));
+
+        //wattroff(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE)));
         yCurPos++;
       }
 
@@ -1081,6 +1056,7 @@ class ADS_B_List_Box
   {
     // Get new list of Aircraft.
     PROP.VALUE = sdSysData.AIRCRAFT_COORD.DATA;
+    IS_ACTIVE = sdSysData.AIRCRAFT_COORD.is_active();
 
     // Prepare list to display.
     sort_index();

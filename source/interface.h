@@ -578,6 +578,17 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // Start Power Down Animation
       process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(15, 15, 0));
     }
+    
+    // Command Line (load copy direcory)
+    if (check_command(cons, " adsbsnap", "ADS-B Snapshot"))
+    {
+      // Call command.
+      //cons.printwait("cp -r /run/dump1090-fa/ ~/flightaware/snapshot." + to_string(tmeCurrentTime));
+      sdSysData.Command_Thread.run_command("cp -r /run/dump1090-fa/ ~/flightaware/snapshot." + to_string(tmeCurrentTime));
+
+      // Start Power Down Animation
+      //process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(15, 15, 0));
+    }
     // -------------------------------------------------------------------------------------
     // PLAYLIST
 

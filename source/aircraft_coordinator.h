@@ -105,7 +105,7 @@ class AIRCRAFT
 
   // Radio Information
   STRING_INT MESSAGES;    // Message Count Received.                    "messages":261
-  STRING_FLOAT SEEN;        // Seconds since last                         "seen":209.0
+  STRING_FLOAT SEEN;      // Seconds since last                         "seen":209.0
                           //  received message (300 second expiration)
   STRING_FLOAT RSSI;      // Signal Strength                            "rssi":-28.4
 
@@ -119,6 +119,7 @@ class AIRCRAFT
     if(SQUAWK.conversion_success() == true)
     {
       
+      /*
       if (SQUAWK.get_int_value() == 0020)
       {
         ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Emergency");
@@ -134,6 +135,13 @@ class AIRCRAFT
       if (SQUAWK.get_int_value() >= 4701 && SQUAWK.get_int_value() <= 4777)
       {
         ALERT_LIST.push_back("   SQUAWK ALERT: Special Eents - NOTAM");
+        ALERT= true;
+      }
+      */
+
+      if (SQUAWK.get_int_value() == 1200)
+      {
+        ALERT_LIST.push_back("         SQUAWK: Visual Flight Rules (VFR)");
         ALERT= true;
       }
 
@@ -206,8 +214,8 @@ class AIRCRAFT
 class AIRCRAFT_DATA
 {
   public:
-  float NOW = 0;
-  long MESSAGES = 0;
+  STRING_FLOAT NOW;
+  STRING_INT MESSAGES;
   deque<AIRCRAFT> AIRCRAFTS;
   
   bool CHANGED = false;
@@ -218,12 +226,14 @@ class AIRCRAFT_COORDINATOR
   private:
   ptree PROPERTY_TREE;
 
+  bool IS_ACTIVE = false;
+
   //bool PREPARED = false;
 
   public:
   AIRCRAFT_DATA DATA;
 
-  string data = "";
+
 
   private:
 
@@ -261,6 +271,11 @@ class AIRCRAFT_COORDINATOR
   }
 
   public:
+
+  bool is_active()
+  {
+    return IS_ACTIVE;
+  }
   bool process(string JSON_Filename)
   // Read JSON Aircraft file, parse data, and store data to the Aircraft Data list.
   //  Returns true if sucessfule
@@ -269,12 +284,20 @@ class AIRCRAFT_COORDINATOR
   {
     if (read_json_file(JSON_Filename) == true)
     {
+      IS_ACTIVE = true;
+
       // Clear the current list for new list replacement.
       DATA.AIRCRAFTS.clear();
 
       // Read data from property tree.
+
+      /*
       DATA.NOW = PROPERTY_TREE.get<float>("now");
       DATA.MESSAGES = PROPERTY_TREE.get<long>("messages");
+      */
+      DATA.NOW.store(PROPERTY_TREE.get<string>("now"));
+      DATA.MESSAGES.store(PROPERTY_TREE.get<string>("messages"));
+
       
       for (ptree::value_type &aircraft : PROPERTY_TREE.get_child("aircraft"))
       {
@@ -331,6 +354,7 @@ class AIRCRAFT_COORDINATOR
     }
     else
     {
+      IS_ACTIVE = false;
       return false;
     }
   }
