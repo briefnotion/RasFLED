@@ -291,7 +291,7 @@ class Screen3
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
     bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
     bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    bzButtons.modify(4, "", "", 0, -1, 6, 0);
+    bzButtons.modify(4, "LIGHTSOFF", "%LIGHTS%OFF", 0, 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
     bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
@@ -516,9 +516,9 @@ class Screen3
     // Prep Gadgets for ADS_B screen.
     tiADS_B_Screen.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
-    bzADS_B.create_button(0, "ADS_BON", "%ADS_B%ON", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    bzADS_B.create_button(2, "BLANK", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzADS_B.create_button(0, "ADS_BON", "%ADS-B", 0, 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, -2, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzADS_B.create_button(2, "BLANK1", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzADS_B.create_button(3, "ADS_B_SNAPSHOT", "%Snap%Shot", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     //bzADS_B.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
 
@@ -954,8 +954,8 @@ class Screen3
       //bzADS_B.move_resize(4, YADS_B_ScreenPos + (YBADS_BSize *4), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
 
       // Hide unneeded buttons.
-      //bzADS_B.change_enabled("AIRSTOP", false);
-      //bzADS_B.change_enabled("E2", false);
+      bzADS_B.change_enabled("ADS_BOFF", false);
+      bzADS_B.change_enabled("BLANK1", false);
     }
 
     if (ScrStat.Window_ADS_B_Screen == true)
@@ -1065,15 +1065,24 @@ class Screen3
     mvwprintw(winStatus, 0, 44, " Door4 ");
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winStatus, A_REVERSE);}
 
+    // Display Lights Off mode toggle.
+    if(sdSysData.Lights_Off == true)
+    {
+      wattron(winStatus, A_REVERSE);
+      mvwprintw(winStatus, 1, 4, "  LIGHTS OFF  ");
+      wattroff(winStatus, A_REVERSE);
+    }
+    else
+    {
+      mvwprintw(winStatus, 1, 4, "              ");      
+    }
+
     // Display Day or Night mode toggle.
     if(sdSysData.booDay_On == true)
     {
-      //init_pair(1, COLOR_WHITE, COLOR_BLUE);
-      //wattron(winStatus, COLOR_PAIR(1));
       wattron(winStatus, A_REVERSE);
       mvwprintw(winStatus, 0, 29, "  DAY  ");
       wattroff(winStatus, A_REVERSE);
-      //wattroff(winStatus, COLOR_PAIR(1));
     }
     else
     {
@@ -1579,6 +1588,9 @@ class Screen3
     //  has changed.
     bzButtons.change_value("TIMER",int(sdSysData.cdTIMER.is_active()));
     bzButtons.change_value("MENUOVERHEAD",int(sdSysData.booOverheadRunning));
+    bzButtons.change_value("HAZARD", int(sdSysData.booHazardRunning));
+    bzButtons.change_value("LIGHTSOFF", int(sdSysData.Lights_Off));
+    bzADS_B.change_value("ADS_BON",int(sdSysData.AIRCRAFT_COORD.is_active()));
 
     // Check for Timer Window
     if (sdSysData.cdTIMER.is_active() == true)

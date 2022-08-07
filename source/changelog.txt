@@ -1,3 +1,8 @@
+V 1.11A_220806
+  - Changes made to the ADS-B Screen.
+  - Changed the path of the ADS-B Snapshot.
+  - Created a Lights Off button.
+
 V 1.10A_220805
   - Changes made to the ADS-B gadget.
   - ADS-B Indicator added to Status.

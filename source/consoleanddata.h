@@ -422,6 +422,19 @@ class Console
           }
         }
 
+        else if(name.compare("LIGHTSOFF") == 0)
+        // Turn Lights On or Off
+        {
+          if(sdSysData.Lights_Off == false)
+          {
+            keywatch.cmdInString(" lightsoff");
+          }
+          else
+          {
+            keywatch.cmdInString(" lightson");
+          }
+        }
+
         else if(name.compare("TIMER") == 0)
         // Start / Stop Timer
         if (sdSysData.cdTIMER.is_active() == false)
@@ -834,13 +847,22 @@ class Console
           if(name.compare("ADS_BON") == 0)
           // Turn On ADS_B Receiver
           {
-            keywatch.cmdInString(" absbon");
+            if(sdSysData.AIRCRAFT_COORD.is_active() == false)
+            {
+              keywatch.cmdInString(" absbon");
+            }
+            else
+            {
+              keywatch.cmdInString(" absboff");
+            }
           }
+          /*
           else if(name.compare("ADS_BOFF") == 0)
           // Turn Off ADS_B Receiver
           {
             keywatch.cmdInString(" absboff");
           }
+          */
           else if(name.compare("ADS_B_SNAPSHOT") == 0)
           // Turn Off ADS_B Receiver
           {

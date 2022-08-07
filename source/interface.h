@@ -419,6 +419,18 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       }
     }
 
+    // Toggle Lights Off
+    if (check_command(cons, " lightsoff", "Lights Off."))
+    {
+      sdSysData.Lights_Off = true;
+    }
+
+    // Toggle Lights On
+    if (check_command(cons, " lightson", "Lights ON."))
+    {
+      sdSysData.Lights_Off = false;
+    }
+
     // Toggle Day Mode On
     if (check_command(cons, "dayon", "DAY mode ON."))
     {
@@ -584,7 +596,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     {
       // Call command.
       //cons.printwait("cp -r /run/dump1090-fa/ ~/flightaware/snapshot." + to_string(tmeCurrentTime));
-      sdSysData.Command_Thread.run_command("cp -r /run/dump1090-fa/ ~/flightaware/snapshot." + to_string(tmeCurrentTime));
+      sdSysData.Command_Thread.run_command("cp -r /run/dump1090-fa/ /home/pi/flightaware/snapshot." + sdSysData.AIRCRAFT_COORD.DATA.NOW.get_str_value());
 
       // Start Power Down Animation
       //process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(15, 15, 0));

@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.10A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.11A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -770,8 +770,14 @@ int loop()
         }
 
 
-        // LED Library Renderer -- Recommend: DON'T TOUCH        
-        matrix_render(led_count);
+        //  Are the lights enable to display.       
+        //    Lights off will not turn the lights off and clear their values.  
+        //      Instead, transmitting those color are to the lights disabled.
+        if (sdSystem.Lights_Off == false)
+        {
+          // LED Library Renderer -- Recommend: DON'T TOUCH
+          matrix_render(led_count);
+        }
 
         // Create a seperate thread only to render the LEDs with the hardware.  This process
         //  is very intensive for the system and is only one way.  The render thread only needs 

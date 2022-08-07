@@ -290,18 +290,19 @@ class AIRCRAFT_COORDINATOR
       DATA.AIRCRAFTS.clear();
 
       // Read data from property tree.
-
-      /*
-      DATA.NOW = PROPERTY_TREE.get<float>("now");
-      DATA.MESSAGES = PROPERTY_TREE.get<long>("messages");
-      */
-      DATA.NOW.store(PROPERTY_TREE.get<string>("now"));
-      DATA.MESSAGES.store(PROPERTY_TREE.get<string>("messages"));
-
+      try
+      {
+        // Safegaurd the finicky read.  
+        DATA.NOW.store(PROPERTY_TREE.get<string>("now"));
+        DATA.MESSAGES.store(PROPERTY_TREE.get<string>("messages"));
+      }
+      catch (std::exception const& e)
+      {
+        // Do nothing
+      }
       
       for (ptree::value_type &aircraft : PROPERTY_TREE.get_child("aircraft"))
       {
-        
         AIRCRAFT tmpAircraft;
 
         string first = "";
@@ -315,7 +316,6 @@ class AIRCRAFT_COORDINATOR
         tmpAircraft.SQUAWK.store(tree_value("squawk", aircraft));
         tmpAircraft.FLIGHT.store(tree_value("flight", aircraft));
         tmpAircraft.VERSION.store(tree_value("version", aircraft));
-
 
         // Speed Rate Positions
         tmpAircraft.SPEED.store(tree_value("gs", aircraft));
@@ -354,6 +354,11 @@ class AIRCRAFT_COORDINATOR
     }
     else
     {
+      if(IS_ACTIVE == true)
+      {
+        DATA.CHANGED = true;
+      }
+
       IS_ACTIVE = false;
       return false;
     }
