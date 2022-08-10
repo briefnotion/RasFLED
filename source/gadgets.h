@@ -530,8 +530,33 @@ class ADS_B_List_Box
       }
     }
     
+    /*
     // Move active entrys that are off screen up on list.
-    
+    for(int x=0; x < AIRCRAFT_INDEX_LIST.size(); x++)
+    {
+      if (AIRCRAFT_INDEX_LIST[x].POSITION > PROP.SIZEY)
+      {
+        // Search for any empty pos.
+        bool pos_found = false;
+
+        int first_empty = get_first_empty_pos();
+        if(first_empty >= 0 && )
+
+        
+        for(int y=0; y < AIRCRAFT_INDEX_LIST.size() && pos_found == false; y++)
+        {
+          if(AIRCRAFT_INDEX_LIST[y].POSITION < PROP.SIZEY && AIRCRAFT_INDEX_LIST[y].HEX == "")
+          {
+            // swap positions
+            int tmppos = AIRCRAFT_INDEX_LIST[y].POSITION;
+            AIRCRAFT_INDEX_LIST[y].POSITION = AIRCRAFT_INDEX_LIST[x].POSITION;
+            AIRCRAFT_INDEX_LIST[x].POSITION = tmppos;
+            pos_found = true;
+          }
+        }
+      }
+    }
+    */
   }
 
   int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
@@ -720,8 +745,14 @@ class ADS_B_List_Box
     }
     else
     {
-      background_color = COLOR_GREEN;
-      //color_pair = CRT_get_color_pair(COLOR_GREEN, Text_Color);
+      if(Text.get_str_value() == "")
+      {
+        background_color = COLOR_GREEN;
+      }
+      else
+      {
+        background_color = COLOR_RED;
+      }
     }
 
     if(Inverse_Colors == false)
@@ -783,7 +814,14 @@ class ADS_B_List_Box
     }
     else
     {
-      background_color = COLOR_GREEN;
+      if(Text.get_str_value() == "")
+      {
+        background_color = COLOR_GREEN;
+      }
+      else
+      {
+        background_color = COLOR_RED;
+      }
     }
 
     if(Inverse_Colors == false)
@@ -895,7 +933,10 @@ class ADS_B_List_Box
 
       if(IS_ACTIVE == true)
       {
-        tmp_line = "Messages: " + PROP.VALUE.MESSAGES.get_str_value() + "     Now: " + PROP.VALUE.NOW.get_str_value() + "     Aircraft Count: " + to_string(PROP.VALUE.AIRCRAFTS.size());
+        tmp_line = "Messages: " + PROP.VALUE.MESSAGES.get_str_value() + "   Now: " + PROP.VALUE.NOW.get_str_value() + 
+                    "   Aircraft: " + to_string(PROP.VALUE.AIRCRAFTS.size()) + 
+                    "   Positioned: " + to_string(PROP.VALUE.POSITIONED_AIRCRAFT)
+                    ;
         
         wattron(ADS_B_List_Box, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
 
@@ -991,9 +1032,9 @@ class ADS_B_List_Box
           dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
           
           dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, 2, 4, 10, 290, 299, 0);
-          dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, 2, 100, 5000, 10000, 20000, 40000);
+          dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, 2, 100, 5000, 12000, 20000, 40000);
           dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, 2, 10, 290, 299, 0, 0);
-          dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 1, 10, 25, 28, 30, 32);
+          dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 2, 10, 30, 32, 34, 36);
 
           if(display_aircraft.alert() == true)
           {

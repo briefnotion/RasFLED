@@ -217,6 +217,7 @@ class AIRCRAFT_DATA
   STRING_FLOAT NOW;
   STRING_INT MESSAGES;
   deque<AIRCRAFT> AIRCRAFTS;
+  int POSITIONED_AIRCRAFT = 0;
   
   bool CHANGED = false;
 };
@@ -288,6 +289,7 @@ class AIRCRAFT_COORDINATOR
 
       // Clear the current list for new list replacement.
       DATA.AIRCRAFTS.clear();
+      DATA.POSITIONED_AIRCRAFT = 0;
 
       // Read data from property tree.
       try
@@ -340,6 +342,11 @@ class AIRCRAFT_COORDINATOR
         tmpAircraft.MESSAGES.store(tree_value("messages", aircraft));
         tmpAircraft.SEEN.store(tree_value("seen", aircraft));
         tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
+
+        if(tmpAircraft.POSITION.LATITUDE.conversion_success() == true &&  tmpAircraft.POSITION.LONGITUDE.conversion_success() == true)
+        {
+          DATA.POSITIONED_AIRCRAFT ++;
+        }
 
         tmpAircraft.count_data();
         tmpAircraft.check_alerts();
