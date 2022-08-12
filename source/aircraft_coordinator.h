@@ -103,6 +103,9 @@ class AIRCRAFT
   STRING_STRING MLAT;     // UNKNOWN                                    "mlat":[]
   STRING_STRING TISB;     // UNKNOWN                                    "tisb":[]
 
+  // Display Data
+  STRING_INT D_VERTICAL_RATE;
+
   // Radio Information
   STRING_INT MESSAGES;    // Message Count Received.                    "messages":261
   STRING_FLOAT SEEN;      // Seconds since last                         "seen":209.0
@@ -168,6 +171,19 @@ class AIRCRAFT
     {
         ALERT_LIST.push_back("EMERGENCY ALERT: " + EMERGENCY.get_str_value());
         ALERT= true;
+    }
+  }
+
+  void post_process()
+  {
+    // Vertical Rate
+    if (GEOM_RATE.conversion_success() == true)
+    {
+      D_VERTICAL_RATE = GEOM_RATE;
+    }
+    if (VERT_RATE.conversion_success() == true)
+    {
+      D_VERTICAL_RATE = VERT_RATE;
     }
   }
 
@@ -348,6 +364,7 @@ class AIRCRAFT_COORDINATOR
           DATA.POSITIONED_AIRCRAFT ++;
         }
 
+        tmpAircraft.post_process();
         tmpAircraft.count_data();
         tmpAircraft.check_alerts();
 

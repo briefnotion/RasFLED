@@ -961,7 +961,7 @@ class ADS_B_List_Box
 
         print_to_line(yCurPos, xCurPos, 3, right_justify(3, ""), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
 
-        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "G SPEED"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "GS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         print_to_line(yCurPos, xCurPos, 8, right_justify(8, "ALT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         print_to_line(yCurPos, xCurPos, 7, right_justify(7, "V RT"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         print_to_line(yCurPos, xCurPos, 7, right_justify(7, "TRACK"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
@@ -1026,7 +1026,7 @@ class ADS_B_List_Box
 
           dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, text_color, inverse_colors, 1, 60, 80, 100, 250, 600);
           dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, text_color, inverse_colors, 1, 50, 500, 3000, 12000, 40000);
-          dsp_intg(yCurPos, xCurPos, 7, display_aircraft.VERT_RATE, text_color, inverse_colors, 2, 100, 1200, 3000, 4000, 5000);
+          dsp_intg(yCurPos, xCurPos, 7, display_aircraft.D_VERTICAL_RATE, text_color, inverse_colors, 2, 100, 1200, 3000, 4000, 5000);
           dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, text_color, inverse_colors, 0, 0, 0, 0, 0, 0);
 
           dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, 1, 2, 1, 2, 3, 4, 5);
@@ -1034,7 +1034,7 @@ class ADS_B_List_Box
           dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, 2, 4, 10, 290, 299, 0);
           dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, 2, 100, 5000, 12000, 20000, 40000);
           dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, 2, 10, 290, 299, 0, 0);
-          dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 2, 10, 30, 32, 34, 36);
+          dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, 2, 18, 30, 32, 34, 36);
 
           if(display_aircraft.alert() == true)
           {

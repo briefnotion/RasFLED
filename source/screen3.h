@@ -291,7 +291,7 @@ class Screen3
     bzButtons.modify(1, "", "", 0, -1, 6, 0);
     bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
     bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    bzButtons.modify(4, "LIGHTSOFF", "%LIGHTS%OFF", 0, 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzButtons.modify(4, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
     bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
     bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
@@ -1066,7 +1066,7 @@ class Screen3
     if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winStatus, A_REVERSE);}
 
     // Display Lights Off mode toggle.
-    if(sdSysData.Lights_Off == true)
+    if(sdSysData.Lights_On == false)
     {
       wattron(winStatus, A_REVERSE);
       mvwprintw(winStatus, 1, 4, "  LIGHTS OFF  ");
@@ -1589,7 +1589,7 @@ class Screen3
     bzButtons.change_value("TIMER",int(sdSysData.cdTIMER.is_active()));
     bzButtons.change_value("MENUOVERHEAD",int(sdSysData.booOverheadRunning));
     bzButtons.change_value("HAZARD", int(sdSysData.booHazardRunning));
-    bzButtons.change_value("LIGHTSOFF", int(sdSysData.Lights_Off));
+    bzButtons.change_value("LIGHTSOFF", int(sdSysData.Lights_On));
     bzADS_B.change_value("ADS_BON",int(sdSysData.AIRCRAFT_COORD.is_active()));
 
     // Check for Timer Window

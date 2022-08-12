@@ -1,3 +1,10 @@
+V 1.13A_220811
+  - Change made to the lights off routine.  Light events are still 
+      part of the global events, which will still be rendered.  But, 
+      the change will stop LED render events.  CPU processing time 
+      will be reduced, but still exist.
+  - Changes made to the ADS-B.
+
 V 1.12A_220809
   - Changes made to the ADS-B gadget.
 

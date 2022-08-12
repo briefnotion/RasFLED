@@ -9,7 +9,7 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.12A"
+/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.13A"
 /* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
@@ -687,108 +687,108 @@ int loop()
       //  For now we are working with just one big LED strip.  So, just check to see if anything
       //    changed.  Then, Redraw the entire strip. 
 
-      // Update?
-      for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+      // Calculate LED values and update if enabled.
+      if (sdSystem.Lights_On == true)
       {
-        for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+        // Update?    
+        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
         {
-          if (sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED == true)
+          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
           {
-            booUpdate = true;
-          }
-        }
-      }
-
-
-      if (booUpdate == true)
-      {
-        //  Do I need to move the whole thing or can I just move the changed pixels?
-
-        int mcount = 0;
-
-        // If debug mode Display all lights static color are selectted, replace all generated led colors
-        // with a static color
-        if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
-        {
-          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-          {
-            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            if (sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED == true)
             {
-              MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
-              CRGB(25,25,25));
+              booUpdate = true;
             }
           }
         }
-        
-        // Copy the prepaird Matrixes to the display matrix
-        if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
-        {
-          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-          {
-            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-            {
-              // Build LED Array to display
-              // FUTER !!! - Only update portions of LED array that has changed. First, group. Second individual LEDs.
-                  // Probably not needed because I'v only seen .5ms time needed for full matrix copy.
-              MatrixPrepare(cons, sdSystem, 
-                    sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-                    sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
-                    matrix, mcount);
-            }
-          }
-        }
-        else
-        {
-          // Build TEST array to display
-          int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
-          int pos = 0;
-          int g = 0; 
-          int s = 0;
 
-          // Find Strip
-          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+        if (booUpdate == true)
+        {
+          //  Do I need to move the whole thing or can I just move the changed pixels?
+
+          int mcount = 0;
+
+          // If debug mode Display all lights static color are selectted, replace all generated led colors
+          // with a static color
+          if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
           {
-            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
             {
-              if (selected_test_array == pos)
+              for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
               {
-                g = group;
-                s = strip;
-                sdSystem.t_group = group;
-                sdSystem.t_strip = strip;
+                MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+                CRGB(25,25,25));
               }
-              pos++;
             }
           }
+          
+          // Copy the prepaird Matrixes to the display matrix
+          if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
+          {
+            for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+            {
+              for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+              {
+                // Build LED Array to display
+                // FUTER !!! - Only update portions of LED array that has changed. First, group. Second individual LEDs.
+                    // Probably not needed because I'v only seen .5ms time needed for full matrix copy.
+                MatrixPrepare(cons, sdSystem, 
+                      sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                      sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+                      matrix, mcount);
+              }
+            }
+          }
+          else
+          {
+            // Build TEST array to display
+            int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
+            int pos = 0;
+            int g = 0; 
+            int s = 0;
 
-          // Draw fround strip
-          MatrixPrepare(cons, sdSystem, 
-                            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
-                            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
-                            matrix, mcount);
-        }
+            // Find Strip
+            for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+            {
+              for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+              {
+                if (selected_test_array == pos)
+                {
+                  g = group;
+                  s = strip;
+                  sdSystem.t_group = group;
+                  sdSystem.t_strip = strip;
+                }
+                pos++;
+              }
+            }
 
+            // Draw fround strip
+            MatrixPrepare(cons, sdSystem, 
+                              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
+                              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
+                              matrix, mcount);
+          }
 
-        //  Are the lights enable to display.       
-        //    Lights off will not turn the lights off and clear their values.  
-        //      Instead, transmitting those color are to the lights disabled.
-        if (sdSystem.Lights_Off == false)
-        {
+          //  Are the lights enable to display.       
+          //    Lights off will not turn the lights off and clear their values.  
+          //      Instead, transmitting those color are to the lights disabled.
+          
           // LED Library Renderer -- Recommend: DON'T TOUCH
           matrix_render(led_count);
-        }
-
-        // Create a seperate thread only to render the LEDs with the hardware.  This process
-        //  is very intensive for the system and is only one way.  The render thread only needs 
-        //  to rejoin with the main program, at the end of the main loop, to signify its 
-        //  completion, so that the loop can restart and begin computing its values and colors 
-        //  again. 
-        // A render thread should not be created if no changes have been made to the led values.
-        if (thread_render_running == false)
-        {
-          thread_render = async(proc_render_thread);
-          thread_render_running = true;
+          
+          // Create a seperate thread only to render the LEDs with the hardware.  This process
+          //  is very intensive for the system and is only one way.  The render thread only needs 
+          //  to rejoin with the main program, at the end of the main loop, to signify its 
+          //  completion, so that the loop can restart and begin computing its values and colors 
+          //  again. 
+          // A render thread should not be created if no changes have been made to the led values.
+          if (thread_render_running == false)
+          {
+            thread_render = async(proc_render_thread);
+            thread_render_running = true;
+          }
         }
       }
     } // Is Events and Render ready -----------------

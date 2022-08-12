@@ -425,7 +425,7 @@ class Console
         else if(name.compare("LIGHTSOFF") == 0)
         // Turn Lights On or Off
         {
-          if(sdSysData.Lights_Off == false)
+          if(sdSysData.Lights_On == true)
           {
             keywatch.cmdInString(" lightsoff");
           }
