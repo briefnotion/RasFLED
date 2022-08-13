@@ -458,6 +458,19 @@ class ADS_B_List_Box
     return return_int;
   }
 
+  int get_first_pos_with_no_data()
+  {
+    int return_int = -1;
+    for(int x=0; (x < AIRCRAFT_INDEX_LIST.size()) && (return_int == -1); x++)
+    {
+      if(AIRCRAFT_INDEX_LIST[x].DATA_COUNT == 0)
+      {
+        return_int = x;
+      }
+    }
+    return return_int;
+  }
+
   int find_HEX(string Hex)
   {
     int return_int = -1;
@@ -470,7 +483,47 @@ class ADS_B_List_Box
     }
     return return_int;
   }
-  
+
+  void organize_index()
+  // Move items with data and off screen to first empty pos
+  {
+    if(AIRCRAFT_INDEX_LIST.size() > PROP.SIZEY -2)
+    {
+      // First Loop to fill empty positions
+      for(int pos = PROP.SIZEY -2; pos < AIRCRAFT_INDEX_LIST.size(); pos++)
+      {
+        if(AIRCRAFT_INDEX_LIST[pos].DATA_COUNT > 0)
+        {
+          int first_empty = get_first_empty_pos();
+          if(first_empty >= 0 && first_empty < PROP.SIZEY)
+          {
+            // move position and blank old postion
+            AIRCRAFT_INDEX_LIST[first_empty] = AIRCRAFT_INDEX_LIST[pos];
+
+            AIRCRAFT_INDEX_INFORMATION blank_index;
+            AIRCRAFT_INDEX_LIST[pos] = blank_index;
+          }
+        }
+      }
+
+      // Second loop to swap positions of no data.
+      for(int pos = PROP.SIZEY -2; pos < AIRCRAFT_INDEX_LIST.size(); pos++)
+      {
+        if(AIRCRAFT_INDEX_LIST[pos].DATA_COUNT > 0)
+        {
+          int first_empty = get_first_pos_with_no_data();
+          if(first_empty >= 0 && first_empty < PROP.SIZEY)
+          {
+            // swap positions
+            AIRCRAFT_INDEX_INFORMATION no_data_index = AIRCRAFT_INDEX_LIST[first_empty];
+            AIRCRAFT_INDEX_LIST[first_empty] = AIRCRAFT_INDEX_LIST[pos];
+            AIRCRAFT_INDEX_LIST[pos] = no_data_index;
+          }
+        }
+      }
+    }
+  }
+
   void sort_index()
   {
     // Clear the Updated Flag
@@ -529,34 +582,6 @@ class ADS_B_List_Box
         AIRCRAFT_INDEX_LIST[x].HEX = "";
       }
     }
-    
-    /*
-    // Move active entrys that are off screen up on list.
-    for(int x=0; x < AIRCRAFT_INDEX_LIST.size(); x++)
-    {
-      if (AIRCRAFT_INDEX_LIST[x].POSITION > PROP.SIZEY)
-      {
-        // Search for any empty pos.
-        bool pos_found = false;
-
-        int first_empty = get_first_empty_pos();
-        if(first_empty >= 0 && )
-
-        
-        for(int y=0; y < AIRCRAFT_INDEX_LIST.size() && pos_found == false; y++)
-        {
-          if(AIRCRAFT_INDEX_LIST[y].POSITION < PROP.SIZEY && AIRCRAFT_INDEX_LIST[y].HEX == "")
-          {
-            // swap positions
-            int tmppos = AIRCRAFT_INDEX_LIST[y].POSITION;
-            AIRCRAFT_INDEX_LIST[y].POSITION = AIRCRAFT_INDEX_LIST[x].POSITION;
-            AIRCRAFT_INDEX_LIST[x].POSITION = tmppos;
-            pos_found = true;
-          }
-        }
-      }
-    }
-    */
   }
 
   int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
@@ -979,6 +1004,11 @@ class ADS_B_List_Box
 
         //----------------
 
+        // Attempt to make sure anything with data will not be displayed off screen.
+        organize_index();
+
+        //----------------
+
         // Display Aircraft data in the order of the index.
         for (int y = 0; y < AIRCRAFT_INDEX_LIST.size() &&
                     yCurPos < PROP.SIZEY; y++)
@@ -1086,7 +1116,6 @@ class ADS_B_List_Box
         }
       }
     
-
       PROP.CHANGED = false;
       
       wrefresh(ADS_B_List_Box);

@@ -174,18 +174,7 @@ class AIRCRAFT
     }
   }
 
-  void post_process()
-  {
-    // Vertical Rate
-    if (GEOM_RATE.conversion_success() == true)
-    {
-      D_VERTICAL_RATE = GEOM_RATE;
-    }
-    if (VERT_RATE.conversion_success() == true)
-    {
-      D_VERTICAL_RATE = VERT_RATE;
-    }
-  }
+
 
   void count_data()
   {
@@ -219,6 +208,26 @@ class AIRCRAFT
                   //MLAT.conversion_success() +
                   //TISB.conversion_success()
                   ;
+  }
+
+  void post_process()
+  {
+    // Convert Data to Display Standard.
+    // Vertical Rate
+    if (VERT_RATE.conversion_success() == true)
+    {
+      D_VERTICAL_RATE = VERT_RATE;
+    }
+    else
+    {
+      D_VERTICAL_RATE = GEOM_RATE;
+    }
+
+    // Fill Data Size Field
+    count_data();
+
+    // Fill Alert Fields.
+    check_alerts();
   }
 
   bool alert()
@@ -364,9 +373,8 @@ class AIRCRAFT_COORDINATOR
           DATA.POSITIONED_AIRCRAFT ++;
         }
 
+        
         tmpAircraft.post_process();
-        tmpAircraft.count_data();
-        tmpAircraft.check_alerts();
 
         // Store Aircraft ADS-B Data into list.
         DATA.AIRCRAFTS.push_back(tmpAircraft);
