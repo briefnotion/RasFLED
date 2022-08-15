@@ -223,6 +223,61 @@ bool string_to_int(string String_Value, int &Int_Value)
   }
 }
 
+int string_to_int(string String_Value)
+{
+  int tmp_int = 0;
+  string_to_int(String_Value, tmp_int);
+  return tmp_int;
+}
+
+bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value)
+// Convert in String_Value number to out Int_Value.
+//  Returns true if value sucessful.
+{
+  try
+  {
+    //Long_Value = strtol(String_Value, NULL, 10);
+    Unsigned_Long_Value = stoul(String_Value);
+    return true;
+  }
+  catch(const std::exception& e)
+  {
+    Unsigned_Long_Value = 0;
+    return false;
+  }
+}
+
+unsigned long string_to_ulong(string String_Value)
+{
+  unsigned long tmp_ulong = 0;
+  string_to_ulong(String_Value, tmp_ulong);
+  return tmp_ulong;
+}
+
+bool string_to_ulonglong(string String_Value, unsigned long long &Unsigned_Long_Long_Value)
+// Convert in String_Value number to out Int_Value.
+//  Returns true if value sucessful.
+{
+  try
+  {
+    //Long_Value = strtol(String_Value, NULL, 10);
+    Unsigned_Long_Long_Value = stoull(String_Value);
+    return true;
+  }
+  catch(const std::exception& e)
+  {
+    Unsigned_Long_Long_Value = 0;
+    return false;
+  }
+}
+
+unsigned long long string_to_ulonglong(string String_Value)
+{
+  unsigned long long tmp_ulonglong = 0;
+  string_to_ulonglong(String_Value, tmp_ulonglong);
+  return tmp_ulonglong;
+}
+
 bool string_to_float(string String_Value, float &Float_Value)
 // Convert in String_Value number to out Float_Value.
 //  Returns true if value sucessful.
@@ -237,6 +292,13 @@ bool string_to_float(string String_Value, float &Float_Value)
     Float_Value = 0;
     return false;
   }
+}
+
+float string_to_float(string String_Value)
+{
+  float tmp_float = 0;
+  string_to_float(String_Value, tmp_float);
+  return tmp_float;
 }
 
 class STRING_STRING

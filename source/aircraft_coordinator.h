@@ -13,11 +13,14 @@
 #define AIRCRAFT_COORDINATOR_H
 
 #include <deque>
-
 #include <string.h>
 
+// Boost libraries
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+
+// RASFled related header files
+#include "fled_time.h"
 
 
 /*
@@ -174,8 +177,6 @@ class AIRCRAFT
     }
   }
 
-
-
   void count_data()
   {
     DATA_COUNT =  SQUAWK.conversion_success() +
@@ -243,6 +244,8 @@ class AIRCRAFT_DATA
   STRING_INT MESSAGES;
   deque<AIRCRAFT> AIRCRAFTS;
   int POSITIONED_AIRCRAFT = 0;
+
+  FLED_TIME_VAR CONVERTED_TIME;
   
   bool CHANGED = false;
 };
@@ -258,8 +261,6 @@ class AIRCRAFT_COORDINATOR
 
   public:
   AIRCRAFT_DATA DATA;
-
-
 
   private:
 
@@ -296,12 +297,28 @@ class AIRCRAFT_COORDINATOR
     }
   }
 
+  void post_post_process()
+  // Calculate full aircraft data.
+  {
+    // Convert time
+    if (DATA.NOW.conversion_success() == true)
+    {
+      int dec_pos = DATA.NOW.get_str_value().find('.');
+      if (dec_pos != string::npos)
+      {
+        DATA.CONVERTED_TIME.put_seconds(string_to_ulong(DATA.NOW.get_str_value().erase(dec_pos)));
+        DATA.CONVERTED_TIME.put_deciseconds(string_to_int(DATA.NOW.get_str_value().erase(0, dec_pos +1)));
+      }
+    }
+  }
+
   public:
 
   bool is_active()
   {
     return IS_ACTIVE;
   }
+
   bool process(string JSON_Filename)
   // Read JSON Aircraft file, parse data, and store data to the Aircraft Data list.
   //  Returns true if sucessfule
@@ -379,6 +396,8 @@ class AIRCRAFT_COORDINATOR
         // Store Aircraft ADS-B Data into list.
         DATA.AIRCRAFTS.push_back(tmpAircraft);
       }
+
+      post_post_process();
 
       DATA.CHANGED = true;
       

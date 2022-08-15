@@ -21,8 +21,125 @@
 
 // Standard Header Files
 #include <chrono>
+#include <ctime>
 
 using namespace std;
+
+// -------------------------------------------------------------------------------------
+// Time Variable
+class FLED_TIME_VAR
+{
+  private:
+  // time starts at jan 1 1970
+  unsigned long SECONDS = 0;
+  int MICRO_SECONDS = 0;   // 1*10^-6 Seconds
+
+  time_t THE_TIME;
+  tm *PTM;
+  bool TIME_UPDATED = false;
+
+  void update_time()
+  {
+    THE_TIME = (time_t)SECONDS;
+    PTM = gmtime(&THE_TIME);
+    TIME_UPDATED = true;
+  }
+
+  public:
+  void put_seconds(unsigned long Seconds)
+  {
+    SECONDS = Seconds;
+    TIME_UPDATED = false;
+  }
+
+  void put_deciseconds(int Deciseconds)
+  {
+    MICRO_SECONDS = Deciseconds *100000;
+    TIME_UPDATED = false;
+  }
+
+  void put_miliseconds(int Miliseconds)
+  {
+    MICRO_SECONDS = Miliseconds *1000;
+    TIME_UPDATED = false;
+  }
+
+  unsigned long get_seconds()
+  {
+    return SECONDS;
+  }
+
+  int get_deciseconds()
+  {
+    return MICRO_SECONDS / 100000;
+  }
+
+  int get_miliseconds()
+  {
+    return MICRO_SECONDS / 1000;
+  }
+
+  int get_year()
+  {
+    int return_int = 0;
+
+    if (TIME_UPDATED == false)
+    {
+      update_time();
+    }
+
+    return (1900 + PTM->tm_year);
+  }
+
+  int get_month()
+  {
+    int return_int = 0;
+
+    if (TIME_UPDATED == false)
+    {
+      update_time();
+    }
+    
+    return (1 + PTM->tm_mon);
+  }
+
+  int get_day()
+  {
+    if (TIME_UPDATED == false)
+    {
+      update_time();
+    }
+    return (1 + PTM->tm_mday);
+  }
+
+  int get_hour()
+  {
+    if (TIME_UPDATED == false)
+    {
+      update_time();
+    }
+    return (5 + PTM->tm_hour);
+  }
+
+  int get_minute()
+  {
+    if (TIME_UPDATED == false)
+    {
+      update_time();
+    }
+    return (30 + PTM->tm_min);
+  }
+  
+  int get_second()
+  {
+    if (TIME_UPDATED == false)
+    {
+      update_time();
+    }
+    return (5 + PTM->tm_sec);
+  }
+};
+
 
 // -------------------------------------------------------------------------------------
 // Keeps track of timing variables

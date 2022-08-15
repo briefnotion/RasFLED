@@ -17,6 +17,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+#include "stringthings.h"
 #include "helper.h"
 #include <wiringPi.h>
 
@@ -56,7 +58,7 @@ class HARDWARE_STATUS
 
         fread(data, buf_size, 1, fshardware);
 
-        TEMPERTURE = atoi(data);
+        TEMPERTURE = string_to_int(data);
         TEMPERTURE /= 1000;
 
         fclose(fshardware);
@@ -90,7 +92,7 @@ class HARDWARE_STATUS
 
         fread(data, buf_size, 1, fshardware);
 
-        LOW_VOLTAGE = atoi(data);
+        LOW_VOLTAGE = string_to_int(data);
 
         fclose(fshardware);
       }      

@@ -18,7 +18,6 @@
 #include <string.h>
 #include <deque>
 
-
 // RASFled related header files
 #include "helper.h"
 #include "LEDstuff.h"
@@ -412,7 +411,7 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
     loc = tmpSettings.exits_at("Switch_Count");
     if(loc >= 0)
     {
-      sdSysData.CONFIG.iNUM_SWITCHES = atoi(tmpSettings.value_at(loc,0).c_str());
+      sdSysData.CONFIG.iNUM_SWITCHES = string_to_int(tmpSettings.value_at(loc,0));
     }      
 
     for(int x=0; x<sdSysData.CONFIG.iNUM_SWITCHES; x++)
@@ -421,7 +420,7 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
       if (loc >= 0)
       {
         switch_map tmpsm;
-        tmpsm.pin = atoi(tmpSettings.value_at(loc,1).c_str());
+        tmpsm.pin = string_to_int(tmpSettings.value_at(loc,1));
         
         sdSysData.CONFIG.vSWITCH_PIN_MAP.push_back(tmpsm);
       }
@@ -443,7 +442,7 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
       loc = tmpSettings.exits_at("LED_Group_Count");
       if(loc >= 0)
       {
-        int group_count = atoi(tmpSettings.value_at(loc,0).c_str());
+        int group_count = string_to_int(tmpSettings.value_at(loc,0));
         for(int x=0; x<group_count; x++)
         {
           loc = tmpSettings.exits_id_at("LED_Group_ID", to_string(x));
@@ -456,8 +455,8 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
 
             loc = tmpSettings.exits_id_at("LED_Strip_Count", to_string(x));
             if(loc >0)
-            {   
-              int strip_count = atoi(tmpSettings.value_at(loc,1).c_str());
+            {
+              int strip_count = string_to_int(tmpSettings.value_at(loc,1));
               for(int y=0; y<strip_count; y++)
               {
                 loc = tmpSettings.exits_id_2_at("LED_Strip_ID", to_string(x), to_string(y));
@@ -466,7 +465,7 @@ bool load_configuration(Console &cons, system_data &sdSysData, string strFilenam
                   int sid = y;
                   string sname = tmpSettings.value_at(loc,2);
                   string sposition = tmpSettings.value_at(loc,3);
-                  int sledcount = atoi(tmpSettings.value_at(loc,4).c_str());
+                  int sledcount = string_to_int(tmpSettings.value_at(loc,4));
 
                   bool sforward = false;
                   bool sbot_at_start = false;

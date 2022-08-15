@@ -16,6 +16,8 @@
 #include <string.h>
 #include <deque>
 
+#include "stringthings.h"
+
 using namespace std;
 
 // ***************************************************************************************
@@ -74,9 +76,9 @@ public:
       c2 = strCRGB.find(",",c1+1);
       if (c2!=string::npos);
       {
-        r = atoi(strCRGB.substr(0,c1).c_str()); 
-        g = atoi(strCRGB.substr(c1+1,c2-c1-1).c_str());
-        b = atoi(strCRGB.substr(c2+1,strCRGB.length()-1).c_str());
+        r = string_to_int(strCRGB.substr(0,c1)); 
+        g = string_to_int(strCRGB.substr(c1+1,c2-c1-1));
+        b = string_to_int(strCRGB.substr(c2+1,strCRGB.length()-1));
       }
     }
     return CRGB(r,g,b);
