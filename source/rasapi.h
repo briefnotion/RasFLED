@@ -65,6 +65,8 @@ class FILE_WATCH
   // File Properties
   time_t LAST_WRITE_TIME;
 
+  bool CHANGED = false;
+
   public:
   FILE_WATCH_Properties PROP;
 
@@ -111,11 +113,21 @@ class FILE_WATCH
   {
     if (boost::filesystem::exists(FILENAME) == false)
     {
+      if (PROP.FILE_EXIST == true)
+      {
+        CHANGED = true;
+      }
+
       PROP.FILE_EXIST = false;
       close();
     }
     else if(LOG_FILE.is_open() != true)
     {
+      if (PROP.FILE_EXIST == false)
+      {
+        CHANGED = true;
+      }
+
       PROP.FILE_EXIST = true;
       open();
     }
@@ -201,12 +213,12 @@ class FILE_WATCH
     {
       if(file_time_changed() == true)
       {
-        boo_return = true;
+        CHANGED = true;
       }
     }
 
     // Watch for File Size Change.
-    if(PROP.WATCH_SIZE_CHANGE == true && boo_return == false)
+    if(PROP.WATCH_SIZE_CHANGE == true && CHANGED == false)
     {
       // Get file size;
       long new_file_size = get_file_size();
@@ -226,9 +238,13 @@ class FILE_WATCH
       else
       {
         FILE_SIZE = new_file_size;
-        boo_return =  true;
+        CHANGED =  true;
       }
     }
+
+    boo_return = CHANGED;
+
+    CHANGED = false;
 
     return boo_return;
   }

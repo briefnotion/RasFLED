@@ -41,7 +41,7 @@ class FLED_TIME_VAR
   void update_time()
   {
     THE_TIME = (time_t)SECONDS;
-    PTM = gmtime(&THE_TIME);
+    PTM = localtime(&THE_TIME);
     TIME_UPDATED = true;
   }
 
@@ -99,8 +99,8 @@ class FLED_TIME_VAR
     {
       update_time();
     }
-    
-    return (1 + PTM->tm_mon);
+
+    return (PTM->tm_mon);
   }
 
   int get_day()
@@ -109,7 +109,8 @@ class FLED_TIME_VAR
     {
       update_time();
     }
-    return (1 + PTM->tm_mday);
+
+    return (PTM->tm_mday);
   }
 
   int get_hour()
@@ -118,7 +119,8 @@ class FLED_TIME_VAR
     {
       update_time();
     }
-    return (5 + PTM->tm_hour);
+
+    return (PTM->tm_hour);
   }
 
   int get_minute()
@@ -127,7 +129,8 @@ class FLED_TIME_VAR
     {
       update_time();
     }
-    return (30 + PTM->tm_min);
+
+    return (PTM->tm_min);
   }
   
   int get_second()
@@ -136,7 +139,8 @@ class FLED_TIME_VAR
     {
       update_time();
     }
-    return (5 + PTM->tm_sec);
+
+    return (PTM->tm_sec);
   }
 };
 

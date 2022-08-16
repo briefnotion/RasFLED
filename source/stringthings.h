@@ -111,7 +111,7 @@ string linemerge(int size, string line, string text)
 
 string linemerge_left_justify(int size, string line, string text)
 // Overlaps and right justifies text onto line.
-// Returns value at size. 
+// Returns value at size of size. 
 {
   string return_string = line;
 
@@ -133,9 +133,10 @@ string linemerge_left_justify(int size, string line, string text)
 }
 
 string linemerge_left_justify(string line, string text)
-// Overlaps and right justifies text onto line.
+// Overlaps and left justifies text onto line.
 // No Truncate.
-// Returns value at size. 
+// Returns value at size of line or text size, whichever
+//  is larger. 
 {
   return linemerge_left_justify(0, line, text);
 }

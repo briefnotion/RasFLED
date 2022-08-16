@@ -958,14 +958,14 @@ class ADS_B_List_Box
 
       if(IS_ACTIVE == true)
       {
-        tmp_line = "Messages: " + PROP.VALUE.MESSAGES.get_str_value() + 
+        tmp_line = "Messages: " + linemerge_right_justify(6, "      ", PROP.VALUE.MESSAGES.get_str_value()) + 
                     //"   Now: " + to_string(PROP.VALUE.CONVERTED_TIME.get_seconds()) + 
                     "   " + to_string(PROP.VALUE.CONVERTED_TIME.get_year()) + 
-                    "-" + to_string(PROP.VALUE.CONVERTED_TIME.get_month()) + 
-                    "-" + to_string(PROP.VALUE.CONVERTED_TIME.get_day()) + 
-                    " " + to_string(PROP.VALUE.CONVERTED_TIME.get_hour()) + 
-                    ":" + to_string(PROP.VALUE.CONVERTED_TIME.get_minute()) + 
-                    ":" + to_string(PROP.VALUE.CONVERTED_TIME.get_second()) + 
+                    "-" + linemerge_right_justify(2, "00", to_string(PROP.VALUE.CONVERTED_TIME.get_month())) + 
+                    "-" + linemerge_right_justify(2, "00", to_string(PROP.VALUE.CONVERTED_TIME.get_day())) + 
+                    " " + linemerge_right_justify(2, "00", to_string(PROP.VALUE.CONVERTED_TIME.get_hour())) + 
+                    ":" + linemerge_right_justify(2, "00", to_string(PROP.VALUE.CONVERTED_TIME.get_minute())) + 
+                    ":" + linemerge_right_justify(2, "00", to_string(PROP.VALUE.CONVERTED_TIME.get_second())) + 
                     "." + to_string(PROP.VALUE.CONVERTED_TIME.get_deciseconds()) + 
                     "   Aircraft: " + to_string(PROP.VALUE.AIRCRAFTS.size()) + 
                     "   Positioned: " + to_string(PROP.VALUE.POSITIONED_AIRCRAFT)
