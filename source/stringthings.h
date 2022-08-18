@@ -342,7 +342,6 @@ class STRING_INT
   bool    CONVERSION_SUCCESS = false;
 
   public:
-
   void store(string str_value)
   {
     STR_VALUE = str_value;
@@ -379,7 +378,6 @@ class STRING_FLOAT
   bool    CONVERSION_SUCCESS = false;
 
   public:
-
   void store(string str_value)
   {
     STR_VALUE = str_value;

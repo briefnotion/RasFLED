@@ -49,6 +49,13 @@ rssi:       recent average RSSI (signal power), in dbFS; this will always be neg
 //using namespace std;
 using namespace boost::property_tree;
 
+class ALERT_ENTRY
+{
+  public:
+  int ALERT_LEVEL = 0;
+  string ALERT = "";
+};
+
 class GLOBAL_POSITION
 {
   public:
@@ -66,7 +73,7 @@ class AIRCRAFT
   public:
   
   // Alert List
-  deque<string> ALERT_LIST;
+  deque<ALERT_ENTRY> ALERT_LIST;
 
   // VARIABLES            // DESCRIPTION                                EXAMPLE
   // Idents
@@ -108,6 +115,7 @@ class AIRCRAFT
 
   // Display Data
   STRING_INT D_VERTICAL_RATE;
+  STRING_FLOAT D_FLIGHT_ANGLE;
 
   // Radio Information
   STRING_INT MESSAGES;    // Message Count Received.                    "messages":261
@@ -122,57 +130,58 @@ class AIRCRAFT
 
   void check_alerts()
   {
+    ALERT_ENTRY tmp_alert_entry;
+    // Check Squak Codes
     if(SQUAWK.conversion_success() == true)
     {
-      
-      /*
-      if (SQUAWK.get_int_value() == 0020)
-      {
-        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Emergency");
-        ALERT= true;
-      }
-
-      if (SQUAWK.get_int_value() >= 1301 && SQUAWK.get_int_value() <= 1327)
-      {
-        ALERT_LIST.push_back("   SQUAWK ALERT: NATO - Air Policing - Quick Reaction Alert");
-        ALERT= true;
-      }
-
-      if (SQUAWK.get_int_value() >= 4701 && SQUAWK.get_int_value() <= 4777)
-      {
-        ALERT_LIST.push_back("   SQUAWK ALERT: Special Eents - NOTAM");
-        ALERT= true;
-      }
-      */
-
       if (SQUAWK.get_int_value() == 1200)
       {
-        ALERT_LIST.push_back("         SQUAWK: Visual Flight Rules (VFR)");
+        tmp_alert_entry.ALERT_LEVEL = 1;
+        tmp_alert_entry.ALERT = "  \\----------SQUAWK: Visual Flight Rules (VFR)";
+        ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() == 7500)
       {
-        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Hi-Jacking");
+        tmp_alert_entry.ALERT_LEVEL = 3;
+        tmp_alert_entry.ALERT = "  \\----SQUAWK ALERT: Special Purpose Code - Hi-Jacking";
+        ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() == 7600)
-      {
-        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Radio Failure");
+      {        
+        tmp_alert_entry.ALERT_LEVEL = 2;
+        tmp_alert_entry.ALERT = "  \\----SQUAWK ALERT: Special Purpose Code - Radio Failure";
+        ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
 
       if (SQUAWK.get_int_value() == 7700)
       {
-        ALERT_LIST.push_back("   SQUAWK ALERT: Special Purpose Code - Emergency");
+        tmp_alert_entry.ALERT_LEVEL = 3;
+        tmp_alert_entry.ALERT = "  \\----SQUAWK ALERT: Special Purpose Code - Emergency";
+        ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
     }
 
+    // Check Emergency Stat
     if (EMERGENCY.get_str_value() != "" && EMERGENCY.get_str_value() != "none")
     {
-        ALERT_LIST.push_back("EMERGENCY ALERT: " + EMERGENCY.get_str_value());
+        tmp_alert_entry.ALERT_LEVEL = 3;
+        tmp_alert_entry.ALERT = "  \\-EMERGENCY ALERT: " + EMERGENCY.get_str_value();
+        ALERT_LIST.push_back(tmp_alert_entry);
+        ALERT= true;
+    }
+
+    // Check Values
+    if (D_FLIGHT_ANGLE.get_float_value() > 5)
+    {
+        tmp_alert_entry.ALERT_LEVEL = 2;
+        tmp_alert_entry.ALERT = "  \\----FLIGHT ANGLE: " + D_FLIGHT_ANGLE.get_str_value();
+        ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
     }
   }
@@ -222,6 +231,15 @@ class AIRCRAFT
     else
     {
       D_VERTICAL_RATE = GEOM_RATE;
+    }
+
+    // Calculate Flight Angle
+    if (D_VERTICAL_RATE.conversion_success() == true && SPEED.conversion_success() == true )
+    {
+      float scent_rate  = (float)D_VERTICAL_RATE.get_int_value();
+      float speed       = ((float)SPEED.get_float_value()) * (5280/ 60);
+
+      D_FLIGHT_ANGLE.store (to_string(abs((atan( scent_rate / speed) * (180 / 3.14159)))));
     }
 
     // Fill Data Size Field

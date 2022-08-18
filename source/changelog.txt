@@ -1,3 +1,97 @@
+V 1.17A_220818
+  - Changes made to the ADS-B gadget.
+
+  - A quick description and translation for the colors on the ADS-B screen.
+
+    Typical aircraft entries with data will be on one line.
+      Entries with green background and white text are aircraft with 
+        translated GPS location positions.
+      Entries with green background and black text are typical for 
+        aircraft without GPS locations found. Even if the location isn't 
+        found, the data that has been received will be displayed.
+      Entries with black backgrounds are aircraft entries whos data is no 
+        longer being recieved.  This is typical for aircraft that data 
+        transmissions have been received in the past, but has now moved 
+        out of range. 
+
+      Any entrie received will persist on the screen, with or without data 
+        for a minimum of 5 minutes.  If no data is received in 5 minutes the 
+        entry will be removed.
+
+    Entries are color coded for quick reference.
+      Two ledgends exist:
+          Range ledgend, where center or safe value would be green.
+            -Magenta  Red  Yellow  Green  Blue  Cyan
+          Scaler ledgend, where zero value is green.
+            -Green  Yellow  Red  Magenta  Blue  Cyan
+
+      The left 2/3rds of the screen is information recieved from the 
+        aircraft.
+      The right 1/3rd of the screen displays reception information.
+
+      Left 2/3rds ofd the screen:
+        Squawk codes, Track and Flight ID codes will have green backgrounds.
+
+        Ground speed: 
+          Green at 100 to 160 - usually small airplain cruising speed.
+          Blue and above at 160+ - usually large airliners.
+          Yellow at 80 to 100 - typically small aircraft landing and take off speeds.
+          Red at less than 80.
+
+        Vertical Rates will not change color based on absolute values.
+          Vertical rate colors will be based on the estimated flight angle 
+          of the aircraft.
+          Green at 0 to 2 degrees.
+          Yellow at 2 to 4 degrees.
+          Red at 4 to 6 degrees.
+          and so on.
+
+        Altitude:
+          Green at 3000 to 1200 ft - Typical for small plane cruising.
+          Yellow at 500 to 3000 ft.
+          Red at 50 to 500 ft.
+          Magenta at less that 50 ft.
+          Blue at 12000 to 40000 ft - Typical for large airlines.
+          Cyan at greater than 40000 ft.
+
+      Right 1/3rd of the screen.
+        Seen Position and Seen follow the similar rules.
+          Green means data recently received.
+          Yellow means data has been received but not recently.
+          Red means data previously received has expired and will soon
+            be removed from the screen.
+
+        Seen Position data reports how long ago a valid GPS Position was
+          received.  The data expires in 70 seconds.
+        Seen reports how long ago any valid data has been received. The 
+          data expires in 300 seconds.
+        
+        Messages reports how many messages, translated or not translated 
+          has been received from the aircraft.
+
+        RSSI reports signal strength from the transmitting aircraft.
+          Green is 0db to -18db.
+          Yellow is -18db to -30db.
+          Red is -30db to -32db
+          and so on.
+
+        Signal strenght does not translate to proximity because the enviornment 
+          affects quality of the signal. 
+          Typiclly green means the aircraft is nearby.  However, a small aircraft 
+            one mile away and at low altitudes may not be green, whereas an 
+            airliner 20 miles away at 30k ft can have a green signal.
+
+      Aircraft entries can have additional lines, based on the alert system.
+        Green is for additional information, such as a VFR squawk code.
+        Yellow is for possible warning, such as a Radio Failure squawk code, 
+          or other out of the ordinary information.
+        Red for Emergency squawk codes or ADS-B reporting an Emergency other 
+          than "none".
+
+    These color codes are not based on anything but my experience with 
+      observations watching and reading the data. The values may change, 
+      depending on what works or does not work for me.
+
 V 1.16A_220815
   - Changes made to the ADS-B gadget.
   - Changes made to FILE_WATCH.
