@@ -431,6 +431,7 @@ class ADS_B_List_Box
     string HEX = "";
     int POSITION = -1;
     int DATA_COUNT = 0;
+    int SIZE = 0;
     bool UPDATED = false;
   };
 
@@ -440,7 +441,7 @@ class ADS_B_List_Box
   int Counter = 0;
 
   deque<AIRCRAFT_INDEX_INFORMATION> AIRCRAFT_INDEX_LIST;
-
+  int AIRCRAFT_INDEX_LIST_ALERT_COUNT_GUIDE = 0;
   
   bool IS_ACTIVE = false;
 
@@ -492,7 +493,7 @@ class ADS_B_List_Box
   void organize_index()
   // Move items with data and off screen to first empty pos
   {
-    if(AIRCRAFT_INDEX_LIST.size() > PROP.SIZEY -2)
+    if(AIRCRAFT_INDEX_LIST.size() > PROP.SIZEY -2 - AIRCRAFT_INDEX_LIST_ALERT_COUNT_GUIDE)
     {
       // First Loop to fill empty positions
       for(int pos = PROP.SIZEY -2; pos < AIRCRAFT_INDEX_LIST.size(); pos++)
@@ -580,11 +581,27 @@ class ADS_B_List_Box
     }
 
     // Go through list again and mark non updated with empty.
+    AIRCRAFT_INDEX_LIST_ALERT_COUNT_GUIDE = 0;
+    
     for(int x=0; x < AIRCRAFT_INDEX_LIST.size(); x++)
     {
+      // Count the Alerts for display guide.
+      if (PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[x].POSITION].alert() == true)
+      {
+        if(PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[x].POSITION].ALERT_LIST.size() > AIRCRAFT_INDEX_LIST[x].SIZE)
+        {
+          AIRCRAFT_INDEX_LIST[x].SIZE = PROP.VALUE.AIRCRAFTS[AIRCRAFT_INDEX_LIST[x].POSITION].ALERT_LIST.size();
+        }
+
+        AIRCRAFT_INDEX_LIST_ALERT_COUNT_GUIDE = 
+          AIRCRAFT_INDEX_LIST_ALERT_COUNT_GUIDE + AIRCRAFT_INDEX_LIST[x].SIZE;
+      }
+
+      // Erase data on non updated.~
       if(AIRCRAFT_INDEX_LIST[x].UPDATED == false)
       {
         AIRCRAFT_INDEX_LIST[x].HEX = "";
+        AIRCRAFT_INDEX_LIST[x].SIZE = 0;
       }
     }
   }
@@ -1015,8 +1032,8 @@ class ADS_B_List_Box
 
         print_to_line(yCurPos, xCurPos, space_size, right_justify(space_size, ""), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
 
-        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "SN POS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         print_to_line(yCurPos, xCurPos, 6, right_justify(6, "SEEN"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
+        print_to_line(yCurPos, xCurPos, 8, right_justify(8, "SN POS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         print_to_line(yCurPos, xCurPos, 6, right_justify(6, "MSGS"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         print_to_line(yCurPos, xCurPos, 7, right_justify(7, "RSSI"), CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE));
         
@@ -1089,11 +1106,12 @@ class ADS_B_List_Box
 
           dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, LEDGEND_RANGE, 2, 1, 2, 3, 4, 5);
 
-          dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, LEDGEND_SCALER, 5, 60, 68, 299, 0);
           dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, LEDGEND_SCALER, 10, 290, 298, 0, 0);
+          dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, LEDGEND_SCALER, 5, 60, 68, 299, 0);
           dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, LEDGEND_SCALER, 100, 5000, 12000, 20000, 40000);
           dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, LEDGEND_SCALER, 18, 30, 32, 34, 36);
 
+          // Display alerts
           if(display_aircraft.alert() == true)
           {
             for (int alerts_pos = 0; alerts_pos < display_aircraft.ALERT_LIST.size(); alerts_pos++)
@@ -1118,7 +1136,26 @@ class ADS_B_List_Box
                   alert_color = COLOR_RED;
                 }
 
-                print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].ALERT.c_str()), CRT_get_color_pair(alert_color, COLOR_WHITE));
+                print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].ALERT.c_str()), CRT_get_color_pair(alert_color, text_color));
+              }
+            }
+          }
+
+          // Display expired alert blank lines.
+          if(AIRCRAFT_INDEX_LIST[y].SIZE > display_aircraft.ALERT_LIST.size())
+          {
+            for(int line = display_aircraft.ALERT_LIST.size(); line < AIRCRAFT_INDEX_LIST[y].SIZE; line++)
+            {
+              yCurPos++;
+              clear_line(yCurPos, xCurPos);
+
+              if(display_aircraft.data_count() >0)
+              {
+                print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, "  \\_____..."), CRT_get_color_pair(COLOR_GREEN, text_color));
+              }
+              else
+              {
+                print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, "  \\_____..."), CRT_get_color_pair(COLOR_BLACK, COLOR_GREEN));
               }
             }
           }

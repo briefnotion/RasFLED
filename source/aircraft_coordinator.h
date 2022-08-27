@@ -123,6 +123,22 @@ class AIRCRAFT
                           //  received message (300 second expiration)
   STRING_FLOAT RSSI;      // Signal Strength                            "rssi":-28.4
 
+  string simple_float_to_string(int Decimal_Positions, float Number)
+  {
+    int c1 = 0;
+
+    string return_string = to_string(Number);
+
+    c1 = return_string.find(".") + 1;
+
+    if(c1!=std::string::npos)
+    {
+      return_string.erase(c1 + Decimal_Positions, return_string.size() - c1 - Decimal_Positions);
+    }
+
+    return return_string;
+  }
+
   int data_count()
   {
     return DATA_COUNT;
@@ -137,7 +153,7 @@ class AIRCRAFT
       if (SQUAWK.get_int_value() == 1200)
       {
         tmp_alert_entry.ALERT_LEVEL = 1;
-        tmp_alert_entry.ALERT = "  \\----------SQUAWK: Visual Flight Rules (VFR)";
+        tmp_alert_entry.ALERT = "  \\_________ SQUAWK: Visual Flight Rules (VFR)";
         ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
@@ -145,7 +161,7 @@ class AIRCRAFT
       if (SQUAWK.get_int_value() == 7500)
       {
         tmp_alert_entry.ALERT_LEVEL = 3;
-        tmp_alert_entry.ALERT = "  \\----SQUAWK ALERT: Special Purpose Code - Hi-Jacking";
+        tmp_alert_entry.ALERT = "  \\___ SQUAWK ALERT: Special Purpose Code - Hi-Jacking";
         ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
@@ -153,7 +169,7 @@ class AIRCRAFT
       if (SQUAWK.get_int_value() == 7600)
       {        
         tmp_alert_entry.ALERT_LEVEL = 2;
-        tmp_alert_entry.ALERT = "  \\----SQUAWK ALERT: Special Purpose Code - Radio Failure";
+        tmp_alert_entry.ALERT = "  \\___ SQUAWK ALERT: Special Purpose Code - Radio Failure";
         ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
@@ -161,7 +177,7 @@ class AIRCRAFT
       if (SQUAWK.get_int_value() == 7700)
       {
         tmp_alert_entry.ALERT_LEVEL = 3;
-        tmp_alert_entry.ALERT = "  \\----SQUAWK ALERT: Special Purpose Code - Emergency";
+        tmp_alert_entry.ALERT = "  \\___ SQUAWK ALERT: Special Purpose Code - Emergency";
         ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
       }
@@ -171,16 +187,16 @@ class AIRCRAFT
     if (EMERGENCY.get_str_value() != "" && EMERGENCY.get_str_value() != "none")
     {
         tmp_alert_entry.ALERT_LEVEL = 3;
-        tmp_alert_entry.ALERT = "  \\-EMERGENCY ALERT: " + EMERGENCY.get_str_value();
+        tmp_alert_entry.ALERT = "  \\ EMERGENCY ALERT: " + EMERGENCY.get_str_value();
         ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
     }
 
     // Check Values
-    if (D_FLIGHT_ANGLE.get_float_value() > 5)
+    if (D_FLIGHT_ANGLE.get_float_value() > 6)
     {
         tmp_alert_entry.ALERT_LEVEL = 2;
-        tmp_alert_entry.ALERT = "  \\----FLIGHT ANGLE: " + D_FLIGHT_ANGLE.get_str_value();
+        tmp_alert_entry.ALERT = "  \\___ FLIGHT ANGLE: " + simple_float_to_string(1, D_FLIGHT_ANGLE.get_float_value()) + " deg";
         ALERT_LIST.push_back(tmp_alert_entry);
         ALERT= true;
     }
@@ -189,7 +205,7 @@ class AIRCRAFT
   void count_data()
   {
     DATA_COUNT =  SQUAWK.conversion_success() +
-                  //FLIGHT.conversion_success() +
+                  FLIGHT.conversion_success() +
                   //VERSION.conversion_success() +
                   SPEED.conversion_success() +
                   SEEN_POS.conversion_success() +
@@ -202,7 +218,7 @@ class AIRCRAFT
                   POSITION.LONGITUDE.conversion_success() +
                   SIL.conversion_success() +
                   //(SIL_TYPE.length() > 0) +
-                  //EMERGENCY.conversion_success() +
+                  EMERGENCY.conversion_success() +
                   //(CATAGORY.length() > 0) +
                   NAV_QNH.conversion_success() +
                   NAV_HEADING.conversion_success() +

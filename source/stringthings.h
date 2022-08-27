@@ -315,7 +315,14 @@ class STRING_STRING
   void store(string str_value)
   {
     STR_VALUE = str_value;
-    CONVERSION_SUCCESS = true;
+    if(str_value == "")
+    {
+      CONVERSION_SUCCESS = false;
+    }
+    else
+    {
+      CONVERSION_SUCCESS = true;
+    }
   }
 
   string get_str_value()

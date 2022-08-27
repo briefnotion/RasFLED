@@ -1,3 +1,6 @@
+V 1.18A_220826
+  - Changes made to the ADS-B gadget. 
+
 V 1.17A_220818
   - Changes made to the ADS-B gadget.
 
