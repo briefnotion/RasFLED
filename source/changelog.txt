@@ -1,3 +1,7 @@
+V 1.19A_220828
+  - Rearanged the source code to improve compile times.
+  - No changes made.
+
 V 1.18A_220826
   - Changes made to the ADS-B gadget. 
 

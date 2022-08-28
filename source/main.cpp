@@ -9,8 +9,8 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 // *
-/* *  PROJECTID: gi6$b*E>*q%; */ #define Revision "00000001.18A"
-/* *  TEST CODE:              */ #define  QACODE  "A565"        // CENSORCODE: EQK6}Lc`:Eg>
+/* *  PROJECTID: gi6$b*E>*q%; */
+/* *  TEST CODE:              */ // CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
 // *  Programmer Notes:
@@ -57,63 +57,7 @@
 // *
 // ***************************************************************************************
 
-
-#include <stdio.h>
-#include <math.h>
-#include <future>
-#include <wiringPi.h>
-#include <string>
-#include <chrono>
-#include <unistd.h>
-#include <termio.h>
-#include <vector>
-#include <iostream>
-
-
-// Distros: Jeremy Garff <jer @ jers.net>
-//  Zips at https://github.com/jgarff/rpi_ws281x
-//static char VERSION[] = "XX.YY.ZZ";
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <getopt.h>
-
-#include "clk.h"
-#include "gpio.h"
-#include "dma.h"
-#include "pwm.h"
-//#include "version.h"
-
-#include "ws2811.h"
-
-// Boost libraries
-#include <boost/interprocess/shared_memory_object.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-
-
-// RASFled related header files
-#include "definitions.h"
-#include "helper.h"
-#include "files.h"
-#include "rasapi.h"
-#include "consoleanddata.h"
-#include "LEDstuff.h"
-#include "fled_time.h"
-#include "fledcore.h"
-#include "timedeventsystem.h"
-#include "animations.h"
-#include "hardware_module_door.h"
-#include "interface.h"
-
-
+#include "main.h"
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
@@ -206,9 +150,6 @@ void store_event_counts(system_data &sdSysData, timed_event teEvent[])
 // lights on and off or whatever.  Will not pretend to understand it.  Instead, will 
 // squish it down as much as possible so that I can pretend its not there.
 // ***************************************************************************************
-ws2811_t ledstring;
-int *matrix;
-static char running = 1;
 void matrix_render(int led_count)
 {
     int x;

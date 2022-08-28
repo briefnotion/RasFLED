@@ -37,59 +37,11 @@ Mine    Color        Standard
     7  COLOR_WHITE   7
 */
 
-short CRT_get_color(short Color)
-// Retrieve the Color ID associated in the color pair index.
-//  Not the standard color codes, but simple enough to calculate 
-//  even without this function. 
-{
-  if (Color == COLOR_YELLOW)
-  {
-    return 2;
-  }
-  else if (Color == COLOR_GREEN)
-  {
-    return 3;
-  }
-  else
-  {
-    return Color;
-  }
-}
+short CRT_get_color(short Color);
 
-int CRT_get_color_pair(short Background_Color, short Foreground_Color)
-// Called to retrieve the the color pair ID. 
-{
-  short back = CRT_get_color(Background_Color);
-  short fore = CRT_get_color(Foreground_Color);
+int CRT_get_color_pair(short Background_Color, short Foreground_Color);
 
-  if (back == fore)
-  {
-    return 0;
-  }
-  else
-  {
-    return back*10 + fore;
-  }
-  //return 47;
-}
-
-void CRT_init_all_pairs()
-// Pair all color combinations.
-// Should only be needed to call once, at startup of any screen 
-//  activities.
-{
-  for(short b = 0; b < 8; b++)
-  {
-    for(short f = 0; f < 8; f++)
-    {
-      if (b != f)
-      {
-        init_pair( (b*10)+f , CRT_get_color(f), CRT_get_color(b));
-      }
-    }
-  }
-}
-
+void CRT_init_all_pairs();
 
 
 

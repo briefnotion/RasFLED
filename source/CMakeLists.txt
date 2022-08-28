@@ -32,29 +32,33 @@ INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(
   RasFLED
-  main.cpp
-  commands.h
-  hardware_status.h
-  animations.h
-  files.h
-  rasapi.h
-  consoleanddata.h
+
   definitions.h
-  fled_time.h
-  fledcore.h
-  hardware_module_door.h
-  helper.h
-  interface.h
-  LEDstuff.h
-  stringthings.h
-  timedeventsystem.h
-  gadgets.h
-  screen3.h
-  player.h
-  api_shared_memory.h
   api_rtlairband.h
-  radio_channel_coordinator.h
-  aircraft_coordinator.h
+
+  LEDstuff.cpp
+  api_shared_memory.cpp
+  commands.cpp
+  helper.cpp
+  stringthings.cpp
+  fled_time.cpp
+  helper_ncurses.cpp
+  rasapi.cpp
+  hardware_module_door.cpp
+  hardware_status.cpp
+  animations.cpp
+  gadgets.cpp
+  interface.cpp
+  player.cpp
+  radio_channel_coordinator.cpp
+  aircraft_coordinator.cpp
+  files.cpp
+  screen3.cpp
+  consoleanddata.cpp
+  timedeventsystem.cpp
+  fledcore.cpp
+  
+  main.cpp
 )
 
 target_link_libraries(RasFLED 

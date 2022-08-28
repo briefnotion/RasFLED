@@ -14,6 +14,7 @@
 
 #include <deque>
 
+#include "helper.h"
 #include "api_rtlairband.h"
 
 using namespace std;
@@ -36,138 +37,19 @@ class RADIO_CHANNEL_COORDINATOR
   // Stores all the frequencies observed and parsed into frequencies.
   deque<API_SQUELCH_DESTINATION> CHANNELS;
   
-  int size()
-  // Returns size, or amount, of Channels stred in the Channels deque.
-  {
-    return CHANNELS.size();
-    //return 2;
-  }
+  int size();
 
-  void process_command_received(API_COMMAND &Command_Received)
-  // Process command recieved into radio coordinator
-  {
-    if (Command_Received.CHANGED == true)
-    {
+  void process_command_received(API_COMMAND &Command_Received);
 
-      if (Command_Received.COMMAND == 1 || Command_Received.COMMAND == 2 || Command_Received.COMMAND == 4)
-      {
+  void process(API_SQUELCH_DESTINATION &Received_Squelch);
 
-        int pos_found = -1;
+  void pause();
 
-        // Seach the Channels for existing Squelch Channel
-        for (int pos = 0; (pos < CHANNELS.size()) && (pos_found == -1); pos++)
-        {
-          if (radio_translate_to_frequency_6(CHANNELS[pos].FREQUENCY.FREQUENCY) == Command_Received.PARAMETER)
-          {
-            pos_found = pos;
-          }
-        }
+  void play();
 
-        if (pos_found > -1)
-        {
-          if (Command_Received.COMMAND == 1)
-          {
-            CHANNELS[pos_found].PROP.SKIP = true;
-            CHANNELS[pos_found].PROP.CHANGED = true;
-          }
-          else if (Command_Received.COMMAND == 2)
-          {
-            CHANNELS[pos_found].PROP.HELD = true;
-            CHANNELS[pos_found].PROP.CHANGED = true;
-          }          
-          else if (Command_Received.COMMAND == 4)
-          {
-            CHANNELS[pos_found].PROP.SKIP = false;
-            CHANNELS[pos_found].PROP.HELD = false;
-            CHANNELS[pos_found].PROP.CHANGED = true;
-          }
-        }
-      }
-      else if (Command_Received.COMMAND == 3)
-      {
-        // Seach the Channels for existing Squelch Channel
-        for (int pos = 0; pos < CHANNELS.size(); pos++)
-        {
-          CHANNELS[pos].PROP.SKIP = false;
-          CHANNELS[pos].PROP.HELD = false;
-          CHANNELS[pos].PROP.CHANGED = true;
-        }
-      }
+  bool is_paused();
 
-      Command_Received.CHANGED = false;
-    }
-  }
-
-  void process(API_SQUELCH_DESTINATION &Received_Squelch)
-  // Stores fresh frequency squelch received into CHANNELS deque.
-  //  If freqency data already exist, replaces.
-  //  If freqency data doesn't exist, add to end of deque.
-  {
-    if (PLAY == true)
-    {
-      LAST_READ_BIND_COUNT = Received_Squelch.MANAGER.BINDS;
-
-      if (Received_Squelch.DEVICE.CHANGED == true)
-      {
-        // Store Status
-        DEVICE_STATUS.ACTIVE = Received_Squelch.DEVICE.ACTIVE;
-        DEVICE_STATUS.DEVICE = Received_Squelch.DEVICE.DEVICE;
-        DEVICE_STATUS.GAIN = Received_Squelch.DEVICE.GAIN;
-
-        DEVICE_STATUS.CHANGED = true;
-
-        Received_Squelch.DEVICE.CHANGED = false;
-      }
-
-      if (Received_Squelch.FREQUENCY.CHANGED == true)
-      {
-        int pos_found = -1;
-
-        // Seach the Channels for existing Squelch Channel
-        for (int pos = 0; (pos < CHANNELS.size()) && (pos_found == -1); pos++)
-        {
-          if (CHANNELS[pos].FREQUENCY.FREQUENCY == Received_Squelch.FREQUENCY.FREQUENCY)
-          {
-            pos_found = pos;
-          }
-        }
-        
-        if (pos_found >= 0) // If found, change the data.
-        {
-          CHANNELS[pos_found].FREQUENCY = Received_Squelch.FREQUENCY;
-        }
-        else if (Received_Squelch.FREQUENCY.FREQUENCY != 0)  // If not found, add it. 
-        // Only add if not empty frequency.
-        {
-          CHANNELS.push_back(Received_Squelch);
-        }
-        
-        Received_Squelch.FREQUENCY.CHANGED = false;
-      }
-    }
-  }
-
-  void pause()
-  {
-    PLAY = false;
-  }
-
-  void play()
-  {
-    PLAY = true;
-  }
-
-  bool is_paused()
-  {
-    return PLAY;
-  }
-
-  void command_send(int Command, int Parameter)
-  {
-    COMMAND_TO_RADIO.COMMAND = Command;
-    COMMAND_TO_RADIO.PARAMETER = Parameter;
-    COMMAND_TO_RADIO.CHANGED = true;
-  }
+  void command_send(int Command, int Parameter);
 
 };
 

@@ -22,6 +22,7 @@
 #include "commands.h"
 #include "hardware_status.h"
 
+#include "LEDstuff.h"
 #include "api_shared_memory.h"
 #include "api_rtlairband.h"
 #include "radio_channel_coordinator.h"
