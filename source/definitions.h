@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.19A"
+#define Revision "00000001.20A"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -58,6 +58,11 @@
 #define DEFAULTTIMER      5   //Minutes
 
 #define LED_FPS           50  // Compile time LED Frames per Second, frams/second.
+
+// -------------------------------------------------------------------------------------
+// Door Switches
+
+#define DOOR_SWITCH_LEEWAY_TIME 300   // Leeway time for door switches in ms.
 
 // -------------------------------------------------------------------------------------
 // LED Strip Declarations

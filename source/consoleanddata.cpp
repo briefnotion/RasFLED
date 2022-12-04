@@ -372,11 +372,13 @@ void Console::processmouseinput(system_data &sdSysData)
         {
           keywatch.cmdInString("dayon");
           Screen.bzButtons.change_label("DAYNIGHT", "%Day%Mode");
+          Screen.buttons_menu_home(sdSysData);
         }
         else
         {
           keywatch.cmdInString("dayoff");
           Screen.bzButtons.change_label("DAYNIGHT", "%Night%Mode");
+          Screen.buttons_menu_home(sdSysData);
         }
       }
 
@@ -421,6 +423,7 @@ void Console::processmouseinput(system_data &sdSysData)
       // Clear Most Animations
       {
         keywatch.cmdInString("``");
+        Screen.buttons_menu_home(sdSysData);
       }
 
       else if(name.compare("HAZARD") == 0)
@@ -433,6 +436,7 @@ void Console::processmouseinput(system_data &sdSysData)
         else
         {
           keywatch.cmdInString("h`");
+          Screen.buttons_menu_home(sdSysData);
         }
       }
 
@@ -440,6 +444,7 @@ void Console::processmouseinput(system_data &sdSysData)
       // Start Hazard Lights
       {
         keywatch.cmdInString("/");
+        Screen.buttons_menu_home(sdSysData);
       }
 
       else if(name.compare("RUNNINGCOLOR") == 0)

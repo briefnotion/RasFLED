@@ -260,68 +260,68 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
       // Safegaurd the finicky read.  
       DATA.NOW.store(PROPERTY_TREE.get<string>("now"));
       DATA.MESSAGES.store(PROPERTY_TREE.get<string>("messages"));
+
+      for (ptree::value_type &aircraft : PROPERTY_TREE.get_child("aircraft"))
+      {
+        AIRCRAFT tmpAircraft;
+
+        string first = "";
+        string second = "";
+
+        string tmp = "";
+        string version = "";
+
+        // Idents
+        tmpAircraft.HEX.store(tree_value("hex", aircraft));
+        tmpAircraft.SQUAWK.store(tree_value("squawk", aircraft));
+        tmpAircraft.FLIGHT.store(tree_value("flight", aircraft));
+        tmpAircraft.VERSION.store(tree_value("version", aircraft));
+
+        // Speed Rate Positions
+        tmpAircraft.SPEED.store(tree_value("gs", aircraft));
+        tmpAircraft.SEEN_POS.store(tree_value("seen_pos", aircraft));
+        tmpAircraft.ALTITUDE.store(tree_value("alt_baro", aircraft));
+        tmpAircraft.ALTITUDE_GEOM.store(tree_value("alt_geom", aircraft));
+        tmpAircraft.VERT_RATE.store(tree_value("baro_rate", aircraft));
+        tmpAircraft.GEOM_RATE.store(tree_value("geom_rate", aircraft));
+        tmpAircraft.TRACK.store(tree_value("track", aircraft));
+        tmpAircraft.POSITION.LATITUDE.store(tree_value("lat", aircraft));
+        tmpAircraft.POSITION.LONGITUDE.store(tree_value("lon", aircraft));
+        
+        // Aircraft Configuration
+        tmpAircraft.EMERGENCY.store(tree_value("emergency", aircraft));
+        /*  Not yet grabbing all data.
+              .
+              .
+              .
+        */
+
+        // Radio Information
+        tmpAircraft.MESSAGES.store(tree_value("messages", aircraft));
+        tmpAircraft.SEEN.store(tree_value("seen", aircraft));
+        tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
+
+        if(tmpAircraft.POSITION.LATITUDE.conversion_success() == true &&  tmpAircraft.POSITION.LONGITUDE.conversion_success() == true)
+        {
+          DATA.POSITIONED_AIRCRAFT ++;
+        }
+
+        
+        tmpAircraft.post_process();
+
+        // Store Aircraft ADS-B Data into list.
+        DATA.AIRCRAFTS.push_back(tmpAircraft);
+      }
+
+      post_post_process();
+
+      DATA.CHANGED = true;
     }
     catch (std::exception const& e)
     {
       // Do nothing
     }
-    
-    for (ptree::value_type &aircraft : PROPERTY_TREE.get_child("aircraft"))
-    {
-      AIRCRAFT tmpAircraft;
 
-      string first = "";
-      string second = "";
-
-      string tmp = "";
-      string version = "";
-
-      // Idents
-      tmpAircraft.HEX.store(tree_value("hex", aircraft));
-      tmpAircraft.SQUAWK.store(tree_value("squawk", aircraft));
-      tmpAircraft.FLIGHT.store(tree_value("flight", aircraft));
-      tmpAircraft.VERSION.store(tree_value("version", aircraft));
-
-      // Speed Rate Positions
-      tmpAircraft.SPEED.store(tree_value("gs", aircraft));
-      tmpAircraft.SEEN_POS.store(tree_value("seen_pos", aircraft));
-      tmpAircraft.ALTITUDE.store(tree_value("alt_baro", aircraft));
-      tmpAircraft.ALTITUDE_GEOM.store(tree_value("alt_geom", aircraft));
-      tmpAircraft.VERT_RATE.store(tree_value("baro_rate", aircraft));
-      tmpAircraft.GEOM_RATE.store(tree_value("geom_rate", aircraft));
-      tmpAircraft.TRACK.store(tree_value("track", aircraft));
-      tmpAircraft.POSITION.LATITUDE.store(tree_value("lat", aircraft));
-      tmpAircraft.POSITION.LONGITUDE.store(tree_value("lon", aircraft));
-      
-      // Aircraft Configuration
-      tmpAircraft.EMERGENCY.store(tree_value("emergency", aircraft));
-      /*  Not yet grabbing all data.
-            .
-            .
-            .
-      */
-
-      // Radio Information
-      tmpAircraft.MESSAGES.store(tree_value("messages", aircraft));
-      tmpAircraft.SEEN.store(tree_value("seen", aircraft));
-      tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
-
-      if(tmpAircraft.POSITION.LATITUDE.conversion_success() == true &&  tmpAircraft.POSITION.LONGITUDE.conversion_success() == true)
-      {
-        DATA.POSITIONED_AIRCRAFT ++;
-      }
-
-      
-      tmpAircraft.post_process();
-
-      // Store Aircraft ADS-B Data into list.
-      DATA.AIRCRAFTS.push_back(tmpAircraft);
-    }
-
-    post_post_process();
-
-    DATA.CHANGED = true;
-    
     return true;
   }
   else

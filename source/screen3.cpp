@@ -24,7 +24,10 @@ void Screen3::buttons_menu_home(system_data &sdSysData)
   bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
   bzButtons.modify(3, "FLASH", "%Flash", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
   bzButtons.modify(4, "", "", 0, -1, 6, 0);
-  bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+
+  bzButtons.modify(5, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+  //bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+  
   bzButtons.modify(6, "MENUCONTROL", "%...", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 }
 
@@ -37,7 +40,10 @@ void Screen3::buttons_menu_control(system_data &sdSysData)
   bzButtons.modify(1, "", "", 0, -1, 6, 0);
   bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
   bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.modify(4, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+  
+  bzButtons.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+  //bzButtons.modify(4, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+
   bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
   bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
@@ -136,7 +142,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   bzButtons.create_button(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
   bzButtons.create_button(3, "FLASH", "%Flash", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
   bzButtons.create_button(4, "", "", 0, -1, 6, 0);
-  bzButtons.create_button(5, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+  bzButtons.create_button(5, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
   bzButtons.create_button(6, "MENUCONTROL", "%...", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
   // Prep Color Picker Buttons, even thought they 

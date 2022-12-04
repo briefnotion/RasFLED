@@ -171,7 +171,11 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
               if (sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s).strNAME == "Overhead")
               {
                 cons.printwait("  G" + to_string(door) + " S" + to_string(s) + " :Overhead Animation");
-                vdPacificaishAnimationADV(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+
+                // Remove after verified working correctly. Overhead lights on door open with running colors.
+                //vdPacificaishAnimationADV   (cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime);
+                
+                vdPacificaishAnimationADVColor(cons, sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(door).vLED_STRIPS.at(s), teEvents, tmeCurrentTime, sdSysData.running_color_list.color[0]);
               }
             }
           }

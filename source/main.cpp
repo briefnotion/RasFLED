@@ -429,7 +429,7 @@ int loop()
 
   // Initialize Switches
   hardware_monitor tmpSwitch;
-  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, 150, true);
+  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, DOOR_SWITCH_LEEWAY_TIME, true);
   for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
   {
     sdSystem.CONFIG.vhwDOORS.push_back(tmpSwitch);

@@ -1,3 +1,16 @@
+V 1.20A_221204
+  - Moved the "Clear Anims" button to the Settings Menu.
+  - Moved the "Lights On" button to the Main Menu.
+  - Changed a few Light Submenu Buttons.  When Submenu Button is pressed 
+      the Buttons will be returned to the Main Light Control Buttons menu.
+  - Door opens will call Pacificaish Color animation with running color instead 
+      of the Pacificaish animation.
+  - Increased the size of the JSON ADSB Data read routine because was getting 
+      random, full program crashing, "SUDO" error.  Source of error unknown but 
+      seems related to many aircraft tracks.
+  - Increased the Door Switch Leeway Time from 150ms to 300ms. Hardware is 
+      showing age and gremlins are chewing on the wires.
+
 V 1.19A_220828
   - Rearanged the source code to improve compile times.
   - No changes made.

@@ -1,4 +1,12 @@
   ToDo:
+    - Write my own JSON reader and writer.
+    - Add blink effect to changed text fields for ADSB display.
+    - Add some flashy Cyberpunk Style animations to main screen as eye candy for the 
+        bored.
+    - Create a Numeric Keypad enter screen.
+    - Create a Keyboard Keypad enter screen.
+    - Create Play/Pause, Skip button for player.
+    - Create scroll bars for Text gadget.
     - Update everything properly classified with reference .h, supporting, and helper 
         libraries. (in progress)
     - Create a way to import all animations from an animations file. (finish 
