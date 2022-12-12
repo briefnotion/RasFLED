@@ -1,3 +1,9 @@
+V 1.21A_221205
+  - Corrected problem with Overhead Animations not ending when all doors are 
+      closed.  Preserved the seperation of "Overhead Open Anim" types and
+      "Overhead Illumination" types by duplicating the 
+      vdPacificaishAnimationADVColor routine and changing the Identities.
+
 V 1.20A_221204
   - Moved the "Clear Anims" button to the Settings Menu.
   - Moved the "Lights On" button to the Main Menu.

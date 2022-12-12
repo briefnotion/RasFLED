@@ -108,6 +108,9 @@ void vdPacificaishAnimationADV(Console &cons, v_profile_strip strip, timed_event
 
 // -------------------------------------------------------------------------------------
 
+void vdPacificaishAnimationADVColor_Door(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor);
+// -------------------------------------------------------------------------------------
+
 void vdCloseOverADV(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime);
 
 // -------------------------------------------------------------------------------------
