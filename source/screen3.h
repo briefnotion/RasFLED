@@ -73,6 +73,14 @@ class Screen3
   int YMax = 0;
   int XMax = 0;
 
+  // CYBR Screen Variables --------------------
+  int YCYBRPos = 0;
+  int XCYBRPos = 0;
+  int YCYBRSize = -1;
+  int XCYBRSize = 2;
+
+  WINDOW * winCYBR;
+
   // Status Screen Variables --------------------
   int YStatusPos = 0;
   int XStatusPos = 0;
@@ -283,6 +291,9 @@ class Screen3
 
   // ---------------------------------------------------------------------------------------
   void output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse);
+
+  // ---------------------------------------------------------------------------------------
+  void output_CYBR(system_data &sdSysData, ScreenStatus &ScrStat);
 
   // ---------------------------------------------------------------------------------------
   void output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse);

@@ -180,6 +180,7 @@ bool Console::print_movie_frame(fstream &fsPlayer)
 void Console::set_screen(system_data &sdSysData)
 // Before drawing and initializing the screen, set the display to how it should look. 
 {
+  ScrStat.Window_CYBR_On();
   ScrStat.Window_Status_On();
   ScrStat.Window_Buttons_On();
   ScrStat.Window_Debug_Off();

@@ -152,6 +152,9 @@ class system_data
 
   COMMAND_THREAD Command_Thread;
 
+  // CYBR Variables
+  int YLn = 0;
+
   // Radio Variables
   API_SQUELCH_DESTINATION RECEIVED_SQUELCH;
   API_CHANNEL_MEM API_CHANNEL;
@@ -627,6 +630,7 @@ class ScreenStatus
   //bool Needs_Redraw = false;
 
   // Windows - Controls to say if a window should be displayed.
+  bool Window_CYBR = false;
   bool Window_Status = false;
   bool Window_Buttons = false;
   bool Window_Debug = false;
@@ -645,6 +649,24 @@ class ScreenStatus
   // Refresh is set to true only if the value 
   //  of displaying the window has changed. 
   //  Yes, too much code for something so redudantly simple. Later.
+  void Window_CYBR_On()
+  {
+    if (Window_CYBR == false)
+    {
+      Window_CYBR = true;
+      Needs_Refresh = true;
+    }
+  }
+
+  void Window_CYBR_Off()
+  {
+    if (Window_CYBR == true)
+    {
+      Window_CYBR = false;
+      Needs_Refresh = true;
+    }
+  }
+
   void Window_Status_On()
   {
     if (Window_Status == false)

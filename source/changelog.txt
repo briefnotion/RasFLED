@@ -1,3 +1,7 @@
+V 1.21A_221211
+  - Added a Error Trap for Main Loop.
+  - Changes.
+
 V 1.21A_221205
   - Corrected problem with Overhead Animations not ending when all doors are 
       closed.  Preserved the seperation of "Overhead Open Anim" types and

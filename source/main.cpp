@@ -952,8 +952,17 @@ int main(int argc, char *argv[])
   // Start the main loop.
   while (ret == 1)
   {
-    ret = loop();
-
+    try
+    {
+      ret = loop();
+    }
+    catch (std::exception const& e)
+    {
+      printf("An Error has occured in the main loop.\n");
+      printf("Error Code: %d\n", ret);
+      ret = 0;
+    }
+    
     // Reboot?
     if(ret == 9999)
     {

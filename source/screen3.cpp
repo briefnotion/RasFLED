@@ -304,14 +304,44 @@ void Screen3::reset(ScreenStatus &ScrStat)
   int YSplit = 0;
   int XSplit = 0;
 
-  // Start first split at X button size
-  XSplit = XMax - XButtonSize;
+  // Start first split
+  XSplit = XMax - XCYBRSize;
+
+  // ---------------------------------------------------------------------------------------
+  // CYBR Panel
+  if (ScrStat.Window_CYBR == true)
+  // Main CYBR Panel
+  {
+    // Calculate Size and Position
+    YCYBRPos = YCYBRPos;
+    XCYBRPos = XSplit;
+    YCYBRSize = YMax;
+    XCYBRSize = XCYBRSize;
+
+    // Build Window
+    winCYBR = newwin(YCYBRSize, XCYBRSize, YCYBRPos, XCYBRPos);
+    
+    // Set Y Split
+    // YSplit = YSplit + YCYBRSize;
+
+    // CYBR Window Border
+    wborder(winCYBR,' ',' ',' ',' ',' ',' ',' ',' ') ;
+    
+    // Create CYBR Screen
+    wrefresh(winCYBR);
+
+    // Set window color
+    wbkgd(winCYBR, COLOR_PAIR(CRT_get_color_pair(COLOR_BLACK, COLOR_RED)));
+  }
 
   // ---------------------------------------------------------------------------------------
   // Status Panel
   if (ScrStat.Window_Status == true)
   // Main Status Panel
   {
+    // Recreate XSplit Size
+    XSplit = XSplit - XButtonSize;
+
     // Calculate Size and Position
     YStatusPos = YStatusPos;
     XStatusPos = XStatusPos;
@@ -332,7 +362,6 @@ void Screen3::reset(ScreenStatus &ScrStat)
     wrefresh(winStatus);
 
     // Set window color
-    //wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
     wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
   }
 
@@ -341,8 +370,8 @@ void Screen3::reset(ScreenStatus &ScrStat)
   if (ScrStat.Window_Buttons == true)
   // Control Buttons
   {
-    int YButtonPos = 0;
-    int XButtonPos = XMax - XButtonSize;
+    YButtonPos = 0;
+    XButtonPos = XSplit;
 
     bzButtons.move_resize(0, (YButtonSize *0), XButtonPos, YButtonSize, XButtonSize);
     bzButtons.move_resize(1, (YButtonSize *1), XButtonPos, YButtonSize, XButtonSize);
@@ -933,6 +962,15 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
 }
 
 // ---------------------------------------------------------------------------------------
+void Screen3::output_CYBR(system_data &sdSysData, ScreenStatus &ScrStat)
+// Displays CYBR
+{
+  mvwprintw(winCYBR, 0, 0, "%d",sdSysData.tmeCURRENT_FRAME_TIME);
+  // Commit all our changes to the status portion of the screen (winTop)
+  wrefresh(winCYBR);
+}
+
+// ---------------------------------------------------------------------------------------
 void Screen3::output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
 // Displays clock timings, event count, and mouse info.
 {
@@ -1438,6 +1476,12 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   if (ScrStat.Window_Status == true)
   {
     output_status(sdSysData, keywatch, ScrStat, mouse);
+  }
+
+  // Draw Status window.
+  if (true == true)
+  {
+    output_CYBR(sdSysData, ScrStat);
   }
 
   // ---------------------------------------------------------------------------------------
