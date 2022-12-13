@@ -337,3 +337,19 @@ int radio_translate_to_frequency_6(float Frequency)
 {
   return (int)round(Frequency / 1000.0);
 }
+
+int position_of_scale(int size, int scale, int value)
+// Calculate position of value on scale (eg 100%) with size.
+//  Will not return anything larger than size.
+{
+  int pos = size * value / scale;
+
+  if (pos > size)
+  {
+    return size;
+  }
+  else
+  {
+    return pos;
+  }
+}

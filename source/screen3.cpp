@@ -318,6 +318,9 @@ void Screen3::reset(ScreenStatus &ScrStat)
     YCYBRSize = YMax;
     XCYBRSize = XCYBRSize;
 
+    CYBR_Sleep_Count.resize(YCYBRSize);
+    CYBR_Anims.resize(YCYBRSize);
+
     // Build Window
     winCYBR = newwin(YCYBRSize, XCYBRSize, YCYBRPos, XCYBRPos);
     
@@ -965,7 +968,51 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
 void Screen3::output_CYBR(system_data &sdSysData, ScreenStatus &ScrStat)
 // Displays CYBR
 {
-  mvwprintw(winCYBR, 0, 0, "%d",sdSysData.tmeCURRENT_FRAME_TIME);
+  int working_pos = 0;
+  int color_pair = 0;
+
+  int anims = 0;
+
+  mvwprintw(winCYBR, 0, 0, "%d",sdSysData.tmeCURRENT_FRAME_TIME/100);
+
+  mvwprintw(winCYBR, CYBR_YLn, 0, "  ");
+  CYBR_Sleep_Count[CYBR_YLn] = 0;
+  CYBR_Anims[CYBR_YLn] = 0;
+
+  CYBR_YLn = CYBR_YLn -1;
+  if (CYBR_YLn <0)
+  {
+    CYBR_YLn = YCYBRSize -1;
+  }
+  //wattron(winCYBR, A_REVERSE);
+  mvwprintw(winCYBR, CYBR_YLn, 0, "__");
+  //wattroff(winCYBR, A_REVERSE);
+
+  // Sleep 
+  working_pos = position_of_scale(YCYBRSize, 20, sdSysData.dblPREVSLEEPTIME.data);
+  CYBR_Sleep_Count[working_pos]++;
+  mvwprintw(winCYBR, working_pos, 0, "%x", CYBR_Sleep_Count[working_pos]);
+
+  // Anims
+  for(int gr = 0; gr <=3; gr++)
+  {
+    if(sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(gr)>0)
+    {
+      anims = anims + sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(gr);
+    }
+  }
+  if (anims > 0)
+  {
+    working_pos = position_of_scale(YCYBRSize, 256, anims);
+    CYBR_Anims[working_pos]++;
+    //color_pair = CRT_get_color_pair(COLOR_BLACK, COLOR_YELLOW);
+    wattron(winCYBR, A_REVERSE);
+    //wattron(winCYBR, COLOR_PAIR(color_pair));
+    mvwprintw(winCYBR, working_pos, 0, "%x", CYBR_Anims[working_pos]);
+    //wattroff(winCYBR, COLOR_PAIR(color_pair));
+    wattroff(winCYBR, A_REVERSE);
+  }
+
   // Commit all our changes to the status portion of the screen (winTop)
   wrefresh(winCYBR);
 }

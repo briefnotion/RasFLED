@@ -152,9 +152,6 @@ class system_data
 
   COMMAND_THREAD Command_Thread;
 
-  // CYBR Variables
-  int YLn = 0;
-
   // Radio Variables
   API_SQUELCH_DESTINATION RECEIVED_SQUELCH;
   API_CHANNEL_MEM API_CHANNEL;

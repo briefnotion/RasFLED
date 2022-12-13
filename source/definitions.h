@@ -21,13 +21,13 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.22A"
+#define Revision "00000001.23A"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
 // CONSOLE AND INTEFACE SETUP
 
-#define SCREENUPDATEDELAY 100
+#define SCREENUPDATEDELAY 60
 //#define CONSOLESPLITSIZE  6
 
 // Files

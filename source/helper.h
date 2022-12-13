@@ -197,6 +197,9 @@ int get_frame_interval(int Frames_Per_Second);
 
 int radio_translate_to_frequency_6(float Frequency);
 
+int position_of_scale(int size, int scale, int value);
+// Calculate position of value on scale (eg 100%) with size.
+//  Will not return anything larger than size.
 
 
 #endif

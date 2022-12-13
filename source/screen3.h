@@ -81,6 +81,12 @@ class Screen3
 
   WINDOW * winCYBR;
 
+  // CYBR Variables
+  int CYBR_YLn = 0;
+
+  deque<int> CYBR_Sleep_Count;
+  deque<int> CYBR_Anims;
+
   // Status Screen Variables --------------------
   int YStatusPos = 0;
   int XStatusPos = 0;

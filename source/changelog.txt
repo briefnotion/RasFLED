@@ -1,4 +1,8 @@
-V 1.21A_221211
+V 1.23A_221213
+  - Screen redraw every 60ms instad of 100ms.
+  - Changes.
+
+V 1.22A_221211
   - Added a Error Trap for Main Loop.
   - Changes.
 
