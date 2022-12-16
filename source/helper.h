@@ -160,6 +160,32 @@ class hardware_monitor
 };
 // ---------------------------------------------------------------------------------------
 
+class STAT_DATA_DOUBLE
+// Provide minor min max stats over time of resets.
+// I real stats ever necessary, then weighted average 
+//  routine needed.
+{
+  private:
+
+  bool set = true;
+
+  double DATA  = 0;
+  double MIN   = 0;
+  double MAX   = 0;
+
+  public:
+  void set_data(double data);
+
+  double get_data();
+
+  double get_min();
+
+  double get_max();
+
+  void reset_minmax();
+};
+// ---------------------------------------------------------------------------------------
+
 class EFFICIANTCY_TIMER
 // Measures time passed between calls. 
 {
@@ -174,7 +200,6 @@ class EFFICIANTCY_TIMER
   double elapsed_timer_time(double dblCurrent_Time);
 
   double elapsed_time(double dblCurrent_Time);
-
 };
 
 

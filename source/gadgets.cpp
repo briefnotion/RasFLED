@@ -432,6 +432,8 @@ void ADS_B_List_Box::sort_index()
 }
 
 int ADS_B_List_Box::color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color yellow
 // Non zero or mid level green.
 { 
   // 1 - Range Level
@@ -465,6 +467,8 @@ int ADS_B_List_Box::color_range(float Value, int Magenta, int Red, int Yellow, i
 
 //int color_scale(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
 int ADS_B_List_Box::color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue)
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color red
 // zero level green.
 { 
   // 2 - Scale Level
@@ -529,11 +533,11 @@ void ADS_B_List_Box::dsp_text(int &yCurPos, int &xCurPos, int Size, STRING_STRIN
 
   if(Text.conversion_success() == true)
   {
-    if (Color_Scale_Type == 0)
+    if (Color_Scale_Type == LEDGEND_OFF)
     {
-      background_color = COLOR_GREEN;
+      background_color = Level_0;
     }
-    else if (Color_Scale_Type == 1)
+    else if (Color_Scale_Type == LEDGEND_RANGE)
     {
       background_color = color_range(Color_Value, Level_0, Level_1, Level_2, Level_3, Level_4);
     }
@@ -547,7 +551,7 @@ void ADS_B_List_Box::dsp_text(int &yCurPos, int &xCurPos, int Size, STRING_STRIN
     background_color = COLOR_GREEN;
   }
 
-  if(Inverse_Colors == false)
+  if(Inverse_Colors == true)
   {
     color_pair = CRT_get_color_pair(background_color, Text_Color);
   }
@@ -594,7 +598,7 @@ void ADS_B_List_Box::dsp_intg(int &yCurPos, int &xCurPos, int Size, STRING_INT &
   {
     if (Color_Scale_Type == LEDGEND_OFF)
     {
-      background_color = COLOR_GREEN;
+      background_color = Level_0;
     }
     else if (Color_Scale_Type == LEDGEND_RANGE)
     {
@@ -617,7 +621,7 @@ void ADS_B_List_Box::dsp_intg(int &yCurPos, int &xCurPos, int Size, STRING_INT &
     }
   }
 
-  if(Inverse_Colors == false)
+  if(Inverse_Colors == true)
   {
     color_pair = CRT_get_color_pair(background_color, Text_Color);
   }
@@ -672,7 +676,7 @@ void ADS_B_List_Box::dsp_floa(int &yCurPos, int &xCurPos, int Size, STRING_FLOAT
   {
     if (Color_Scale_Type == LEDGEND_OFF)
     {
-      background_color = COLOR_GREEN;
+      background_color = Level_0;
     }
     else if (Color_Scale_Type == LEDGEND_RANGE)
     {
@@ -695,7 +699,7 @@ void ADS_B_List_Box::dsp_floa(int &yCurPos, int &xCurPos, int Size, STRING_FLOAT
     }
   }
 
-  if(Inverse_Colors == false)
+  if(Inverse_Colors == true)
   {
     color_pair = CRT_get_color_pair(background_color, Text_Color);
   }
@@ -808,7 +812,7 @@ void ADS_B_List_Box::draw(bool Refresh)
     STRING_STRING blank_text;
 
     int color_pair = 0;
-    int text_color = COLOR_WHITE;
+    int position_color = COLOR_WHITE;
     bool inverse_colors = false;
 
     if(IS_ACTIVE == true)
@@ -886,19 +890,19 @@ void ADS_B_List_Box::draw(bool Refresh)
           if(display_aircraft.POSITION.LATITUDE.conversion_success() == true && 
               display_aircraft.POSITION.LONGITUDE.conversion_success() == true)
             {
-              text_color = COLOR_WHITE;
-              inverse_colors = false;
+              position_color = COLOR_WHITE;
+              inverse_colors = true;
             }
             else
             {
-              text_color = COLOR_BLACK;
-              inverse_colors = false;
+              position_color = COLOR_GREEN;
+              inverse_colors = true;
             }
         }
         else
         {
-          text_color = COLOR_BLACK;
-          inverse_colors = true;
+          position_color = COLOR_BLACK;
+          inverse_colors = false;
         }
 
         // Scale Types:
@@ -914,23 +918,23 @@ void ADS_B_List_Box::draw(bool Refresh)
       
         // Print Aircraft Info Line
         clear_line(yCurPos, xCurPos);
-        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.SQUAWK, text_color, inverse_colors, LEDGEND_OFF, 0, 0, 0, 0, 0);
-        dsp_text(yCurPos, xCurPos, 9, display_aircraft.FLIGHT, text_color, inverse_colors, LEDGEND_RANGE, 2, 1, 2, 3, 4, 5);
+        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.SQUAWK, COLOR_BLACK, inverse_colors, LEDGEND_OFF, position_color, 0, 0, 0, 0);
+        dsp_text(yCurPos, xCurPos, 9, display_aircraft.FLIGHT, COLOR_BLACK, inverse_colors, 0, LEDGEND_OFF, position_color, 2, 3, 4, 5);
 
-        dsp_text(yCurPos, xCurPos, 3, blank_text, text_color, inverse_colors, LEDGEND_RANGE, 2, 1, 2, 3, 4, 5);
+        dsp_text(yCurPos, xCurPos, 3, blank_text, COLOR_BLACK, inverse_colors, 0, LEDGEND_OFF, COLOR_GREEN, 2, 3, 4, 5);
 
-        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, text_color, inverse_colors, LEDGEND_RANGE, 60, 80, 100, 160, 600);
-        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, text_color, inverse_colors, LEDGEND_OFF, 0, 0, 0, 0, 0);
+        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SPEED, COLOR_BLACK, inverse_colors, LEDGEND_RANGE, 60, 80, 100, 160, 600);
+        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.TRACK, COLOR_BLACK, inverse_colors, LEDGEND_OFF, COLOR_GREEN, 0, 0, 0, 0);
         dsp_intg(yCurPos, xCurPos, 7, display_aircraft.D_VERTICAL_RATE, display_aircraft.D_FLIGHT_ANGLE.get_float_value(), 
-                  display_aircraft.D_FLIGHT_ANGLE.conversion_success(), text_color, inverse_colors, LEDGEND_SCALER, 2, 4, 6, 8, 10);
-        dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, text_color, inverse_colors, LEDGEND_RANGE, 50, 500, 3000, 12000, 40000);
+                  display_aircraft.D_FLIGHT_ANGLE.conversion_success(), COLOR_BLACK, inverse_colors, LEDGEND_SCALER, 2, 4, 6, 8, 10);
+        dsp_intg(yCurPos, xCurPos, 8, display_aircraft.ALTITUDE, COLOR_BLACK, inverse_colors, LEDGEND_RANGE, 50, 500, 3000, 12000, 40000);
 
-        dsp_text(yCurPos, xCurPos, space_size, blank_text, text_color, inverse_colors, LEDGEND_RANGE, 2, 1, 2, 3, 4, 5);
+        dsp_text(yCurPos, xCurPos, space_size, blank_text, COLOR_BLACK, inverse_colors,  0, LEDGEND_OFF, COLOR_GREEN, 2, 3, 4, 5);
 
-        dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, text_color, inverse_colors, LEDGEND_SCALER, 10, 290, 298, 0, 0);
-        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, text_color, inverse_colors, LEDGEND_SCALER, 5, 60, 68, 299, 0);
-        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, text_color, inverse_colors, LEDGEND_SCALER, 100, 5000, 12000, 20000, 40000);
-        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, text_color, inverse_colors, LEDGEND_SCALER, 18, 30, 32, 34, 36);
+        dsp_floa(yCurPos, xCurPos, 6, display_aircraft.SEEN, COLOR_BLACK, inverse_colors, LEDGEND_SCALER, 10, 290, 298, 0, 0);
+        dsp_floa(yCurPos, xCurPos, 8, display_aircraft.SEEN_POS, COLOR_BLACK, inverse_colors, LEDGEND_SCALER, 5, 60, 68, 299, 0);
+        dsp_intg(yCurPos, xCurPos, 6, display_aircraft.MESSAGES, COLOR_BLACK, inverse_colors, LEDGEND_SCALER, 100, 5000, 12000, 20000, 40000);
+        dsp_floa(yCurPos, xCurPos, 7, display_aircraft.RSSI, COLOR_BLACK, inverse_colors, LEDGEND_SCALER, 18, 30, 32, 34, 36);
 
         // Display alerts
         if(display_aircraft.alert() == true)
@@ -957,7 +961,7 @@ void ADS_B_List_Box::draw(bool Refresh)
                 alert_color = COLOR_RED;
               }
 
-              print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].ALERT.c_str()), CRT_get_color_pair(alert_color, text_color));
+              print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, display_aircraft.ALERT_LIST[alerts_pos].ALERT.c_str()), CRT_get_color_pair(alert_color, COLOR_BLACK));
             }
           }
         }
@@ -972,7 +976,7 @@ void ADS_B_List_Box::draw(bool Refresh)
 
             if(display_aircraft.data_count() >0)
             {
-              print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, "  \\_____..."), CRT_get_color_pair(COLOR_GREEN, text_color));
+              print_to_line(yCurPos, xCurPos, PROP.SIZEX, left_justify(PROP.SIZEX, "  \\_____..."), CRT_get_color_pair(COLOR_GREEN, COLOR_BLACK));
             }
             else
             {

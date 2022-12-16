@@ -86,15 +86,8 @@ class system_data
   struct stat_data
   {
     float data  = 0;
-    float min   = 0; 
-    float max   = 0;
-  };
-
-  struct stat_data_double
-  {
-    double data  = 0;
-    double min   = 0; 
-    double max   = 0;
+    float min   = 0;    // Unfinished?
+    float max   = 0;    // Unfinished?
   };
 
   class running_colors
@@ -118,10 +111,10 @@ class system_data
   configuration CONFIG;
 
   // System Timing
-  stat_data_double dblCOMPUTETIME;   // Loop time spent while only proceessing.
-  stat_data_double dblSLEEPTIME;     // Calculated time needed to sleep.
-  stat_data_double dblCYCLETIME;     // Amount of time to complete an entire cycle.
-  stat_data_double dblPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
+  STAT_DATA_DOUBLE dblCOMPUTETIME;   // Loop time spent while only proceessing.
+  STAT_DATA_DOUBLE dblSLEEPTIME;     // Calculated time needed to sleep.
+  STAT_DATA_DOUBLE dblCYCLETIME;     // Amount of time to complete an entire cycle.
+  STAT_DATA_DOUBLE dblPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
 
   // Door Module Support
   deque<bool> boolDOOR_SENSOR_STATUS;
@@ -307,30 +300,11 @@ class system_data
     cdTIMER.set_timer(tmeCURRENT_FRAME_TIME, Seconds);
   }
 
-
-  void store_compute_time(double fltComputeTime)
-  // Stores the time the program spent actively running, for diag. 
-  {
-    dblCOMPUTETIME.data = fltComputeTime;
-  }
-
-  void store_cycle_time(double fltCycleTime)
-  // Stores the time the program spent point to point while running, for diag. 
-  {
-    dblCYCLETIME.data = fltCycleTime;
-    /*
-    if (fltCycleTime > fltCYCLETIME.max)
-    {
-      fltCYCLETIME.max = fltCycleTime;
-    }
-    */
-  }
-
   double store_sleep_time(double tmeSleep)
   // Pass through variable
   // Stores the Sleep time to be displayed in diag, then returns the same value.
   {
-    dblPREVSLEEPTIME.data = tmeSleep;
+    dblPREVSLEEPTIME.set_data(tmeSleep);
     return tmeSleep;
   }
   
@@ -356,12 +330,9 @@ class system_data
   // reset monitor times.
   void refresh()
   {
-    dblCOMPUTETIME.min  = 0;
-    dblCOMPUTETIME.max  = 0;
-    dblSLEEPTIME.min    = 0;
-    dblSLEEPTIME.max    = 0;
-    dblCYCLETIME.min    = 0;
-    dblCYCLETIME.max    = 0;
+    dblCOMPUTETIME.reset_minmax();
+    dblSLEEPTIME.reset_minmax();
+    dblCYCLETIME.reset_minmax();
   }
  };
 // -------------------------------------------------------------------------------------

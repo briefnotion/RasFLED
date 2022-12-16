@@ -276,6 +276,53 @@ void stupid_2d::clear()
 // ---------------------------------------------------------------------------------------
 
 
+  void STAT_DATA_DOUBLE::set_data(double data)
+  // Provide minor min max stats over time of resets.
+  // I real stats ever necessary, then weighted average 
+  //  routine needed.
+  {
+    DATA = data;
+    
+    if (set == false)
+    {
+      set = true;
+      MIN = DATA;
+      MAX = DATA;
+    }
+    else if (data < MIN)
+    {
+      MIN = data;
+    }
+    else if (data > MAX)
+    {
+      MAX = data;
+    }
+  }
+
+  double STAT_DATA_DOUBLE::get_data()
+  {
+    return DATA;
+  }
+
+    double STAT_DATA_DOUBLE::get_min()
+  {
+    return MIN;
+  }
+
+    double STAT_DATA_DOUBLE::get_max()
+  {
+    return MAX;
+  }
+  
+  void STAT_DATA_DOUBLE::reset_minmax()
+  {
+    set = false;
+    MIN = DATA;
+    MAX = DATA;
+  }
+// ---------------------------------------------------------------------------------------
+
+
   void EFFICIANTCY_TIMER::start_timer(double dblCurrent_Time)
   // Start the timer (stopwatch) by setting its the stopwatch time.
   //  The timer is a simple and can be considered always active. 

@@ -1,3 +1,8 @@
+V 1.24A_221216
+  - Changes.
+  - Modified ADSB-B Screen for better readability on vt terms with 
+      incredibly over saturated colors.
+
 V 1.23A_221213
   - Screen redraw every 60ms instad of 100ms.
   - Changes.

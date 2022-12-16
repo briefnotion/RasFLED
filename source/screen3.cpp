@@ -984,12 +984,12 @@ void Screen3::output_CYBR(system_data &sdSysData, ScreenStatus &ScrStat)
   {
     CYBR_YLn = YCYBRSize -1;
   }
-  //wattron(winCYBR, A_REVERSE);
-  mvwprintw(winCYBR, CYBR_YLn, 0, "__");
-  //wattroff(winCYBR, A_REVERSE);
+  wattron(winCYBR, A_REVERSE);
+  mvwprintw(winCYBR, CYBR_YLn, 0, "/\\");
+  wattroff(winCYBR, A_REVERSE);
 
   // Sleep 
-  working_pos = position_of_scale(YCYBRSize, 20, sdSysData.dblPREVSLEEPTIME.data);
+  working_pos = position_of_scale(YCYBRSize, 20, sdSysData.dblPREVSLEEPTIME.get_data());
   CYBR_Sleep_Count[working_pos]++;
   mvwprintw(winCYBR, working_pos, 0, "%x", CYBR_Sleep_Count[working_pos]);
 
@@ -1005,11 +1005,11 @@ void Screen3::output_CYBR(system_data &sdSysData, ScreenStatus &ScrStat)
   {
     working_pos = position_of_scale(YCYBRSize, 256, anims);
     CYBR_Anims[working_pos]++;
-    //color_pair = CRT_get_color_pair(COLOR_BLACK, COLOR_YELLOW);
+    color_pair = CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE);
     wattron(winCYBR, A_REVERSE);
-    //wattron(winCYBR, COLOR_PAIR(color_pair));
+    wattron(winCYBR, COLOR_PAIR(color_pair));
     mvwprintw(winCYBR, working_pos, 0, "%x", CYBR_Anims[working_pos]);
-    //wattroff(winCYBR, COLOR_PAIR(color_pair));
+    wattroff(winCYBR, COLOR_PAIR(color_pair));
     wattroff(winCYBR, A_REVERSE);
   }
 
@@ -1025,14 +1025,14 @@ void Screen3::output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus
   string strLevel = "";
 
   // Print Timings
-  Compute_Time.label("Compute: " + to_string(sdSysData.dblCOMPUTETIME.data) + " ");
-  Compute_Time.guage_bar(winDebug, 0, 7, sdSysData.dblCOMPUTETIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
+  Compute_Time.label("Compute: " + to_string(sdSysData.dblCOMPUTETIME.get_data()) + " ");
+  Compute_Time.guage_bar(winDebug, 0, 7, sdSysData.dblCOMPUTETIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
   
-  Sleep_Time.label("Sleep:   " + to_string(sdSysData.dblPREVSLEEPTIME.data) + " ");
-  Sleep_Time.guage_bar(winDebug, 1, 7, sdSysData.dblPREVSLEEPTIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
+  Sleep_Time.label("Sleep:   " + to_string(sdSysData.dblPREVSLEEPTIME.get_data()) + " ");
+  Sleep_Time.guage_bar(winDebug, 1, 7, sdSysData.dblPREVSLEEPTIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
   
-  Cycle_Time.label("Cycle:   " + to_string(sdSysData.dblCYCLETIME.data) + " ");
-  Cycle_Time.guage_bar(winDebug, 2, 7, sdSysData.dblCYCLETIME.data, sdSysData.tmeCURRENT_FRAME_TIME);
+  Cycle_Time.label("Cycle:   " + to_string(sdSysData.dblCYCLETIME.get_data()) + " ");
+  Cycle_Time.guage_bar(winDebug, 2, 7, sdSysData.dblCYCLETIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
   
   //------------------------
   // Print LED Display Mode

@@ -857,10 +857,10 @@ int loop()
 
     // Measure how much time has passed since the previous time the program was at 
     //  this point and store that value to be displayed in diag.
-    sdSystem.store_cycle_time(effi_timer.elapsed_time(tmeFled.now()));
+    sdSystem.dblCYCLETIME.set_data(effi_timer.elapsed_time(tmeFled.now()));
 
     // Reset the the compute timer (stopwatch) and store the value before the program sleeps. 
-    sdSystem.store_compute_time(effi_timer.elapsed_timer_time(tmeFled.now()));
+    sdSystem.dblCOMPUTETIME.set_data(effi_timer.elapsed_timer_time(tmeFled.now()));
 
     // Determine how long the program will sleep, store the value to be displayed in diag, and put the cycle
     //  to sleep.
