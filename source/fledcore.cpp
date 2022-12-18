@@ -16,35 +16,6 @@
 // ***************************************************************************************
 
 // -------------------------------------------------------------------------------------
-// LedStrip Structures 
-
-/*
-// Defines a basic LED Strip
-class led_strip
-{
-  public:
-  int Cl = 0; // Channel
-  int St = 0; // Start Led Pos
-  int Ed = 0; // End Led Pos
-  int AnimationStatus = 0;
-
-  void set(int intChannel, int intStart, int intEnd)
-  {
-    Cl = intChannel;
-    St = intStart;
-    Ed = intEnd;
-  }
-
-  int Ct()
-  {
-    int count;
-    return Ed - St + 1;
-  }
-};
-*/
-
-
-// -------------------------------------------------------------------------------------
 // Timed Event Data Variable
 
 void timed_event_data::PostCheck(unsigned long tmeCurrent)

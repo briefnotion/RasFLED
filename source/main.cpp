@@ -645,8 +645,6 @@ int loop()
 
         if (booUpdate == true)
         {
-          //  Do I need to move the whole thing or can I just move the changed pixels?
-
           int mcount = 0;
 
           // If debug mode Display all lights static color are selectted, replace all generated led colors
@@ -671,9 +669,6 @@ int loop()
             {
               for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
               {
-                // Build LED Array to display
-                // FUTER !!! - Only update portions of LED array that has changed. First, group. Second individual LEDs.
-                    // Probably not needed because I'v only seen .5ms time needed for full matrix copy.
                 MatrixPrepare(cons, sdSystem, 
                       sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
                       sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 

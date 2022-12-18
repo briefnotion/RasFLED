@@ -162,7 +162,7 @@ class hardware_monitor
 
 class STAT_DATA_DOUBLE
 // Provide minor min max stats over time of resets.
-// I real stats ever necessary, then weighted average 
+// If real stats ever necessary, then weighted average 
 //  routine needed.
 {
   private:

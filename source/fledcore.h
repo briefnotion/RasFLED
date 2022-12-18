@@ -13,6 +13,8 @@
 #define FLEDCORE_H
 
 // Standard Header Files
+#include <deque>
+
 #include "LEDstuff.h"
 #include "consoleanddata.h"
 
@@ -90,8 +92,7 @@ class timed_event
 //    If an event is over written the previous animation will be lost.
 {
   public:
-  //timed_event_data teDATA[NUM_TIMED_EVENTS];
-  std::vector<timed_event_data> teDATA;
+  std::deque<timed_event_data> teDATA;
   int      intLEDCOUNT;
 
   void create(int intLedCount);

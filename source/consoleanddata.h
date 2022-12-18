@@ -29,6 +29,7 @@
 #include "stringthings.h"
 #include "system.h"
 #include "gadgets.h"
+#include "gadgets_radio.h"
 #include "screen3.h"
 #include "player.h"
 

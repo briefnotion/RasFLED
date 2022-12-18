@@ -23,6 +23,7 @@
 #include "system.h"
 #include "player.h"
 #include "gadgets.h"
+#include "gadgets_radio.h"
 #include "radio_channel_coordinator.h"
 
 using namespace std;

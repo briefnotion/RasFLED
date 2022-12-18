@@ -31,7 +31,7 @@ find_package(Boost COMPONENTS system thread filesystem REQUIRED)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(
-  RasFLED
+  rasfled
 
   definitions.h
   api_rtlairband.h
@@ -48,6 +48,7 @@ add_executable(
   hardware_status.cpp
   animations.cpp
   gadgets.cpp
+  gadgets_radio.cpp
   interface.cpp
   player.cpp
   radio_channel_coordinator.cpp
@@ -61,7 +62,7 @@ add_executable(
   main.cpp
 )
 
-target_link_libraries(RasFLED 
+target_link_libraries(rasfled 
   ${WIRINGPI_LIBRARIES} 
   ${WS2811_LIBRARIES} 
   ${CURSES_LIBRARIES} 

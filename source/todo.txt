@@ -1,8 +1,6 @@
   ToDo:
     - Write my own JSON reader and writer.
     - Add blink effect to changed text fields for ADSB display.
-    - Add some flashy Cyberpunk Style animations to main screen as eye candy for the 
-        bored.
     - Create a Numeric Keypad enter screen.
     - Create a Keyboard Keypad enter screen.
     - Create Play/Pause, Skip button for player.
@@ -14,7 +12,6 @@
     - Clean up 90% of the code. (recursive)
     - Move all the main animations into their own subroutines.
     - Trace Flicker that occurs when sleep = 0 and doors are closing.
-    - Replace vectors with deques.
     - Continue refining animations into an event language that can be ported. 
     - Configuration files. (in progress)
     - Add descriptions in the configuration.cfg file.
@@ -33,9 +30,6 @@
         lights can be combined together so that animations can flow from one, to the 
         other, even if the LEDs are in differant portions of the LED strip, or in a 
         differant type of order or orientation.
-    - Remove created "ENGINE STATUS" screen: speed, temperature, pressure, errors, fuel
-        health, and other vehicle stuff, now that I see it can be done
-        - Combine vehicle related info to new animations, and animation events.
     - Create other types of screens. 
     - Create Automated Checklist screen triggered by conditions.
     - Create Conditions monitor to call events.
