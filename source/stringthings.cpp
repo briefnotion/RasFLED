@@ -303,6 +303,74 @@ void STRING_STRING::store(string str_value)
   }
 }
 
+int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color yellow
+// Non zero or mid level green.
+{ 
+  // 1 - Range Level
+  // Magenta  Red  Yellow  Green  Blue  Cyan
+
+  if (abs(Value) <= Magenta)
+  {
+    return COLOR_MAGENTA;
+  }
+  else if(abs(Value) <= Red)
+  {
+    return COLOR_RED;
+  }
+  else if(abs(Value) <= Yellow)
+  {
+    return COLOR_YELLOW;
+  }
+  else if(abs(Value) <= Green)
+  {
+    return COLOR_GREEN;
+  }
+  else if(abs(Value) <= Blue)
+  {
+    return COLOR_BLUE;
+  }
+  else
+  {
+    return COLOR_CYAN;
+  }
+}
+
+int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue)
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color red
+// zero level green.
+{ 
+  // 2 - Scale Level
+  // Green  Yellow  Red  Magenta  Blue  Cyan
+  
+  if (abs(Value) <= Green)
+  {
+    return COLOR_GREEN;
+  }
+  else if(abs(Value) <= Yellow)
+  {
+    return COLOR_YELLOW;
+  }
+  else if(abs(Value) <= Red)
+  {
+    return COLOR_RED;
+  }
+  else if(abs(Value) <= Magenta)
+  {
+    return COLOR_MAGENTA;
+  }
+  else if(abs(Value) <= Blue)
+  {
+    return COLOR_BLUE;
+  }
+  else
+  {
+    return COLOR_CYAN;
+  }
+}
+
 string STRING_STRING::get_str_value()
 // Return original number string value.
 {

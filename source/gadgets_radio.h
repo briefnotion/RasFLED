@@ -81,10 +81,6 @@ class ADS_B_List_Box
   
   bool IS_ACTIVE = false;
 
-  // Types:
-  // -1 - Hidden
-  //  0 - Read Only
-
   private:
 
   int get_first_empty_pos();
@@ -96,11 +92,6 @@ class ADS_B_List_Box
   void organize_index();
 
   void sort_index();
-
-  int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue);
-
-  //int color_scale(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
-  int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue);
 
   void clear_line(int &yCurPos, int &xCurPos);
 
@@ -141,6 +132,136 @@ class ADS_B_List_Box
   void draw(bool Refresh);
 
   void update(system_data &sdSysData);
+};
+
+
+
+// -------------------------------------------------------------------------------------
+//  ADSB_Channel Classes
+class ADSB_Channel_Properties
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+
+  int COLOR = COLOR_WHITE;
+  int BCOLOR = COLOR_BLACK;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 6;
+  int SIZEX = 15;
+
+  bool CHANGED = true;
+
+  AIRCRAFT AIRCRAFT_DATA;
+};
+
+class ADSB_Channel
+// Routines for create, draw, modify, and behavior.
+// Note: Function needs frame time to function.
+{
+  private:
+
+  // Gadget window
+  WINDOW * winADSB;
+
+  // Time Provided
+  unsigned long FRAME_TIME;             // Internal
+
+  // Was gadget redrawn during the previous draw cycle.
+  bool WAS_REDRAWN = false;
+
+  TIMED_PING EXPIREED;
+
+  //Debug
+  int Counter = 0;
+
+  public:
+  // Text Fields  
+  Text_Field TOP_BAR;
+  
+  Text_Field FLIGHT;
+  Text_Field SQUAWK;
+
+  Text_Field ALTITUDE;
+  Text_Field ALTITUDE_IND;
+  Text_Field NAV_ALTITUDE_MCP; 
+
+  Text_Field D_VERTICAL_RATE;
+  Text_Field D_VERTICAL_RATE_IND;
+
+  Text_Field SPEED;
+  Text_Field SPEED_IND;
+
+  Text_Field TRACK;
+  Text_Field NAV_HEADING;
+
+  Text_Field MESSAGE;
+  
+  //Text_Field NAV_QNH;
+
+  ADSB_Channel_Properties PROP;  
+
+  void create();
+
+  bool changed();
+
+  void update_value(string Flight, string Squawk, string Speed, string Track, 
+                                string D_Vertical_Rate, string Altitude, 
+                                unsigned long tmeFrame_Time);
+
+  void update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis);
+
+  void draw(bool Refresh, unsigned long tmeFrame_Time);
+};
+
+
+//  ADSB_Channel Classes
+class ADSB_Channel_Grid_Properties
+// Properties (duh)
+{
+  public: 
+
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CHANGED = true;
+  bool NEEDS_REFRESH_DATA = true;
+
+  AIRCRAFT_DATA AIRCRAFT_LIST;
+};
+
+
+class ADSB_Channel_Grid
+// Routines for create, draw, modify, and behavior.
+// Note: Function needs frame time to function.
+{
+  private:
+  deque<ADSB_Channel> ADSB_Channel_q;
+
+  ADSB_Channel test;
+
+  int ADSB_Channel_Count = 0;
+  
+  int find_HEX(string Hex);
+
+  public:
+
+  ADSB_Channel_Grid_Properties PROP;  
+
+  bool IS_ACTIVE = false;
+
+  void create();
+
+  void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
+
+  void draw(bool Refresh, unsigned long tmeFrame_Time);
 };
 
 // -------------------------------------------------------------------------------------

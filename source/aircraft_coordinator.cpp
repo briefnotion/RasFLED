@@ -282,11 +282,14 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
         tmpAircraft.SEEN_POS.store(tree_value("seen_pos", aircraft));
         tmpAircraft.ALTITUDE.store(tree_value("alt_baro", aircraft));
         tmpAircraft.ALTITUDE_GEOM.store(tree_value("alt_geom", aircraft));
+        tmpAircraft.NAV_ALTITUDE_MCP.store(tree_value("nav_altitude_mcp", aircraft));
         tmpAircraft.VERT_RATE.store(tree_value("baro_rate", aircraft));
         tmpAircraft.GEOM_RATE.store(tree_value("geom_rate", aircraft));
         tmpAircraft.TRACK.store(tree_value("track", aircraft));
+        tmpAircraft.NAV_HEADING.store(tree_value("nav_heading", aircraft));
         tmpAircraft.POSITION.LATITUDE.store(tree_value("lat", aircraft));
         tmpAircraft.POSITION.LONGITUDE.store(tree_value("lon", aircraft));
+        tmpAircraft.NAV_MODES.store(tree_value("nav_modes", aircraft));
         
         // Aircraft Configuration
         tmpAircraft.EMERGENCY.store(tree_value("emergency", aircraft));

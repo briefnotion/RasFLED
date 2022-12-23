@@ -43,7 +43,7 @@ void Title_Bar::create(int id, string name, string label, int size, int color, i
   PROP.COLOR = color;
   PROP.BCOLOR = bcolor;
 
-  winTitle = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+  winTitle = newwin(1, PROP.SIZE, PROP.POSY, PROP.POSX + PROP.SIZEX - PROP.SIZE);
 
   bool CHANGED = true;
 }
@@ -51,12 +51,12 @@ void Title_Bar::create(int id, string name, string label, int size, int color, i
 void Title_Bar::move_resize(int posY, int posX, int sizeY, int sizeX)
 // Redefine position and size.
 {
-  PROP.POSX = posX;
+  PROP.POSX = posX + sizeX - PROP.SIZE;
   PROP.POSY = posY;
   PROP.SIZEX = sizeX;
-  PROP.SIZEY = sizeY;
+  PROP.SIZEY = 1;
 
-  winTitle = newwin(1, PROP.SIZE, PROP.POSY, sizeX - PROP.SIZE);
+  winTitle = newwin(PROP.SIZEY, PROP.SIZE, PROP.POSY, PROP.POSX);
 
   refresh();
 
@@ -85,6 +85,83 @@ void Title_Bar::draw(bool Refresh)
     PROP.CHANGED = false;
 
     wrefresh(winTitle);
+  }
+}
+
+// -------------------------------------------------------------------------------------
+//  Text_Field Classes
+
+void Text_Field::set_text(string Text)
+{
+  if (Text != PROP.LABEL)
+  {
+    PROP.LABEL = Text;
+    PROP.CHANGED = true;
+  }
+}
+
+void Text_Field::set_color(int Background_Color, int Color)
+{
+  if (Background_Color != PROP.BCOLOR || Color != PROP.COLOR)
+  {
+    PROP.BCOLOR = Background_Color;
+    PROP.COLOR  = Color;
+    PROP.CHANGED = true;
+  }
+}
+
+void Text_Field::draw(WINDOW *Window, bool Refresh)
+{
+  if (PROP.CHANGED == true || Refresh == true)
+  {
+    // Check for Reverse Text
+    if (PROP.REVERSE == true)
+    {
+      wattron(Window, A_REVERSE);
+    }
+
+    // Check for Colored Text
+    if (PROP.COLORS_ON == true)
+    {
+      wattron(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    }
+
+    // Check for Text Modification
+    if ((PROP.JUSTIFICATION_LEFT == true || PROP.JUSTIFICATION_CENTER == true|| PROP.JUSTIFICATION_RIGHT == true) && PROP.SIZEX >0)
+    {
+      // Print Center Justified
+      if (PROP.JUSTIFICATION_CENTER == true)
+      {
+        mvwprintw(Window, PROP.POSY, PROP.POSX, linefill(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+      }
+      // Print Right Justified
+      else if (PROP.JUSTIFICATION_RIGHT == true)
+      {
+        mvwprintw(Window, PROP.POSY, PROP.POSX, right_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+      }
+      // Print Left Justified or full field.
+      else if (PROP.JUSTIFICATION_LEFT == true)
+      {
+        mvwprintw(Window, PROP.POSY, PROP.POSX, left_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+      }
+    }
+    else  // Print Simple Text
+    {
+      mvwprintw(Window, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line.
+      PROP.CHANGED = false;
+    }
+
+    // Check for Colored Text
+    if (PROP.COLORS_ON == true)
+    {
+      wattroff(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    }
+
+    // Check for Reverse Text
+    if (PROP.REVERSE == true)
+    {
+      wattroff(Window, A_REVERSE);
+    }
   }
 }
 

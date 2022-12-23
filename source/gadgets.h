@@ -78,6 +78,52 @@ class Title_Bar
   void draw(bool Refresh);
 };
 
+
+// -------------------------------------------------------------------------------------
+//  Text_Field Classes
+
+class Text_Field_Properties
+// Properties (duh)
+{
+  public: 
+  string LABEL = "";
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  //int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CHANGED = false;
+
+  bool JUSTIFICATION_LEFT = false;
+  bool JUSTIFICATION_CENTER = false;
+  bool JUSTIFICATION_RIGHT = false;
+
+  bool COLORS_ON = false;
+  bool REVERSE = false;
+};
+
+
+class Text_Field
+{
+  private:
+  TIMED_PING EXPIREED;
+
+  public:
+  Text_Field_Properties PROP;
+
+  void set_text(string Text);
+
+  void set_color(int Background_Color, int Color);
+
+  void draw(WINDOW *window, bool Refresh);
+};
+
+
 // -------------------------------------------------------------------------------------
 //  Text_Box Classes
 

@@ -248,8 +248,9 @@ class Screen3
   // ADS_B Buttons
   Button_Zone_Manager bzADS_B;
 
-  // ADS_B Text Box Data
-  ADS_B_List_Box tbads_b_Data;
+  // ADS_B Gadget Grid
+  ADSB_Channel_Grid ADSB_Grid;
+  //ADS_B_List_Box tbads_b_Data;
 
   private:
   // Log Screen Variables --------------------

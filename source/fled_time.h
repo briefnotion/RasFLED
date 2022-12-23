@@ -132,12 +132,23 @@ class TIMED_PING
   public:
 
   void ping_up(unsigned long current_time, int delay);
+  // Start the timer for the event that needs to be triggered.
 
   bool ping_down(unsigned long current_time);
+  // Check for the event triggered time.
+  // Returns true if interval time has not passed, and ping is enabled.
+  //  Disables after returning false.
+  // Returns false if not enabled or time is passed.
 
   bool blip_visible(unsigned long current_time);
+  // Check for the event triggered time.
+  // Returns true if interval time has not passed, and ping is enabled.
+  // Returns false if not enabled or time is passed.
   
   bool blip_moved(unsigned long current_time);
+  // Check to see if return ping has changed from false to true or true to false.
+  // Returns true if changed.
+  // Returns false if not changed or not enabled.
 };
 
 

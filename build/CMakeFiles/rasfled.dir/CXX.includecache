@@ -56,6 +56,10 @@ fledcore.h
 string.h
 -
 
+/home/pi/source/RasFLED/source/api_shared_memory.cpp
+api_shared_memory.h
+/home/pi/source/RasFLED/source/api_shared_memory.h
+
 /home/pi/source/RasFLED/source/api_shared_memory.h
 fstream
 -
@@ -460,6 +464,8 @@ radio_channel_coordinator.h
 string
 -
 deque
+-
+ncurses.h
 -
 
 /home/pi/source/RasFLED/source/system.h

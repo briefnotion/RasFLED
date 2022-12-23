@@ -16,6 +16,9 @@
 #include <string>
 #include <deque>
 
+// Optional Includes
+#include <ncurses.h>
+
 using namespace std;
 
 class WORDLINE
@@ -59,6 +62,16 @@ unsigned long long string_to_ulonglong(string String_Value);
 bool string_to_float(string String_Value, float &Float_Value);
 
 float string_to_float(string String_Value);
+
+int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue);
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color yellow
+// Non zero or mid level green.
+
+int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue);
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color red
+// zero level green.
 
 class STRING_STRING
 // Variable stores original string number and converted value.

@@ -76,9 +76,9 @@ void Console::update_freqency_gadgets(system_data &sdSysData)
 
 void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
 {
-  if(sdSysData.AIRCRAFT_COORD.DATA.CHANGED == true)
+  if(sdSysData.AIRCRAFT_COORD.DATA.CHANGED == true || Screen.ADSB_Grid.PROP.NEEDS_REFRESH_DATA == true)
   {
-    Screen.tbads_b_Data.update(sdSysData);
+    Screen.ADSB_Grid.update(sdSysData, tmeCurrentMillis);
   }
 
 }

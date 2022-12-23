@@ -1,5 +1,5 @@
 // ***************************************************************************************
-// *
+// *size
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
@@ -166,75 +166,6 @@ void ADS_B_List_Box::sort_index()
       AIRCRAFT_INDEX_LIST[x].HEX = "";
       AIRCRAFT_INDEX_LIST[x].SIZE = 0;
     }
-  }
-}
-
-int ADS_B_List_Box::color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
-// Returns color in ranges of 1st to 5th of values
-// eg (12, 5, 10, 15, 20, 25) returns color yellow
-// Non zero or mid level green.
-{ 
-  // 1 - Range Level
-  // Magenta  Red  Yellow  Green  Blue  Cyan
-
-  if (abs(Value) <= Magenta)
-  {
-    return COLOR_MAGENTA;
-  }
-  else if(abs(Value) <= Red)
-  {
-    return COLOR_RED;
-  }
-  else if(abs(Value) <= Yellow)
-  {
-    return COLOR_YELLOW;
-  }
-  else if(abs(Value) <= Green)
-  {
-    return COLOR_GREEN;
-  }
-  else if(abs(Value) <= Blue)
-  {
-    return COLOR_BLUE;
-  }
-  else
-  {
-    return COLOR_CYAN;
-  }
-}
-
-//int color_scale(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
-int ADS_B_List_Box::color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue)
-// Returns color in ranges of 1st to 5th of values
-// eg (12, 5, 10, 15, 20, 25) returns color red
-// zero level green.
-{ 
-  // 2 - Scale Level
-  // Green  Yellow  Red  Magenta  Blue  Cyan
-  
-  if (abs(Value) <= Green)
-  {
-    return COLOR_GREEN;
-  }
-  else if(abs(Value) <= Yellow)
-  {
-    return COLOR_YELLOW;
-  }
-  else if(abs(Value) <= Red)
-  {
-    return COLOR_RED;
-  }
-  else if(abs(Value) <= Magenta)
-  {
-    return COLOR_MAGENTA;
-  }
-  else if(abs(Value) <= Blue)
-  {
-    return COLOR_BLUE;
-  }
-  else
-  {
-    return COLOR_CYAN;
   }
 }
 
@@ -775,6 +706,445 @@ void ADS_B_List_Box::update(system_data &sdSysData)
 
   PROP.CHANGED = true;
 }
+
+
+// -------------------------------------------------------------------------------------
+//  ADSB_Channel Classes
+
+void ADSB_Channel::create()
+// Define and behavior.  
+// Like set but leaves off position and size details.
+// Does not create window.
+{
+  // Create Gadget Window
+  winADSB = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+  //wborder(winFrequency,'|','|','-','-','+','+','+','+') ;
+  wborder(winADSB,' ',' ',' ',' ',' ',' ',' ',' ') ;
+
+  // Create Text Fields
+
+  // Top Bar
+  TOP_BAR.PROP.POSY = 0;
+  TOP_BAR.PROP.POSX = 0;
+  TOP_BAR.PROP.COLORS_ON = true;
+  TOP_BAR.PROP.COLOR = COLOR_BLACK;
+  TOP_BAR.PROP.BCOLOR = COLOR_BLACK;
+  TOP_BAR.PROP.SIZEX = PROP.SIZEX;
+  TOP_BAR.PROP.JUSTIFICATION_LEFT = true;
+
+  // Flight
+  FLIGHT.PROP.POSY = 0;
+  FLIGHT.PROP.POSX = 1;
+  FLIGHT.PROP.COLORS_ON = true;
+  FLIGHT.PROP.COLOR = COLOR_BLACK;
+  FLIGHT.PROP.BCOLOR = COLOR_BLACK;
+  FLIGHT.PROP.SIZEX = 8;
+  FLIGHT.PROP.JUSTIFICATION_LEFT = true;
+
+  // Squawk
+  SQUAWK.PROP.POSY = 0;
+  SQUAWK.PROP.POSX = 10;
+  SQUAWK.PROP.COLORS_ON = true;
+  SQUAWK.PROP.COLOR = COLOR_BLACK;
+  SQUAWK.PROP.BCOLOR = COLOR_BLACK;
+  SQUAWK.PROP.SIZEX = 4;
+  SQUAWK.PROP.JUSTIFICATION_RIGHT = true;
+
+  // Altitude
+  ALTITUDE.PROP.POSY = 1;
+  ALTITUDE.PROP.POSX = 8;
+  ALTITUDE.PROP.SIZEX = 6;
+  ALTITUDE.PROP.JUSTIFICATION_RIGHT = true;
+
+  // Altitude Indicator
+  ALTITUDE_IND.PROP.POSY = 1;
+  ALTITUDE_IND.PROP.POSX = 14;
+  ALTITUDE_IND.PROP.COLORS_ON = true;
+  ALTITUDE_IND.PROP.COLOR = COLOR_BLACK;
+  ALTITUDE_IND.PROP.BCOLOR = COLOR_BLACK;
+  ALTITUDE_IND.PROP.SIZEX = 1;
+  ALTITUDE_IND.PROP.JUSTIFICATION_LEFT = true;
+
+  // Altitude Nav
+  //NAV_ALTITUDE_MCP.PROP.LABEL = "nava";
+  NAV_ALTITUDE_MCP.PROP.POSY = 2;
+  NAV_ALTITUDE_MCP.PROP.POSX = 8;
+  NAV_ALTITUDE_MCP.PROP.COLORS_ON = true;
+  NAV_ALTITUDE_MCP.PROP.COLOR = COLOR_BLUE;
+  NAV_ALTITUDE_MCP.PROP.BCOLOR = COLOR_BLACK;
+  NAV_ALTITUDE_MCP.PROP.SIZEX = 6;
+  NAV_ALTITUDE_MCP.PROP.JUSTIFICATION_RIGHT = true;
+
+  // Vertical Rate
+  D_VERTICAL_RATE.PROP.POSY = 3;
+  D_VERTICAL_RATE.PROP.POSX = 8;
+  D_VERTICAL_RATE.PROP.SIZEX = 6;
+  D_VERTICAL_RATE.PROP.JUSTIFICATION_RIGHT = true;
+
+  // Vertical Rate Indicator
+  D_VERTICAL_RATE_IND.PROP.POSY = 3;
+  D_VERTICAL_RATE_IND.PROP.POSX = 14;
+  D_VERTICAL_RATE_IND.PROP.COLORS_ON = true;
+  D_VERTICAL_RATE_IND.PROP.COLOR = COLOR_BLACK;
+  D_VERTICAL_RATE_IND.PROP.BCOLOR = COLOR_BLACK;
+  D_VERTICAL_RATE_IND.PROP.SIZEX = 1;
+  D_VERTICAL_RATE_IND.PROP.JUSTIFICATION_LEFT = true;
+
+  // Speed
+  SPEED.PROP.POSY = 1;
+  SPEED.PROP.POSX = 1;
+  SPEED.PROP.SIZEX = 5;
+  SPEED.PROP.JUSTIFICATION_LEFT = true;
+
+  // Speed Indicator
+  SPEED_IND.PROP.POSY = 1;
+  SPEED_IND.PROP.POSX = 0;
+  SPEED_IND.PROP.COLORS_ON = true;
+  SPEED_IND.PROP.COLOR = COLOR_BLACK;
+  SPEED_IND.PROP.BCOLOR = COLOR_BLACK;
+  SPEED_IND.PROP.SIZEX = 1;
+  SPEED_IND.PROP.JUSTIFICATION_LEFT = true;
+
+  // Track
+  TRACK.PROP.POSY = 4;
+  TRACK.PROP.POSX = 2;
+  TRACK.PROP.SIZEX = 5;
+  TRACK.PROP.JUSTIFICATION_CENTER = true;
+  
+  // Track Nav
+  //NAV_HEADING.PROP.LABEL = "navt";
+  NAV_HEADING.PROP.POSY = 4;
+  NAV_HEADING.PROP.POSX = 8;
+  NAV_HEADING.PROP.COLORS_ON = true;
+  NAV_HEADING.PROP.COLOR = COLOR_BLUE;
+  NAV_HEADING.PROP.BCOLOR = COLOR_BLACK;
+  NAV_HEADING.PROP.SIZEX = 5;
+  NAV_HEADING.PROP.JUSTIFICATION_CENTER = true;
+
+  /*
+  // Autopilot QNH Nav
+  //NAV_QNH.PROP.LABEL = "qnh";
+  NAV_QNH.PROP.POSY = 6;
+  NAV_QNH.PROP.POSX = 1;
+  NAV_QNH.PROP.SIZEX = 12;
+  NAV_QNH.PROP.JUSTIFICATION_LEFT = true;
+  */
+
+  // Track
+  MESSAGE.PROP.POSY = PROP.SIZEY - 1;
+  MESSAGE.PROP.POSX = 1;
+  MESSAGE.PROP.SIZEX = PROP.SIZEX - 2;
+  MESSAGE.PROP.JUSTIFICATION_LEFT = true;
+
+  refresh();
+
+  PROP.CHANGED = true;
+}
+
+bool ADSB_Channel::changed()
+// Returns true if any of the properties have changed.
+{
+  return PROP.CHANGED;
+}
+
+void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis)
+{
+  // Start or Continue expiration timer
+  EXPIREED.ping_up(tmeCurrentMillis, 30000);
+
+  PROP.AIRCRAFT_DATA = Aircraft;
+
+  FLIGHT.set_text(PROP.AIRCRAFT_DATA.FLIGHT.get_str_value());
+  SQUAWK.set_text(PROP.AIRCRAFT_DATA.SQUAWK.get_str_value());
+  ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value());
+  NAV_ALTITUDE_MCP.set_text(PROP.AIRCRAFT_DATA.NAV_ALTITUDE_MCP.get_str_value());
+  D_VERTICAL_RATE.set_text(PROP.AIRCRAFT_DATA.D_VERTICAL_RATE.get_str_value());
+  SPEED.set_text(PROP.AIRCRAFT_DATA.SPEED.get_str_value());
+  TRACK.set_text(PROP.AIRCRAFT_DATA.TRACK.get_str_value());
+  NAV_HEADING.set_text(PROP.AIRCRAFT_DATA.NAV_HEADING.get_str_value());
+  
+  //NAV_QNH.set_text(PROP.AIRCRAFT_DATA.NAV_QNH.get_str_value());
+
+  PROP.CHANGED = true;
+}
+
+void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
+// Draw the text_box on the screen if the value has changed or if  
+//  the Refresh parameter is true.
+{
+  FRAME_TIME = tmeFrame_Time;
+
+  // Check Expiration
+  if (EXPIREED.ping_down(tmeFrame_Time) == false)
+  {
+    // Clear all data and reset to start empty state.
+    ADSB_Channel_Properties cleared_properties;
+    PROP = cleared_properties;
+    update_aircraft(PROP.AIRCRAFT_DATA, tmeFrame_Time);
+    Refresh = true;
+  }
+
+  if ((PROP.CHANGED == true || Refresh == true))
+  {
+    // Draw Background
+    // If No Data
+    if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == false)
+    {
+      PROP.BCOLOR = COLOR_BLACK;
+      PROP.COLOR = COLOR_BLACK;
+      MESSAGE.set_text("");
+    }
+    else if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
+    {
+      PROP.BCOLOR = COLOR_BLUE;
+      PROP.COLOR = COLOR_BLACK;
+      MESSAGE.set_text("All Data Expired");
+    }
+    // If Position Found
+    else if(PROP.AIRCRAFT_DATA.POSITION.LATITUDE.conversion_success() == true && 
+              PROP.AIRCRAFT_DATA.POSITION.LONGITUDE.conversion_success() == true)
+    {
+      PROP.BCOLOR = COLOR_GREEN;
+      PROP.COLOR = COLOR_BLACK;
+    }
+    // If No Position Found
+    else
+    {
+      PROP.BCOLOR = COLOR_YELLOW;
+      PROP.COLOR = COLOR_BLACK;
+    }
+    
+    wbkgd(winADSB, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+
+    if (PROP.AIRCRAFT_DATA.data_count() > 0)
+    {
+      TOP_BAR.set_color(COLOR_WHITE, COLOR_BLACK);
+      FLIGHT.set_color(COLOR_WHITE, COLOR_BLACK);
+      SQUAWK.set_color(COLOR_WHITE, COLOR_BLACK);
+    }
+    else
+    {
+      TOP_BAR.set_color(COLOR_BLACK, COLOR_BLACK);
+      FLIGHT.set_color(COLOR_BLACK, COLOR_BLACK);
+      SQUAWK.set_color(COLOR_BLACK, COLOR_BLACK);
+    }
+
+    if (PROP.AIRCRAFT_DATA.ALTITUDE.conversion_success()==true)
+    {
+      ALTITUDE_IND.set_color(color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000), ALTITUDE_IND.PROP.COLOR);
+    }
+    else
+    {
+      ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+    }
+
+    if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
+    {
+      D_VERTICAL_RATE_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10), D_VERTICAL_RATE_IND.PROP.COLOR);
+    }
+    else
+    {
+      D_VERTICAL_RATE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+    }
+
+    if (PROP.AIRCRAFT_DATA.ALTITUDE.conversion_success()==true)
+    {
+      SPEED_IND.set_color(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600), SPEED_IND.PROP.COLOR);
+    }
+    else
+    {
+      SPEED_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+    }
+
+    TOP_BAR.draw(winADSB, Refresh);
+
+    FLIGHT.draw(winADSB, Refresh);
+    SQUAWK.draw(winADSB, Refresh);
+
+    ALTITUDE_IND.draw(winADSB, Refresh);
+    ALTITUDE.draw(winADSB, Refresh);
+    NAV_ALTITUDE_MCP.set_color(PROP.BCOLOR, COLOR_BLUE);
+    NAV_ALTITUDE_MCP.draw(winADSB, Refresh);
+
+    D_VERTICAL_RATE_IND.draw(winADSB, Refresh);
+    D_VERTICAL_RATE.draw(winADSB, Refresh);
+
+    SPEED_IND.draw(winADSB, Refresh);
+    SPEED.draw(winADSB, Refresh);
+
+    TRACK.draw(winADSB, Refresh);
+    NAV_HEADING.set_color(PROP.BCOLOR, COLOR_BLUE);
+    NAV_HEADING.draw(winADSB, Refresh);
+
+    MESSAGE.draw(winADSB, Refresh);
+    
+    //NAV_QNH.draw(winADSB, Refresh);
+    
+
+    /*
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(winFrequency, 0, 0, "%d ", Counter);
+      mvwprintw(winFrequency, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
+    }
+    */
+
+    // Reset Properties Changed.
+    PROP.CHANGED = false;
+
+    // Draw the Gadget.
+    wrefresh(winADSB);
+  }
+}
+
+// -------------------------------------------------------------------------------------
+
+int ADSB_Channel_Grid::find_HEX(string Hex)
+{
+  int return_int = -1;
+  for(int x=0; (x < ADSB_Channel_q.size()) && (return_int == -1); x++)
+  {
+    if(ADSB_Channel_q[x].PROP.AIRCRAFT_DATA.HEX.get_str_value() == Hex)
+    {
+      return_int = x;
+    }
+  }
+  return return_int;
+}
+
+void ADSB_Channel_Grid::create()
+{
+  ADSB_Channel Default_ADS_B; // Default ADSB Gadget.
+  
+  // Calculate size of ADS-B Channel Grid.
+  int x = (PROP.SIZEX + 1) / Default_ADS_B.PROP.SIZEX;
+  int y =  PROP.SIZEY      / Default_ADS_B.PROP.SIZEY;
+
+  // Set number of Channels
+  int new_count = x * y;
+
+  // Create
+  if (new_count > ADSB_Channel_Count)
+  {
+    for (int size = ADSB_Channel_Count; size < new_count; size++)
+    {
+      // Put channel in queue
+      ADSB_Channel_q.push_back(Default_ADS_B);
+    }
+  }
+  else if (new_count < ADSB_Channel_Count)
+  {
+    for (int size = new_count; size < ADSB_Channel_Count; size++)
+    {
+      // Put channel in queue
+      ADSB_Channel_q.erase(ADSB_Channel_q.begin() + new_count, ADSB_Channel_q.end());
+    }
+  }
+
+  ADSB_Channel_Count = new_count;
+
+
+  int yp = 0;
+  int xp = 0;
+  
+  for (int pos = 0; pos < ADSB_Channel_Count; pos++)
+  {
+    ADSB_Channel_q[pos].PROP.POSX = PROP.POSX + (xp * Default_ADS_B.PROP.SIZEX) + (xp * 1);
+    ADSB_Channel_q[pos].PROP.POSY = PROP.POSY + (yp * Default_ADS_B.PROP.SIZEY);
+
+    ADSB_Channel_q[pos].create();
+
+    yp++;
+    if (yp >= y)
+    {
+      yp = 0;
+      xp++;
+    }
+  }
+
+  PROP.CHANGED = true;
+  PROP.NEEDS_REFRESH_DATA = true;
+
+}
+
+void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
+{
+  int pos_found = 0;
+  int pos_avail = 0;
+
+  // Get new list of Aircraft.
+  PROP.AIRCRAFT_LIST = sdSysData.AIRCRAFT_COORD.DATA;
+  IS_ACTIVE = sdSysData.AIRCRAFT_COORD.is_active();
+
+  // Prepare list to display.
+  //sort_index();
+
+  for (int pos_search = 0; pos_search < PROP.AIRCRAFT_LIST.AIRCRAFTS.size(); pos_search++)
+  {
+    //Search gadget list for existing item to update.
+    pos_found = find_HEX(PROP.AIRCRAFT_LIST.AIRCRAFTS[pos_search].HEX.get_str_value());
+
+    // if not found, put aircraft info in first avail slot.
+    if (pos_found == -1)
+    {
+      pos_avail = find_HEX("");
+      
+      //if slot found
+      if (pos_avail == -1)
+      {
+        // no slot avail. just exit.
+      }
+      else // slot found and pos avail.
+      {
+        ADSB_Channel_q[pos_avail].update_aircraft(PROP.AIRCRAFT_LIST.AIRCRAFTS[pos_search], tmeCurrentMillis);
+      }
+    }
+    else // put in found pos.
+    {
+      ADSB_Channel_q[pos_found].update_aircraft(PROP.AIRCRAFT_LIST.AIRCRAFTS[pos_search], tmeCurrentMillis);
+    }
+  }
+
+
+  sdSysData.AIRCRAFT_COORD.DATA.CHANGED = false;
+  PROP.NEEDS_REFRESH_DATA = false;
+}
+
+void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time)
+// Draw the text_box on the screen if the value has changed or if  
+//  the Refresh parameter is true.
+{
+  for (int x = 0; x < ADSB_Channel_Count; x++)
+  {
+    //int speed = string_to_int(ADSB_Channel_q[x].SPEED.PROP.LABEL);
+    //speed++;
+    //ADSB_Channel_q[x].update_value(to_string(x), to_string(ADSB_Channel_Count), "", "", "", "", tmeFrame_Time);
+    //ADSB_Channel_q[x].update_value("FLIGHTxx", "1234", "099.9", "180.1", "1234", "35000", tmeFrame_Time);
+    ADSB_Channel_q[x].draw(Refresh, tmeFrame_Time);
+  }
+
+  if ((PROP.CHANGED == true || Refresh == true))
+  {
+
+    /*
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(winFrequency, 0, 0, "%d ", Counter);
+      mvwprintw(winFrequency, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
+    }
+    */
+
+    // Reset Properties Changed.
+    PROP.CHANGED = false;
+
+  }
+}
+
 
 // -------------------------------------------------------------------------------------
 //  Radio_Channel Classes

@@ -274,7 +274,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   bzADS_B.create_button(3, "ADS_B_SNAPSHOT", "%Snap%Shot", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
   //bzADS_B.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
 
-  tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+  //tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
   // Create Log Screen Text Box
   tiLog_Screen.create(1, "LOGS", "LOGS", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
@@ -747,9 +747,9 @@ void Screen3::reset(ScreenStatus &ScrStat)
     // ADS_B Window
     // Calculate Size and Position
     YADS_B_ScreenPos = YSplit;
-    XADS_B_ScreenPos = XADS_B_ScreenPos;
+    XADS_B_ScreenPos = XADS_B_ScreenPos + XBADS_BSize;
     YADS_B_ScreenSize = YMax - YSplit - YTabSize;
-    XADS_B_ScreenSize =  XSplit;
+    XADS_B_ScreenSize =  XSplit - XBADS_BSize;
 
     // Build Window
     winADS_B_Screen = newwin(YADS_B_ScreenSize, XADS_B_ScreenSize, YADS_B_ScreenPos, XADS_B_ScreenPos);
@@ -771,8 +771,15 @@ void Screen3::reset(ScreenStatus &ScrStat)
     strBotLine = "";
     strBotLine = strBotLine.append(XADS_B_ScreenSize-1, '_');
 
-    // Display ADSB Log
-    tbads_b_Data.move_resize(YADS_B_ScreenPos, XADS_B_ScreenPos + XBADS_BSize, YADS_B_ScreenSize, XADS_B_ScreenSize - XBADS_BSize);
+    // Display ADSB Tital Bar
+    //tbads_b_Data.move_resize(YADS_B_ScreenPos, XADS_B_ScreenPos + XBADS_BSize, YADS_B_ScreenSize, XADS_B_ScreenSize - XBADS_BSize);
+    
+    ADSB_Grid.PROP.POSY = YADS_B_ScreenPos;
+    ADSB_Grid.PROP.POSX = XADS_B_ScreenPos;
+    ADSB_Grid.PROP.SIZEY = YADS_B_ScreenSize;
+    ADSB_Grid.PROP.SIZEX = XADS_B_ScreenSize;
+
+    ADSB_Grid.create();
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1326,9 +1333,6 @@ void Screen3::radio_status(system_data &sdSysData, ScreenStatus &ScrStat)
     }
 
     mvwprintw(winRadioStatus, 0, 10, "Gain: %.1f", sdSysData.RADIO_COORD.DEVICE_STATUS.GAIN);
-    //mvwprintw(winRadioStatus, 0, 0, "A%d", sdSysData.RADIO_COORD.DEVICE_STATUS.ACTIVE);
-    //mvwprintw(winRadioStatus, 0, 3, "C%d", sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED);
-    //mvwprintw(winRadioStatus, 0, 6, "B%d", sdSysData.RADIO_COORD.LAST_READ_BIND_COUNT);
 
     wrefresh(winRadioStatus);
     
@@ -1380,17 +1384,27 @@ void Screen3::manyradio(system_data &sdSysData, ScreenStatus &ScrStat)
 void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
 {
-  // Print ADS_B Information
+  // Print ADS_B Buttons
   bzADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
 
-  if(tbads_b_Data.PROP.CHANGED == true || ScrStat.Needs_Refresh == true)
+  ADSB_Grid.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+
+  if(ScrStat.Needs_Refresh == true)
   {
-    // Print Log File
-    tbads_b_Data.draw(ScrStat.Needs_Refresh);
+    /*
+    Default_ADS_B.update_value("Data", sdSysData.tmeCURRENT_FRAME_TIME);
+
+    Default_ADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+    */
+    // Refresh Screen
+    //wrefresh(winADS_B_Screen);
 
     // Print Title
     tiADS_B_Screen.draw(true);
   }
+
+  
+    
 }
 
 // ---------------------------------------------------------------------------------------
