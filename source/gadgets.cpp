@@ -91,13 +91,53 @@ void Title_Bar::draw(bool Refresh)
 // -------------------------------------------------------------------------------------
 //  Text_Field Classes
 
+bool Text_Field::changed()
+// Returns true if any of the properties have changed.
+{
+  return CHANGED;
+}
+
+bool Text_Field::has_blank()
+// Returns true if any of the properties have changed.
+{
+  return HAS_BLANK;
+}
+
 void Text_Field::set_text(string Text)
 {
   if (Text != PROP.LABEL)
   {
-    PROP.LABEL = Text;
-    PROP.CHANGED = true;
+    if (PROP.DONT_BLANK == true && Text  == "")
+    {
+      HAS_BLANK = true;
+    }
+    else
+    {
+      PROP.LABEL = Text;
+      HAS_BLANK = false;
+      CHANGED = true;
+    }
   }
+}
+
+void Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
+{
+  if (PROP.UPDATE_INDICATION == true)
+  {
+    UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, 250);
+  }
+
+  set_text(Text);
+}
+
+void Text_Field::clear()
+{
+  Text_Field_Properties cleared_properties;
+
+  //PROP = cleared_properties;
+
+  PROP.LABEL = "";
+  CHANGED = true;
 }
 
 void Text_Field::set_color(int Background_Color, int Color)
@@ -106,13 +146,13 @@ void Text_Field::set_color(int Background_Color, int Color)
   {
     PROP.BCOLOR = Background_Color;
     PROP.COLOR  = Color;
-    PROP.CHANGED = true;
+    CHANGED = true;
   }
 }
 
-void Text_Field::draw(WINDOW *Window, bool Refresh)
+void Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
 {
-  if (PROP.CHANGED == true || Refresh == true)
+  if (CHANGED == true || Refresh == true || (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time)))
   {
     // Check for Reverse Text
     if (PROP.REVERSE == true)
@@ -147,8 +187,19 @@ void Text_Field::draw(WINDOW *Window, bool Refresh)
     }
     else  // Print Simple Text
     {
+      if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_visible(tmeFrame_Time) == true)
+      {
+        wattron(Window, A_REVERSE);
+      }
+
       mvwprintw(Window, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line.
-      PROP.CHANGED = false;
+
+      if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_visible(tmeFrame_Time) == true)
+      {
+        wattroff(Window, A_REVERSE);
+      }
+
+      CHANGED = false;
     }
 
     // Check for Colored Text
@@ -163,6 +214,11 @@ void Text_Field::draw(WINDOW *Window, bool Refresh)
       wattroff(Window, A_REVERSE);
     }
   }
+}
+  
+void Text_Field::draw(WINDOW *Window, bool Refresh)
+{
+  draw(Window, Refresh, 0);
 }
 
 // -------------------------------------------------------------------------------------

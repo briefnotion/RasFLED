@@ -127,6 +127,8 @@ class STRING_FLOAT
 
   float get_float_value();
 
+  int get_int_value();
+
   bool conversion_success();
 };
 

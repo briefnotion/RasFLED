@@ -711,6 +711,94 @@ void ADS_B_List_Box::update(system_data &sdSysData)
 // -------------------------------------------------------------------------------------
 //  ADSB_Channel Classes
 
+string ADSB_Channel::compass_mini_top(float Heading)
+{
+  string return_str = ""; 
+
+  if ((Heading >= 337.5 && Heading <= 360) || (Heading >= 0 && Heading < 22.5))
+  {
+    return_str = " | ";
+  }
+  else if (Heading >= 22.5 && Heading < 67.5)
+  {
+    return_str = "  /";
+  }
+  else if (Heading >= 67.5 && Heading < 112.5)
+  {
+    return_str = "  _";
+  }
+  else if (Heading >= 112.5 && Heading < 157.5)
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 157.5 && Heading < 202.5)
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 202.5 && Heading < 247.5)
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 247.5 && Heading < 292.5)
+  {
+    return_str = "_  ";
+  }
+  else if (Heading >= 292.5 && Heading < 337.5)
+  {
+    return_str = "\\  ";
+  }
+  else
+    {
+    return_str = "XX";
+  }
+
+  return return_str;
+}
+
+string ADSB_Channel::compass_mini_bottom(float Heading)
+{
+  string return_str = ""; 
+
+  if ((Heading >= 337.5 && Heading <= 360) || (Heading >= 0 && Heading < 22.5))
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 22.5 && Heading < 67.5)
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 67.5 && Heading < 112.5)
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 112.5 && Heading < 157.5)
+  {
+    return_str = "  \\";
+  }
+  else if (Heading >= 157.5 && Heading < 202.5)
+  {
+    return_str = " | ";
+  }
+  else if (Heading >= 202.5 && Heading < 247.5)
+  {
+    return_str = "/  ";
+  }
+  else if (Heading >= 247.5 && Heading < 292.5)
+  {
+    return_str = "   ";
+  }
+  else if (Heading >= 292.5 && Heading < 337.5)
+  {
+    return_str = "   ";
+  }
+  else
+    {
+    return_str = "XX";
+  }
+
+  return return_str;
+}
+
 void ADSB_Channel::create()
 // Define and behavior.  
 // Like set but leaves off position and size details.
@@ -740,6 +828,7 @@ void ADSB_Channel::create()
   FLIGHT.PROP.COLOR = COLOR_BLACK;
   FLIGHT.PROP.BCOLOR = COLOR_BLACK;
   FLIGHT.PROP.SIZEX = 8;
+  FLIGHT.PROP.DONT_BLANK = true;
   FLIGHT.PROP.JUSTIFICATION_LEFT = true;
 
   // Squawk
@@ -749,13 +838,16 @@ void ADSB_Channel::create()
   SQUAWK.PROP.COLOR = COLOR_BLACK;
   SQUAWK.PROP.BCOLOR = COLOR_BLACK;
   SQUAWK.PROP.SIZEX = 4;
+  SQUAWK.PROP.DONT_BLANK = true;
   SQUAWK.PROP.JUSTIFICATION_RIGHT = true;
 
   // Altitude
   ALTITUDE.PROP.POSY = 1;
   ALTITUDE.PROP.POSX = 8;
   ALTITUDE.PROP.SIZEX = 6;
+  ALTITUDE.PROP.DONT_BLANK = true;
   ALTITUDE.PROP.JUSTIFICATION_RIGHT = true;
+  //ALTITUDE.PROP.UPDATE_INDICATION = true;
 
   // Altitude Indicator
   ALTITUDE_IND.PROP.POSY = 1;
@@ -764,6 +856,7 @@ void ADSB_Channel::create()
   ALTITUDE_IND.PROP.COLOR = COLOR_BLACK;
   ALTITUDE_IND.PROP.BCOLOR = COLOR_BLACK;
   ALTITUDE_IND.PROP.SIZEX = 1;
+  ALTITUDE_IND.PROP.DONT_BLANK = true;
   ALTITUDE_IND.PROP.JUSTIFICATION_LEFT = true;
 
   // Altitude Nav
@@ -774,12 +867,14 @@ void ADSB_Channel::create()
   NAV_ALTITUDE_MCP.PROP.COLOR = COLOR_BLUE;
   NAV_ALTITUDE_MCP.PROP.BCOLOR = COLOR_BLACK;
   NAV_ALTITUDE_MCP.PROP.SIZEX = 6;
+  NAV_ALTITUDE_MCP.PROP.DONT_BLANK = true;
   NAV_ALTITUDE_MCP.PROP.JUSTIFICATION_RIGHT = true;
 
   // Vertical Rate
   D_VERTICAL_RATE.PROP.POSY = 3;
   D_VERTICAL_RATE.PROP.POSX = 8;
   D_VERTICAL_RATE.PROP.SIZEX = 6;
+  D_VERTICAL_RATE.PROP.DONT_BLANK = true;
   D_VERTICAL_RATE.PROP.JUSTIFICATION_RIGHT = true;
 
   // Vertical Rate Indicator
@@ -789,12 +884,14 @@ void ADSB_Channel::create()
   D_VERTICAL_RATE_IND.PROP.COLOR = COLOR_BLACK;
   D_VERTICAL_RATE_IND.PROP.BCOLOR = COLOR_BLACK;
   D_VERTICAL_RATE_IND.PROP.SIZEX = 1;
+  D_VERTICAL_RATE_IND.PROP.DONT_BLANK = true;
   D_VERTICAL_RATE_IND.PROP.JUSTIFICATION_LEFT = true;
 
   // Speed
   SPEED.PROP.POSY = 1;
   SPEED.PROP.POSX = 1;
   SPEED.PROP.SIZEX = 5;
+  SPEED.PROP.DONT_BLANK = true;
   SPEED.PROP.JUSTIFICATION_LEFT = true;
 
   // Speed Indicator
@@ -804,23 +901,60 @@ void ADSB_Channel::create()
   SPEED_IND.PROP.COLOR = COLOR_BLACK;
   SPEED_IND.PROP.BCOLOR = COLOR_BLACK;
   SPEED_IND.PROP.SIZEX = 1;
+  SPEED_IND.PROP.DONT_BLANK = true;
   SPEED_IND.PROP.JUSTIFICATION_LEFT = true;
 
   // Track
-  TRACK.PROP.POSY = 4;
-  TRACK.PROP.POSX = 2;
-  TRACK.PROP.SIZEX = 5;
-  TRACK.PROP.JUSTIFICATION_CENTER = true;
+  TRACK.PROP.POSY = 3;
+  TRACK.PROP.POSX = 1;
+  TRACK.PROP.SIZEX = 3;
+  TRACK.PROP.DONT_BLANK = true;
+  TRACK.PROP.JUSTIFICATION_RIGHT = true;
+
+  // Track Mini Compass
+  TRACK_MINI_COMPASS_TOP.PROP.POSY = 4;
+  TRACK_MINI_COMPASS_TOP.PROP.POSX = 1;
+  TRACK_MINI_COMPASS_TOP.PROP.SIZEX = 3;
+  TRACK_MINI_COMPASS_TOP.PROP.COLOR = COLOR_BLACK;
+  TRACK_MINI_COMPASS_TOP.PROP.BCOLOR = COLOR_BLACK;
+  TRACK_MINI_COMPASS_TOP.PROP.COLORS_ON = true;
+  TRACK_MINI_COMPASS_TOP.PROP.JUSTIFICATION_LEFT = true;
+
+  TRACK_MINI_COMPASS_BOTTOM.PROP.POSY = 5;
+  TRACK_MINI_COMPASS_BOTTOM.PROP.POSX = 1;
+  TRACK_MINI_COMPASS_BOTTOM.PROP.SIZEX = 3;
+  TRACK_MINI_COMPASS_BOTTOM.PROP.COLOR = COLOR_BLACK;
+  TRACK_MINI_COMPASS_BOTTOM.PROP.BCOLOR = COLOR_BLACK;
+  TRACK_MINI_COMPASS_BOTTOM.PROP.COLORS_ON = true;
+  TRACK_MINI_COMPASS_BOTTOM.PROP.JUSTIFICATION_LEFT = true;
   
   // Track Nav
   //NAV_HEADING.PROP.LABEL = "navt";
-  NAV_HEADING.PROP.POSY = 4;
-  NAV_HEADING.PROP.POSX = 8;
+  NAV_HEADING.PROP.POSY = 3;
+  NAV_HEADING.PROP.POSX = 5;
   NAV_HEADING.PROP.COLORS_ON = true;
   NAV_HEADING.PROP.COLOR = COLOR_BLUE;
   NAV_HEADING.PROP.BCOLOR = COLOR_BLACK;
-  NAV_HEADING.PROP.SIZEX = 5;
-  NAV_HEADING.PROP.JUSTIFICATION_CENTER = true;
+  NAV_HEADING.PROP.SIZEX = 3;
+  NAV_HEADING.PROP.DONT_BLANK = true;
+  NAV_HEADING.PROP.JUSTIFICATION_LEFT = true;
+
+  // Track Nav Mini Compass
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.POSY = 4;
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.POSX = 5;
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.SIZEX = 3;
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.COLOR = COLOR_BLACK;
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.BCOLOR = COLOR_BLACK;
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.COLORS_ON = true;
+  NAV_HEADING_MINI_COMPASS_TOP.PROP.JUSTIFICATION_LEFT = true;
+
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.POSY = 5;
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.POSX = 5;
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.SIZEX = 3;
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.COLOR = COLOR_BLACK;
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.BCOLOR = COLOR_BLACK;
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.COLORS_ON = true;
+  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.JUSTIFICATION_LEFT = true;
 
   /*
   // Autopilot QNH Nav
@@ -842,6 +976,31 @@ void ADSB_Channel::create()
   PROP.CHANGED = true;
 }
 
+void ADSB_Channel::clear()
+{
+  // Clear Variables
+  ADSB_Channel_Properties cleared_properties;
+  PROP = cleared_properties;
+
+  // Reset Text Fields
+  FLIGHT.clear();
+  SQUAWK.clear();
+  ALTITUDE.clear();
+  NAV_ALTITUDE_MCP.clear();
+  D_VERTICAL_RATE.clear();
+  SPEED.clear();
+
+  TRACK.clear();
+  TRACK_MINI_COMPASS_TOP.clear();
+  TRACK_MINI_COMPASS_BOTTOM.clear();
+  
+  NAV_HEADING.clear();
+  NAV_HEADING_MINI_COMPASS_TOP.clear();
+  NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
+
+  //NAV_QNH.set_text(PROP.AIRCRAFT_DATA.NAV_QNH.get_str_value());
+}
+
 bool ADSB_Channel::changed()
 // Returns true if any of the properties have changed.
 {
@@ -851,18 +1010,45 @@ bool ADSB_Channel::changed()
 void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis)
 {
   // Start or Continue expiration timer
-  EXPIREED.ping_up(tmeCurrentMillis, 30000);
+  EXPIREED.ping_up(tmeCurrentMillis, 5000);
 
   PROP.AIRCRAFT_DATA = Aircraft;
 
   FLIGHT.set_text(PROP.AIRCRAFT_DATA.FLIGHT.get_str_value());
   SQUAWK.set_text(PROP.AIRCRAFT_DATA.SQUAWK.get_str_value());
+
   ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value());
+  //ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeCurrentMillis);
+
   NAV_ALTITUDE_MCP.set_text(PROP.AIRCRAFT_DATA.NAV_ALTITUDE_MCP.get_str_value());
   D_VERTICAL_RATE.set_text(PROP.AIRCRAFT_DATA.D_VERTICAL_RATE.get_str_value());
   SPEED.set_text(PROP.AIRCRAFT_DATA.SPEED.get_str_value());
-  TRACK.set_text(PROP.AIRCRAFT_DATA.TRACK.get_str_value());
-  NAV_HEADING.set_text(PROP.AIRCRAFT_DATA.NAV_HEADING.get_str_value());
+
+  if (PROP.AIRCRAFT_DATA.TRACK.conversion_success() == true)
+  {
+    TRACK.set_text(to_string(PROP.AIRCRAFT_DATA.TRACK.get_int_value()));
+    TRACK_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
+    TRACK_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
+  }
+  else
+  {
+    TRACK.set_text("");
+    TRACK_MINI_COMPASS_TOP.clear();
+    TRACK_MINI_COMPASS_BOTTOM.clear();
+  }
+
+  if (PROP.AIRCRAFT_DATA.NAV_HEADING.conversion_success() == true)
+  {
+    NAV_HEADING.set_text(to_string(PROP.AIRCRAFT_DATA.NAV_HEADING.get_int_value()));
+    NAV_HEADING_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
+    NAV_HEADING_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
+  }
+  else
+  {
+    NAV_HEADING_MINI_COMPASS_BOTTOM.set_text("");
+    NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
+    NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
+  }
   
   //NAV_QNH.set_text(PROP.AIRCRAFT_DATA.NAV_QNH.get_str_value());
 
@@ -879,9 +1065,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   if (EXPIREED.ping_down(tmeFrame_Time) == false)
   {
     // Clear all data and reset to start empty state.
-    ADSB_Channel_Properties cleared_properties;
-    PROP = cleared_properties;
-    update_aircraft(PROP.AIRCRAFT_DATA, tmeFrame_Time);
+    clear();
     Refresh = true;
   }
 
@@ -899,7 +1083,6 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       PROP.BCOLOR = COLOR_BLUE;
       PROP.COLOR = COLOR_BLACK;
-      MESSAGE.set_text("All Data Expired");
     }
     // If Position Found
     else if(PROP.AIRCRAFT_DATA.POSITION.LATITUDE.conversion_success() == true && 
@@ -917,6 +1100,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     
     wbkgd(winADSB, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
 
+    // Set Colors
     if (PROP.AIRCRAFT_DATA.data_count() > 0)
     {
       TOP_BAR.set_color(COLOR_WHITE, COLOR_BLACK);
@@ -936,7 +1120,19 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     }
     else
     {
-      ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "")
+      {
+          ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      }
+      else if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "ground")
+      {
+        ALTITUDE_IND.set_color(COLOR_RED, PROP.BCOLOR);
+        ALTITUDE.set_text("GROUND");
+      }
+      else
+      {
+        ALTITUDE_IND.set_color(COLOR_RED, PROP.BCOLOR);
+      }
     }
 
     if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
@@ -957,13 +1153,51 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       SPEED_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
     }
 
+    // Color Track Compass
+    if (PROP.AIRCRAFT_DATA.TRACK.conversion_success() == true)
+    {
+      TRACK_MINI_COMPASS_TOP.set_color(COLOR_BLUE, COLOR_WHITE);
+      TRACK_MINI_COMPASS_BOTTOM.set_color(COLOR_BLUE, COLOR_WHITE);
+    }
+    else
+    {
+      TRACK_MINI_COMPASS_TOP.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      TRACK_MINI_COMPASS_BOTTOM.set_color(PROP.BCOLOR, PROP.BCOLOR);
+    }
+
+    // Color Nav Compass
+    if (PROP.AIRCRAFT_DATA.NAV_HEADING.conversion_success() == true)
+    {
+      NAV_HEADING_MINI_COMPASS_TOP.set_color(COLOR_BLUE, COLOR_WHITE);
+      NAV_HEADING_MINI_COMPASS_BOTTOM.set_color(COLOR_BLUE, COLOR_WHITE);
+    }
+    else
+    {
+      NAV_HEADING_MINI_COMPASS_TOP.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      NAV_HEADING_MINI_COMPASS_BOTTOM.set_color(PROP.BCOLOR, PROP.BCOLOR);
+    }
+
+    // Write Additional Messages
+    if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
+    {
+      MESSAGE.set_text("All Data Expired");
+    }
+    else
+    {
+      MESSAGE.set_text("");
+    }
+
+    // Write Text Fields
     TOP_BAR.draw(winADSB, Refresh);
 
     FLIGHT.draw(winADSB, Refresh);
     SQUAWK.draw(winADSB, Refresh);
 
     ALTITUDE_IND.draw(winADSB, Refresh);
+    
     ALTITUDE.draw(winADSB, Refresh);
+    //ALTITUDE.draw(winADSB, Refresh, tmeFrame_Time);
+    
     NAV_ALTITUDE_MCP.set_color(PROP.BCOLOR, COLOR_BLUE);
     NAV_ALTITUDE_MCP.draw(winADSB, Refresh);
 
@@ -974,10 +1208,15 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     SPEED.draw(winADSB, Refresh);
 
     TRACK.draw(winADSB, Refresh);
+    TRACK_MINI_COMPASS_TOP.draw(winADSB, Refresh);
+    TRACK_MINI_COMPASS_BOTTOM.draw(winADSB, Refresh);
+
     NAV_HEADING.set_color(PROP.BCOLOR, COLOR_BLUE);
     NAV_HEADING.draw(winADSB, Refresh);
+    NAV_HEADING_MINI_COMPASS_TOP.draw(winADSB, Refresh);
+    NAV_HEADING_MINI_COMPASS_BOTTOM.draw(winADSB, Refresh);
 
-    MESSAGE.draw(winADSB, Refresh);
+    //MESSAGE.draw(winADSB, Refresh);
     
     //NAV_QNH.draw(winADSB, Refresh);
     
@@ -1008,6 +1247,19 @@ int ADSB_Channel_Grid::find_HEX(string Hex)
   for(int x=0; (x < ADSB_Channel_q.size()) && (return_int == -1); x++)
   {
     if(ADSB_Channel_q[x].PROP.AIRCRAFT_DATA.HEX.get_str_value() == Hex)
+    {
+      return_int = x;
+    }
+  }
+  return return_int;
+}
+
+int ADSB_Channel_Grid::find_expired()
+{
+  int return_int = -1;
+  for(int x=0; (x < ADSB_Channel_q.size()) && (return_int == -1); x++)
+  {
+    if(ADSB_Channel_q[x].PROP.AIRCRAFT_DATA.data_count() == 0)
     {
       return_int = x;
     }
@@ -1074,6 +1326,7 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
 {
   int pos_found = 0;
   int pos_avail = 0;
+  int pos_expired_avail = 0;
 
   // Get new list of Aircraft.
   PROP.AIRCRAFT_LIST = sdSysData.AIRCRAFT_COORD.DATA;
@@ -1095,7 +1348,18 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
       //if slot found
       if (pos_avail == -1)
       {
-        // no slot avail. just exit.
+        // search to put in empty position
+        pos_expired_avail = find_expired();
+
+        if (pos_expired_avail == -1)
+        {
+          // do nothing. nothing avail.
+        }
+        else
+        {
+          ADSB_Channel_q[pos_expired_avail].clear();
+          ADSB_Channel_q[pos_expired_avail].update_aircraft(PROP.AIRCRAFT_LIST.AIRCRAFTS[pos_search], tmeCurrentMillis);
+        }
       }
       else // slot found and pos avail.
       {

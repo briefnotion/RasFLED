@@ -97,11 +97,13 @@ class Text_Field_Properties
   //int SIZEY = 0;
   int SIZEX = 0;
 
-  bool CHANGED = false;
-
   bool JUSTIFICATION_LEFT = false;
   bool JUSTIFICATION_CENTER = false;
   bool JUSTIFICATION_RIGHT = false;
+
+  bool UPDATE_INDICATION = false;
+
+  bool DONT_BLANK = false;
 
   bool COLORS_ON = false;
   bool REVERSE = false;
@@ -111,14 +113,27 @@ class Text_Field_Properties
 class Text_Field
 {
   private:
-  TIMED_PING EXPIREED;
+  TIMED_PING UPDATE_INDICATION_TIMER;
+
+  bool CHANGED = false;
+  bool HAS_BLANK = false;
 
   public:
   Text_Field_Properties PROP;
 
+  bool changed();
+
+  bool has_blank();
+
   void set_text(string Text);
 
+  void set_text(string Text, unsigned long tmeFrame_Time);
+  
+  void clear();
+
   void set_color(int Background_Color, int Color);
+
+  void draw(WINDOW *window, bool Refresh, unsigned long tmeFrame_Time);
 
   void draw(WINDOW *window, bool Refresh);
 };

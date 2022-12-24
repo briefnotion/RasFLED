@@ -177,6 +177,10 @@ class ADSB_Channel
 
   TIMED_PING EXPIREED;
 
+  string compass_mini_top(float Heading);
+
+  string compass_mini_bottom(float Heading);
+
   //Debug
   int Counter = 0;
 
@@ -198,7 +202,12 @@ class ADSB_Channel
   Text_Field SPEED_IND;
 
   Text_Field TRACK;
+  Text_Field TRACK_MINI_COMPASS_TOP;
+  Text_Field TRACK_MINI_COMPASS_BOTTOM;
+  
   Text_Field NAV_HEADING;
+  Text_Field NAV_HEADING_MINI_COMPASS_TOP;
+  Text_Field NAV_HEADING_MINI_COMPASS_BOTTOM;
 
   Text_Field MESSAGE;
   
@@ -207,6 +216,8 @@ class ADSB_Channel
   ADSB_Channel_Properties PROP;  
 
   void create();
+
+  void clear();
 
   bool changed();
 
@@ -250,6 +261,8 @@ class ADSB_Channel_Grid
   int ADSB_Channel_Count = 0;
   
   int find_HEX(string Hex);
+
+  int find_expired();
 
   public:
 

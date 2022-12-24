@@ -425,6 +425,12 @@ float STRING_FLOAT::get_float_value()
   return FLOAT_VALUE;
 }
 
+int STRING_FLOAT::get_int_value()
+// Return converted number string value.
+{
+  return FLOAT_VALUE;
+}
+
 bool STRING_FLOAT::conversion_success()
 // Returns true if conversion was unsucessful.
 {
