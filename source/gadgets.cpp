@@ -91,6 +91,8 @@ void Title_Bar::draw(bool Refresh)
 // -------------------------------------------------------------------------------------
 //  Text_Field Classes
 
+
+
 bool Text_Field::changed()
 // Returns true if any of the properties have changed.
 {
@@ -103,7 +105,7 @@ bool Text_Field::has_blank()
   return HAS_BLANK;
 }
 
-void Text_Field::set_text(string Text)
+void Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
 {
   if (Text != PROP.LABEL)
   {
@@ -116,18 +118,18 @@ void Text_Field::set_text(string Text)
       PROP.LABEL = Text;
       HAS_BLANK = false;
       CHANGED = true;
+      
+      if (PROP.UPDATE_INDICATION == true)
+      {
+        UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, INDICATED_BLINK_TIME);
+      }
     }
   }
 }
 
-void Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
+void Text_Field::set_text(string Text)
 {
-  if (PROP.UPDATE_INDICATION == true)
-  {
-    UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, 250);
-  }
-
-  set_text(Text);
+  set_text(Text, 0);
 }
 
 void Text_Field::clear()
@@ -150,9 +152,14 @@ void Text_Field::set_color(int Background_Color, int Color)
   }
 }
 
-void Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
+bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
 {
-  if (CHANGED == true || Refresh == true || (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time)))
+  if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
+  {
+    Refresh = true;
+  }
+
+  if (CHANGED == true || Refresh == true)
   {
     // Check for Reverse Text
     if (PROP.REVERSE == true)
@@ -164,6 +171,13 @@ void Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.COLORS_ON == true)
     {
       wattron(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    }
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattron(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      //wattron(Window, A_REVERSE);
     }
 
     // Check for Text Modification
@@ -187,19 +201,14 @@ void Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     }
     else  // Print Simple Text
     {
-      if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_visible(tmeFrame_Time) == true)
-      {
-        wattron(Window, A_REVERSE);
-      }
+      mvwprintw(Window, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line. 
+    }
 
-      mvwprintw(Window, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line.
-
-      if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_visible(tmeFrame_Time) == true)
-      {
-        wattroff(Window, A_REVERSE);
-      }
-
-      CHANGED = false;
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattroff(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      //wattroff(Window, A_REVERSE);
     }
 
     // Check for Colored Text
@@ -213,12 +222,24 @@ void Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     {
       wattroff(Window, A_REVERSE);
     }
+
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(Window, PROP.POSY, PROP.POSX, "%d ", Counter);
+    }
+
+    CHANGED = false;
+
   }
+
+  return Refresh;
 }
   
-void Text_Field::draw(WINDOW *Window, bool Refresh)
+bool Text_Field::draw(WINDOW *Window, bool Refresh)
 {
-  draw(Window, Refresh, 0);
+  return draw(Window, Refresh, 0);
 }
 
 // -------------------------------------------------------------------------------------

@@ -201,6 +201,26 @@ class EFFICIANTCY_TIMER
 
   double elapsed_time(double dblCurrent_Time);
 };
+// ---------------------------------------------------------------------------------------
+
+class TRUTH_CATCH
+// Simple Variable to track if a TRUE value has entered.
+{
+  private:
+
+  bool HAS_TRUTH = false;
+
+  public:
+
+  void catch_truth(bool Value);
+  // Sets HAS_TRUTH = true if Value is true.
+
+  bool has_truth();
+  // Returns true a true value was caught in the catch truth routine.
+  //  Resets HAS_TRUTH = false after called.
+  // Returns if all catch_truths were false.
+};
+
 
 
 

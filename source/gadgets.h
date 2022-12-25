@@ -118,6 +118,11 @@ class Text_Field
   bool CHANGED = false;
   bool HAS_BLANK = false;
 
+  int INDICATED_BLINK_TIME = 250;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
   public:
   Text_Field_Properties PROP;
 
@@ -125,17 +130,17 @@ class Text_Field
 
   bool has_blank();
 
-  void set_text(string Text);
-
   void set_text(string Text, unsigned long tmeFrame_Time);
+
+  void set_text(string Text);
   
   void clear();
 
   void set_color(int Background_Color, int Color);
 
-  void draw(WINDOW *window, bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(WINDOW *window, bool Refresh, unsigned long tmeFrame_Time);
 
-  void draw(WINDOW *window, bool Refresh);
+  bool draw(WINDOW *window, bool Refresh);
 };
 
 

@@ -205,8 +205,6 @@ void stupid_2d::clear()
 // ---------------------------------------------------------------------------------------
 // Hardware Monitor Class
 
-
-
   void hardware_monitor::set(bool booValue, unsigned long tmeCheckTime, int tmeLeeWay, bool isHardware)
   // Prepare the switch.
   {
@@ -344,8 +342,34 @@ void stupid_2d::clear()
     LAST_ASKED_TIME = dblCurrent_Time;
     return time_elapsed;
   }
+// ---------------------------------------------------------------------------------------
 
+  // Simple Variable to track if a TRUE value has entered.
 
+  void TRUTH_CATCH::catch_truth(bool Value)
+  // Sets HAS_TRUTH = true if Value is true.
+  {
+    if (Value == true)
+    {
+      HAS_TRUTH = true;
+    }
+  }
+
+  bool TRUTH_CATCH::has_truth()
+  // Returns true a true value was caught in the catch truth routine.
+  //  Resets HAS_TRUTH = false after called.
+  // Returns if all catch_truths were false.
+  {
+    if (HAS_TRUTH == true)
+    {
+      HAS_TRUTH = false;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES

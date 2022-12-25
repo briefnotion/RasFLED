@@ -152,8 +152,8 @@ class ADSB_Channel_Properties
   
   int POSY = 0;
   int POSX = 0;
-  int SIZEY = 6;
-  int SIZEX = 15;
+  int SIZEY = 5;
+  int SIZEX = 21;
 
   bool CHANGED = true;
 
@@ -175,6 +175,7 @@ class ADSB_Channel
   // Was gadget redrawn during the previous draw cycle.
   bool WAS_REDRAWN = false;
 
+  int EXPIRATION_TIME = 15000;
   TIMED_PING EXPIREED;
 
   string compass_mini_top(float Heading);
