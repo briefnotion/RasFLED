@@ -34,6 +34,7 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  ADS-B Classes
 
+/*
 class ADS_B_List_Box_Properties
 // Properties (duh)
 {
@@ -133,7 +134,7 @@ class ADS_B_List_Box
 
   void update(system_data &sdSysData);
 };
-
+*/
 
 
 // -------------------------------------------------------------------------------------
@@ -187,7 +188,7 @@ class ADSB_Channel
 
   public:
   // Text Fields  
-  Text_Field TOP_BAR;
+  //Text_Field TOP_BAR;
   
   Text_Field FLIGHT;
   Text_Field SQUAWK;
@@ -209,6 +210,10 @@ class ADSB_Channel
   Text_Field NAV_HEADING;
   Text_Field NAV_HEADING_MINI_COMPASS_TOP;
   Text_Field NAV_HEADING_MINI_COMPASS_BOTTOM;
+
+  Text_Field SIG_STR_IND;
+  Text_Field COORD_TTL_IND;
+  Text_Field DATA_TTL_IND;
 
   Text_Field MESSAGE;
   
@@ -265,6 +270,13 @@ class ADSB_Channel_Grid
 
   int find_expired();
 
+  Text_Field TOP_BAR;
+  Text_Field TIME;
+  Text_Field AIRCRAFT_COUNT_TITLE;
+  Text_Field AIRCRAFT_COUNT;
+  Text_Field POSITIONED_AIRCRAFT_TITLE;
+  Text_Field POSITIONED_AIRCRAFT;
+
   public:
 
   ADSB_Channel_Grid_Properties PROP;  
@@ -275,7 +287,7 @@ class ADSB_Channel_Grid
 
   void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
+  void draw(bool Refresh, unsigned long tmeFrame_Time, WINDOW *ADSB_Window);
 };
 
 // -------------------------------------------------------------------------------------

@@ -14,6 +14,7 @@
 // -------------------------------------------------------------------------------------
 //  ADS-B Classes
 
+/*
 int ADS_B_List_Box::get_first_empty_pos()
 {
   int return_int = -1;
@@ -706,7 +707,7 @@ void ADS_B_List_Box::update(system_data &sdSysData)
 
   PROP.CHANGED = true;
 }
-
+*/
 
 // -------------------------------------------------------------------------------------
 //  ADSB_Channel Classes
@@ -812,33 +813,24 @@ void ADSB_Channel::create()
 
   // Create Text Fields
 
-  // Top Bar
-  TOP_BAR.PROP.POSY = 0;
-  TOP_BAR.PROP.POSX = 0;
-  TOP_BAR.PROP.COLORS_ON = true;
-  TOP_BAR.PROP.COLOR = COLOR_BLACK;
-  TOP_BAR.PROP.BCOLOR = COLOR_BLACK;
-  TOP_BAR.PROP.SIZEX = PROP.SIZEX;
-  TOP_BAR.PROP.JUSTIFICATION_LEFT = true;
-
   // Flight
   FLIGHT.PROP.POSY = 0;
-  FLIGHT.PROP.POSX = 1;
+  FLIGHT.PROP.POSX = 0;
   FLIGHT.PROP.COLORS_ON = true;
   FLIGHT.PROP.COLOR = COLOR_BLACK;
   FLIGHT.PROP.BCOLOR = COLOR_BLACK;
-  FLIGHT.PROP.SIZEX = 8;
+  FLIGHT.PROP.SIZEX = 9;
   FLIGHT.PROP.DONT_BLANK = true;
   FLIGHT.PROP.JUSTIFICATION_LEFT = true;
   FLIGHT.PROP.UPDATE_INDICATION = true;
 
   // Squawk
   SQUAWK.PROP.POSY = 0;
-  SQUAWK.PROP.POSX = 16;
+  SQUAWK.PROP.POSX = 15;
   SQUAWK.PROP.COLORS_ON = true;
   SQUAWK.PROP.COLOR = COLOR_BLACK;
   SQUAWK.PROP.BCOLOR = COLOR_BLACK;
-  SQUAWK.PROP.SIZEX = 4;
+  SQUAWK.PROP.SIZEX = 6;
   SQUAWK.PROP.DONT_BLANK = true;
   SQUAWK.PROP.JUSTIFICATION_RIGHT = true;
   SQUAWK.PROP.UPDATE_INDICATION = true;
@@ -972,39 +964,37 @@ void ADSB_Channel::create()
   NAV_QNH.PROP.JUSTIFICATION_LEFT = true;
   */
 
-  /*
-  // Signal Strenght Indicator
-  SIG_STR_IND.PROP.POSY = 1;
-  SIG_STR_IND.PROP.POSX = 12;
-  SIG_STR_IND.PROP.COLORS_ON = true;
-  SIG_STR_IND.PROP.COLOR = COLOR_BLACK;
-  SIG_STR_IND.PROP.BCOLOR = COLOR_BLACK;
-  SIG_STR_IND.PROP.SIZEX = 1;
-  SIG_STR_IND.PROP.DONT_BLANK = true;
-  SIG_STR_IND.PROP.JUSTIFICATION_LEFT = true;
-
   // Coordinate Data TTL Indicator
-  COORD_TTL_IND.PROP.POSY = 1;
-  COORD_TTL_IND.PROP.POSX = 12;
+  COORD_TTL_IND.PROP.POSY = 0;
+  COORD_TTL_IND.PROP.POSX = 9;
   COORD_TTL_IND.PROP.COLORS_ON = true;
   COORD_TTL_IND.PROP.COLOR = COLOR_BLACK;
   COORD_TTL_IND.PROP.BCOLOR = COLOR_BLACK;
-  COORD_TTL_IND.PROP.SIZEX = 1;
+  COORD_TTL_IND.PROP.SIZEX = 2;
   COORD_TTL_IND.PROP.DONT_BLANK = true;
   COORD_TTL_IND.PROP.JUSTIFICATION_LEFT = true;
 
   // Aircraft Data TTL Indicator
-  DATA_TTL_IND.PROP.POSY = 1;
-  DATA_TTL_IND.PROP.POSX = 12;
+  DATA_TTL_IND.PROP.POSY = 0;
+  DATA_TTL_IND.PROP.POSX = 11;
   DATA_TTL_IND.PROP.COLORS_ON = true;
   DATA_TTL_IND.PROP.COLOR = COLOR_BLACK;
   DATA_TTL_IND.PROP.BCOLOR = COLOR_BLACK;
-  DATA_TTL_IND.PROP.SIZEX = 1;
+  DATA_TTL_IND.PROP.SIZEX = 2;
   DATA_TTL_IND.PROP.DONT_BLANK = true;
   DATA_TTL_IND.PROP.JUSTIFICATION_LEFT = true;
-  */
 
-  // Track
+    // Signal Strenght Indicator
+  SIG_STR_IND.PROP.POSY = 0;
+  SIG_STR_IND.PROP.POSX = 13;
+  SIG_STR_IND.PROP.COLORS_ON = true;
+  SIG_STR_IND.PROP.COLOR = COLOR_BLACK;
+  SIG_STR_IND.PROP.BCOLOR = COLOR_BLACK;
+  SIG_STR_IND.PROP.SIZEX = 2;
+  SIG_STR_IND.PROP.DONT_BLANK = true;
+  SIG_STR_IND.PROP.JUSTIFICATION_LEFT = true;
+
+  // Message
   MESSAGE.PROP.POSY = PROP.SIZEY - 1;
   MESSAGE.PROP.POSX = 1;
   MESSAGE.PROP.SIZEX = PROP.SIZEX - 2;
@@ -1037,6 +1027,15 @@ void ADSB_Channel::clear()
   NAV_HEADING_MINI_COMPASS_TOP.clear();
   NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
 
+  SIG_STR_IND.set_color(COLOR_BLACK, COLOR_BLACK);
+  SIG_STR_IND.clear();
+
+  COORD_TTL_IND.set_color(COLOR_BLACK, COLOR_BLACK);
+  COORD_TTL_IND.clear();
+  
+  DATA_TTL_IND.set_color(COLOR_BLACK, COLOR_BLACK);
+  DATA_TTL_IND.clear();
+
   //NAV_QNH.set_text(PROP.AIRCRAFT_DATA.NAV_QNH.get_str_value());
 }
 
@@ -1052,44 +1051,6 @@ void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentM
   EXPIREED.ping_up(tmeCurrentMillis, EXPIRATION_TIME);
 
   PROP.AIRCRAFT_DATA = Aircraft;
-
-  FLIGHT.set_text(PROP.AIRCRAFT_DATA.FLIGHT.get_str_value(), tmeCurrentMillis);
-  SQUAWK.set_text(PROP.AIRCRAFT_DATA.SQUAWK.get_str_value(), tmeCurrentMillis);
-
-  //ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value());
-  ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeCurrentMillis);
-
-  NAV_ALTITUDE_MCP.set_text(PROP.AIRCRAFT_DATA.NAV_ALTITUDE_MCP.get_str_value(), tmeCurrentMillis);
-  D_VERTICAL_RATE.set_text(PROP.AIRCRAFT_DATA.D_VERTICAL_RATE.get_str_value(), tmeCurrentMillis);
-  SPEED.set_text(PROP.AIRCRAFT_DATA.SPEED.get_str_value(), tmeCurrentMillis);
-
-  if (PROP.AIRCRAFT_DATA.TRACK.conversion_success() == true)
-  {
-    TRACK.set_text(to_string(PROP.AIRCRAFT_DATA.TRACK.get_int_value()), tmeCurrentMillis);
-    TRACK_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
-    TRACK_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
-  }
-  else
-  {
-    TRACK.set_text("");
-    TRACK_MINI_COMPASS_TOP.clear();
-    TRACK_MINI_COMPASS_BOTTOM.clear();
-  }
-
-  if (PROP.AIRCRAFT_DATA.NAV_HEADING.conversion_success() == true)
-  {
-    NAV_HEADING.set_text(to_string(PROP.AIRCRAFT_DATA.NAV_HEADING.get_int_value()), tmeCurrentMillis);
-    NAV_HEADING_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
-    NAV_HEADING_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
-  }
-  else
-  {
-    NAV_HEADING_MINI_COMPASS_BOTTOM.set_text("");
-    NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
-    NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
-  }
-  
-  //NAV_QNH.set_text(PROP.AIRCRAFT_DATA.NAV_QNH.get_str_value());
 
   PROP.CHANGED = true;
 }
@@ -1162,41 +1123,53 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     
     wbkgd(winADSB, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
 
-    // Set Colors
+    // Set Colors and Text
+
+    // Flight and Squawk
     if (PROP.AIRCRAFT_DATA.data_count() > 0)
     {
-      TOP_BAR.set_color(COLOR_WHITE, COLOR_BLACK);
+      //TOP_BAR.set_color(COLOR_WHITE, COLOR_BLACK);
       FLIGHT.set_color(COLOR_WHITE, COLOR_BLACK);
       SQUAWK.set_color(COLOR_WHITE, COLOR_BLACK);
     }
     else
     {
-      TOP_BAR.set_color(COLOR_BLACK, COLOR_BLACK);
+      //TOP_BAR.set_color(COLOR_BLACK, COLOR_BLACK);
       FLIGHT.set_color(COLOR_BLACK, COLOR_BLACK);
       SQUAWK.set_color(COLOR_BLACK, COLOR_BLACK);
     }
 
+    FLIGHT.set_text(PROP.AIRCRAFT_DATA.FLIGHT.get_str_value(), tmeFrame_Time);
+    SQUAWK.set_text(PROP.AIRCRAFT_DATA.SQUAWK.get_str_value(), tmeFrame_Time);
+
+    //Altitude and Altitude Inicator
     if (PROP.AIRCRAFT_DATA.ALTITUDE.conversion_success()==true)
     {
+      // Aircraft Altitude data ok
       ALTITUDE_IND.set_color(color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000), ALTITUDE_IND.PROP.COLOR);
+      ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
     }
     else
     {
-      if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "")
-      {
-          ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
-      }
-      else if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "ground")
+      if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "ground")
+      // Aircraft Altitude data says on ground
       {
         ALTITUDE_IND.set_color(COLOR_RED, PROP.BCOLOR);
         ALTITUDE.set_text("GROUND");
       }
       else
       {
-        ALTITUDE_IND.set_color(COLOR_RED, PROP.BCOLOR);
+        // Aircraft Altitude data unknown
+        ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+        ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
       }
     }
 
+    // Aircraft Nav Altitude
+    NAV_ALTITUDE_MCP.set_color(PROP.BCOLOR, COLOR_BLUE);
+    NAV_ALTITUDE_MCP.set_text(PROP.AIRCRAFT_DATA.NAV_ALTITUDE_MCP.get_str_value(), tmeFrame_Time);
+    
+    // Aircraft Vertical Rate and Vertical Rate Indicator
     if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
     {
       D_VERTICAL_RATE_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10), D_VERTICAL_RATE_IND.PROP.COLOR);
@@ -1205,8 +1178,11 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       D_VERTICAL_RATE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
     }
+    
+    D_VERTICAL_RATE.set_text(PROP.AIRCRAFT_DATA.D_VERTICAL_RATE.get_str_value(), tmeFrame_Time);
 
-    if (PROP.AIRCRAFT_DATA.ALTITUDE.conversion_success()==true)
+    // Aircraft Speed and Speed Indicator
+    if (PROP.AIRCRAFT_DATA.SPEED.conversion_success()==true)
     {
       SPEED_IND.set_color(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600), SPEED_IND.PROP.COLOR);
     }
@@ -1215,28 +1191,82 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       SPEED_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
     }
 
-    // Color Track Compass
+    SPEED.set_text(PROP.AIRCRAFT_DATA.SPEED.get_str_value(), tmeFrame_Time);
+
+    // Aircraft Track and Compass Track
     if (PROP.AIRCRAFT_DATA.TRACK.conversion_success() == true)
     {
       TRACK_MINI_COMPASS_TOP.set_color(COLOR_BLUE, COLOR_WHITE);
       TRACK_MINI_COMPASS_BOTTOM.set_color(COLOR_BLUE, COLOR_WHITE);
+
+      TRACK_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
+      TRACK_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
+
+      TRACK.set_text(to_string(PROP.AIRCRAFT_DATA.TRACK.get_int_value()), tmeFrame_Time);
     }
     else
     {
       TRACK_MINI_COMPASS_TOP.set_color(PROP.BCOLOR, PROP.BCOLOR);
       TRACK_MINI_COMPASS_BOTTOM.set_color(PROP.BCOLOR, PROP.BCOLOR);
+
+      TRACK_MINI_COMPASS_TOP.clear();
+      TRACK_MINI_COMPASS_BOTTOM.clear();
+
+      TRACK.set_text("");
     }
 
-    // Color Nav Compass
+    // Aircraft NAV Track and Compass NAV Track
+    NAV_HEADING.set_color(PROP.BCOLOR, COLOR_BLUE);
     if (PROP.AIRCRAFT_DATA.NAV_HEADING.conversion_success() == true)
     {
       NAV_HEADING_MINI_COMPASS_TOP.set_color(COLOR_BLUE, COLOR_WHITE);
       NAV_HEADING_MINI_COMPASS_BOTTOM.set_color(COLOR_BLUE, COLOR_WHITE);
+      
+      NAV_HEADING_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
+      NAV_HEADING_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
+
+      NAV_HEADING.set_text(to_string(PROP.AIRCRAFT_DATA.NAV_HEADING.get_int_value()), tmeFrame_Time);
     }
     else
     {
       NAV_HEADING_MINI_COMPASS_TOP.set_color(PROP.BCOLOR, PROP.BCOLOR);
       NAV_HEADING_MINI_COMPASS_BOTTOM.set_color(PROP.BCOLOR, PROP.BCOLOR);
+
+      NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
+      NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
+
+      NAV_HEADING.set_text("");
+    }
+
+    // Aircraft QNK Values
+    //NAV_QNH.set_text(PROP.AIRCRAFT_DATA.NAV_QNH.get_str_value());
+
+    if (PROP.AIRCRAFT_DATA.data_count() > 0)
+
+    {
+      // Aircraft Geo Coordinates TTL
+      if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
+      {
+        COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 70, 0, 0), PROP.BCOLOR);
+      }
+
+      // Aircraft Data TTL
+      if (PROP.AIRCRAFT_DATA.SEEN.conversion_success()==true)
+      {
+        DATA_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 150, 290, 0, 0), PROP.BCOLOR);
+      }
+
+      // Aircraft RSSI Strength
+      if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
+      {
+        SIG_STR_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36), PROP.BCOLOR);
+      }
+    }
+    else
+    {
+      COORD_TTL_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      DATA_TTL_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      SIG_STR_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
     }
 
     // Screen needs to be redrawn.
@@ -1245,7 +1275,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 
 
   // Write All text fields.
-  redraw_screen.catch_truth(TOP_BAR.draw(winADSB, Refresh));
+  //redraw_screen.catch_truth(TOP_BAR.draw(winADSB, Refresh));
 
   redraw_screen.catch_truth(FLIGHT.draw(winADSB, Refresh, tmeFrame_Time));
   redraw_screen.catch_truth(SQUAWK.draw(winADSB, Refresh, tmeFrame_Time));
@@ -1254,7 +1284,6 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   
   redraw_screen.catch_truth(ALTITUDE.draw(winADSB, Refresh, tmeFrame_Time));
   
-  NAV_ALTITUDE_MCP.set_color(PROP.BCOLOR, COLOR_BLUE);
   redraw_screen.catch_truth(NAV_ALTITUDE_MCP.draw(winADSB, Refresh, tmeFrame_Time));
 
   redraw_screen.catch_truth(D_VERTICAL_RATE_IND.draw(winADSB, Refresh));
@@ -1267,10 +1296,13 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   redraw_screen.catch_truth(TRACK_MINI_COMPASS_TOP.draw(winADSB, Refresh));
   redraw_screen.catch_truth(TRACK_MINI_COMPASS_BOTTOM.draw(winADSB, Refresh));
 
-  NAV_HEADING.set_color(PROP.BCOLOR, COLOR_BLUE);
   redraw_screen.catch_truth(NAV_HEADING.draw(winADSB, Refresh, tmeFrame_Time));
   redraw_screen.catch_truth(NAV_HEADING_MINI_COMPASS_TOP.draw(winADSB, Refresh));
   redraw_screen.catch_truth(NAV_HEADING_MINI_COMPASS_BOTTOM.draw(winADSB, Refresh));
+
+  redraw_screen.catch_truth(SIG_STR_IND.draw(winADSB, Refresh, tmeFrame_Time));
+  redraw_screen.catch_truth(COORD_TTL_IND.draw(winADSB, Refresh, tmeFrame_Time));
+  redraw_screen.catch_truth(DATA_TTL_IND.draw(winADSB, Refresh, tmeFrame_Time));
 
   MESSAGE.draw(winADSB, Refresh);
   
@@ -1329,12 +1361,57 @@ void ADSB_Channel_Grid::create()
 {
   ADSB_Channel Default_ADS_B; // Default ADSB Gadget.
   
+  // Create Title Bar
+  TOP_BAR.PROP.POSX = 0;
+  TOP_BAR.PROP.POSY = 0;
+  TOP_BAR.PROP.SIZEX = PROP.SIZEX;
+  TOP_BAR.PROP.COLORS_ON = true;
+  TOP_BAR.set_color(COLOR_BLUE, COLOR_WHITE);
+  TOP_BAR.PROP.JUSTIFICATION_LEFT = true;
+
+  TIME.PROP.POSX = 0;
+  TIME.PROP.POSY = 0;
+  TIME.PROP.SIZEX = 21;
+  TIME.PROP.COLORS_ON = true;
+  TIME.set_color(COLOR_BLUE, COLOR_WHITE);
+  TIME.PROP.JUSTIFICATION_LEFT = true;
+
+  AIRCRAFT_COUNT_TITLE.PROP.POSX = 27;
+  AIRCRAFT_COUNT_TITLE.PROP.POSY = 0;
+  AIRCRAFT_COUNT_TITLE.PROP.SIZEX = 9;
+  AIRCRAFT_COUNT_TITLE.PROP.COLORS_ON = true;
+  AIRCRAFT_COUNT_TITLE.set_color(COLOR_BLUE, COLOR_WHITE);
+  AIRCRAFT_COUNT_TITLE.PROP.JUSTIFICATION_LEFT = true;
+  AIRCRAFT_COUNT_TITLE.set_text("Aircraft:");
+
+  AIRCRAFT_COUNT.PROP.POSX = 37;
+  AIRCRAFT_COUNT.PROP.POSY = 0;
+  AIRCRAFT_COUNT.PROP.SIZEX = 4;
+  AIRCRAFT_COUNT.PROP.COLORS_ON = true;
+  AIRCRAFT_COUNT.set_color(COLOR_BLUE, COLOR_WHITE);
+  AIRCRAFT_COUNT.PROP.JUSTIFICATION_LEFT = true;
+
+  POSITIONED_AIRCRAFT_TITLE.PROP.POSX = 51;
+  POSITIONED_AIRCRAFT_TITLE.PROP.POSY = 0;
+  POSITIONED_AIRCRAFT_TITLE.PROP.SIZEX = 4;
+  POSITIONED_AIRCRAFT_TITLE.PROP.COLORS_ON = true;
+  POSITIONED_AIRCRAFT_TITLE.set_color(COLOR_BLUE, COLOR_WHITE);
+  POSITIONED_AIRCRAFT_TITLE.PROP.JUSTIFICATION_LEFT = true;
+  POSITIONED_AIRCRAFT_TITLE.set_text("Pos:");
+
+  POSITIONED_AIRCRAFT.PROP.POSX = 56;
+  POSITIONED_AIRCRAFT.PROP.POSY = 0;
+  POSITIONED_AIRCRAFT.PROP.SIZEX = 4;
+  POSITIONED_AIRCRAFT.PROP.COLORS_ON = true;
+  POSITIONED_AIRCRAFT.set_color(COLOR_BLUE, COLOR_WHITE);
+  POSITIONED_AIRCRAFT.PROP.JUSTIFICATION_LEFT = true;
+
   // Calculate size of ADS-B Channel Grid.
-  int x = (PROP.SIZEX + 1) / Default_ADS_B.PROP.SIZEX;
-  int y =  PROP.SIZEY      / Default_ADS_B.PROP.SIZEY;
+  int x = PROP.SIZEX / (Default_ADS_B.PROP.SIZEX + 1);
+  int y = (PROP.SIZEY - 1) /  Default_ADS_B.PROP.SIZEY;
 
   // Set number of Channels
-  int new_count = x * y;
+  int new_count = (x * y) -1; // Skip slot one so have one less avail
 
   // Create
   if (new_count > ADSB_Channel_Count)
@@ -1356,14 +1433,13 @@ void ADSB_Channel_Grid::create()
 
   ADSB_Channel_Count = new_count;
 
-
-  int yp = 0;
+  int yp = 1; //Skip slot 1
   int xp = 0;
   
   for (int pos = 0; pos < ADSB_Channel_Count; pos++)
   {
     ADSB_Channel_q[pos].PROP.POSX = PROP.POSX + (xp * Default_ADS_B.PROP.SIZEX) + (xp * 1);
-    ADSB_Channel_q[pos].PROP.POSY = PROP.POSY + (yp * Default_ADS_B.PROP.SIZEY);
+    ADSB_Channel_q[pos].PROP.POSY = 1 + (PROP.POSY + (yp * Default_ADS_B.PROP.SIZEY));  // Offsetting Title_Bar
 
     ADSB_Channel_q[pos].create();
 
@@ -1391,8 +1467,6 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
   IS_ACTIVE = sdSysData.AIRCRAFT_COORD.is_active();
 
   // Prepare list to display.
-  //sort_index();
-
   for (int pos_search = 0; pos_search < PROP.AIRCRAFT_LIST.AIRCRAFTS.size(); pos_search++)
   {
     //Search gadget list for existing item to update.
@@ -1430,21 +1504,18 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
     }
   }
 
-
   sdSysData.AIRCRAFT_COORD.DATA.CHANGED = false;
   PROP.NEEDS_REFRESH_DATA = false;
 }
 
-void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time)
+void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, WINDOW *ADSB_Screen)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
+  TRUTH_CATCH redraw_screen;
+
   for (int x = 0; x < ADSB_Channel_Count; x++)
   {
-    //int speed = string_to_int(ADSB_Channel_q[x].SPEED.PROP.LABEL);
-    //speed++;
-    //ADSB_Channel_q[x].update_value(to_string(x), to_string(ADSB_Channel_Count), "", "", "", "", tmeFrame_Time);
-    //ADSB_Channel_q[x].update_value("FLIGHTxx", "1234", "099.9", "180.1", "1234", "35000", tmeFrame_Time);
     ADSB_Channel_q[x].draw(Refresh, tmeFrame_Time);
   }
 
@@ -1461,9 +1532,34 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time)
     }
     */
 
+    redraw_screen.catch_truth(true);
+  }
+
+  TIME.set_text(                                         to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_year()) + 
+                  "-" + linemerge_right_justify(2, "00", to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_month())) + 
+                  "-" + linemerge_right_justify(2, "00", to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_day())) + 
+                  " " + linemerge_right_justify(2, "00", to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_hour())) + 
+                  ":" + linemerge_right_justify(2, "00", to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_minute())) + 
+                  ":" + linemerge_right_justify(2, "00", to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_second())) + 
+                  "." + to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_deciseconds())
+                );
+
+
+  AIRCRAFT_COUNT.set_text(to_string(PROP.AIRCRAFT_LIST.AIRCRAFTS.size()));
+  POSITIONED_AIRCRAFT.set_text(to_string(PROP.AIRCRAFT_LIST.POSITIONED_AIRCRAFT));
+
+  redraw_screen.catch_truth(TOP_BAR.draw(ADSB_Screen, Refresh));
+  redraw_screen.catch_truth(TIME.draw(ADSB_Screen, Refresh));
+  redraw_screen.catch_truth(AIRCRAFT_COUNT_TITLE.draw(ADSB_Screen, Refresh));
+  redraw_screen.catch_truth(AIRCRAFT_COUNT.draw(ADSB_Screen, Refresh));
+  redraw_screen.catch_truth(POSITIONED_AIRCRAFT_TITLE.draw(ADSB_Screen, Refresh));
+  redraw_screen.catch_truth(POSITIONED_AIRCRAFT.draw(ADSB_Screen, Refresh));
+
+  if (redraw_screen.has_truth())
+  {
     // Reset Properties Changed.
     PROP.CHANGED = false;
-
+    wrefresh(ADSB_Screen);
   }
 }
 

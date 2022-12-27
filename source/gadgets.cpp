@@ -92,7 +92,6 @@ void Title_Bar::draw(bool Refresh)
 //  Text_Field Classes
 
 
-
 bool Text_Field::changed()
 // Returns true if any of the properties have changed.
 {
@@ -116,7 +115,16 @@ void Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
     else
     {
       PROP.LABEL = Text;
-      HAS_BLANK = false;
+
+      if (Text  == "")
+      {
+        HAS_BLANK = true;
+      }
+      else
+      {
+        HAS_BLANK = false;
+      }
+
       CHANGED = true;
       
       if (PROP.UPDATE_INDICATION == true)
@@ -154,6 +162,8 @@ void Text_Field::set_color(int Background_Color, int Color)
 
 bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
 {
+  bool redrawn = false;
+
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
@@ -177,7 +187,6 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
       wattron(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
-      //wattron(Window, A_REVERSE);
     }
 
     // Check for Text Modification
@@ -208,7 +217,6 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
       wattroff(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
-      //wattroff(Window, A_REVERSE);
     }
 
     // Check for Colored Text
@@ -230,11 +238,13 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
       mvwprintw(Window, PROP.POSY, PROP.POSX, "%d ", Counter);
     }
 
+    redrawn = true;
+
     CHANGED = false;
 
   }
 
-  return Refresh;
+  return redrawn;
 }
   
 bool Text_Field::draw(WINDOW *Window, bool Refresh)

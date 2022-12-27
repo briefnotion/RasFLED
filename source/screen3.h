@@ -238,8 +238,8 @@ class Screen3
   int YADS_B_ScreenSize = -1;
   int XADS_B_ScreenSize = -1;
 
-  int YBADS_BSize = 4; // ADS_B Button Standard Sizes
-  int XBADS_BSize = 8;
+  int YBADS_BSize = 5; // ADS_B Button Standard Sizes
+  int XBADS_BSize = 10;
 
   WINDOW * winADS_B_Screen;
   Title_Bar tiADS_B_Screen;

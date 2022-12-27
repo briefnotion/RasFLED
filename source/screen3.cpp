@@ -269,9 +269,9 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   tiADS_B_Screen.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
   bzADS_B.create_button(0, "ADS_BON", "%ADS-B", 0, 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, -2, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzADS_B.create_button(2, "BLANK1", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzADS_B.create_button(3, "ADS_B_SNAPSHOT", "%Snap%Shot", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+  //bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, -2, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+  //bzADS_B.create_button(2, "BLANK1", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+  bzADS_B.create_button(1, "ADS_B_SNAPSHOT", "%Snap%Shot", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
   //bzADS_B.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
 
   //tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
@@ -731,10 +731,10 @@ void Screen3::reset(ScreenStatus &ScrStat)
     XADS_B_ScreenPos = 0;
 
     // Prep ADS_B Buttons
-    bzADS_B.move_resize(0, YADS_B_ScreenPos + (YBADS_BSize *0), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-    bzADS_B.move_resize(1, YADS_B_ScreenPos + (YBADS_BSize *1), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-    bzADS_B.move_resize(2, YADS_B_ScreenPos + (YBADS_BSize *2), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-    bzADS_B.move_resize(3, YADS_B_ScreenPos + (YBADS_BSize *3), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+    bzADS_B.move_resize(0, YADS_B_ScreenPos + 1 + (YBADS_BSize *0), XADS_B_ScreenPos + (XBADS_BSize *0), YBADS_BSize, XBADS_BSize);
+    //bzADS_B.move_resize(1, YADS_B_ScreenPos + (YBADS_BSize *1), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+    //bzADS_B.move_resize(2, YADS_B_ScreenPos + (YBADS_BSize *2), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+    bzADS_B.move_resize(1, YADS_B_ScreenPos + 1 + (YBADS_BSize *0), XADS_B_ScreenPos + (XBADS_BSize *1), YBADS_BSize, XBADS_BSize);
     //bzADS_B.move_resize(4, YADS_B_ScreenPos + (YBADS_BSize *4), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
 
     // Hide unneeded buttons.
@@ -747,9 +747,9 @@ void Screen3::reset(ScreenStatus &ScrStat)
     // ADS_B Window
     // Calculate Size and Position
     YADS_B_ScreenPos = YSplit;
-    XADS_B_ScreenPos = XADS_B_ScreenPos + XBADS_BSize;
+    XADS_B_ScreenPos = XADS_B_ScreenPos;  // + XBADS_BSize;
     YADS_B_ScreenSize = YMax - YSplit - YTabSize;
-    XADS_B_ScreenSize =  XSplit - XBADS_BSize;
+    XADS_B_ScreenSize =  XSplit;          // - XBADS_BSize;
 
     // Build Window
     winADS_B_Screen = newwin(YADS_B_ScreenSize, XADS_B_ScreenSize, YADS_B_ScreenPos, XADS_B_ScreenPos);
@@ -1387,7 +1387,7 @@ void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   // Print ADS_B Buttons
   bzADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
 
-  ADSB_Grid.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+  ADSB_Grid.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, winADS_B_Screen);
 
   if(ScrStat.Needs_Refresh == true)
   {
@@ -1402,9 +1402,6 @@ void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
     // Print Title
     tiADS_B_Screen.draw(true);
   }
-
-  
-    
 }
 
 // ---------------------------------------------------------------------------------------
