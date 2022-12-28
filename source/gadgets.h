@@ -106,7 +106,7 @@ class Text_Field_Properties
   bool DONT_BLANK = false;
 
   bool COLORS_ON = false;
-  bool REVERSE = false;
+  bool INVERSE = false;
 };
 
 
@@ -129,6 +129,8 @@ class Text_Field
   bool changed();
 
   bool has_blank();
+
+  void set_inverse(bool Inverse);
 
   void set_text(string Text, unsigned long tmeFrame_Time);
 

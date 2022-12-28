@@ -134,7 +134,7 @@ void AIRCRAFT::count_data()
                 //(SIL_TYPE.length() > 0) +
                 EMERGENCY.conversion_success() +
                 //(CATAGORY.length() > 0) +
-                NAV_QNH.conversion_success() +
+                //NAV_QNH.conversion_success() +
                 NAV_HEADING.conversion_success() +
                 NAV_ALTITUDE_MCP.conversion_success() +
                 //NAV_MODES.conversion_success() +

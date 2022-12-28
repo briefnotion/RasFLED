@@ -104,6 +104,15 @@ bool Text_Field::has_blank()
   return HAS_BLANK;
 }
 
+void Text_Field::set_inverse(bool Inverse)
+{
+  if (Inverse != PROP.INVERSE)
+  {
+    PROP.INVERSE = Inverse;
+    CHANGED = true;
+  }
+}
+
 void Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
 {
   if (Text != PROP.LABEL)
@@ -172,7 +181,7 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
   if (CHANGED == true || Refresh == true)
   {
     // Check for Reverse Text
-    if (PROP.REVERSE == true)
+    if (PROP.INVERSE == true)
     {
       wattron(Window, A_REVERSE);
     }
@@ -226,7 +235,7 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     }
 
     // Check for Reverse Text
-    if (PROP.REVERSE == true)
+    if (PROP.INVERSE == true)
     {
       wattroff(Window, A_REVERSE);
     }

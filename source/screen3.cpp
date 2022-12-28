@@ -366,6 +366,48 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Set window color
     wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+
+    // Text Fields
+
+    DOOR1.PROP.POSY = 1;
+    DOOR1.PROP.POSX = 37;
+
+    DOOR2.PROP.POSY = 0;
+    DOOR2.PROP.POSX = 37;
+
+    DOOR3.PROP.POSY = 1;
+    DOOR3.PROP.POSX = 44;
+
+    DOOR4.PROP.POSY = 0;
+    DOOR4.PROP.POSX = 44;
+
+    LIGHTSOFF.PROP.POSY = 1;
+    LIGHTSOFF.PROP.POSX = 4;
+
+    NIGHT.PROP.POSY = 0;
+    NIGHT.PROP.POSX = 29;
+
+    HAZARD.PROP.POSY = 1;
+    HAZARD.PROP.POSX = 18;
+
+    OVERHEAD.PROP.POSY = 0;
+    OVERHEAD.PROP.POSX = 18;
+
+    TIMER.PROP.POSY = 1;
+    TIMER.PROP.POSX = 29;
+
+    ADSB.PROP.POSY = 1;
+    ADSB.PROP.POSX = 53;
+
+    VERSION.PROP.POSY = 0;
+    VERSION.PROP.POSX = XStatusSize - 6 - TitleSize;
+    VERSION.PROP.SIZEX = 5;
+    VERSION.PROP.JUSTIFICATION_LEFT = true;
+
+    TEMPERATURE.PROP.POSY = 1;
+    TEMPERATURE.PROP.POSX = XStatusSize - 4;
+    TEMPERATURE.PROP.SIZEX = 5;
+    TEMPERATURE.PROP.JUSTIFICATION_LEFT = true;
   }
 
   // ---------------------------------------------------------------------------------------
@@ -840,81 +882,62 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   }
 
   //Display Door Statuses, highlighting values that are on (doors open)
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattron(winStatus, A_REVERSE);}
-  mvwprintw(winStatus, 1, 37, " Door1 ");
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value == true) {wattroff(winStatus, A_REVERSE);}
+  DOOR1.set_text(" Door1 ");
+  DOOR1.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value);
+  DOOR1.draw(winStatus, true);
   
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattron(winStatus, A_REVERSE);}
-  mvwprintw(winStatus, 0, 37, " Door2 ");
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value == true) {wattroff(winStatus, A_REVERSE);}
-  
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattron(winStatus, A_REVERSE);}
-  mvwprintw(winStatus, 1, 44, " Door3 ");
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value == true) {wattroff(winStatus, A_REVERSE);}
+  DOOR2.set_text(" Door2 ");
+  DOOR2.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value);
+  DOOR2.draw(winStatus, true);
 
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattron(winStatus, A_REVERSE);}
-  mvwprintw(winStatus, 0, 44, " Door4 ");
-  if (sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value == true) {wattroff(winStatus, A_REVERSE);}
+  DOOR3.set_text(" Door3 ");
+  DOOR3.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value);
+  DOOR3.draw(winStatus, true);
+
+  DOOR4.set_text(" Door4 ");
+  DOOR4.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value);
+  DOOR4.draw(winStatus, true);
 
   // Display Lights Off mode toggle.
   if(sdSysData.Lights_On == false)
   {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 1, 4, "  LIGHTS OFF  ");
-    wattroff(winStatus, A_REVERSE);
+    LIGHTSOFF.set_inverse(true);
+    LIGHTSOFF.set_text("  LIGHTS OFF  ");
   }
   else
   {
-    mvwprintw(winStatus, 1, 4, "              ");      
+    LIGHTSOFF.set_inverse(false);
+    LIGHTSOFF.set_text("              ");    
   }
+  LIGHTSOFF.draw(winStatus, true);
 
   // Display Day or Night mode toggle.
   if(sdSysData.booDay_On == true)
   {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 0, 29, "  DAY  ");
-    wattroff(winStatus, A_REVERSE);
+    NIGHT.set_inverse(true);
+    NIGHT.set_text("  DAY  ");
   }
   else
   {
-    mvwprintw(winStatus, 0, 29, " NIGHT ");      
+    NIGHT.set_inverse(false);
+    NIGHT.set_text(" NIGHT ");   
   }
+  NIGHT.draw(winStatus, true);
 
   // Display Hazard Indicator
-  if(sdSysData.booHazardRunning == true)
-  {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 1, 18, "  HAZARD  ");
-    wattroff(winStatus, A_REVERSE);
-  }
-  else
-  {
-    mvwprintw(winStatus, 1, 18, "  HAZARD  "); 
-  }
+  HAZARD.set_inverse(sdSysData.booHazardRunning);
+  HAZARD.set_text("  HAZARD  ");
+  HAZARD.draw(winStatus, true);
 
   // Display Overhead Indicator
-  if(sdSysData.booOverheadRunning == true)
-  {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 0, 18, " OVERHEAD ");
-    wattroff(winStatus, A_REVERSE);
-  }
-  else
-  {
-    mvwprintw(winStatus, 0, 18, " OVERHEAD "); 
-  }
+  OVERHEAD.set_inverse(sdSysData.booOverheadRunning);
+  OVERHEAD.set_text(" OVERHEAD ");
+  OVERHEAD.draw(winStatus, true);
 
   // Display Timer Indicator
-  if(sdSysData.cdTIMER.is_active() == true)
-  {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 1, 29, " TIMER ");
-    wattroff(winStatus, A_REVERSE);
-  }
-  else
-  {
-    mvwprintw(winStatus, 1, 29, " TIMER "); 
-  }
+  TIMER.set_inverse(sdSysData.cdTIMER.is_active());
+  TIMER.set_text(" TIMER ");
+  TIMER.draw(winStatus, true);
 
   // Display Radio Indicator
   /*
@@ -931,16 +954,9 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   */
 
   // Display ADS-B Indicaor
-  if(sdSysData.AIRCRAFT_COORD.is_active() == true)
-  {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 1, 53, " ADS-B ");
-    wattroff(winStatus, A_REVERSE);
-  }
-  else
-  {
-    mvwprintw(winStatus, 1, 53, "       "); 
-  }
+  ADSB.set_inverse(sdSysData.AIRCRAFT_COORD.is_active());
+  ADSB.set_text(" ADS-B ");
+  ADSB.draw(winStatus, true);
 
   /*
   // Display Undervoltage
@@ -954,17 +970,19 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   */
 
   // Display Version
-  mvwprintw(winStatus, 0, XStatusSize - 14 - TitleSize , "v%s", Revision);
+  VERSION.set_text(Revision);
+  VERSION.draw(winStatus, true);
 
   // Display CPU Temp
   if (sdSysData.hsHardware_Status.enabled() == true)
   {
-    mvwprintw(winStatus, 1, XStatusSize - 5, "%3.0fc", sdSysData.hsHardware_Status.get_temperature());
+    TEMPERATURE.set_text(to_string((int)sdSysData.hsHardware_Status.get_temperature()) + "c");
   }
   else
   {
-    mvwprintw(winStatus, 1, XStatusSize - 12, "NA");
+    TEMPERATURE.set_text("NA");
   }
+  TEMPERATURE.draw(winStatus, true);
 
   // Commit all our changes to the status portion of the screen (winTop)
   wrefresh(winStatus);

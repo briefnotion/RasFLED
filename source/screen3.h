@@ -94,6 +94,23 @@ class Screen3
   int YStatusSize = 2;
   int XStatusSize = -1;
 
+  Text_Field COMMAND_L;
+
+  Text_Field LIGHTSOFF;
+  Text_Field OVERHEAD;
+  Text_Field HAZARD;
+  Text_Field NIGHT;
+  Text_Field TIMER;
+  Text_Field ADSB;
+
+  Text_Field DOOR1;
+  Text_Field DOOR2;
+  Text_Field DOOR3;
+  Text_Field DOOR4;
+
+  Text_Field VERSION;
+  Text_Field TEMPERATURE;
+
   WINDOW * winStatus;
   Title_Bar tiStatus;
 

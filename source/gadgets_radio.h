@@ -34,109 +34,6 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  ADS-B Classes
 
-/*
-class ADS_B_List_Box_Properties
-// Properties (duh)
-{
-  public: 
-
-  int ID;
-  string NAME = "";
-  string LABEL = "";
-
-  AIRCRAFT_DATA VALUE;
-
-  int TYPE = 0;
-  int COLOR = 0;
-  int BCOLOR = 0;
-  
-  int POSY = 0;
-  int POSX = 0;
-  int SIZEY = 0;
-  int SIZEX = 0;
-
-  bool CHANGED = false;
-};
-
-class ADS_B_List_Box
-// Routines for create, draw, modify, and behavior.
-{
-  private:
-  class AIRCRAFT_INDEX_INFORMATION
-  {
-    public:
-    string HEX = "";
-    int POSITION = -1;
-    int DATA_COUNT = 0;
-    int SIZE = 0;
-    bool UPDATED = false;
-  };
-
-  WINDOW * ADS_B_List_Box;
-
-  // DEBUG_COUNTER
-  int Counter = 0;
-
-  deque<AIRCRAFT_INDEX_INFORMATION> AIRCRAFT_INDEX_LIST;
-  int AIRCRAFT_INDEX_LIST_ALERT_COUNT_GUIDE = 0;
-  
-  bool IS_ACTIVE = false;
-
-  private:
-
-  int get_first_empty_pos();
-
-  int get_first_pos_with_no_data();
-
-  int find_HEX(string Hex);
-
-  void organize_index();
-
-  void sort_index();
-
-  void clear_line(int &yCurPos, int &xCurPos);
-
-  void print_to_line(int &yCurPos, int &xCurPos, int Size, string Text, int Color_Pair);
-
-  void dsp_text(int &yCurPos, int &xCurPos, int Size, STRING_STRING &Text, int Text_Color, bool Inverse_Colors, int Color_Value, 
-                  int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4);
-
-  // Scale Types:
-  //  0 = LEDGEND_OFF;
-  //  1 = LEDGEND_RANGE   - Non Zero Green
-  //  2 = LEDGEND_SCALER  - Zero Green
-
-  void dsp_intg(int &yCurPos, int &xCurPos, int Size, STRING_INT &Text, float Alt_Value, bool Alt_Success, int Text_Color, bool Inverse_Colors, 
-                  int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4);
-
-  void dsp_intg(int &yCurPos, int &xCurPos, int Size, STRING_INT &Text, int Text_Color, bool Inverse_Colors, 
-                  int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4);
-
-  void dsp_floa(int &yCurPos, int &xCurPos, int Size, STRING_FLOAT &Text, float Alt_Value, bool Alt_Success, int Text_Color, bool Inverse_Colors, 
-                  int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4);
-
-  void dsp_floa(int &yCurPos, int &xCurPos, int Size, STRING_FLOAT &Text, int Text_Color, bool Inverse_Colors, 
-                int Color_Scale_Type, int Level_0, int Level_1, int Level_2, int Level_3, int Level_4);
-
-  public:
-
-  ADS_B_List_Box_Properties PROP;  
-
-  void modify(int id, string name, string label, int type, int color, int bcolor);
-
-  void create(int id, string name, string label, int type, int color, int bcolor);
-
-  void move_resize(int posY, int posX, int sizeY, int sizeX);
-
-  bool changed();
-
-  void draw(bool Refresh);
-
-  void update(system_data &sdSysData);
-};
-*/
-
-
 // -------------------------------------------------------------------------------------
 //  ADSB_Channel Classes
 class ADSB_Channel_Properties
@@ -216,8 +113,6 @@ class ADSB_Channel
   Text_Field DATA_TTL_IND;
 
   Text_Field MESSAGE;
-  
-  //Text_Field NAV_QNH;
 
   ADSB_Channel_Properties PROP;  
 

@@ -1,3 +1,6 @@
+V 1.30A_221228
+  - Changes to ADSB Screen.
+
 V 1.29A_221227
   - FOR TESTING REASONS ONLY.  LIMITED FUNCTIONS.
   - Changes to ADSB Screen.
