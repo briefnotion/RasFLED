@@ -31,6 +31,54 @@
 using namespace std;
 
 
+class Mini_Compass_Properties
+// Properties (duh)
+{
+  public: 
+  float HEADING = 0;
+
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+
+  bool CLEARED = true;
+
+  bool UPDATE_INDICATION = false;
+};
+
+class Mini_Compass
+{
+  private:
+  TIMED_PING UPDATE_INDICATION_TIMER;
+
+  bool CHANGED = false;
+  bool HAS_BLANK = false;
+
+  int INDICATED_BLINK_TIME = 250;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  public:
+  Mini_Compass_Properties PROP;
+
+  bool changed();
+
+  void set_heading(float Heading, unsigned long tmeFrame_Time);
+
+  void set_heading(float Heading);
+  
+  void clear();
+
+  void set_color(int Background_Color, int Color);
+
+  bool draw(WINDOW *window, bool Refresh, unsigned long tmeFrame_Time);
+
+  bool draw(WINDOW *window, bool Refresh);
+};
+
 // -------------------------------------------------------------------------------------
 //  ADS-B Classes
 
@@ -101,12 +149,10 @@ class ADSB_Channel
   Text_Field SPEED_IND;
 
   Text_Field TRACK;
-  Text_Field TRACK_MINI_COMPASS_TOP;
-  Text_Field TRACK_MINI_COMPASS_BOTTOM;
+  Mini_Compass TRACK_MINI_COMPASS;
   
   Text_Field NAV_HEADING;
-  Text_Field NAV_HEADING_MINI_COMPASS_TOP;
-  Text_Field NAV_HEADING_MINI_COMPASS_BOTTOM;
+  Mini_Compass NAV_HEADING_MINI_COMPASS;
 
   Text_Field SIG_STR_IND;
   Text_Field COORD_TTL_IND;

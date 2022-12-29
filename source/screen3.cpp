@@ -369,6 +369,15 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Text Fields
 
+    COMMAND_TITLE.PROP.POSY = 0;
+    COMMAND_TITLE.PROP.POSX = 1;
+
+    COMMAND_UNDERLINE.PROP.POSY = 0;
+    COMMAND_UNDERLINE.PROP.POSX = 6;
+
+    COMMAND.PROP.POSY = 0;
+    COMMAND.PROP.POSX = 6;
+
     DOOR1.PROP.POSY = 1;
     DOOR1.PROP.POSX = 37;
 
@@ -869,34 +878,31 @@ void Screen3::reset(ScreenStatus &ScrStat)
 void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
 // Displays command line input, status and door indicators
 {
+  TRUTH_CATCH redraw_screen;
+
   // Display Command Line
-  if (keywatch.cmdPressed() == true || ScrStat.Needs_Refresh == true)
+  COMMAND_TITLE.set_text("CMD:");
+  if (keywatch.cmdPressed() == true || keywatch.cmdCleared() == true || ScrStat.Needs_Refresh == true)
   {
-    if (keywatch.cmdCleared() == true || ScrStat.Needs_Refresh == true)
-    {
-      // Blank out the line before redraw.
-      wmove(winStatus, 0, 1);
-      mvwprintw(winStatus, 0, 1, "CMD: __________");
-    }
-    mvwprintw(winStatus, 0, 1, "CMD: %s", keywatch.cmdRead().c_str());
+    COMMAND_UNDERLINE.set_text("__________");
+    COMMAND_UNDERLINE.redraw();
+
+    COMMAND.set_text(keywatch.cmdRead().c_str());
   }
 
   //Display Door Statuses, highlighting values that are on (doors open)
   DOOR1.set_text(" Door1 ");
   DOOR1.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value);
-  DOOR1.draw(winStatus, true);
   
   DOOR2.set_text(" Door2 ");
   DOOR2.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value);
-  DOOR2.draw(winStatus, true);
 
   DOOR3.set_text(" Door3 ");
   DOOR3.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value);
-  DOOR3.draw(winStatus, true);
-
+  
   DOOR4.set_text(" Door4 ");
   DOOR4.set_inverse(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value);
-  DOOR4.draw(winStatus, true);
+  
 
   // Display Lights Off mode toggle.
   if(sdSysData.Lights_On == false)
@@ -909,7 +915,6 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
     LIGHTSOFF.set_inverse(false);
     LIGHTSOFF.set_text("              ");    
   }
-  LIGHTSOFF.draw(winStatus, true);
 
   // Display Day or Night mode toggle.
   if(sdSysData.booDay_On == true)
@@ -922,23 +927,19 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
     NIGHT.set_inverse(false);
     NIGHT.set_text(" NIGHT ");   
   }
-  NIGHT.draw(winStatus, true);
-
+  
   // Display Hazard Indicator
   HAZARD.set_inverse(sdSysData.booHazardRunning);
   HAZARD.set_text("  HAZARD  ");
-  HAZARD.draw(winStatus, true);
-
+  
   // Display Overhead Indicator
   OVERHEAD.set_inverse(sdSysData.booOverheadRunning);
   OVERHEAD.set_text(" OVERHEAD ");
-  OVERHEAD.draw(winStatus, true);
-
+  
   // Display Timer Indicator
   TIMER.set_inverse(sdSysData.cdTIMER.is_active());
   TIMER.set_text(" TIMER ");
-  TIMER.draw(winStatus, true);
-
+  
   // Display Radio Indicator
   /*
   if(true)
@@ -956,8 +957,7 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   // Display ADS-B Indicaor
   ADSB.set_inverse(sdSysData.AIRCRAFT_COORD.is_active());
   ADSB.set_text(" ADS-B ");
-  ADSB.draw(winStatus, true);
-
+  
   /*
   // Display Undervoltage
   if (sdSysData.hsHardware_Status.enabled() == true)
@@ -971,8 +971,7 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
 
   // Display Version
   VERSION.set_text(Revision);
-  VERSION.draw(winStatus, true);
-
+  
   // Display CPU Temp
   if (sdSysData.hsHardware_Status.enabled() == true)
   {
@@ -984,8 +983,28 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   }
   TEMPERATURE.draw(winStatus, true);
 
+  // Draw Fields
+  redraw_screen.catch_truth(COMMAND_TITLE.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(COMMAND_UNDERLINE.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(COMMAND.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(DOOR1.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(DOOR2.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(DOOR3.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(DOOR4.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(LIGHTSOFF.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(NIGHT.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(HAZARD.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(OVERHEAD.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(TIMER.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(ADSB.draw(winStatus, ScrStat.Needs_Refresh));
+  redraw_screen.catch_truth(VERSION.draw(winStatus, ScrStat.Needs_Refresh));
+
   // Commit all our changes to the status portion of the screen (winTop)
-  wrefresh(winStatus);
+  if (redraw_screen.has_truth() == true)
+  {
+    wrefresh(winStatus);
+  }
+
   tiStatus.draw(ScrStat.Needs_Refresh);
 }
 

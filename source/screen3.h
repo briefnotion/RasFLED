@@ -94,7 +94,9 @@ class Screen3
   int YStatusSize = 2;
   int XStatusSize = -1;
 
-  Text_Field COMMAND_L;
+  Text_Field COMMAND_TITLE;
+  Text_Field COMMAND_UNDERLINE;
+  Text_Field COMMAND;
 
   Text_Field LIGHTSOFF;
   Text_Field OVERHEAD;

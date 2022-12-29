@@ -12,98 +12,204 @@
 #include "gadgets_radio.h"
 
 // -------------------------------------------------------------------------------------
+//  ADSB_Channel Classes
+
+bool Mini_Compass::changed()
+// Returns true if any of the properties have changed.
+{
+  return CHANGED;
+}
+
+void Mini_Compass::set_heading(float Heading, unsigned long tmeFrame_Time)
+{
+  PROP.CLEARED = false; 
+
+  if (Heading != PROP.HEADING)
+  {
+    PROP.HEADING = Heading;
+
+    CHANGED = true;
+    
+    if (PROP.UPDATE_INDICATION == true)
+    {
+      UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, INDICATED_BLINK_TIME);
+    }
+  }
+}
+
+void Mini_Compass::set_heading(float Heading)
+{
+  set_heading(Heading, 0);
+}
+
+void Mini_Compass::clear()
+{
+  Text_Field_Properties cleared_properties;
+
+  PROP.CLEARED = true;
+  PROP.HEADING = 0;
+  CHANGED = true;
+}
+
+void Mini_Compass::set_color(int Background_Color, int Color)
+{
+  if (Background_Color != PROP.BCOLOR || Color != PROP.COLOR)
+  {
+    PROP.BCOLOR = Background_Color;
+    PROP.COLOR  = Color;
+    CHANGED = true;
+  }
+}
+
+bool Mini_Compass::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
+{
+  bool redrawn = false;
+
+  if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
+  {
+    Refresh = true;
+  }
+
+  if (CHANGED == true || Refresh == true)
+  {
+    // Check for Colored Text
+    wattron(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattron(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+    }
+    
+    string return_str = ""; 
+
+    // Draw Compas Needles
+    if (PROP.CLEARED == false)
+    {
+      // Draw Top Line
+      if ((PROP.HEADING >= 337.5 && PROP.HEADING <= 360) || (PROP.HEADING >= 0 && PROP.HEADING < 22.5))
+      {
+        return_str = " | ";
+      }
+      else if (PROP.HEADING >= 22.5 && PROP.HEADING < 67.5)
+      {
+        return_str = "  /";
+      }
+      else if (PROP.HEADING >= 67.5 && PROP.HEADING < 112.5)
+      {
+        return_str = "  _";
+      }
+      else if (PROP.HEADING >= 112.5 && PROP.HEADING < 157.5)
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 157.5 && PROP.HEADING < 202.5)
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 202.5 && PROP.HEADING < 247.5)
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 247.5 && PROP.HEADING < 292.5)
+      {
+        return_str = "_  ";
+      }
+      else if (PROP.HEADING >= 292.5 && PROP.HEADING < 337.5)
+      {
+        return_str = "\\  ";
+      }
+      else
+        {
+        return_str = "XX";
+      }
+
+      mvwprintw(Window, PROP.POSY, PROP.POSX, return_str.c_str());
+
+      // Draw Bottom Line
+
+      if ((PROP.HEADING >= 337.5 && PROP.HEADING <= 360) || (PROP.HEADING >= 0 && PROP.HEADING < 22.5))
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 22.5 && PROP.HEADING < 67.5)
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 67.5 && PROP.HEADING < 112.5)
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 112.5 && PROP.HEADING < 157.5)
+      {
+        return_str = "  \\";
+      }
+      else if (PROP.HEADING >= 157.5 && PROP.HEADING < 202.5)
+      {
+        return_str = " | ";
+      }
+      else if (PROP.HEADING >= 202.5 && PROP.HEADING < 247.5)
+      {
+        return_str = "/  ";
+      }
+      else if (PROP.HEADING >= 247.5 && PROP.HEADING < 292.5)
+      {
+        return_str = "   ";
+      }
+      else if (PROP.HEADING >= 292.5 && PROP.HEADING < 337.5)
+      {
+        return_str = "   ";
+      }
+      else
+        {
+        return_str = "XX";
+      }
+
+      mvwprintw(Window, PROP.POSY +1, PROP.POSX, return_str.c_str());
+    }
+    else  // Cleared, draw blanks.
+    {
+      mvwprintw(Window, PROP.POSY   , PROP.POSX, "   ");
+      mvwprintw(Window, PROP.POSY +1, PROP.POSX, "   ");
+    }
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattroff(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+    }
+
+    // Check for Colored Text
+    wattroff(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+ 
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(Window, PROP.POSY, PROP.POSX, "%d ", Counter);
+    }
+
+    redrawn = true;
+
+    CHANGED = false;
+
+  }
+
+  return redrawn;
+}
+  
+bool Mini_Compass::draw(WINDOW *Window, bool Refresh)
+{
+  return draw(Window, Refresh, 0);
+}
+
+
+// -------------------------------------------------------------------------------------
 //  ADS-B Classes
 
 // -------------------------------------------------------------------------------------
 //  ADSB_Channel Classes
-
-string ADSB_Channel::compass_mini_top(float Heading)
-{
-  string return_str = ""; 
-
-  if ((Heading >= 337.5 && Heading <= 360) || (Heading >= 0 && Heading < 22.5))
-  {
-    return_str = " | ";
-  }
-  else if (Heading >= 22.5 && Heading < 67.5)
-  {
-    return_str = "  /";
-  }
-  else if (Heading >= 67.5 && Heading < 112.5)
-  {
-    return_str = "  _";
-  }
-  else if (Heading >= 112.5 && Heading < 157.5)
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 157.5 && Heading < 202.5)
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 202.5 && Heading < 247.5)
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 247.5 && Heading < 292.5)
-  {
-    return_str = "_  ";
-  }
-  else if (Heading >= 292.5 && Heading < 337.5)
-  {
-    return_str = "\\  ";
-  }
-  else
-    {
-    return_str = "XX";
-  }
-
-  return return_str;
-}
-
-string ADSB_Channel::compass_mini_bottom(float Heading)
-{
-  string return_str = ""; 
-
-  if ((Heading >= 337.5 && Heading <= 360) || (Heading >= 0 && Heading < 22.5))
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 22.5 && Heading < 67.5)
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 67.5 && Heading < 112.5)
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 112.5 && Heading < 157.5)
-  {
-    return_str = "  \\";
-  }
-  else if (Heading >= 157.5 && Heading < 202.5)
-  {
-    return_str = " | ";
-  }
-  else if (Heading >= 202.5 && Heading < 247.5)
-  {
-    return_str = "/  ";
-  }
-  else if (Heading >= 247.5 && Heading < 292.5)
-  {
-    return_str = "   ";
-  }
-  else if (Heading >= 292.5 && Heading < 337.5)
-  {
-    return_str = "   ";
-  }
-  else
-    {
-    return_str = "XX";
-  }
-
-  return return_str;
-}
 
 void ADSB_Channel::create()
 // Define and behavior.  
@@ -215,21 +321,10 @@ void ADSB_Channel::create()
   TRACK.PROP.UPDATE_INDICATION = true;
 
   // Track Mini Compass
-  TRACK_MINI_COMPASS_TOP.PROP.POSY = 2;
-  TRACK_MINI_COMPASS_TOP.PROP.POSX = 14;
-  TRACK_MINI_COMPASS_TOP.PROP.SIZEX = 3;
-  TRACK_MINI_COMPASS_TOP.PROP.COLOR = COLOR_BLACK;
-  TRACK_MINI_COMPASS_TOP.PROP.BCOLOR = COLOR_BLACK;
-  TRACK_MINI_COMPASS_TOP.PROP.COLORS_ON = true;
-  TRACK_MINI_COMPASS_TOP.PROP.JUSTIFICATION_LEFT = true;
-
-  TRACK_MINI_COMPASS_BOTTOM.PROP.POSY = 3;
-  TRACK_MINI_COMPASS_BOTTOM.PROP.POSX = 14;
-  TRACK_MINI_COMPASS_BOTTOM.PROP.SIZEX = 3;
-  TRACK_MINI_COMPASS_BOTTOM.PROP.COLOR = COLOR_BLACK;
-  TRACK_MINI_COMPASS_BOTTOM.PROP.BCOLOR = COLOR_BLACK;
-  TRACK_MINI_COMPASS_BOTTOM.PROP.COLORS_ON = true;
-  TRACK_MINI_COMPASS_BOTTOM.PROP.JUSTIFICATION_LEFT = true;
+  TRACK_MINI_COMPASS.PROP.POSY = 2;
+  TRACK_MINI_COMPASS.PROP.POSX = 14;
+  TRACK_MINI_COMPASS.PROP.COLOR = COLOR_BLACK;
+  TRACK_MINI_COMPASS.PROP.BCOLOR = COLOR_BLACK;
   
   // Track Nav
   //NAV_HEADING.PROP.LABEL = "navt";
@@ -244,21 +339,10 @@ void ADSB_Channel::create()
   NAV_HEADING.PROP.UPDATE_INDICATION = true;
 
   // Track Nav Mini Compass
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.POSY = 2;
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.POSX = 18;
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.SIZEX = 3;
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.COLOR = COLOR_BLACK;
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.BCOLOR = COLOR_BLACK;
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.COLORS_ON = true;
-  NAV_HEADING_MINI_COMPASS_TOP.PROP.JUSTIFICATION_LEFT = true;
-
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.POSY = 3;
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.POSX = 18;
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.SIZEX = 3;
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.COLOR = COLOR_BLACK;
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.BCOLOR = COLOR_BLACK;
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.COLORS_ON = true;
-  NAV_HEADING_MINI_COMPASS_BOTTOM.PROP.JUSTIFICATION_LEFT = true;
+  NAV_HEADING_MINI_COMPASS.PROP.POSY = 2;
+  NAV_HEADING_MINI_COMPASS.PROP.POSX = 18;
+  NAV_HEADING_MINI_COMPASS.PROP.COLOR = COLOR_BLACK;
+  NAV_HEADING_MINI_COMPASS.PROP.BCOLOR = COLOR_BLACK;
   
   // Coordinate Data TTL Indicator
   COORD_TTL_IND.PROP.POSY = 0;
@@ -316,12 +400,10 @@ void ADSB_Channel::clear()
   SPEED.clear();
 
   TRACK.clear();
-  TRACK_MINI_COMPASS_TOP.clear();
-  TRACK_MINI_COMPASS_BOTTOM.clear();
+  TRACK_MINI_COMPASS.clear();
   
   NAV_HEADING.clear();
-  NAV_HEADING_MINI_COMPASS_TOP.clear();
-  NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
+  NAV_HEADING_MINI_COMPASS.clear();
 
   SIG_STR_IND.set_color(COLOR_BLACK, COLOR_BLACK);
   SIG_STR_IND.clear();
@@ -399,7 +481,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Write Additional Messages
     if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
     {
-      MESSAGE.set_text("All Data Expired");
+      MESSAGE.set_text("No Data");
     }
     else
     {
@@ -443,6 +525,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       // Aircraft Altitude data ok
       ALTITUDE_IND.set_color(color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000), ALTITUDE_IND.PROP.COLOR);
+      ALTITUDE_IND.set_text("^");
       ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
     }
     else
@@ -450,13 +533,15 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "ground")
       // Aircraft Altitude data says on ground
       {
-        ALTITUDE_IND.set_color(COLOR_RED, PROP.BCOLOR);
+        ALTITUDE_IND.set_color(COLOR_RED, COLOR_BLACK);
+        ALTITUDE_IND.set_text("X");
         ALTITUDE.set_text("GROUND");
       }
       else
       {
         // Aircraft Altitude data unknown
         ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+        ALTITUDE_IND.set_text(" ");
         ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
       }
     }
@@ -468,11 +553,13 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Vertical Rate and Vertical Rate Indicator
     if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
     {
-      D_VERTICAL_RATE_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10), D_VERTICAL_RATE_IND.PROP.COLOR);
+      D_VERTICAL_RATE_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10), COLOR_BLACK);
+      D_VERTICAL_RATE_IND.set_text("^");
     }
     else
     {
-      D_VERTICAL_RATE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      D_VERTICAL_RATE_IND.set_color(PROP.BCOLOR, COLOR_BLACK);
+      D_VERTICAL_RATE_IND.set_text(" ");
     }
     
     D_VERTICAL_RATE.set_text(PROP.AIRCRAFT_DATA.D_VERTICAL_RATE.get_str_value(), tmeFrame_Time);
@@ -480,11 +567,13 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Speed and Speed Indicator
     if (PROP.AIRCRAFT_DATA.SPEED.conversion_success()==true)
     {
-      SPEED_IND.set_color(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600), SPEED_IND.PROP.COLOR);
+      SPEED_IND.set_color(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600), COLOR_BLACK);
+      SPEED_IND.set_text("^");
     }
     else
     {
-      SPEED_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      SPEED_IND.set_color(PROP.BCOLOR, COLOR_BLACK);
+      SPEED_IND.set_text(" ");
     }
 
     SPEED.set_text(PROP.AIRCRAFT_DATA.SPEED.get_str_value(), tmeFrame_Time);
@@ -492,22 +581,14 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Track and Compass Track
     if (PROP.AIRCRAFT_DATA.TRACK.conversion_success() == true)
     {
-      TRACK_MINI_COMPASS_TOP.set_color(COLOR_BLUE, COLOR_WHITE);
-      TRACK_MINI_COMPASS_BOTTOM.set_color(COLOR_BLUE, COLOR_WHITE);
-
-      TRACK_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
-      TRACK_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.TRACK.get_float_value()));
-
+      TRACK_MINI_COMPASS.set_color(COLOR_BLUE, COLOR_WHITE);
+      TRACK_MINI_COMPASS.set_heading(PROP.AIRCRAFT_DATA.TRACK.get_float_value());
       TRACK.set_text(to_string(PROP.AIRCRAFT_DATA.TRACK.get_int_value()), tmeFrame_Time);
     }
     else
     {
-      TRACK_MINI_COMPASS_TOP.set_color(PROP.BCOLOR, PROP.BCOLOR);
-      TRACK_MINI_COMPASS_BOTTOM.set_color(PROP.BCOLOR, PROP.BCOLOR);
-
-      TRACK_MINI_COMPASS_TOP.clear();
-      TRACK_MINI_COMPASS_BOTTOM.clear();
-
+      TRACK_MINI_COMPASS.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      TRACK_MINI_COMPASS.clear();
       TRACK.set_text("");
     }
 
@@ -515,22 +596,14 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     NAV_HEADING.set_color(PROP.BCOLOR, COLOR_BLUE);
     if (PROP.AIRCRAFT_DATA.NAV_HEADING.conversion_success() == true)
     {
-      NAV_HEADING_MINI_COMPASS_TOP.set_color(COLOR_BLUE, COLOR_WHITE);
-      NAV_HEADING_MINI_COMPASS_BOTTOM.set_color(COLOR_BLUE, COLOR_WHITE);
-      
-      NAV_HEADING_MINI_COMPASS_TOP.set_text(compass_mini_top(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
-      NAV_HEADING_MINI_COMPASS_BOTTOM.set_text(compass_mini_bottom(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value()));
-
+      NAV_HEADING_MINI_COMPASS.set_color(COLOR_BLUE, COLOR_WHITE);
+      NAV_HEADING_MINI_COMPASS.set_heading(PROP.AIRCRAFT_DATA.NAV_HEADING.get_float_value());
       NAV_HEADING.set_text(to_string(PROP.AIRCRAFT_DATA.NAV_HEADING.get_int_value()), tmeFrame_Time);
     }
     else
     {
-      NAV_HEADING_MINI_COMPASS_TOP.set_color(PROP.BCOLOR, PROP.BCOLOR);
-      NAV_HEADING_MINI_COMPASS_BOTTOM.set_color(PROP.BCOLOR, PROP.BCOLOR);
-
-      NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
-      NAV_HEADING_MINI_COMPASS_BOTTOM.clear();
-
+      NAV_HEADING_MINI_COMPASS.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      NAV_HEADING_MINI_COMPASS.clear();
       NAV_HEADING.set_text("");
     }
 
@@ -540,26 +613,34 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       // Aircraft Geo Coordinates TTL
       if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
       {
-        COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 70, 0, 0), PROP.BCOLOR);
+        COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 25, 45, 0, 0), COLOR_BLACK);
+        COORD_TTL_IND.set_text("()");
       }
 
       // Aircraft Data TTL
       if (PROP.AIRCRAFT_DATA.SEEN.conversion_success()==true)
       {
-        DATA_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 150, 290, 0, 0), PROP.BCOLOR);
+        DATA_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 100, 150, 0, 0), COLOR_BLACK);
+        DATA_TTL_IND.set_text("()");
       }
 
       // Aircraft RSSI Strength
       if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
       {
-        SIG_STR_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36), PROP.BCOLOR);
+        SIG_STR_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36), COLOR_BLACK);
+        SIG_STR_IND.set_text("()");
       }
     }
     else
     {
       COORD_TTL_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      COORD_TTL_IND.set_text("  ");
+
       DATA_TTL_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      DATA_TTL_IND.set_text("  ");
+
       SIG_STR_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
+      SIG_STR_IND.set_text("  ");
     }
 
     // Screen needs to be redrawn.
@@ -586,12 +667,10 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   redraw_screen.catch_truth(SPEED.draw(winADSB, Refresh, tmeFrame_Time));
 
   redraw_screen.catch_truth(TRACK.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(TRACK_MINI_COMPASS_TOP.draw(winADSB, Refresh));
-  redraw_screen.catch_truth(TRACK_MINI_COMPASS_BOTTOM.draw(winADSB, Refresh));
+  redraw_screen.catch_truth(TRACK_MINI_COMPASS.draw(winADSB, Refresh));
 
   redraw_screen.catch_truth(NAV_HEADING.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(NAV_HEADING_MINI_COMPASS_TOP.draw(winADSB, Refresh));
-  redraw_screen.catch_truth(NAV_HEADING_MINI_COMPASS_BOTTOM.draw(winADSB, Refresh));
+  redraw_screen.catch_truth(NAV_HEADING_MINI_COMPASS.draw(winADSB, Refresh));
 
   redraw_screen.catch_truth(SIG_STR_IND.draw(winADSB, Refresh, tmeFrame_Time));
   redraw_screen.catch_truth(COORD_TTL_IND.draw(winADSB, Refresh, tmeFrame_Time));

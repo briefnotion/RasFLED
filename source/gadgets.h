@@ -130,6 +130,8 @@ class Text_Field
 
   bool has_blank();
 
+  void redraw();
+
   void set_inverse(bool Inverse);
 
   void set_text(string Text, unsigned long tmeFrame_Time);

@@ -104,6 +104,11 @@ bool Text_Field::has_blank()
   return HAS_BLANK;
 }
 
+void Text_Field::redraw()
+{
+  CHANGED = true;
+}
+
 void Text_Field::set_inverse(bool Inverse)
 {
   if (Inverse != PROP.INVERSE)
