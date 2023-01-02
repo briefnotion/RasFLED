@@ -248,7 +248,7 @@ void ADSB_Channel::create()
 
   // Altitude
   ALTITUDE.PROP.POSY = 1;
-  ALTITUDE.PROP.POSX = 6;
+  ALTITUDE.PROP.POSX = 14;
   ALTITUDE.PROP.SIZEX = 6;
   ALTITUDE.PROP.DONT_BLANK = true;
   ALTITUDE.PROP.JUSTIFICATION_RIGHT = true;
@@ -256,7 +256,7 @@ void ADSB_Channel::create()
 
   // Altitude Indicator
   ALTITUDE_IND.PROP.POSY = 1;
-  ALTITUDE_IND.PROP.POSX = 12;
+  ALTITUDE_IND.PROP.POSX = 20;
   ALTITUDE_IND.PROP.COLORS_ON = true;
   ALTITUDE_IND.PROP.COLOR = COLOR_BLACK;
   ALTITUDE_IND.PROP.BCOLOR = COLOR_BLACK;
@@ -267,7 +267,7 @@ void ADSB_Channel::create()
   // Altitude Nav
   //NAV_ALTITUDE_MCP.PROP.LABEL = "nava";
   NAV_ALTITUDE_MCP.PROP.POSY = 2;
-  NAV_ALTITUDE_MCP.PROP.POSX = 6;
+  NAV_ALTITUDE_MCP.PROP.POSX = 14;
   NAV_ALTITUDE_MCP.PROP.COLORS_ON = true;
   NAV_ALTITUDE_MCP.PROP.COLOR = COLOR_BLUE;
   NAV_ALTITUDE_MCP.PROP.BCOLOR = COLOR_BLACK;
@@ -278,7 +278,7 @@ void ADSB_Channel::create()
 
   // Vertical Rate
   D_VERTICAL_RATE.PROP.POSY = 3;
-  D_VERTICAL_RATE.PROP.POSX = 6;
+  D_VERTICAL_RATE.PROP.POSX = 14;
   D_VERTICAL_RATE.PROP.SIZEX = 6;
   D_VERTICAL_RATE.PROP.DONT_BLANK = true;
   D_VERTICAL_RATE.PROP.JUSTIFICATION_RIGHT = true;
@@ -286,7 +286,7 @@ void ADSB_Channel::create()
 
   // Vertical Rate Indicator
   D_VERTICAL_RATE_IND.PROP.POSY = 3;
-  D_VERTICAL_RATE_IND.PROP.POSX = 12;
+  D_VERTICAL_RATE_IND.PROP.POSX = 20;
   D_VERTICAL_RATE_IND.PROP.COLORS_ON = true;
   D_VERTICAL_RATE_IND.PROP.COLOR = COLOR_BLACK;
   D_VERTICAL_RATE_IND.PROP.BCOLOR = COLOR_BLACK;
@@ -314,7 +314,7 @@ void ADSB_Channel::create()
 
   // Track
   TRACK.PROP.POSY = 1;
-  TRACK.PROP.POSX = 14;
+  TRACK.PROP.POSX = 7;
   TRACK.PROP.SIZEX = 3;
   TRACK.PROP.DONT_BLANK = true;
   TRACK.PROP.JUSTIFICATION_RIGHT = true;
@@ -322,14 +322,14 @@ void ADSB_Channel::create()
 
   // Track Mini Compass
   TRACK_MINI_COMPASS.PROP.POSY = 2;
-  TRACK_MINI_COMPASS.PROP.POSX = 14;
+  TRACK_MINI_COMPASS.PROP.POSX = 7;
   TRACK_MINI_COMPASS.PROP.COLOR = COLOR_BLACK;
   TRACK_MINI_COMPASS.PROP.BCOLOR = COLOR_BLACK;
   
   // Track Nav
   //NAV_HEADING.PROP.LABEL = "navt";
   NAV_HEADING.PROP.POSY = 1;
-  NAV_HEADING.PROP.POSX = 18;
+  NAV_HEADING.PROP.POSX = 11;
   NAV_HEADING.PROP.COLORS_ON = true;
   NAV_HEADING.PROP.COLOR = COLOR_BLUE;
   NAV_HEADING.PROP.BCOLOR = COLOR_BLACK;
@@ -340,7 +340,7 @@ void ADSB_Channel::create()
 
   // Track Nav Mini Compass
   NAV_HEADING_MINI_COMPASS.PROP.POSY = 2;
-  NAV_HEADING_MINI_COMPASS.PROP.POSX = 18;
+  NAV_HEADING_MINI_COMPASS.PROP.POSX = 11;
   NAV_HEADING_MINI_COMPASS.PROP.COLOR = COLOR_BLACK;
   NAV_HEADING_MINI_COMPASS.PROP.BCOLOR = COLOR_BLACK;
   
@@ -452,13 +452,14 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   if ((PROP.CHANGED == true || Refresh == true))
   {
     // Draw Background
-    // If No Data
+    // If No Data at all
     if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == false)
     {
       PROP.BCOLOR = COLOR_BLACK;
       PROP.COLOR = COLOR_BLACK;
       MESSAGE.set_text("");
     }
+    // If No Aircraft Data
     else if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
     {
       PROP.BCOLOR = COLOR_BLUE;
@@ -471,7 +472,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       PROP.BCOLOR = COLOR_GREEN;
       PROP.COLOR = COLOR_BLACK;
     }
-    // If No Position Found
+    // If No Position Found but Data Exist
     else
     {
       PROP.BCOLOR = COLOR_YELLOW;
@@ -608,7 +609,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     }
 
     // Aircraft COORD TTL, Data TTL, and RSSI Str.
-    if (PROP.AIRCRAFT_DATA.data_count() > 0)
+    if (PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
     {
       // Aircraft Geo Coordinates TTL
       if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
@@ -625,7 +626,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       }
 
       // Aircraft RSSI Strength
-      if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
+      if (PROP.AIRCRAFT_DATA.RSSI.conversion_success()==true)
       {
         SIG_STR_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36), COLOR_BLACK);
         SIG_STR_IND.set_text("()");

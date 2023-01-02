@@ -1,3 +1,6 @@
+V 1.32A_230101
+  - Small corrections to ADSB Screen.
+
 V 1.31A_221229
   - Changes to ADSB Screen.
 
