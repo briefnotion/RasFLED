@@ -612,16 +612,22 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
     {
       // Aircraft Geo Coordinates TTL
-      if (PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true)
+      if (  PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true &&
+            PROP.AIRCRAFT_DATA.POSITION.LATITUDE.conversion_success() == true && 
+            PROP.AIRCRAFT_DATA.POSITION.LONGITUDE.conversion_success() == true)
       {
-        COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 25, 45, 0, 0), COLOR_BLACK);
+        COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 65, 0, 0), COLOR_BLACK);
         COORD_TTL_IND.set_text("()");
+      }
+      else
+      {
+        COORD_TTL_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
       }
 
       // Aircraft Data TTL
       if (PROP.AIRCRAFT_DATA.SEEN.conversion_success()==true)
       {
-        DATA_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 100, 150, 0, 0), COLOR_BLACK);
+        DATA_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 170, 290, 0, 0), COLOR_BLACK);
         DATA_TTL_IND.set_text("()");
       }
 

@@ -14,6 +14,38 @@
 using namespace std;
 
 // -------------------------------------------------------------------------------------
+//  Panel Class
+
+void Panel::create()
+{
+  winPanel = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+
+  refresh();
+
+  wborder(winPanel,'|','|','-','-','+','+','+','+') ;
+
+  CHANGED = true;
+}
+
+void Panel::set_color(int Background_Color, int Color)
+{
+  wbkgd(winPanel, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+  CHANGED = true;
+}
+
+void Panel::draw(bool Refresh)
+{
+  if (CHANGED == true || Refresh == true)
+  {
+
+    wrefresh(winPanel);
+
+    CHANGED = false;
+  }
+}
+
+
+// -------------------------------------------------------------------------------------
 //  Title_Bar Classes
 
 void Title_Bar::modify(int id, string name, string label, int size, int color, int bcolor)

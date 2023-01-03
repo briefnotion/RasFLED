@@ -31,6 +31,49 @@ using namespace std;
 #define LEDGEND_SCALER  2
 
 // -------------------------------------------------------------------------------------
+//  Panel Class
+
+class Panel_Properties
+// Properties (duh)
+{
+  public: 
+  string LABEL = "";
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+};
+
+
+class Panel
+{
+  private:
+
+  WINDOW * winPanel;
+
+  bool CHANGED = false;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  public:
+  Panel_Properties PROP;
+
+  //bool changed();
+
+  void create();
+
+  void set_color(int Background_Color, int Color);
+
+  void draw(bool Refresh);
+};
+
+// -------------------------------------------------------------------------------------
 //  Title_Bar Classes
 class Title_Bar_Properties
 // Properties (duh)
