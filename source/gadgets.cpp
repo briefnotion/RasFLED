@@ -16,29 +16,48 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Panel Class
 
-void Panel::create()
+void PANEL::create()
 {
-  winPanel = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+  winPANEL = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
 
   refresh();
 
-  wborder(winPanel,'|','|','-','-','+','+','+','+') ;
+  //wborder(winPANEL,'|','|','-','-','+','+','+','+') ;
+  wborder(winPANEL,' ',' ',' ',' ',' ',' ',' ',' ') ;
+  wbkgd(winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
 
   CHANGED = true;
 }
 
-void Panel::set_color(int Background_Color, int Color)
+void PANEL::changed_on()
 {
-  wbkgd(winPanel, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
   CHANGED = true;
 }
 
-void Panel::draw(bool Refresh)
+void PANEL::set_color(int Background_Color, int Color)
+{
+  if (PROP.BCOLOR != Background_Color || PROP.COLOR != Color)
+  {
+    PROP.BCOLOR = Background_Color;
+    PROP.COLOR = Color;
+
+    wbkgd(winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    CHANGED = true;    
+  }
+}
+
+void PANEL::draw(bool Refresh)
 {
   if (CHANGED == true || Refresh == true)
   {
-
-    wrefresh(winPanel);
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(winPANEL, 0, 0, "%d ", Counter);
+    }
+    
+    wrefresh(winPANEL);
 
     CHANGED = false;
   }
@@ -206,10 +225,8 @@ void Text_Field::set_color(int Background_Color, int Color)
   }
 }
 
-bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
+void Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 {
-  bool redrawn = false;
-
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
@@ -220,19 +237,19 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
     // Check for Reverse Text
     if (PROP.INVERSE == true)
     {
-      wattron(Window, A_REVERSE);
+      wattron(Panel.winPANEL, A_REVERSE);
     }
 
     // Check for Colored Text
     if (PROP.COLORS_ON == true)
     {
-      wattron(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
     }
 
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
-      wattron(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
     }
 
     // Check for Text Modification
@@ -241,61 +258,58 @@ bool Text_Field::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
       // Print Center Justified
       if (PROP.JUSTIFICATION_CENTER == true)
       {
-        mvwprintw(Window, PROP.POSY, PROP.POSX, linefill(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, linefill(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
       // Print Right Justified
       else if (PROP.JUSTIFICATION_RIGHT == true)
       {
-        mvwprintw(Window, PROP.POSY, PROP.POSX, right_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, right_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
       // Print Left Justified or full field.
       else if (PROP.JUSTIFICATION_LEFT == true)
       {
-        mvwprintw(Window, PROP.POSY, PROP.POSX, left_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, left_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
     }
     else  // Print Simple Text
     {
-      mvwprintw(Window, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line. 
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line. 
     }
 
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
-      wattroff(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
     }
 
     // Check for Colored Text
     if (PROP.COLORS_ON == true)
     {
-      wattroff(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
     }
 
     // Check for Reverse Text
     if (PROP.INVERSE == true)
     {
-      wattroff(Window, A_REVERSE);
+      wattroff(Panel.winPANEL, A_REVERSE);
     }
 
     //Debug -- displays dedraw count and other variables.
     if (true == DEBUG_COUNTER)
     {
       Counter++;
-      mvwprintw(Window, PROP.POSY, PROP.POSX, "%d ", Counter);
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%d ", Counter);
     }
-
-    redrawn = true;
 
     CHANGED = false;
 
+    Panel.changed_on();
   }
-
-  return redrawn;
 }
   
-bool Text_Field::draw(WINDOW *Window, bool Refresh)
+void Text_Field::draw(PANEL &Panel, bool Refresh)
 {
-  return draw(Window, Refresh, 0);
+  draw(Panel, Refresh, 0);
 }
 
 // -------------------------------------------------------------------------------------

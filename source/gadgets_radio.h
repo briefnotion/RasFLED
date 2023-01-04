@@ -74,9 +74,9 @@ class Mini_Compass
 
   void set_color(int Background_Color, int Color);
 
-  bool draw(WINDOW *window, bool Refresh, unsigned long tmeFrame_Time);
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
 
-  bool draw(WINDOW *window, bool Refresh);
+  void draw(PANEL &Panel, bool Refresh);
 };
 
 // -------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ class ADSB_Channel
   private:
 
   // Gadget window
-  WINDOW * winADSB;
+  PANEL ADSB_PANEL;
 
   // Time Provided
   unsigned long FRAME_TIME;             // Internal
@@ -228,7 +228,7 @@ class ADSB_Channel_Grid
 
   void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time, WINDOW *ADSB_Window);
+  void draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel);
 };
 
 // -------------------------------------------------------------------------------------

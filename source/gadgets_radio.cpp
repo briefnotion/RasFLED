@@ -61,10 +61,9 @@ void Mini_Compass::set_color(int Background_Color, int Color)
   }
 }
 
-bool Mini_Compass::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Time)
-{
-  bool redrawn = false;
 
+void Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+{
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
@@ -73,13 +72,13 @@ bool Mini_Compass::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Tim
   if (CHANGED == true || Refresh == true)
   {
     // Check for Colored Text
-    wattron(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
 
 
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
-      wattron(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
     }
     
     string return_str = ""; 
@@ -125,7 +124,7 @@ bool Mini_Compass::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Tim
         return_str = "XX";
       }
 
-      mvwprintw(Window, PROP.POSY, PROP.POSX, return_str.c_str());
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, return_str.c_str());
 
       // Draw Bottom Line
 
@@ -166,44 +165,40 @@ bool Mini_Compass::draw(WINDOW *Window, bool Refresh, unsigned long tmeFrame_Tim
         return_str = "XX";
       }
 
-      mvwprintw(Window, PROP.POSY +1, PROP.POSX, return_str.c_str());
+      mvwprintw(Panel.winPANEL, PROP.POSY +1, PROP.POSX, return_str.c_str());
     }
     else  // Cleared, draw blanks.
     {
-      mvwprintw(Window, PROP.POSY   , PROP.POSX, "   ");
-      mvwprintw(Window, PROP.POSY +1, PROP.POSX, "   ");
+      mvwprintw(Panel.winPANEL, PROP.POSY   , PROP.POSX, "   ");
+      mvwprintw(Panel.winPANEL, PROP.POSY +1, PROP.POSX, "   ");
     }
 
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
-      wattroff(Window, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
     }
 
     // Check for Colored Text
-    wattroff(Window, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
  
     //Debug -- displays dedraw count and other variables.
     if (true == DEBUG_COUNTER)
     {
       Counter++;
-      mvwprintw(Window, PROP.POSY, PROP.POSX, "%d ", Counter);
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%d ", Counter);
     }
-
-    redrawn = true;
-
+    
     CHANGED = false;
 
+    Panel.changed_on();
   }
-
-  return redrawn;
 }
   
-bool Mini_Compass::draw(WINDOW *Window, bool Refresh)
+void Mini_Compass::draw(PANEL &Panel, bool Refresh)
 {
-  return draw(Window, Refresh, 0);
+  return draw(Panel, Refresh, 0);
 }
-
 
 // -------------------------------------------------------------------------------------
 //  ADS-B Classes
@@ -217,10 +212,13 @@ void ADSB_Channel::create()
 // Does not create window.
 {
   // Create Gadget Window
-  winADSB = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+  // Create Panel
+  ADSB_PANEL.PROP.POSY = PROP.POSY;
+  ADSB_PANEL.PROP.POSX = PROP.POSX;
+  ADSB_PANEL.PROP.SIZEY = PROP.SIZEY;
+  ADSB_PANEL.PROP.SIZEX = PROP.SIZEX;
 
-  //wborder(winFrequency,'|','|','-','-','+','+','+','+') ;
-  wborder(winADSB,' ',' ',' ',' ',' ',' ',' ',' ') ;
+  ADSB_PANEL.create();
 
   // Create Text Fields
 
@@ -437,8 +435,6 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  TRUTH_CATCH redraw_screen;
-
   FRAME_TIME = tmeFrame_Time;
 
   // Check Expiration
@@ -500,7 +496,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       }  
     }
     
-    wbkgd(winADSB, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    ADSB_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
 
     // Set Colors and Text
 
@@ -651,61 +647,54 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     }
 
     // Screen needs to be redrawn.
-    redraw_screen.catch_truth(true);
   }
-
 
   // Write All text fields.
-  //redraw_screen.catch_truth(TOP_BAR.draw(winADSB, Refresh));
 
-  redraw_screen.catch_truth(FLIGHT.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(SQUAWK.draw(winADSB, Refresh, tmeFrame_Time));
+  FLIGHT.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
+  SQUAWK.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
 
-  redraw_screen.catch_truth(ALTITUDE_IND.draw(winADSB, Refresh));
+  ALTITUDE_IND.draw(ADSB_PANEL, Refresh);
   
-  redraw_screen.catch_truth(ALTITUDE.draw(winADSB, Refresh, tmeFrame_Time));
+  ALTITUDE.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
   
-  redraw_screen.catch_truth(NAV_ALTITUDE_MCP.draw(winADSB, Refresh, tmeFrame_Time));
+  NAV_ALTITUDE_MCP.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
 
-  redraw_screen.catch_truth(D_VERTICAL_RATE_IND.draw(winADSB, Refresh));
-  redraw_screen.catch_truth(D_VERTICAL_RATE.draw(winADSB, Refresh, tmeFrame_Time));
+  D_VERTICAL_RATE_IND.draw(ADSB_PANEL, Refresh);
+  D_VERTICAL_RATE.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
 
-  redraw_screen.catch_truth(SPEED_IND.draw(winADSB, Refresh));
-  redraw_screen.catch_truth(SPEED.draw(winADSB, Refresh, tmeFrame_Time));
+  SPEED_IND.draw(ADSB_PANEL, Refresh);
+  SPEED.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
 
-  redraw_screen.catch_truth(TRACK.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(TRACK_MINI_COMPASS.draw(winADSB, Refresh));
+  TRACK.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
+  TRACK_MINI_COMPASS.draw(ADSB_PANEL, Refresh);
 
-  redraw_screen.catch_truth(NAV_HEADING.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(NAV_HEADING_MINI_COMPASS.draw(winADSB, Refresh));
+  NAV_HEADING.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
+  NAV_HEADING_MINI_COMPASS.draw(ADSB_PANEL, Refresh);
 
-  redraw_screen.catch_truth(SIG_STR_IND.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(COORD_TTL_IND.draw(winADSB, Refresh, tmeFrame_Time));
-  redraw_screen.catch_truth(DATA_TTL_IND.draw(winADSB, Refresh, tmeFrame_Time));
+  SIG_STR_IND.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
+  COORD_TTL_IND.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
+  DATA_TTL_IND.draw(ADSB_PANEL, Refresh, tmeFrame_Time);
 
-  MESSAGE.draw(winADSB, Refresh);
+  MESSAGE.draw(ADSB_PANEL, Refresh);
   
-  //NAV_QNH.draw(winADSB, Refresh);
+//NAV_QNH.draw(winADSB, Refresh);
 
-
-  if (redraw_screen.has_truth() == true)
+  /*
+  //Debug -- displays dedraw count and other variables.
+  if (true == DEBUG_COUNTER)
   {
-    /*
-    //Debug -- displays dedraw count and other variables.
-    if (true == DEBUG_COUNTER)
-    {
-      Counter++;
-      mvwprintw(winFrequency, 0, 0, "%d ", Counter);
-      mvwprintw(winFrequency, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
-    }
-    */
-
-    // Reset Properties Changed.
-    PROP.CHANGED = false;
-
-    // Draw the Gadget.
-    wrefresh(winADSB);
+    Counter++;
+    mvwprintw(winFrequency, 0, 0, "%d ", Counter);
+    mvwprintw(winFrequency, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
   }
+  */
+
+  // Reset Properties Changed.
+  PROP.CHANGED = false;
+
+  // Draw the Gadget.
+  ADSB_PANEL.draw(Refresh);
 }
 
 // -------------------------------------------------------------------------------------
@@ -887,12 +876,10 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
   PROP.NEEDS_REFRESH_DATA = false;
 }
 
-void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, WINDOW *ADSB_Screen)
+void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  TRUTH_CATCH redraw_screen;
-
   for (int x = 0; x < ADSB_Channel_Count; x++)
   {
     ADSB_Channel_q[x].draw(Refresh, tmeFrame_Time);
@@ -911,7 +898,6 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, WINDOW *
     }
     */
 
-    redraw_screen.catch_truth(true);
   }
 
   TIME.set_text(                                         to_string(PROP.AIRCRAFT_LIST.CONVERTED_TIME.get_year()) + 
@@ -927,19 +913,16 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, WINDOW *
   AIRCRAFT_COUNT.set_text(to_string(PROP.AIRCRAFT_LIST.AIRCRAFTS.size()));
   POSITIONED_AIRCRAFT.set_text(to_string(PROP.AIRCRAFT_LIST.POSITIONED_AIRCRAFT));
 
-  redraw_screen.catch_truth(TOP_BAR.draw(ADSB_Screen, Refresh));
-  redraw_screen.catch_truth(TIME.draw(ADSB_Screen, Refresh));
-  redraw_screen.catch_truth(AIRCRAFT_COUNT_TITLE.draw(ADSB_Screen, Refresh));
-  redraw_screen.catch_truth(AIRCRAFT_COUNT.draw(ADSB_Screen, Refresh));
-  redraw_screen.catch_truth(POSITIONED_AIRCRAFT_TITLE.draw(ADSB_Screen, Refresh));
-  redraw_screen.catch_truth(POSITIONED_AIRCRAFT.draw(ADSB_Screen, Refresh));
+  TOP_BAR.draw(ADSB_Grid_Panel, Refresh);
+  TIME.draw(ADSB_Grid_Panel, Refresh);
+  AIRCRAFT_COUNT_TITLE.draw(ADSB_Grid_Panel, Refresh);
+  AIRCRAFT_COUNT.draw(ADSB_Grid_Panel, Refresh);
+  POSITIONED_AIRCRAFT_TITLE.draw(ADSB_Grid_Panel, Refresh);
+  POSITIONED_AIRCRAFT.draw(ADSB_Grid_Panel, Refresh);
 
-  if (redraw_screen.has_truth())
-  {
-    // Reset Properties Changed.
-    PROP.CHANGED = false;
-    wrefresh(ADSB_Screen);
-  }
+  PROP.CHANGED = false;
+  ADSB_Grid_Panel.draw(Refresh);
+
 }
 
 

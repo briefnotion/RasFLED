@@ -352,20 +352,22 @@ void Screen3::reset(ScreenStatus &ScrStat)
     XStatusSize = XSplit;
 
     // Build Window
-    winStatus = newwin(YStatusSize, XStatusSize, YStatusPos, XStatusPos);
+    STATUS_PANEL.PROP.SIZEY = YStatusSize;
+    STATUS_PANEL.PROP.SIZEX = XStatusSize;
+    STATUS_PANEL.PROP.POSY = YStatusPos;
+    STATUS_PANEL.PROP.POSX = XStatusPos;
+
+    STATUS_PANEL.create();
+
     tiStatus.move_resize(YStatusPos, XStatusPos, YStatusSize, XStatusSize);
     
     // Set Y Split
     YSplit = YSplit + YStatusSize;
 
-    // Status Window Border
-    wborder(winStatus,' ',' ',' ',' ',' ',' ',' ',' ') ;
+    STATUS_PANEL.set_color(COLOR_BLUE, COLOR_WHITE);
     
     // Create Status Screen
-    wrefresh(winStatus);
-
-    // Set window color
-    wbkgd(winStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
+    STATUS_PANEL.draw(true);
 
     // Text Fields
 
@@ -803,20 +805,21 @@ void Screen3::reset(ScreenStatus &ScrStat)
     XADS_B_ScreenSize =  XSplit;          // - XBADS_BSize;
 
     // Build Window
-    winADS_B_Screen = newwin(YADS_B_ScreenSize, XADS_B_ScreenSize, YADS_B_ScreenPos, XADS_B_ScreenPos);
+    ADSB_GRID_PANEL.PROP.SIZEY = YADS_B_ScreenSize;
+    ADSB_GRID_PANEL.PROP.SIZEX = XADS_B_ScreenSize;
+    ADSB_GRID_PANEL.PROP.POSY = YADS_B_ScreenPos;
+    ADSB_GRID_PANEL.PROP.POSX = XADS_B_ScreenPos;
+
+    ADSB_GRID_PANEL.create();
+
     tiADS_B_Screen.move_resize(YADS_B_ScreenPos, XADS_B_ScreenPos, YADS_B_ScreenSize, XADS_B_ScreenSize);
 
     // Set Y Split      
     YSplit = YSplit + YLog_ScreenSize;
 
-    // ADS_B Window Border
-    wborder(winADS_B_Screen,' ',' ',' ',' ',' ',' ',' ',' ') ;
-
     // Create Screen
-    wrefresh(winADS_B_Screen);
-
-    // Set window color
-    wbkgd(winADS_B_Screen, COLOR_PAIR(0));
+    ADSB_GRID_PANEL.set_color(COLOR_BLACK, COLOR_BLACK);
+    ADSB_GRID_PANEL.draw(true);
 
     // the bottom line of the ADS_B.
     strBotLine = "";
@@ -878,8 +881,6 @@ void Screen3::reset(ScreenStatus &ScrStat)
 void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
 // Displays command line input, status and door indicators
 {
-  TRUTH_CATCH redraw_screen;
-
   // Display Command Line
   COMMAND_TITLE.set_text("CMD:");
   if (keywatch.cmdPressed() == true || keywatch.cmdCleared() == true || ScrStat.Needs_Refresh == true)
@@ -981,29 +982,26 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   {
     TEMPERATURE.set_text("NA");
   }
-  TEMPERATURE.draw(winStatus, true);
 
   // Draw Fields
-  redraw_screen.catch_truth(COMMAND_TITLE.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(COMMAND_UNDERLINE.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(COMMAND.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(DOOR1.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(DOOR2.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(DOOR3.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(DOOR4.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(LIGHTSOFF.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(NIGHT.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(HAZARD.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(OVERHEAD.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(TIMER.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(ADSB.draw(winStatus, ScrStat.Needs_Refresh));
-  redraw_screen.catch_truth(VERSION.draw(winStatus, ScrStat.Needs_Refresh));
+  COMMAND_TITLE.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  COMMAND_UNDERLINE.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  COMMAND.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  DOOR1.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  DOOR2.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  DOOR3.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  DOOR4.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  LIGHTSOFF.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  NIGHT.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  HAZARD.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  OVERHEAD.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  TIMER.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  ADSB.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  TEMPERATURE.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  VERSION.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
 
-  // Commit all our changes to the status portion of the screen (winTop)
-  if (redraw_screen.has_truth() == true)
-  {
-    wrefresh(winStatus);
-  }
+  // Commit all our changes to the status portion of the screen
+  STATUS_PANEL.draw(ScrStat.Needs_Refresh);
 
   tiStatus.draw(ScrStat.Needs_Refresh);
 }
@@ -1424,7 +1422,7 @@ void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   // Print ADS_B Buttons
   bzADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
 
-  ADSB_Grid.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, winADS_B_Screen);
+  ADSB_Grid.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, ADSB_GRID_PANEL);
 
   if(ScrStat.Needs_Refresh == true)
   {

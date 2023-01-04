@@ -1,3 +1,6 @@
+V 1.34A_230104
+  - Changes made to some gadgets.
+
 V 1.33A_230103
   - Small corrections to ADSB Screen.
 

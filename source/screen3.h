@@ -113,7 +113,7 @@ class Screen3
   Text_Field VERSION;
   Text_Field TEMPERATURE;
 
-  WINDOW * winStatus;
+  PANEL STATUS_PANEL;
   Title_Bar tiStatus;
 
   // Buttons Screen Variables --------------------
@@ -260,7 +260,7 @@ class Screen3
   int YBADS_BSize = 5; // ADS_B Button Standard Sizes
   int XBADS_BSize = 10;
 
-  WINDOW * winADS_B_Screen;
+  PANEL ADSB_GRID_PANEL;
   Title_Bar tiADS_B_Screen;
 
   public:

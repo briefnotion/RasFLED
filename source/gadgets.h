@@ -33,7 +33,7 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Panel Class
 
-class Panel_Properties
+class PANEL_PROPERTIES
 // Properties (duh)
 {
   public: 
@@ -50,11 +50,9 @@ class Panel_Properties
 };
 
 
-class Panel
+class PANEL
 {
   private:
-
-  WINDOW * winPanel;
 
   bool CHANGED = false;
 
@@ -62,11 +60,15 @@ class Panel
   int Counter = 0;
 
   public:
-  Panel_Properties PROP;
+  WINDOW * winPANEL;
+
+  PANEL_PROPERTIES PROP;
 
   //bool changed();
 
   void create();
+  
+  void changed_on();
 
   void set_color(int Background_Color, int Color);
 
@@ -185,9 +187,9 @@ class Text_Field
 
   void set_color(int Background_Color, int Color);
 
-  bool draw(WINDOW *window, bool Refresh, unsigned long tmeFrame_Time);
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
 
-  bool draw(WINDOW *window, bool Refresh);
+  void draw(PANEL &Panel, bool Refresh);
 };
 
 
