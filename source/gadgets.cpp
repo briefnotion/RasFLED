@@ -65,81 +65,6 @@ void PANEL::draw(bool Refresh)
 
 
 // -------------------------------------------------------------------------------------
-//  Title_Bar Classes
-
-void Title_Bar::modify(int id, string name, string label, int size, int color, int bcolor)
-// Changes all properties
-{
-  PROP.ID = id;
-  PROP.NAME = name;
-  PROP.LABEL = label;
-
-  PROP.SIZE = size;
-  PROP.COLOR = color;
-
-  PROP.CHANGED = true;
-}
-
-void Title_Bar::create(int id, string name, string label, int size, int color, int bcolor)
-// Define and behavior.  
-// Like set but leaves off position and size details.
-// Does not create window.
-
-{
-  PROP.ID = id;
-  PROP.NAME = name;
-  PROP.LABEL = label;
-
-  PROP.SIZE = size;
-  PROP.COLOR = color;
-  PROP.BCOLOR = bcolor;
-
-  winTitle = newwin(1, PROP.SIZE, PROP.POSY, PROP.POSX + PROP.SIZEX - PROP.SIZE);
-
-  bool CHANGED = true;
-}
-
-void Title_Bar::move_resize(int posY, int posX, int sizeY, int sizeX)
-// Redefine position and size.
-{
-  PROP.POSX = posX + sizeX - PROP.SIZE;
-  PROP.POSY = posY;
-  PROP.SIZEX = sizeX;
-  PROP.SIZEY = 1;
-
-  winTitle = newwin(PROP.SIZEY, PROP.SIZE, PROP.POSY, PROP.POSX);
-
-  refresh();
-
-  wborder(winTitle,'|','|','-','-','+','+','+','+') ;
-
-  bool CHANGED = true;
-}
-
-bool Title_Bar::changed()
-// Returns true if any of the properties have changed.
-{
-  return PROP.CHANGED;
-}
-
-void Title_Bar::draw(bool Refresh)
-// Draw the text_box on the screen if the value has changed or if  
-//  the Refresh parameter is true.
-{
-  if (PROP.CHANGED == true || Refresh == true)
-  {
-    wbkgd(winTitle, COLOR_PAIR(PROP.COLOR));
-    wattron(winTitle, A_REVERSE);
-    mvwprintw(winTitle, 0, 0, right_justify(PROP.SIZE, PROP.LABEL).c_str());
-    wattroff(winTitle, A_REVERSE);
-
-    PROP.CHANGED = false;
-
-    wrefresh(winTitle);
-  }
-}
-
-// -------------------------------------------------------------------------------------
 //  Text_Field Classes
 
 
@@ -207,10 +132,6 @@ void Text_Field::set_text(string Text)
 
 void Text_Field::clear()
 {
-  Text_Field_Properties cleared_properties;
-
-  //PROP = cleared_properties;
-
   PROP.LABEL = "";
   CHANGED = true;
 }
@@ -310,6 +231,61 @@ void Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 void Text_Field::draw(PANEL &Panel, bool Refresh)
 {
   draw(Panel, Refresh, 0);
+}
+
+// -------------------------------------------------------------------------------------
+//  Title_Bar Classes
+
+void Title_Bar::create()
+// Define and behavior.  
+// Like set but leaves off position and size details.
+// Does not create window.
+
+{
+  TITLE_BAR_PANEL.PROP.SIZEY = 1;
+  TITLE_BAR_PANEL.PROP.SIZEX = PROP.SIZE; 
+  TITLE_BAR_PANEL.PROP.POSY = PROP.POSY;
+  TITLE_BAR_PANEL.PROP.POSX = PROP.POSX + PROP.SIZEX - PROP.SIZE;
+
+  TITLE_BAR_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+  
+  TITLE_BAR_PANEL.create();
+
+  TITLE.PROP.POSY = 0;
+  TITLE.PROP.POSX = 0;
+  TITLE.PROP.SIZEX = TITLE_BAR_PANEL.PROP.SIZEX;
+  TITLE.PROP.JUSTIFICATION_RIGHT = true;
+  TITLE.PROP.COLORS_ON = true;
+  TITLE.PROP.INVERSE = true;
+  
+  TITLE.set_color(PROP.BCOLOR, PROP.COLOR);
+
+  bool CHANGED = true;
+}
+
+bool Title_Bar::changed()
+// Returns true if any of the properties have changed.
+{
+  return PROP.CHANGED;
+}
+
+void Title_Bar::draw(bool Refresh)
+// Draw the text_box on the screen if the value has changed or if  
+//  the Refresh parameter is true.
+{
+  if (PROP.CHANGED == true || Refresh == true)
+  {
+    if (PROP.LABEL != TITLE.PROP.LABEL)
+    {
+      TITLE.set_text(PROP.LABEL);
+    }
+
+    TITLE.draw(TITLE_BAR_PANEL, Refresh);
+
+    TITLE_BAR_PANEL.draw(Refresh);
+
+    PROP.CHANGED = false;
+  }
 }
 
 // -------------------------------------------------------------------------------------

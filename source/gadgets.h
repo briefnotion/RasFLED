@@ -75,54 +75,6 @@ class PANEL
   void draw(bool Refresh);
 };
 
-// -------------------------------------------------------------------------------------
-//  Title_Bar Classes
-class Title_Bar_Properties
-// Properties (duh)
-{
-  public: 
-
-  int ID;
-  string NAME = "";
-  string LABEL = "";
-
-  int SIZE = 0;
-  int COLOR = 0;
-  int BCOLOR = 0;
-  
-  int POSY = 0;
-  int POSX = 0;
-  int SIZEY = 0;
-  int SIZEX = 0;
-
-  bool CHANGED = false;
-};
-
-class Title_Bar
-// Routines for create, draw, modify, and behavior.
-{
-  private:
-
-  WINDOW * winTitle;
-
-  //Debug
-  int Counter = 0;
-
-  public:
-
-  Title_Bar_Properties PROP;  
-
-  void modify(int id, string name, string label, int size, int color, int bcolor);
-
-  void create(int id, string name, string label, int size, int color, int bcolor);
-
-  void move_resize(int posY, int posX, int sizeY, int sizeX);
-
-  bool changed();
-
-  void draw(bool Refresh);
-};
-
 
 // -------------------------------------------------------------------------------------
 //  Text_Field Classes
@@ -190,6 +142,53 @@ class Text_Field
   void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
 
   void draw(PANEL &Panel, bool Refresh);
+};
+
+
+// -------------------------------------------------------------------------------------
+//  Title_Bar Classes
+class Title_Bar_Properties
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+
+  int SIZE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool CHANGED = false;
+};
+
+class Title_Bar
+// Routines for create, draw, modify, and behavior.
+{
+  private:
+
+  //WINDOW * winTitle;
+  PANEL TITLE_BAR_PANEL;
+  Text_Field TITLE;
+
+  //Debug
+  int Counter = 0;
+
+  public:
+
+  Title_Bar_Properties PROP;  
+
+  void create();
+
+  bool changed();
+
+  void draw(bool Refresh);
 };
 
 

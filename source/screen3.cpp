@@ -130,12 +130,10 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   // Build any Gadgets that will be called.
 
   // Prep Status Screen Text Box.
-  tiStatus.create(1, "STATUS", " STATUS", TitleSize, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
   // Prep Console Screen Text Box.
   tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-  tiConsole.create(1, "CONSOLE", "CONSOLE", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-
+  
   // Prep Control Buttons for program start.
   bzButtons.create_button(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
   bzButtons.create_button(1, "", "", 0, -1, 6, 0);
@@ -169,8 +167,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // Countdown Screen
   // Countdown Timer
-  tiTimer.create(1, "TIMER", "TIMER", TitleSize, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-
   Countdown_Timer.label("Timer: ");
   Countdown_Timer.label_size(13);
   Countdown_Timer.size(15);
@@ -180,9 +176,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Countdown_Timer.print_value(false);
 
   // Debug Screen 
-  // Compute Times
-  tiDebug.create(1, "DEBUG", "DIAG", TitleSize, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-
+  // Compute Times  
   Compute_Time.label("Compute: ");
   Compute_Time.label_size(13);
   Compute_Time.size(15);
@@ -221,10 +215,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Cycle_Time.min_max(true);
   Cycle_Time.min_max_time_span(10000);
   
-  
-  // Prep Gadgets for Radio screen.
-  tiRadio.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-
+  // Prep Gadgets for Radio screen. 
   bzRadio.create_button(0, "RADIOOFF", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
   bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
   bzRadio.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
@@ -241,9 +232,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
     Radio_Channels.push_back(tmp_radio_channel);
     Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
   }
-
-  // Prep Buttons for Many Radio screen.
-  tiRadio.create(1, "RADIOM", "(multi) RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
   // Radio Channel Frequency gadgets Properties for Multi Screen.
   Radio_Channel tmp_many_radio_channel;
@@ -265,9 +253,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
     Many_Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
   }
 
-  // Prep Gadgets for ADS_B screen.
-  tiADS_B_Screen.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-
   bzADS_B.create_button(0, "ADS_BON", "%ADS-B", 0, 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
   //bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, -2, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
   //bzADS_B.create_button(2, "BLANK1", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
@@ -276,8 +261,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
 
   //tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
-  // Create Log Screen Text Box
-  tiLog_Screen.create(1, "LOGS", "LOGS", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
   tbRadio_Log.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
   // Draw screen the entire screen.  reset is also 
   //  called when the screen is resized.  
@@ -359,8 +342,18 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     STATUS_PANEL.create();
 
-    tiStatus.move_resize(YStatusPos, XStatusPos, YStatusSize, XStatusSize);
-    
+    // Status Title Bar
+    tiStatus.PROP.POSY = YStatusPos;
+    tiStatus.PROP.POSX = XStatusPos;
+    tiStatus.PROP.SIZEY = YStatusSize;
+    tiStatus.PROP.SIZEX = XStatusSize;
+    tiStatus.PROP.SIZE = TitleSize;
+
+    tiStatus.PROP.LABEL = "STATUS";
+    tiStatus.PROP.BCOLOR = COLOR_BLUE;
+    tiStatus.PROP.COLOR = COLOR_WHITE;
+    tiStatus.create();
+
     // Set Y Split
     YSplit = YSplit + YStatusSize;
 
@@ -370,7 +363,6 @@ void Screen3::reset(ScreenStatus &ScrStat)
     STATUS_PANEL.draw(true);
 
     // Text Fields
-
     COMMAND_TITLE.PROP.POSY = 0;
     COMMAND_TITLE.PROP.POSX = 1;
 
@@ -450,8 +442,7 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Build Window
     winDebug = newwin(YDebugSize, XDebugSize, YDebugPos, XDebugPos);
-    tiDebug.move_resize(YDebugPos, XDebugPos, YDebugSize, XDebugSize);
-    
+
     // Set Y Split
     YSplit = YSplit + YDebugSize;
 
@@ -460,6 +451,18 @@ void Screen3::reset(ScreenStatus &ScrStat)
     
     // Create Debug Screen
     wrefresh(winDebug);
+
+    // Debug Title Bar
+    tiDebug.PROP.POSY = YDebugPos;
+    tiDebug.PROP.POSX = XDebugPos;
+    tiDebug.PROP.SIZEY = YDebugSize;
+    tiDebug.PROP.SIZEX = XDebugSize;
+    tiDebug.PROP.SIZE = TitleSize;
+    
+    tiDebug.PROP.LABEL = "DIAG";
+    tiDebug.PROP.BCOLOR = COLOR_RED;
+    tiDebug.PROP.COLOR = COLOR_WHITE;
+    tiDebug.create();
 
     // Set window color
     wbkgd(winDebug, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
@@ -499,7 +502,6 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Build Window
     winTimer = newwin(YTimerSize, XTimerSize, YTimerPos, XTimerPos);
-    tiTimer.move_resize(YTimerPos, XTimerPos, YTimerSize, XTimerSize);
 
     // Set Y Split
     YSplit = YSplit + YTimerSize;
@@ -509,6 +511,18 @@ void Screen3::reset(ScreenStatus &ScrStat)
     
     // Create Timer Screen
     wrefresh(winTimer);
+    
+    // Timer Title Bar
+    tiTimer.PROP.POSY = YTimerPos;
+    tiTimer.PROP.POSX = XTimerPos;
+    tiTimer.PROP.SIZEY = YTimerSize;
+    tiTimer.PROP.SIZEX = XTimerSize;
+    tiTimer.PROP.SIZE = TitleSize;
+
+    tiTimer.PROP.LABEL = "TIMER";
+    tiTimer.PROP.BCOLOR = COLOR_GREEN;
+    tiTimer.PROP.COLOR = COLOR_WHITE;
+    tiTimer.create();
 
     // Set window color
     // wbkgd(winTimer, COLOR_PAIR(5));  //  Set color in window.
@@ -527,8 +541,19 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Build Text Box
     tbConsole.move_resize(YConsolePos, XConsolePos, YConsoleSize, XConsoleSize);
-    tiConsole.move_resize(YConsolePos, XConsolePos, YConsoleSize, XConsoleSize);
-    
+
+    // Console Title Bar
+    tiConsole.PROP.POSY = YConsolePos;
+    tiConsole.PROP.POSX = XConsolePos;
+    tiConsole.PROP.SIZEY = YConsoleSize;
+    tiConsole.PROP.SIZEX = XConsoleSize;
+    tiConsole.PROP.SIZE = TitleSize;
+
+    tiConsole.PROP.LABEL = "CONSOLE";
+    tiConsole.PROP.BCOLOR = COLOR_BLACK;
+    tiConsole.PROP.COLOR = COLOR_WHITE;
+    tiConsole.create();
+
     // Set Y Split
     YSplit = YSplit + YConsoleSize;
 
@@ -606,13 +631,24 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Build Window
     winRadioStatus = newwin(YRadioStatusSize, XRadioStatusSize, YRadioStatusPos, XRadioStatusPos);
-    tiRadio.move_resize(YRadioStatusPos, XRadioStatusPos, YRadioStatusSize, XRadioStatusSize);
-    
+
     // Set Y Split
     YSplit = YSplit + YRadioStatusSize;
 
     // Create Screen
     wrefresh(winRadioStatus);
+
+    // Radio Title Bar
+    tiRadio.PROP.POSY = YRadioStatusPos;
+    tiRadio.PROP.POSX = XRadioStatusPos;
+    tiRadio.PROP.SIZEY = YRadioStatusSize;
+    tiRadio.PROP.SIZEX = XRadioStatusSize;
+    tiRadio.PROP.SIZE = TitleSize;
+
+    tiRadio.PROP.LABEL = "RADIO";
+    tiRadio.PROP.BCOLOR = COLOR_BLACK;
+    tiRadio.PROP.COLOR = COLOR_WHITE;
+    tiRadio.create();
 
     // Set window color
     wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
@@ -628,9 +664,6 @@ void Screen3::reset(ScreenStatus &ScrStat)
     XRadioSize =  XSplit;
 
     YSplit = YSplit + YRadioStatusSize;
-
-    // Set Status Title
-    tiRadio.PROP.LABEL = "RADIO";
 
     // Build Window
     winRadio = newwin(YRadioSize, XRadioSize, YRadioPos, XRadioPos);
@@ -691,9 +724,6 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     YSplit = YSplit + YRadioStatusSize;
 
-    // Set Status Title
-    tiRadio.PROP.LABEL = "(Multi) RADIO";
-
     // Build Window
     winManyRadio = newwin(YManyRadioSize, XManyRadioSize, YManyRadioPos, XManyRadioPos);
 
@@ -705,6 +735,18 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Create Screen
     wrefresh(winManyRadio);
+
+    // Radio Title Bar
+    tiRadio.PROP.POSY = YRadioStatusPos;
+    tiRadio.PROP.POSX = XRadioStatusPos;
+    tiRadio.PROP.SIZEY = YRadioStatusSize;
+    tiRadio.PROP.SIZEX = XRadioStatusSize;
+    tiRadio.PROP.SIZE = TitleSize;
+
+    tiRadio.PROP.LABEL = "(multi) RADIO";
+    tiRadio.PROP.BCOLOR = COLOR_BLACK;
+    tiRadio.PROP.COLOR = COLOR_WHITE;
+    tiRadio.create();
 
     // Set window color
     wbkgd(winManyRadio, COLOR_PAIR(0));
@@ -750,7 +792,19 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     // Build Window
     winLog_Screen = newwin(YLog_ScreenSize, XLog_ScreenSize, YLog_ScreenPos, XLog_ScreenPos);
-    tiLog_Screen.move_resize(YLog_ScreenPos, XLog_ScreenPos, YLog_ScreenSize, XLog_ScreenSize);
+
+    // Log Screen Title Bar
+    tiLog_Screen.PROP.POSY = YLog_ScreenPos;
+    tiLog_Screen.PROP.POSX = XLog_ScreenPos;
+    tiLog_Screen.PROP.SIZEY = YLog_ScreenSize;
+    tiLog_Screen.PROP.SIZEX = XLog_ScreenSize;
+    tiLog_Screen.PROP.SIZE = TitleSize;
+
+    tiLog_Screen.PROP.LABEL = "LOGS";
+    tiLog_Screen.PROP.BCOLOR = COLOR_BLACK;
+    tiLog_Screen.PROP.COLOR = COLOR_WHITE;
+    
+    tiLog_Screen.create();
 
     // Set Y Split      
     YSplit = YSplit + YLog_ScreenSize;
@@ -812,7 +866,17 @@ void Screen3::reset(ScreenStatus &ScrStat)
 
     ADSB_GRID_PANEL.create();
 
-    tiADS_B_Screen.move_resize(YADS_B_ScreenPos, XADS_B_ScreenPos, YADS_B_ScreenSize, XADS_B_ScreenSize);
+    // ADS-B Title Bar
+    tiADS_B_Screen.PROP.POSY = YADS_B_ScreenPos;
+    tiADS_B_Screen.PROP.POSX = XADS_B_ScreenPos;
+    tiADS_B_Screen.PROP.SIZEY = YADS_B_ScreenSize;
+    tiADS_B_Screen.PROP.SIZEX = XADS_B_ScreenSize;
+    tiADS_B_Screen.PROP.SIZE = TitleSize;
+    
+    tiADS_B_Screen.PROP.LABEL = "ADS_B";
+    tiADS_B_Screen.PROP.BCOLOR = COLOR_BLACK;
+    tiADS_B_Screen.PROP.COLOR = COLOR_WHITE;
+    tiADS_B_Screen.create();
 
     // Set Y Split      
     YSplit = YSplit + YLog_ScreenSize;
