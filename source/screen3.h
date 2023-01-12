@@ -123,7 +123,7 @@ class Screen3
   int XButtonSize = 8;
 
   public:
-  Button_Zone_Manager bzButtons;
+  Button_Zone_Manager_2 bzButtons;
   
   private:
   // Debug Screen Variables --------------------
@@ -163,7 +163,7 @@ class Screen3
   WINDOW * winCPicker;
 
   public:
-  Button_Zone_Manager bzCPicker;
+  Button_Zone_Manager_2 bzCPicker;
   
   private:
   // Tabs Variables --------------------
@@ -173,7 +173,7 @@ class Screen3
   int XTabSize = 12;
 
   public:
-  Button_Zone_Manager bzTabs;
+  Button_Zone_Manager_2 bzTabs;
   
   private:
   // Console Screen Variables --------------------
@@ -265,7 +265,7 @@ class Screen3
 
   public:
   // ADS_B Buttons
-  Button_Zone_Manager bzADS_B;
+  Button_Zone_Manager_2 bzADS_B;
 
   // ADS_B Gadget Grid
   ADSB_Channel_Grid ADSB_Grid;
@@ -313,7 +313,7 @@ class Screen3
 
   void set(system_data &sdSysData, ScreenStatus &ScrStat);
 
-  void reset(ScreenStatus &ScrStat);
+  void reset(system_data &sdSysData, ScreenStatus &ScrStat);
   // ---------------------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------------------

@@ -260,7 +260,7 @@ void Console::readkeyboardinput2()
   }
 }
 
-void Console::processkeyboadinput()
+void Console::processkeyboadinput(system_data &sdSysData)
 // Run through this routine before the console is refreshed.
 {
   // Check for screen resize.
@@ -270,7 +270,7 @@ void Console::processkeyboadinput()
     keywatch.Chars[KEYRESIZE].VALUE = 0;
     ScrStat.Needs_Refresh = true;
 
-    Screen.reset(ScrStat);
+    Screen.reset(sdSysData, ScrStat);
   }
 }
 
@@ -372,13 +372,13 @@ void Console::processmouseinput(system_data &sdSysData)
         if (sdSysData.booDay_On == false)
         {
           keywatch.cmdInString("dayon");
-          Screen.bzButtons.change_label("DAYNIGHT", "%Day%Mode");
+          Screen.bzButtons.set_label("DAYNIGHT", "\nDay\nMode");
           Screen.buttons_menu_home(sdSysData);
         }
         else
         {
           keywatch.cmdInString("dayoff");
-          Screen.bzButtons.change_label("DAYNIGHT", "%Night%Mode");
+          Screen.bzButtons.set_label("DAYNIGHT", "\nNight\nMode");
           Screen.buttons_menu_home(sdSysData);
         }
       }

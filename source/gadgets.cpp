@@ -16,18 +16,42 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Panel Class
 
+void PANEL::draw_border()
+{
+  wborder(winPANEL, PROP.BORDER.LEFT, PROP.BORDER.RIGHT, 
+                    PROP.BORDER.TOP, PROP.BORDER.BOT, 
+                    PROP.BORDER.TOP_LEFT, PROP.BORDER.TOP_RIGHT, 
+                    PROP.BORDER.BOT_LEFT, PROP.BORDER.BOT_RIGHT);
+}
+
 void PANEL::create()
 {
   winPANEL = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
 
   refresh();
 
-  //wborder(winPANEL,'|','|','-','-','+','+','+','+') ;
-  wborder(winPANEL,' ',' ',' ',' ',' ',' ',' ',' ') ;
+  draw_border();
+
   wbkgd(winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
 
   CHANGED = true;
 }
+
+void PANEL::clear()
+{
+  werase(winPANEL);
+  draw_border();
+
+  CHANGED = true;
+}
+
+void PANEL::blank_out()
+{
+  werase(winPANEL);
+
+  CHANGED = true;
+}
+
 
 void PANEL::changed_on()
 {
@@ -66,7 +90,6 @@ void PANEL::draw(bool Refresh)
 
 // -------------------------------------------------------------------------------------
 //  Text_Field Classes
-
 
 bool Text_Field::changed()
 // Returns true if any of the properties have changed.
@@ -233,6 +256,211 @@ void Text_Field::draw(PANEL &Panel, bool Refresh)
   draw(Panel, Refresh, 0);
 }
 
+
+// -------------------------------------------------------------------------------------
+//  Text_Field_Multi_Line Classes
+
+void Text_Field_Multi_Line::draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int PosY, int PosX)
+{
+  for (int pos = 0; pos < Lines.size(); pos++)
+  {
+    //mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, Lines[pos].c_str());  //print line. 
+    mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, Lines[pos].c_str());  //print line. 
+  }
+}
+
+int Text_Field_Multi_Line::line_count()
+{
+  return PROP.LABEL_MULTI_LINE.size();
+}
+
+bool Text_Field_Multi_Line::changed()
+// Returns true if any of the properties have changed.
+{
+  return CHANGED;
+}
+
+bool Text_Field_Multi_Line::has_blank()
+// Returns true if any of the properties have changed.
+{
+  return HAS_BLANK;
+}
+
+void Text_Field_Multi_Line::redraw()
+{
+  CHANGED = true;
+}
+
+void Text_Field_Multi_Line::set_inverse(bool Inverse)
+{
+  if (Inverse != PROP.INVERSE)
+  {
+    PROP.INVERSE = Inverse;
+    CHANGED = true;
+  }
+}
+
+void Text_Field_Multi_Line::set_text(string Text, unsigned long tmeFrame_Time)
+{
+  if (Text != PROP.LABEL)
+  {
+    if (PROP.DONT_BLANK == true && Text  == "")
+    {
+      HAS_BLANK = true;
+    }
+    else
+    {
+      string orig = Text;
+      string line = "";
+      bool done = false;
+      int p = 0;
+
+      PROP.LABEL_MULTI_LINE.clear();
+
+      HAS_BLANK = true;
+
+      // Parse Line
+      while (done == false)
+      {
+        p = orig.find("\n");
+
+        if (p >= 0)
+        {
+          line = orig.substr(0,p);
+          orig.erase(0, p+1);
+        }
+        else
+        {
+          line = orig;
+          done = true;
+        }
+
+        if (line != "")
+        {
+          HAS_BLANK = false;
+        }
+
+        // Add line to queue
+        if ((PROP.JUSTIFICATION_LEFT == true || PROP.JUSTIFICATION_CENTER == true|| PROP.JUSTIFICATION_RIGHT == true) && PROP.SIZEX >0)
+        {
+          // Print Center Justified
+          if (PROP.JUSTIFICATION_CENTER == true)
+          {
+            PROP.LABEL_MULTI_LINE.push_back(linefill(PROP.SIZEX, line));
+          }
+          // Print Right Justified
+          else if (PROP.JUSTIFICATION_RIGHT == true)
+          {
+            PROP.LABEL_MULTI_LINE.push_back(right_justify(PROP.SIZEX, line));
+          }
+          // Print Left Justified or full field.
+          else if (PROP.JUSTIFICATION_LEFT == true)
+          {
+            PROP.LABEL_MULTI_LINE.push_back(left_justify(PROP.SIZEX, line));
+          }
+        }
+        else  // Print Simple Text
+        {
+          PROP.LABEL_MULTI_LINE.push_back(line);
+        }
+      }
+
+      CHANGED = true;
+      
+      if (PROP.UPDATE_INDICATION == true)
+      {
+        UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, INDICATED_BLINK_TIME);
+      }
+    }
+  }
+}
+
+void Text_Field_Multi_Line::set_text(string Text)
+{
+  set_text(Text, 0);
+}
+
+void Text_Field_Multi_Line::set_color(int Background_Color, int Color)
+{
+  if (Background_Color != PROP.BCOLOR || Color != PROP.COLOR)
+  {
+    PROP.BCOLOR = Background_Color;
+    PROP.COLOR  = Color;
+    CHANGED = true;
+  }
+}
+
+void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+{
+  if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
+  {
+    Refresh = true;
+  }
+
+  if (CHANGED == true || Refresh == true)
+  {
+    // Clear Panel
+    //  In future, clear only printable lines.
+    Panel.clear();
+
+    // Check for Reverse Text
+    if (PROP.INVERSE == true)
+    {
+      wattron(Panel.winPANEL, A_REVERSE);
+    }
+
+    // Check for Colored Text
+    if (PROP.COLORS_ON == true)
+    {
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    }
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+    }
+
+    // Check for Text Modification
+    draw_all_lines(Panel, PROP.LABEL_MULTI_LINE, PROP.POSY, PROP.POSX);
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+    }
+
+    // Check for Colored Text
+    if (PROP.COLORS_ON == true)
+    {
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+    }
+
+    // Check for Reverse Text
+    if (PROP.INVERSE == true)
+    {
+      wattroff(Panel.winPANEL, A_REVERSE);
+    }
+
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%d ", Counter);
+    }
+
+    CHANGED = false;
+
+    Panel.changed_on();
+  }
+}
+  
+void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh)
+{
+  draw(Panel, Refresh, 0);
+}
+
+
 // -------------------------------------------------------------------------------------
 //  Title_Bar Classes
 
@@ -240,7 +468,6 @@ void Title_Bar::create()
 // Define and behavior.  
 // Like set but leaves off position and size details.
 // Does not create window.
-
 {
   TITLE_BAR_PANEL.PROP.SIZEY = 1;
   TITLE_BAR_PANEL.PROP.SIZEX = PROP.SIZE; 
@@ -929,6 +1156,552 @@ bool Button_Zone_Manager::check_click(int x,int y)
   }
   return clicked;
 }
+
+
+// -------------------------------------------------------------------------------------
+// Button Classes
+
+void Button_2::create()
+//void create(int id, string name, string label, int value, int type, int color, int bcolor)
+// Define button and behavior.  
+// Like set but leaves off position and size details.
+// Does not create window.
+{
+  BUTTON_PANEL.PROP.POSY = PROP.POSY;
+  BUTTON_PANEL.PROP.POSX = PROP.POSX;
+  BUTTON_PANEL.PROP.SIZEY = PROP.SIZEY;
+  BUTTON_PANEL.PROP.SIZEX = PROP.SIZEX;
+  BUTTON_PANEL.PROP.BORDER = PROP.BORDER;
+
+  BUTTON_PANEL.create();
+
+  LINES.PROP.POSY = 0;
+  LINES.PROP.SIZEX = BUTTON_PANEL.PROP.SIZEX;
+  LINES.PROP.SIZEY = BUTTON_PANEL.PROP.SIZEY;
+  LINES.PROP.JUSTIFICATION_CENTER = true;
+
+  bool CHANGED = true;
+}
+
+bool Button_2::changed()
+// Returns true if any of the properties have changed.
+{
+  return PROP.CHANGED;
+}
+
+void Button_2::advance()
+// Brings the value of the button up to its next value state
+//  e.g. A simple button Off (value = 0) would advance to On (value = 1).
+{
+  //LABEL = "clicked";
+  if (PROP.TYPE == 0)  // Click Button
+  {
+    PROP.VALUE = 1;
+  }
+  if (PROP.TYPE == 1)  // Toggle Type
+  {
+    if (PROP.VALUE == 0)
+    {
+      PROP.VALUE = 1;
+    }
+    else
+    {
+      PROP.VALUE = 0;
+    }
+  }
+  if (PROP.TYPE == 2)  // Radio Type
+  {
+    // Let the zone manager handle its value.
+  }
+
+  PROP.CHANGED = true;
+}
+
+void Button_2::change_on()
+{
+  PROP.CHANGED = true;
+}
+
+void Button_2::set_pos_size(int PosY, int PosX, int SizeY, int SizeX)
+{
+  if ((PROP.POSY != PosY) && (PROP.POSX != PosX) && (PROP.SIZEY != SizeY) && (PROP.SIZEX != SizeX))
+  {
+    PROP.POSY = PosY;
+    PROP.POSX = PosX;
+    PROP.SIZEY = SizeY;
+    PROP.SIZEX = SizeX;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_name(string Name)
+{
+  if (PROP.NAME != Name)
+  {
+    PROP.NAME = Name;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_label(string Label)
+{
+  if (PROP.LABEL != Label)
+  {
+    PROP.LABEL = Label;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_value(int Value)
+{
+  if (PROP.VALUE != Value)
+  {
+    PROP.VALUE = Value;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_type(int Type)
+{
+  if (PROP.TYPE != Type)
+  {
+    PROP.TYPE = Type;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_color(int Background_Color, int Color)
+{
+  if ((PROP.BCOLOR != Background_Color) && (PROP.COLOR != Color))
+  {  
+    PROP.BCOLOR = Background_Color;
+    PROP.COLOR = Color;
+
+    BUTTON_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_enabled(bool Enabled)
+{
+  if (PROP.ENABLED != Enabled)
+  {
+    PROP.ENABLED = Enabled;
+    
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::set_hidden(bool Hidden)
+{
+  if (PROP.HIDDEN != Hidden)
+  {
+    PROP.HIDDEN = Hidden;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button_2::draw(bool Refresh, unsigned long tmeFrame_Time)
+// Draw the button on the screen if the value has changed or if  
+//  the Refresh parameter is true.
+{
+  // Refresh if time active.
+  if (BUTTON_PRESSED.blip_moved(tmeFrame_Time) == true)
+  {
+    Refresh = true;
+  }
+
+  if (PROP.CHANGED == true || Refresh == true)
+  {
+    LINES.set_text(PROP.LABEL);
+    
+    //Set Color, Set Reverse if On, Draw Sencils for Buttons
+    if (PROP.ENABLED == true && PROP.HIDDEN == false && 
+                        (PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2))
+    {
+      // Start by setting button color.
+      BUTTON_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+
+      if (PROP.VALUE == 0 && BUTTON_PRESSED.ping_down(tmeFrame_Time) == false)
+      // Dont reverse the colors if Button off or no ping
+      {
+        BUTTON_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+      }
+      else
+      {
+        // If the color background is not black, this works 
+        //  fine.
+        BUTTON_PANEL.set_color(PROP.COLOR, PROP.BCOLOR);
+
+        // Perhaps in the future, I will add a translate to 
+        //  reverse the colors with white background and 
+        //  text as background color.
+      }
+    }
+    else
+    // If button type is unknow or hidden then clear out and set to black.
+    {
+      BUTTON_PANEL.set_color(COLOR_BLACK, COLOR_BLACK);
+      BUTTON_PANEL.blank_out();
+    }
+    
+    // Dont draw lines if hidden
+    if (PROP.HIDDEN == false)
+    {
+      LINES.draw(BUTTON_PANEL, Refresh);
+    }
+    BUTTON_PANEL.draw(Refresh);
+
+    // If the button is simple click, reset its value
+    if (PROP.TYPE == 0 && PROP.VALUE == 1)
+    {
+      PROP.VALUE = 0;
+      BUTTON_PRESSED.ping_up(tmeFrame_Time, VISIBLE_UPATE_TIME);
+    }
+
+    PROP.CHANGED = false;
+  }
+}
+
+
+// -------------------------------------------------------------------------------------
+// Button Zone Variable
+
+int Button_Zone_Manager_2::get_pos(int Id)
+{
+  int ret_pos = -1;
+
+  for (int pos = 0; pos < BUTTONS.size(); pos++)
+  {
+    if (Id == BUTTONS[pos].PROP.ID)
+    {
+      ret_pos = pos;
+    }
+  }
+
+  return ret_pos;
+}
+
+int Button_Zone_Manager_2::get_pos(string Name)
+{
+  int ret_pos = -1;
+
+  for (int pos = 0; pos < BUTTONS.size(); pos++)
+  {
+    if (Name == BUTTONS[pos].PROP.NAME)
+    {
+      ret_pos = pos;
+    }
+  }
+
+  return ret_pos;
+}
+
+int Button_Zone_Manager_2::size()
+// return the size
+{
+  return BUTTONS.size();
+}
+
+string Button_Zone_Manager_2::name(int pos)
+// return the name at the pos
+{
+  return BUTTONS[pos].PROP.NAME;
+}
+
+int Button_Zone_Manager_2::value(int pos)
+// return the value at the pos
+{
+  return BUTTONS[pos].PROP.VALUE;
+}
+
+void Button_Zone_Manager_2::click_advance(int Id)
+{
+  if (BUTTONS[Id].PROP.TYPE == 0 || BUTTONS[Id].PROP.TYPE == 1)
+  {
+    BUTTONS[Id].advance();
+  }
+  else if (BUTTONS[Id].PROP.TYPE == 2)
+  {
+    for (int pos = 0; pos < BUTTONS.size(); pos++)
+    {
+      BUTTONS[pos].PROP.VALUE = 0;
+      BUTTONS[pos].PROP.CHANGED = true;
+    }
+    BUTTONS[Id].PROP.VALUE = 1;
+  }
+}
+
+void Button_Zone_Manager_2::clear()
+{
+  BUTTONS.clear();
+}
+
+void Button_Zone_Manager_2::create_button()
+{
+  Button_2 tmp_button;
+
+  tmp_button.PROP = NEW_BUTTON_PROP;
+
+  tmp_button.create();
+  //tmp_button.modify(Id, Name, Label, Value, Type, Color, BColor);
+  BUTTONS.push_back(tmp_button);
+}
+
+void Button_Zone_Manager_2::draw(bool Refresh, unsigned long tmeFrame_Time)
+{
+  if (BUTTONS.size() >0)
+  {
+    for (int pos = 0; pos < BUTTONS.size(); pos++)
+    {
+      BUTTONS[pos].draw(Refresh, tmeFrame_Time);
+    }
+  }
+}
+
+void Button_Zone_Manager_2::set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX)
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_pos_size(PosY, PosX, SizeY, SizeX);
+  }
+}
+
+void Button_Zone_Manager_2::set_pos_size(string Name, int PosY, int PosX, int SizeY, int SizeX)
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_pos_size(PosY, PosX, SizeY, SizeX);
+  }
+}
+
+void Button_Zone_Manager_2::set_name(int Id, string Name)
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_name(Name);
+  }
+}
+
+void Button_Zone_Manager_2::set_name(string Old_Name, string Name)
+{
+  int pos = get_pos(Old_Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_name(Name);
+  }
+}
+
+void Button_Zone_Manager_2::set_label(int Id, string Label)
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_label(Label);
+  }
+
+  BUTTONS[Id].set_label(Label);
+
+}
+
+void Button_Zone_Manager_2::set_label(string Name, string Label)
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_label(Label);
+  }
+}
+
+void Button_Zone_Manager_2::set_value(int Id, int Value)
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_value(Value);
+  }
+}
+
+void Button_Zone_Manager_2::set_value(string Name, int Value)
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_value(Value);
+  }
+}
+
+void Button_Zone_Manager_2::set_type(int Id, int Type)
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_type(Type);
+  }
+}
+
+void Button_Zone_Manager_2::set_type(string Name, int Type)
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_type(Type);
+  }
+}
+
+void Button_Zone_Manager_2::set_color(int Id, int Background_Color, int Color)
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_color(Background_Color, Color);
+  }
+}
+
+void Button_Zone_Manager_2::set_color(string Name, int Background_Color, int Color)
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_color(Background_Color, Color);
+  }
+}
+
+void Button_Zone_Manager_2::set_enabled(int Id, bool Enabled)
+// Change Property by Name.
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_enabled(Enabled);
+  }
+}
+
+void Button_Zone_Manager_2::set_enabled(string Name, bool Enabled)
+// Change Property by Name.
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_enabled(Enabled);
+  }
+}
+
+void Button_Zone_Manager_2::set_hidden(int Id, bool Hidden)
+// Change Property by Name.
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_hidden(Hidden);
+  }
+}
+
+void Button_Zone_Manager_2::set_hidden(string Name, bool Hidden)
+// Change Property by Name.
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_hidden(Hidden);
+  }
+}
+
+string Button_Zone_Manager_2::get_clicked_name()
+// returns the name of the first clicked button in the list
+{
+  string name = "";
+  
+  for (int pos = 0; pos < BUTTONS.size(); pos ++)
+  {
+    if (BUTTONS[pos].PROP.CLICKED == true)
+    {
+      name = BUTTONS[pos].PROP.NAME;
+      return name;
+    }
+  }
+  return name;
+}
+
+int Button_Zone_Manager_2::get_clicked_value(string Name)
+// returns the value of the named clicked button in the list
+{
+  int pos = get_pos(Name);
+  int ret_int = 0;
+
+  if (pos > -1)
+  {
+    ret_int = BUTTONS[pos].PROP.VALUE;
+    BUTTONS[pos].PROP.CLICKED = false;
+  }
+
+  return ret_int;
+}
+
+int Button_Zone_Manager_2::get_id_of_button_with_value(int Value)
+{
+  int ret_int = -1;
+  for (int pos = 0; pos < BUTTONS.size(); pos++)
+  {
+    if (BUTTONS[pos].PROP.VALUE == Value)
+    {
+      ret_int = BUTTONS[pos].PROP.ID;
+    }
+  }
+  return ret_int;
+}
+
+bool Button_Zone_Manager_2::check_click(int x,int y)
+// Check to see if any button in the list was clicked.
+{
+  bool clicked = false;
+
+  // Check each enabled button in zone for clicked coords within
+  for(int pos=0; pos<BUTTONS.size(); pos++)
+  {
+    if(BUTTONS[pos].PROP.ENABLED == true && (BUTTONS[pos].PROP.TYPE == 0 || BUTTONS[pos].PROP.TYPE == 1 || BUTTONS[pos].PROP.TYPE == 2))
+    // Only update known button types or not disabled button type.
+    {
+      if(x >= BUTTONS[pos].PROP.POSX && x <= (BUTTONS[pos].PROP.POSX + BUTTONS[pos].PROP.SIZEX -1) &&
+        y >= BUTTONS[pos].PROP.POSY && y <= (BUTTONS[pos].PROP.POSY + BUTTONS[pos].PROP.SIZEY -1))
+      {
+        clicked = true;
+        BUTTONS[pos].PROP.CLICKED = true;
+        click_advance(pos);
+
+        return clicked;
+      }
+    }
+  }
+  return clicked;
+}
+
 
 // ---------------------------------------------------------------------------------------
 // Bar Classes

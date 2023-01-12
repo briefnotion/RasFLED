@@ -88,7 +88,7 @@ class Console
 
   void readkeyboardinput2();
 
-  void processkeyboadinput();
+  void processkeyboadinput(system_data &sdSysData);
 
   void processmouseinput(system_data &sdSysData);
 

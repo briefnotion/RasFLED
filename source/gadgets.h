@@ -32,6 +32,19 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 //  Panel Class
+class WINDOW_BODER_PROPERTIES
+{
+  public:
+  char TOP_LEFT = ' ';
+  char TOP = ' ';
+  char TOP_RIGHT = ' ';
+  char LEFT = ' ';
+  char RIGHT = ' ';
+  char BOT_LEFT = ' ';
+  char BOT = ' ';
+  char BOT_RIGHT = ' ';
+};
+
 
 class PANEL_PROPERTIES
 // Properties (duh)
@@ -47,6 +60,8 @@ class PANEL_PROPERTIES
   int POSX = 0;
   int SIZEY = 0;
   int SIZEX = 0;
+
+  WINDOW_BODER_PROPERTIES BORDER;
 };
 
 
@@ -64,10 +79,18 @@ class PANEL
 
   PANEL_PROPERTIES PROP;
 
-  //bool changed();
+  private:
+
+  void draw_border();
+
+  public:
 
   void create();
   
+  void clear();
+
+  void blank_out();
+
   void changed_on();
 
   void set_color(int Background_Color, int Color);
@@ -82,7 +105,10 @@ class PANEL
 class Text_Field_Properties
 // Properties (duh)
 {
+  private:
+
   public: 
+  
   string LABEL = "";
 
   int TYPE = 0;
@@ -146,6 +172,85 @@ class Text_Field
 
 
 // -------------------------------------------------------------------------------------
+//  Text_Field_Multi_Line Classes
+
+class Text_Field_Multi_Line_Properties
+// Properties (duh)
+{
+  private:
+
+  public:
+
+  string LABEL = "";
+  deque<string> LABEL_MULTI_LINE;
+  
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool JUSTIFICATION_LEFT = false;
+  bool JUSTIFICATION_CENTER = false;
+  bool JUSTIFICATION_RIGHT = false;
+
+  bool UPDATE_INDICATION = false;
+
+  bool DONT_BLANK = false;
+
+  bool COLORS_ON = false;
+  bool INVERSE = false;
+};
+
+
+class Text_Field_Multi_Line
+{
+  private:
+  TIMED_PING UPDATE_INDICATION_TIMER;
+
+  bool CHANGED = false;
+  bool HAS_BLANK = false;
+
+  int INDICATED_BLINK_TIME = 250;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  public:
+  Text_Field_Multi_Line_Properties PROP;
+
+  private:
+  
+  void draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int PosY, int PosX);
+
+  public:
+
+  int line_count();
+
+  bool changed();
+
+  bool has_blank();
+
+  void redraw();
+
+  void set_inverse(bool Inverse);
+
+  void set_text(string Text, unsigned long tmeFrame_Time);
+
+  void set_text(string Text);
+
+  void set_color(int Background_Color, int Color);
+
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+
+  void draw(PANEL &Panel, bool Refresh);
+};
+
+
+// -------------------------------------------------------------------------------------
 //  Title_Bar Classes
 class Title_Bar_Properties
 // Properties (duh)
@@ -153,7 +258,6 @@ class Title_Bar_Properties
   public: 
 
   int ID;
-  string NAME = "";
   string LABEL = "";
 
   int SIZE = 0;
@@ -403,6 +507,171 @@ class Button_Zone_Manager
 
   bool check_click(int x,int y);
 };
+
+
+// -------------------------------------------------------------------------------------
+// Button Classes
+
+class Button_Properties_2
+// Properties (duh)
+{
+  public: 
+
+  int ID;
+  string NAME = "";
+  string LABEL = "";
+  
+  int VALUE = 0;
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+
+  bool HIDDEN = false;
+  bool ENABLED = true;
+
+  //bool CLEAR = false;
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+
+  WINDOW_BODER_PROPERTIES BORDER; 
+
+  bool CLICKED = false;
+  bool CHANGED = false;
+};
+
+class Button_2
+// Routines for create, draw, modify, and behavior.
+{
+  private:
+
+  //WINDOW * winButton;
+  PANEL BUTTON_PANEL;
+
+  TIMED_PING BUTTON_PRESSED;
+  int VISIBLE_UPATE_TIME = 500;
+
+  //Debug DEBUG_COUNTER
+  int Counter = 0;
+
+  Text_Field_Multi_Line LINES;
+  
+  // Types:
+  // -2 - Disabled
+  // -1 - Hidden
+  //  0 - Single Click
+  //  1 - Toggle Button
+  //  2 - Radio Button (Zone)
+  // FIX ME: Correctly seperate type into prop values of hidden, disabled.
+
+  public:
+
+  Button_Properties_2 PROP;
+
+  void create();
+
+  bool changed();
+
+  void advance();
+
+  void set_pos_size(int PosY, int PosX, int SizeY, int SizeX);
+  
+  void set_name(string Name);
+  
+  void set_label(string Label);
+
+  void set_value(int Value);
+
+  void set_type(int Type);
+
+  void set_color(int Background_Color, int Color);
+
+  void set_enabled(bool Enabled);
+
+  void set_hidden(bool Hidden);
+
+  void change_on();
+
+  void draw(bool Refresh, unsigned long tmeFrame_Time);
+};
+
+
+// -------------------------------------------------------------------------------------
+// Button Zone Variable
+class Button_Zone_Manager_2
+{
+  private:
+
+  //deque<Button_Properties> ZONES;
+
+  deque<Button_2> BUTTONS;
+
+  int get_pos(int Id);
+
+  int get_pos(string Name);
+
+  public:
+
+  Button_Properties_2 NEW_BUTTON_PROP;
+
+  int size();
+
+  string name(int pos);
+
+  int value(int pos);
+
+  void click_advance(int Id);
+
+  void clear();
+
+  void create_button();
+
+  void draw(bool Refresh, unsigned long tmeFrame_Time);
+
+  void set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX);
+
+  void set_pos_size(string Name, int PosY, int PosX, int SizeY, int SizeX);
+
+  void set_name(int Id, string Name);
+
+  void set_name(string Old_Name, string Name);
+
+  void set_label(int Id, string Label);
+
+  void set_label(string Name, string Label);
+
+  void set_value(int Id, int Value);
+
+  void set_value(string Name, int Value);
+
+  void set_type(int Id, int Type);
+
+  void set_type(string Name, int Type);
+
+  void set_color(int Id, int Background_Color, int Color);
+
+  void set_color(string Name, int Background_Color, int Color);
+
+  void set_enabled(int Id, bool Enabled);
+
+  void set_enabled(string Name, bool Enabled);
+
+  void set_hidden(int Id, bool Hidden);
+
+  void set_hidden(string Name, bool Hidden);
+
+  string get_clicked_name();
+
+  int get_clicked_value(string name);
+
+  int get_id_of_button_with_value(int Value);
+
+  bool check_click(int x,int y);
+};
+
 
 // ---------------------------------------------------------------------------------------
 // Bar Classes

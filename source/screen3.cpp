@@ -18,17 +18,51 @@ void Screen3::buttons_menu_home(system_data &sdSysData)
 //  button zone.
 // Main Buttons (Top)
 {
-  bzButtons.modify(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.modify(1, "", "", 0, -1, 6, 0);
-  //bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.modify(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.modify(3, "FLASH", "%Flash", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzButtons.modify(4, "", "", 0, -1, 6, 0);
+  bzButtons.set_name(0, "TIMER");
+  bzButtons.set_label(0, "\nStart\nTimer");
+  bzButtons.set_value(0, int(sdSysData.cdTIMER.is_active()));
+  bzButtons.set_type(0, 1);
+  bzButtons.set_color(0, COLOR_YELLOW, COLOR_WHITE);
+  bzButtons.set_hidden(0, false);
+  bzButtons.set_enabled(0, true);
 
-  bzButtons.modify(5, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  //bzButtons.modify(5, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+  bzButtons.set_hidden(1, true);
+  bzButtons.set_enabled(1, false);
+
+  bzButtons.set_name(2, "MENUOVERHEAD");
+  bzButtons.set_label(2, "Over\nHead\nLights");
+  bzButtons.set_value(2, int(sdSysData.booOverheadRunning));
+  bzButtons.set_type(2, 1);
+  bzButtons.set_color(2, COLOR_YELLOW, COLOR_WHITE);
+  bzButtons.set_hidden(2, false);
+  bzButtons.set_enabled(2, true);
+
+  bzButtons.set_name(3, "FLASH");
+  bzButtons.set_label(3, "\nFlash");
+  bzButtons.set_value(3, 0);
+  bzButtons.set_type(3, 0);
+  bzButtons.set_color(3, COLOR_GREEN, COLOR_WHITE);
+  bzButtons.set_hidden(3, false);
+  bzButtons.set_enabled(3, true);
+
+  bzButtons.set_hidden(4, true);
+  bzButtons.set_enabled(4, false);
+
+  bzButtons.set_name(5, "LIGHTSOFF");
+  bzButtons.set_label(5, "\nLIGHTS\nON");
+  bzButtons.set_value(5, 0);
+  bzButtons.set_type(5, 1);
+  bzButtons.set_color(5, COLOR_RED, COLOR_WHITE);
+  bzButtons.set_hidden(5, false);
+  bzButtons.set_enabled(5, true);
   
-  bzButtons.modify(6, "MENUCONTROL", "%...", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+  bzButtons.set_name(6, "MENUCONTROL");
+  bzButtons.set_label(6, "\n...");
+  bzButtons.set_value(6, 0);
+  bzButtons.set_type(6, 0);
+  bzButtons.set_color(6, COLOR_BLUE, COLOR_WHITE);
+  bzButtons.set_hidden(6, false);
+  bzButtons.set_enabled(6, true);
 }
 
 void Screen3::buttons_menu_control(system_data &sdSysData)
@@ -36,25 +70,64 @@ void Screen3::buttons_menu_control(system_data &sdSysData)
 //  button zone.
 // RasFLED settings
 {
-  bzButtons.modify(0, "HAZARD","%HAZARD", int(sdSysData.booHazardRunning), 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  bzButtons.modify(1, "", "", 0, -1, 6, 0);
-  bzButtons.modify(2, "DAYNIGHT","%Day%Night",int(sdSysData.booDay_On), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzButtons.modify(3, "RUNNINGCOLOR", "Set%Running%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+  bzButtons.set_name(0, "HAZARD");
+  bzButtons.set_label(0, "\nHAZARD");
+  bzButtons.set_value(0, int(sdSysData.booHazardRunning));
+  bzButtons.set_type(0, 1);
+  bzButtons.set_color(0, COLOR_RED, COLOR_WHITE);
+  bzButtons.set_hidden(0, false);
+  bzButtons.set_enabled(0, true);
+
+  bzButtons.set_hidden(1, true);
+  bzButtons.set_enabled(1, false);
+
+  bzButtons.set_name(2, "DAYNIGHT");
+  bzButtons.set_label(2, "\nDay\nNight");
+  bzButtons.set_value(2, int(sdSysData.booDay_On));
+  bzButtons.set_type(2, 1);
+  bzButtons.set_color(2, COLOR_GREEN, COLOR_WHITE);
+  bzButtons.set_hidden(2, false);
+  bzButtons.set_enabled(2, true);
+
+  bzButtons.set_name(3, "RUNNINGCOLOR");
+  bzButtons.set_label(3, "Set\nRunning\nColor");
+  bzButtons.set_value(3, 0);
+  bzButtons.set_type(3, 0);
+  bzButtons.set_color(3, COLOR_YELLOW, COLOR_WHITE);
+  bzButtons.set_hidden(3, false);
+  bzButtons.set_enabled(3, true);
+
+  bzButtons.set_name(4, "CLEARANIMS");
+  bzButtons.set_label(4, "\nClear\nAnims");
+  bzButtons.set_value(4, 0);
+  bzButtons.set_type(4, 0);
+  bzButtons.set_color(4, COLOR_GREEN, COLOR_WHITE);
+  bzButtons.set_hidden(4, false);
+  bzButtons.set_enabled(4, true);
+
+  bzButtons.set_name(5, "MENUSYSTEM");
+  bzButtons.set_label(5, "\nSYSTEM");
+  bzButtons.set_value(5, 0);
+  bzButtons.set_type(5, 0);
+  bzButtons.set_color(5, COLOR_BLUE, COLOR_WHITE);
+  bzButtons.set_hidden(5, false);
+  bzButtons.set_enabled(5, true);
   
-  bzButtons.modify(4, "CLEARANIMS", "%Clear%Anims", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  //bzButtons.modify(4, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+  bzButtons.set_name(6, "MENUHOME");
+  bzButtons.set_label(6, "\n<--");
+  bzButtons.set_value(6, 0);
+  bzButtons.set_type(6, 0);
+  bzButtons.set_color(6, COLOR_BLUE, COLOR_WHITE);
+  bzButtons.set_hidden(6, false);
+  bzButtons.set_enabled(6, true);
 
-  bzButtons.modify(5, "MENUSYSTEM","%SYSTEM", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-
-  // When first diplaying buttons, set its value to the value it represents.
   if (sdSysData.booDay_On == true)
   {
-    bzButtons.change_label("DAYNIGHT", "%Day%Mode");
+    bzButtons.set_label("DAYNIGHT", "\nDay\nMode");
   }
   else
   {
-    bzButtons.change_label("DAYNIGHT", "%Night%Mode");
+    bzButtons.set_label("DAYNIGHT", "\nNight\nMode");
   }
 }
 
@@ -63,13 +136,46 @@ void Screen3::buttons_menu_system(system_data &sdSysData)
 //  button zone.
 // RasFLED advanced settings
 {
-  bzButtons.modify(0, "EXIT", "%EXIT", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  bzButtons.modify(1, "SHUTDOWN_NOW", "%SYSTEM%SHUTDOWN", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  bzButtons.modify(2, "", "", 0, -1, 6, 0);
-  bzButtons.modify(3, "DEBUG", "%DEBUG", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.modify(4, "", "", 0, -1, 6, 0);
-  bzButtons.modify(5, "", "", 0, -1, 6, 0);
-  bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+  bzButtons.set_name(0, "EXIT");
+  bzButtons.set_label(0, "\nEXIT");
+  bzButtons.set_value(0, 0);
+  bzButtons.set_type(0, 0);
+  bzButtons.set_color(0, COLOR_RED, COLOR_WHITE);
+  bzButtons.set_hidden(0, false);
+  bzButtons.set_enabled(0, true);
+
+  bzButtons.set_name(1, "SHUTDOWN_NOW");
+  bzButtons.set_label(1, "\nSYSTEM\nSHUTDOWN");
+  bzButtons.set_value(1, 0);
+  bzButtons.set_type(1, 0);
+  bzButtons.set_color(1, COLOR_RED, COLOR_WHITE);
+  bzButtons.set_hidden(1, false);
+  bzButtons.set_enabled(1, true);
+  
+  bzButtons.set_hidden(2, true);
+  bzButtons.set_enabled(2, false);
+
+  bzButtons.set_name(3, "DEBUG");
+  bzButtons.set_label(3, "\nDEBUG");
+  bzButtons.set_value(3, 0);
+  bzButtons.set_type(3, 0);
+  bzButtons.set_color(3, COLOR_YELLOW, COLOR_WHITE);
+  bzButtons.set_hidden(3, false);
+  bzButtons.set_enabled(3, true);
+  
+  bzButtons.set_hidden(4, true);
+  bzButtons.set_enabled(4, false);
+  
+  bzButtons.set_hidden(5, true);
+  bzButtons.set_enabled(5, false);
+  
+  bzButtons.set_name(6, "MENUHOME");
+  bzButtons.set_label(6, "\n<--");
+  bzButtons.set_value(6, 0);
+  bzButtons.set_type(6, 0);
+  bzButtons.set_color(6, COLOR_BLUE, COLOR_WHITE);
+  bzButtons.set_hidden(6, false);
+  bzButtons.set_enabled(6, true);
 }
 
 void Screen3::buttons_menu_overhead_color(system_data &sdSysData)
@@ -77,13 +183,41 @@ void Screen3::buttons_menu_overhead_color(system_data &sdSysData)
 //  button zone.
 // Overhead activation and color picker.
 {
-  bzButtons.modify(0, "", "", 0, -1, 6, 0);
-  bzButtons.modify(1, "", "", 0, -1, 6, 0);
-  bzButtons.modify(2, "OVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzButtons.modify(3, "CHOSECOLOR", "%Chose%Color", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.modify(4, "", "", 0, -1, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzButtons.modify(5, "", "", 0, -1, 6, 0);
-  bzButtons.modify(6, "MENUHOME", "%<--", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+  bzButtons.set_hidden(0, true);
+  bzButtons.set_enabled(0, false);
+  
+  bzButtons.set_hidden(1, true);
+  bzButtons.set_enabled(1, false);
+  
+  bzButtons.set_name(2, "OVERHEAD");
+  bzButtons.set_label(2, "Over\nHead\nLights");
+  bzButtons.set_value(2, int(sdSysData.booOverheadRunning));
+  bzButtons.set_type(2, 1);
+  bzButtons.set_color(2, COLOR_GREEN, COLOR_WHITE);
+  bzButtons.set_hidden(2, false);
+  bzButtons.set_enabled(2, true);
+  
+  bzButtons.set_name(3, "CHOSECOLOR");
+  bzButtons.set_label(3, "\nChose\nColor");
+  bzButtons.set_value(3, 0);
+  bzButtons.set_type(3, 0);
+  bzButtons.set_color(3, COLOR_YELLOW, COLOR_WHITE);
+  bzButtons.set_hidden(3, false);
+  bzButtons.set_enabled(3, true);
+  
+  bzButtons.set_hidden(4, true);
+  bzButtons.set_enabled(4, false);
+  
+  bzButtons.set_hidden(5, true);
+  bzButtons.set_enabled(5, false);
+  
+  bzButtons.set_name(6, "MENUHOME");
+  bzButtons.set_label(6, "\n<--");
+  bzButtons.set_value(6, 0);
+  bzButtons.set_type(6, 0);
+  bzButtons.set_color(6, COLOR_BLUE, COLOR_WHITE);
+  bzButtons.set_hidden(6, false);
+  bzButtons.set_enabled(6, true);
 }
 
 void Screen3::init()
@@ -133,37 +267,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // Prep Console Screen Text Box.
   tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-  
-  // Prep Control Buttons for program start.
-  bzButtons.create_button(0, "TIMER", "%Start%Timer", int(sdSysData.cdTIMER.is_active()), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.create_button(1, "", "", 0, -1, 6, 0);
-  bzButtons.create_button(2, "MENUOVERHEAD", "Over%Head%Lights", int(sdSysData.booOverheadRunning), 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzButtons.create_button(3, "FLASH", "%Flash", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzButtons.create_button(4, "", "", 0, -1, 6, 0);
-  bzButtons.create_button(5, "LIGHTSOFF", "%LIGHTS%ON", 0, 1, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  bzButtons.create_button(6, "MENUCONTROL", "%...", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-
-  // Prep Color Picker Buttons, even thought they 
-  //  aren't displayed at start.
-  bzCPicker.create_button(0, "RED", "%r", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  bzCPicker.create_button(1, "GREEN", "%g", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzCPicker.create_button(2, "BLUE", "%b", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzCPicker.create_button(3, "PURPLE", "%u", 0, 0, CRT_get_color_pair(COLOR_MAGENTA, COLOR_WHITE), 0);
-  bzCPicker.create_button(4, "YELLOW", "%y", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzCPicker.create_button(5, "CYAN", "%c", 0, 0, CRT_get_color_pair(COLOR_CYAN, COLOR_WHITE), 0);
-  bzCPicker.create_button(6, "ORANGE", "%n", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  bzCPicker.create_button(7, "WHITE", "%w", 0, 0, CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK), 0);
-
-  // Prep Tab buttons for program first start
-  bzTabs.create_button(0, "TABCONSOLE", "Console", 1, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(1, "TABPLAYER", "Player", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(2, "TABBLANK1", "Blank 1", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(3, "TABRADIO", "Radio", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(4, "TABMANYRADIO", "Radio%(Multi)", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(5, "TABBLANK2", "Blank 2", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(6, "TAB_ADS_B_SCREEN", "ADS-B", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(7, "TABBLANK3", "Blank 3", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzTabs.create_button(8, "TAB_LOG_SCREEN", "Log", 0, 2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
 
   // Countdown Screen
   // Countdown Timer
@@ -253,22 +356,16 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
     Many_Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
   }
 
-  bzADS_B.create_button(0, "ADS_BON", "%ADS-B", 0, 1, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  //bzADS_B.create_button(1, "ADS_BOFF", "%ADS_B%OFF", 0, -2, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  //bzADS_B.create_button(2, "BLANK1", "", 0, -2, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzADS_B.create_button(1, "ADS_B_SNAPSHOT", "%Snap%Shot", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  //bzADS_B.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-
   //tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
   tbRadio_Log.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
   // Draw screen the entire screen.  reset is also 
   //  called when the screen is resized.  
-  reset(ScrStat);
+  reset(sdSysData, ScrStat);
 }
 
 
-void Screen3::reset(ScreenStatus &ScrStat)
+void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 // Creates all windows on panel and sets all positions.
 //  To be called if panel sized changes or if windows are 
 //  opened or closed. 
@@ -421,13 +518,44 @@ void Screen3::reset(ScreenStatus &ScrStat)
     YButtonPos = 0;
     XButtonPos = XSplit;
 
-    bzButtons.move_resize(0, (YButtonSize *0), XButtonPos, YButtonSize, XButtonSize);
-    bzButtons.move_resize(1, (YButtonSize *1), XButtonPos, YButtonSize, XButtonSize);
-    bzButtons.move_resize(2, (YButtonSize *2), XButtonPos, YButtonSize, XButtonSize);
-    bzButtons.move_resize(3, (YButtonSize *3), XButtonPos, YButtonSize, XButtonSize);
-    bzButtons.move_resize(4, (YButtonSize *4), XButtonPos, YButtonSize, XButtonSize);
-    bzButtons.move_resize(5, (YButtonSize *5), XButtonPos, YButtonSize, XButtonSize);
-    bzButtons.move_resize(6, (YButtonSize *6), XButtonPos, YButtonSize, XButtonSize);
+    //buttons_menu_home(system_data &sdSysData, 0, XButtonPos, YButtonSize, XButtonSize);
+
+    bzButtons.clear();
+
+    bzButtons.NEW_BUTTON_PROP.BORDER.BOT = '_';
+    bzButtons.NEW_BUTTON_PROP.POSX = XButtonPos;
+    bzButtons.NEW_BUTTON_PROP.SIZEY = YButtonSize;
+    bzButtons.NEW_BUTTON_PROP.SIZEX = XButtonSize;
+
+    bzButtons.NEW_BUTTON_PROP.ID = 0;
+    bzButtons.NEW_BUTTON_PROP.POSY = 0 * YButtonSize;
+    bzButtons.create_button();
+
+    bzButtons.NEW_BUTTON_PROP.ID = 1;
+    bzButtons.NEW_BUTTON_PROP.POSY = 1 * YButtonSize;
+    bzButtons.create_button();
+
+    bzButtons.NEW_BUTTON_PROP.ID = 2;
+    bzButtons.NEW_BUTTON_PROP.POSY = 2 * YButtonSize;
+    bzButtons.create_button();
+
+    bzButtons.NEW_BUTTON_PROP.ID = 3;
+    bzButtons.NEW_BUTTON_PROP.POSY = 3 * YButtonSize;
+    bzButtons.create_button();
+
+    bzButtons.NEW_BUTTON_PROP.ID = 4;
+    bzButtons.NEW_BUTTON_PROP.POSY = 4 * YButtonSize;
+    bzButtons.create_button();
+
+    bzButtons.NEW_BUTTON_PROP.ID = 5;
+    bzButtons.NEW_BUTTON_PROP.POSY = 5 * YButtonSize;
+    bzButtons.create_button();
+
+    bzButtons.NEW_BUTTON_PROP.ID = 6;
+    bzButtons.NEW_BUTTON_PROP.POSY = 6 * YButtonSize;
+    bzButtons.create_button(); 
+
+    buttons_menu_home(sdSysData);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -480,14 +608,78 @@ void Screen3::reset(ScreenStatus &ScrStat)
     XCPickerPos = XSplit;
 
     // Prep Side Buttons
-    bzCPicker.move_resize(0, YCPickerPos + (YCPickerSize *0), XCPickerPos + (XCPickerSize * 0), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(1, YCPickerPos + (YCPickerSize *0), XCPickerPos + (XCPickerSize * 1), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(2, YCPickerPos + (YCPickerSize *1), XCPickerPos + (XCPickerSize * 0), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(3, YCPickerPos + (YCPickerSize *1), XCPickerPos + (XCPickerSize * 1), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(4, YCPickerPos + (YCPickerSize *2), XCPickerPos + (XCPickerSize * 0), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(5, YCPickerPos + (YCPickerSize *2), XCPickerPos + (XCPickerSize * 1), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(6, YCPickerPos + (YCPickerSize *3), XCPickerPos + (XCPickerSize * 0), YCPickerSize, XCPickerSize);
-    bzCPicker.move_resize(7, YCPickerPos + (YCPickerSize *3), XCPickerPos + (XCPickerSize * 1), YCPickerSize, XCPickerSize);
+    bzCPicker.clear();
+
+    bzCPicker.NEW_BUTTON_PROP.VALUE = 0;
+    bzCPicker.NEW_BUTTON_PROP.TYPE = 0;
+    bzCPicker.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+    bzCPicker.NEW_BUTTON_PROP.SIZEY = YCPickerSize;
+    bzCPicker.NEW_BUTTON_PROP.SIZEX = XCPickerSize;
+    
+    bzCPicker.NEW_BUTTON_PROP.ID = 0;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "RED";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\nr";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *0);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 0);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 1;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "GREEN";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\ng";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_GREEN;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *0);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 1);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 2;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "BLUE";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\nb";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_BLUE;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *1);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 0);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 3;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "PURPLE";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\nu";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_MAGENTA;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *1);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 1);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 4;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "YELLOW";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\ny";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *2);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 0);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 5;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "CYAN";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\nc";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_CYAN;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *2);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 1);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 6;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "ORANGE";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\nn";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *3);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 0);
+    bzCPicker.create_button();
+
+    bzCPicker.NEW_BUTTON_PROP.ID = 7;
+    bzCPicker.NEW_BUTTON_PROP.NAME = "WHITE";
+    bzCPicker.NEW_BUTTON_PROP.LABEL = "\nw";
+    bzCPicker.NEW_BUTTON_PROP.BCOLOR = COLOR_WHITE;
+    bzCPicker.NEW_BUTTON_PROP.COLOR = COLOR_BLACK;
+    bzCPicker.NEW_BUTTON_PROP.POSY = YCPickerPos + (YCPickerSize *3);
+    bzCPicker.NEW_BUTTON_PROP.POSX = XCPickerPos + (XCPickerSize * 1);
+    bzCPicker.create_button();
   }
 
   // ---------------------------------------------------------------------------------------
@@ -838,15 +1030,36 @@ void Screen3::reset(ScreenStatus &ScrStat)
     XADS_B_ScreenPos = 0;
 
     // Prep ADS_B Buttons
-    bzADS_B.move_resize(0, YADS_B_ScreenPos + 1 + (YBADS_BSize *0), XADS_B_ScreenPos + (XBADS_BSize *0), YBADS_BSize, XBADS_BSize);
-    //bzADS_B.move_resize(1, YADS_B_ScreenPos + (YBADS_BSize *1), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-    //bzADS_B.move_resize(2, YADS_B_ScreenPos + (YBADS_BSize *2), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
-    bzADS_B.move_resize(1, YADS_B_ScreenPos + 1 + (YBADS_BSize *0), XADS_B_ScreenPos + (XBADS_BSize *1), YBADS_BSize, XBADS_BSize);
-    //bzADS_B.move_resize(4, YADS_B_ScreenPos + (YBADS_BSize *4), XADS_B_ScreenPos, YBADS_BSize, XBADS_BSize);
+    
+    bzADS_B.clear();
 
-    // Hide unneeded buttons.
-    bzADS_B.change_enabled("ADS_BOFF", false);
-    bzADS_B.change_enabled("BLANK1", false);
+    bzADS_B.NEW_BUTTON_PROP.BORDER.BOT = '_';
+
+    bzADS_B.NEW_BUTTON_PROP.ID = 0;
+    bzADS_B.NEW_BUTTON_PROP.NAME = "ADS_BON";
+    bzADS_B.NEW_BUTTON_PROP.LABEL = "\nADS-B";
+    bzADS_B.NEW_BUTTON_PROP.VALUE = 0;
+    bzADS_B.NEW_BUTTON_PROP.TYPE = 1;
+    bzADS_B.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+    bzADS_B.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+    bzADS_B.NEW_BUTTON_PROP.POSY = YADS_B_ScreenPos + 1 + (YBADS_BSize *0);
+    bzADS_B.NEW_BUTTON_PROP.POSX = XADS_B_ScreenPos + (XBADS_BSize *0);
+    bzADS_B.NEW_BUTTON_PROP.SIZEY = YBADS_BSize;
+    bzADS_B.NEW_BUTTON_PROP.SIZEX = XBADS_BSize;
+    bzADS_B.create_button();
+    
+    bzADS_B.NEW_BUTTON_PROP.ID = 1;
+    bzADS_B.NEW_BUTTON_PROP.NAME = "ADS_B_SNAPSHOT";
+    bzADS_B.NEW_BUTTON_PROP.LABEL = "\nSnap\nShot";
+    bzADS_B.NEW_BUTTON_PROP.VALUE = 0;
+    bzADS_B.NEW_BUTTON_PROP.TYPE = 0;
+    bzADS_B.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+    bzADS_B.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
+    bzADS_B.NEW_BUTTON_PROP.POSY = YADS_B_ScreenPos + 1 + (YBADS_BSize *0);
+    bzADS_B.NEW_BUTTON_PROP.POSX = XADS_B_ScreenPos + (XBADS_BSize *1);
+    bzADS_B.NEW_BUTTON_PROP.SIZEY = YBADS_BSize;
+    bzADS_B.NEW_BUTTON_PROP.SIZEX = XBADS_BSize;
+    bzADS_B.create_button();
   }
 
   if (ScrStat.Window_ADS_B_Screen == true)
@@ -910,26 +1123,71 @@ void Screen3::reset(ScreenStatus &ScrStat)
     YTabPos = YSplit;
     XTabPos = XTabPos;
 
-    // Prep Tab Buttons
-    bzTabs.move_resize(0, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 0), YTabSize, XTabSize); // Console
-    bzTabs.move_resize(1, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 1), YTabSize, XTabSize); // Player
-    
-    bzTabs.move_resize(2, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2), 2, 2); //    Blank
-    
-    bzTabs.move_resize(3, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 2 +2), YTabSize, XTabSize); // Radio
-    bzTabs.move_resize(4, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3 +2), YTabSize, XTabSize); // Radio (MULTI)
-    
-    bzTabs.move_resize(5, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 3), 2, 2); //    Blank
-    
-    bzTabs.move_resize(6, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4 +4), YTabSize, XTabSize); // ADS_B
-    
-    bzTabs.move_resize(7, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 4), 2, 2); //    Blank
-    
-    bzTabs.move_resize(8, YTabPos + (YTabSize *0), XTabPos + (XTabSize * 5 +6), YTabSize, XTabSize); // Log
+    int id_of_val_1 = bzTabs.get_id_of_button_with_value(1);
 
-    bzTabs.change_enabled("TABBLANK1", false);
-    bzTabs.change_enabled("TABBLANK2", false);
-    bzTabs.change_enabled("TABBLANK3", false);
+    // Prep Tab Buttons
+    bzTabs.clear();
+
+    // Shared Properties
+    bzTabs.NEW_BUTTON_PROP.TYPE = 2;
+    bzTabs.NEW_BUTTON_PROP.BCOLOR = COLOR_BLUE;
+    bzTabs.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+    bzTabs.NEW_BUTTON_PROP.SIZEY = YTabSize;
+    bzTabs.NEW_BUTTON_PROP.SIZEX = XTabSize;
+    bzTabs.NEW_BUTTON_PROP.BORDER.TOP_RIGHT = '|';
+    bzTabs.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
+    bzTabs.NEW_BUTTON_PROP.BORDER.BOT_RIGHT = '|';
+
+    bzTabs.NEW_BUTTON_PROP.ID = 0;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TABCONSOLE";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "Console";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 0);
+    bzTabs.create_button();
+    
+    bzTabs.NEW_BUTTON_PROP.ID = 1;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TABPLAYER";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "Player";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 1);
+    bzTabs.create_button();
+
+    bzTabs.NEW_BUTTON_PROP.ID = 3;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TABRADIO";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "Radio";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 2 +2);
+    bzTabs.create_button();
+
+    bzTabs.NEW_BUTTON_PROP.ID = 4;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TABMANYRADIO";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "Radio\n(Multi)";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 3 +2);
+    bzTabs.create_button();
+
+    bzTabs.NEW_BUTTON_PROP.ID = 6;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TAB_ADS_B_SCREEN";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "ADS";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 4 +4);
+    bzTabs.create_button();
+
+    bzTabs.NEW_BUTTON_PROP.ID = 8;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TAB_LOG_SCREEN";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "Log";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 5 +6);
+    bzTabs.create_button();
+
+    if (id_of_val_1 > -1)
+    {
+      bzTabs.set_value(id_of_val_1, 1);
+    }
+    else
+    {
+      bzTabs.set_value(0, 1);
+    }
 
     // Set Y Split
     YSplit = YSplit + YTabSize;
@@ -1533,11 +1791,11 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   //  lines, but they will solve the problem of buttons displaying the wrong status 
   //  until I find a way for the buttons to know that what they are representing 
   //  has changed.
-  bzButtons.change_value("TIMER",int(sdSysData.cdTIMER.is_active()));
-  bzButtons.change_value("MENUOVERHEAD",int(sdSysData.booOverheadRunning));
-  bzButtons.change_value("HAZARD", int(sdSysData.booHazardRunning));
-  bzButtons.change_value("LIGHTSOFF", int(sdSysData.Lights_On));
-  bzADS_B.change_value("ADS_BON",int(sdSysData.AIRCRAFT_COORD.is_active()));
+  bzButtons.set_value("TIMER", int(sdSysData.cdTIMER.is_active()));
+  bzButtons.set_value("MENUOVERHEAD", int(sdSysData.booOverheadRunning));
+  bzButtons.set_value("HAZARD", int(sdSysData.booHazardRunning));
+  bzButtons.set_value("LIGHTSOFF", int(sdSysData.Lights_On));
+  bzADS_B.set_value("ADS_BON", int(sdSysData.AIRCRAFT_COORD.is_active()));
 
   // Check for Timer Window
   if (sdSysData.cdTIMER.is_active() == true)
@@ -1553,7 +1811,7 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   // Check to see if the screen need to be rebuilt
   if (ScrStat.Needs_Refresh == true)
   {
-    reset(ScrStat);
+    reset(sdSysData, ScrStat);
   }
 
   // ---------------------------------------------------------------------------------------

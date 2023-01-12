@@ -762,7 +762,7 @@ int loop()
 
       // Process keyboard info before displaying the screen.
       // This will handle special redraw events such as screen resize.
-      cons.processkeyboadinput();
+      cons.processkeyboadinput(sdSystem);
       cons.processmouseinput(sdSystem);
       processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
       extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
