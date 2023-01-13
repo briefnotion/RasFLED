@@ -707,45 +707,24 @@ void Text_Box::clear_text()
 // -------------------------------------------------------------------------------------
 // Button Classes
 
-void Button::modify(int id, string name, string label, int value, int type, int color, int bcolor)
-// Changes all button properties
-{
-  PROP.ID = id;
-  PROP.NAME = name;
-  PROP.LABEL = label;
-
-  PROP.VALUE = value;
-
-  PROP.TYPE = type;
-  PROP.COLOR = color;
-
-  PROP.CHANGED = true;
-}
-
 void Button::create()
 //void create(int id, string name, string label, int value, int type, int color, int bcolor)
 // Define button and behavior.  
 // Like set but leaves off position and size details.
 // Does not create window.
 {
-  winButton = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+  BUTTON_PANEL.PROP.POSY = PROP.POSY;
+  BUTTON_PANEL.PROP.POSX = PROP.POSX;
+  BUTTON_PANEL.PROP.SIZEY = PROP.SIZEY;
+  BUTTON_PANEL.PROP.SIZEX = PROP.SIZEX;
+  BUTTON_PANEL.PROP.BORDER = PROP.BORDER;
 
-  bool CHANGED = true;
-}
+  BUTTON_PANEL.create();
 
-void Button::move_resize(int posY, int posX, int sizeY, int sizeX)
-// Redefine button position and size.
-{
-  PROP.POSX = posX;
-  PROP.POSY = posY;
-  PROP.SIZEX = sizeX;
-  PROP.SIZEY = sizeY;
-
-  winButton = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
-
-  refresh();
-
-  wborder(winButton,'|','|','-','-','+','+','+','+') ;
+  LINES.PROP.POSY = 0;
+  LINES.PROP.SIZEX = BUTTON_PANEL.PROP.SIZEX;
+  LINES.PROP.SIZEY = BUTTON_PANEL.PROP.SIZEY;
+  LINES.PROP.JUSTIFICATION_CENTER = true;
 
   bool CHANGED = true;
 }
@@ -784,445 +763,12 @@ void Button::advance()
   PROP.CHANGED = true;
 }
 
-void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
-// Draw the button on the screen if the value has changed or if  
-//  the Refresh parameter is true.
-{
-  /*
-  if (PROP.CLEAR == true)
-  {
-    werase(winButton);
-    wrefresh(winButton);
-    PROP.CLEAR = false;
-  }
-  */
-
-  if (BUTTON_PRESSED.blip_moved(tmeFrame_Time) == true)
-  {
-    Refresh = true;
-  }
-
-  if (PROP.CHANGED == true || Refresh == true)
-  {
-    string top = "";
-    string mid = "";
-    string bot = "";
-
-    string strorig = PROP.LABEL;
-    string strtmp = "";
-
-    int p = 0;
-    int y = 0;
-
-    /*    This code was developed before color was given to the
-          buttons.  Though functional, they dont look that great.
-          So... If ever a no color is created, they may still be 
-          fuctional.  Or, maybe a button type param could be made 
-          if needed. 
-    
-    if (PROP.TYPE == 0 || PROP.TYPE == 1)
-    {
-      if (PROP.VALUE == 0)
-      {
-        wattroff(winButton, A_REVERSE);
-        top = " " + top.append(PROP.SIZEX -2, '-') + " ";
-        mid = "|" + mid.append(PROP.SIZEX -2, ' ') + "|";
-        bot = " " + bot.append(PROP.SIZEX -2, '-') + " ";
-      }
-      else
-      {
-        wattron(winButton, A_REVERSE);
-        top = " " + top.append(PROP.SIZEX -2, ' ') + " ";
-        mid = " " + mid.append(PROP.SIZEX -2, ' ') + " ";
-        bot = " " + bot.append(PROP.SIZEX -2, '_') + " ";
-      }
-    }
-    else
-    {
-      wattroff(winButton, A_REVERSE);
-      top = " " + top.append(PROP.SIZEX -2, ' ') + " ";
-      mid = " " + mid.append(PROP.SIZEX -2, ' ') + " ";
-      bot = " " + bot.append(PROP.SIZEX -2, ' ') + " ";
-    }
-    */
-
-    //Set Color, Set Reverse if On, Draw Sencils for Buttons
-    if (PROP.ENABLED == true && (PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2))
-    {
-
-      // Start by setting button color.
-      wbkgd(winButton, COLOR_PAIR(PROP.COLOR));
-      
-      // Top Sides and Bottom
-      top = " " + top.append(PROP.SIZEX -2, ' ') + " ";
-      mid = " " + mid.append(PROP.SIZEX -2, ' ') + " ";
-      bot = " " + bot.append(PROP.SIZEX -2, '_') + " ";
-
-      if (PROP.VALUE == 0 && BUTTON_PRESSED.ping_down(tmeFrame_Time) == false)
-      // Dont reverse the colors if Button off or no ping
-      {
-        wattroff(winButton, A_REVERSE);
-      }
-      else
-      {
-        // If the color background is not black, this works 
-        //  fine.
-        wattron(winButton, A_REVERSE);  // Nope, NVM. Keeping this.
-
-        // However
-        //wbkgd(winButton, COLOR_PAIR(C_BLACK_WHITE));
-
-        // Perhaps in the future, I will add a translate to 
-        //  reverse the colors with white background and 
-        //  text as background color.
-      }
-    }
-    else
-    // If button type is unknow then dont draw anything.
-    {
-      wbkgd(winButton, COLOR_PAIR(0));
-      wattroff(winButton, A_REVERSE);
-      top = " " + top.append(PROP.SIZEX -2, ' ') + " ";
-      mid = " " + mid.append(PROP.SIZEX -2, ' ') + " ";
-      bot = " " + bot.append(PROP.SIZEX -2, ' ') + " ";
-    }
-
-    //Draw button at position with centered text.
-    int x=0;
-    while (x < PROP.SIZEX)
-    {
-      p = strorig.find('%');
-      if (p >= 0)
-      {
-        strtmp = strorig.substr(0,p);
-        strorig.erase(0,p+1);
-      }
-      else 
-      {
-        strtmp = strorig;
-        strorig = "";
-      }
-
-      if (x==0) // Top
-      {
-        mvwprintw(winButton, x, 0, linemerge(PROP.SIZEX, top ,strtmp).c_str());
-      }
-      else if (x==PROP.SIZEY-1) // Bot
-      {
-        mvwprintw(winButton, x, 0, linemerge(PROP.SIZEX, bot ,strtmp).c_str());
-      }
-      else // Mid
-      {
-        mvwprintw(winButton, x, 0, linemerge(PROP.SIZEX, mid ,strtmp).c_str());
-      }
-
-      x++;
-    }
-
-    //Debug -- displays dedraw count and other variables.
-    if (true == DEBUG_COUNTER)
-    {
-      Counter++;
-      mvwprintw(winButton, 0, 0, "%d ", Counter);
-      //mvwprintw(winButton, 1, 0, "%d ", BUTTON_PRESSED.ping_down(tmeFrame_Time));
-    }
-
-    wattroff(winButton, A_REVERSE);
-
-    // Draw button if type not hidden and enabled.
-    if (PROP.ENABLED == true && PROP.HIDDEN == false)
-    {
-      wrefresh(winButton);
-    }
-
-    // If the button is simple click, reset its value
-    if (PROP.TYPE == 0 && PROP.VALUE == 1)
-    {
-      PROP.VALUE = 0;
-      BUTTON_PRESSED.ping_up(tmeFrame_Time, VISIBLE_UPATE_TIME);
-    }
-
-    PROP.CHANGED = false;
-  }
-}
-
-
-// -------------------------------------------------------------------------------------
-// Button Zone Variable
-
-int Button_Zone_Manager::size()
-// return the size
-{
-  return BUTTONS.size();
-}
-
-string Button_Zone_Manager::name(int pos)
-// return the name at the pos
-{
-  return BUTTONS[pos].PROP.NAME;
-}
-
-int Button_Zone_Manager::value(int pos)
-// return the value at the pos
-{
-  return BUTTONS[pos].PROP.VALUE;
-}
-
-void Button_Zone_Manager::click_advance(int Id)
-{
-  if (BUTTONS[Id].PROP.TYPE == 0 || BUTTONS[Id].PROP.TYPE == 1)
-  {
-    BUTTONS[Id].advance();
-  }
-  else if (BUTTONS[Id].PROP.TYPE == 2)
-  {
-    for (int pos = 0; pos < BUTTONS.size(); pos++)
-    {
-      BUTTONS[pos].PROP.VALUE = 0;
-      BUTTONS[pos].PROP.CHANGED = true;
-    }
-    BUTTONS[Id].PROP.VALUE = 1;
-  }
-}
-
-void Button_Zone_Manager::create_button(int Id, string Name, string Label, int Value, int Type, int Color, int BColor)
-{
-  Button tmp_button;
-
-  tmp_button.create();
-  tmp_button.modify(Id, Name, Label, Value, Type, Color, BColor);
-  BUTTONS.push_back(tmp_button);
-}
-
-void Button_Zone_Manager::modify(int Id, string Name, string Label, int Value, int Type, int Color, int BColor)
-{
-  BUTTONS[Id].PROP.ID = Id;
-  BUTTONS[Id].PROP.NAME = Name;
-  BUTTONS[Id].PROP.LABEL = Label;
-  BUTTONS[Id].PROP.VALUE = Value;
-  BUTTONS[Id].PROP.TYPE = Type;
-  BUTTONS[Id].PROP.COLOR = Color;
-  BUTTONS[Id].PROP.BCOLOR = BColor;
-  BUTTONS[Id].PROP.CHANGED = true;
-}
-
-void Button_Zone_Manager::move_resize(int Id, int posY, int posX, int sizeY, int sizeX)
-{
-  BUTTONS[Id].move_resize(posY, posX, sizeY, sizeX);
-}
-
-void Button_Zone_Manager::draw(bool Refresh, unsigned long tmeFrame_Time)
-{
-  if (BUTTONS.size() >0)
-  {
-    for (int pos = 0; pos < BUTTONS.size(); pos++)
-    {
-      BUTTONS[pos].draw(Refresh, tmeFrame_Time);
-    }
-  }
-}
-
-void Button_Zone_Manager::change_label(string name, string label)
-{
-  for(int pos=0; pos<BUTTONS.size(); pos++)
-  {
-    if (BUTTONS[pos].PROP.NAME == name)
-    {
-      if (BUTTONS[pos].PROP.LABEL != label)
-      {
-        BUTTONS[pos].PROP.LABEL = label;
-        BUTTONS[pos].PROP.CHANGED = true;
-      }
-    }
-  }
-}
-
-void Button_Zone_Manager::change_value(string name, int value)
-{
-  for(int pos=0; pos<BUTTONS.size(); pos++)
-  {
-    if (BUTTONS[pos].PROP.NAME == name)
-    {
-      if (BUTTONS[pos].PROP.VALUE != value)
-      {
-        BUTTONS[pos].PROP.VALUE = value;
-        BUTTONS[pos].PROP.CHANGED = true;
-      }
-    }
-  }
-}
-
-void Button_Zone_Manager::change_enabled(string Name, bool Enabled)
-// Change Property by Name.
-{
-  for(int pos=0; pos<BUTTONS.size(); pos++)
-  {
-    if (BUTTONS[pos].PROP.NAME == Name)
-    {
-      if (BUTTONS[pos].PROP.ENABLED != Enabled)
-      {
-        BUTTONS[pos].PROP.ENABLED = Enabled;
-
-        /*
-        if(Enabled == true)
-        {
-          BUTTONS[pos].PROP.CLEAR = true;
-        }
-        */
-
-        BUTTONS[pos].PROP.CHANGED = true;
-      }
-    }
-  }
-}
-
-void Button_Zone_Manager::change_hidden(string Name, bool Hidden)
-// Change Property by Name.
-{
-  for(int pos=0; pos<BUTTONS.size(); pos++)
-  {
-    if (BUTTONS[pos].PROP.NAME == Name)
-    {
-      if (BUTTONS[pos].PROP.HIDDEN != Hidden)
-      {
-        BUTTONS[pos].PROP.HIDDEN = Hidden;
-
-        /*
-        if(Hidden == true)
-        {
-          BUTTONS[pos].PROP.CLEAR = true;
-        }
-        */
-
-        BUTTONS[pos].PROP.CHANGED = true;
-      }
-    }
-  }
-}
-
-string Button_Zone_Manager::get_clicked_name()
-// returns the name of the first clicked button in the list
-{
-  string name = "";
-  
-  for (int pos = 0; pos < BUTTONS.size(); pos ++)
-  {
-    if (BUTTONS[pos].PROP.CLICKED == true)
-    {
-      name = BUTTONS[pos].PROP.NAME;
-      return name;
-    }
-  }
-  return name;
-}
-
-int Button_Zone_Manager::get_clicked_value(string name)
-// returns the value of the named clicked button in the list
-{
-  int value = 0;
-  for (int pos = 0; pos < BUTTONS.size(); pos ++)
-  {
-    if (BUTTONS[pos].PROP.NAME == name)
-    {
-      value = BUTTONS[pos].PROP.VALUE;
-      BUTTONS[pos].PROP.CLICKED = false;
-      return value;
-    }
-  }
-  return value;
-}
-
-bool Button_Zone_Manager::check_click(int x,int y)
-// Check to see if any button in the list was clicked.
-{
-  bool clicked = false;
-
-  // Check each enabled button in zone for clicked coords within
-  for(int pos=0; pos<BUTTONS.size(); pos++)
-  {
-    if(BUTTONS[pos].PROP.ENABLED == true && (BUTTONS[pos].PROP.TYPE == 0 || BUTTONS[pos].PROP.TYPE == 1 || BUTTONS[pos].PROP.TYPE == 2))
-    // Only update known button types or not disabled button type.
-    {
-      if(x >= BUTTONS[pos].PROP.POSX && x <= (BUTTONS[pos].PROP.POSX + BUTTONS[pos].PROP.SIZEX -1) &&
-        y >= BUTTONS[pos].PROP.POSY && y <= (BUTTONS[pos].PROP.POSY + BUTTONS[pos].PROP.SIZEY -1))
-      {
-        clicked = true;
-        BUTTONS[pos].PROP.CLICKED = true;
-        click_advance(pos);
-
-        return clicked;
-      }
-    }
-  }
-  return clicked;
-}
-
-
-// -------------------------------------------------------------------------------------
-// Button Classes
-
-void Button_2::create()
-//void create(int id, string name, string label, int value, int type, int color, int bcolor)
-// Define button and behavior.  
-// Like set but leaves off position and size details.
-// Does not create window.
-{
-  BUTTON_PANEL.PROP.POSY = PROP.POSY;
-  BUTTON_PANEL.PROP.POSX = PROP.POSX;
-  BUTTON_PANEL.PROP.SIZEY = PROP.SIZEY;
-  BUTTON_PANEL.PROP.SIZEX = PROP.SIZEX;
-  BUTTON_PANEL.PROP.BORDER = PROP.BORDER;
-
-  BUTTON_PANEL.create();
-
-  LINES.PROP.POSY = 0;
-  LINES.PROP.SIZEX = BUTTON_PANEL.PROP.SIZEX;
-  LINES.PROP.SIZEY = BUTTON_PANEL.PROP.SIZEY;
-  LINES.PROP.JUSTIFICATION_CENTER = true;
-
-  bool CHANGED = true;
-}
-
-bool Button_2::changed()
-// Returns true if any of the properties have changed.
-{
-  return PROP.CHANGED;
-}
-
-void Button_2::advance()
-// Brings the value of the button up to its next value state
-//  e.g. A simple button Off (value = 0) would advance to On (value = 1).
-{
-  //LABEL = "clicked";
-  if (PROP.TYPE == 0)  // Click Button
-  {
-    PROP.VALUE = 1;
-  }
-  if (PROP.TYPE == 1)  // Toggle Type
-  {
-    if (PROP.VALUE == 0)
-    {
-      PROP.VALUE = 1;
-    }
-    else
-    {
-      PROP.VALUE = 0;
-    }
-  }
-  if (PROP.TYPE == 2)  // Radio Type
-  {
-    // Let the zone manager handle its value.
-  }
-
-  PROP.CHANGED = true;
-}
-
-void Button_2::change_on()
+void Button::change_on()
 {
   PROP.CHANGED = true;
 }
 
-void Button_2::set_pos_size(int PosY, int PosX, int SizeY, int SizeX)
+void Button::set_pos_size(int PosY, int PosX, int SizeY, int SizeX)
 {
   if ((PROP.POSY != PosY) && (PROP.POSX != PosX) && (PROP.SIZEY != SizeY) && (PROP.SIZEX != SizeX))
   {
@@ -1235,7 +781,7 @@ void Button_2::set_pos_size(int PosY, int PosX, int SizeY, int SizeX)
   }
 }
 
-void Button_2::set_name(string Name)
+void Button::set_name(string Name)
 {
   if (PROP.NAME != Name)
   {
@@ -1245,7 +791,7 @@ void Button_2::set_name(string Name)
   }
 }
 
-void Button_2::set_label(string Label)
+void Button::set_label(string Label)
 {
   if (PROP.LABEL != Label)
   {
@@ -1255,7 +801,7 @@ void Button_2::set_label(string Label)
   }
 }
 
-void Button_2::set_value(int Value)
+void Button::set_value(int Value)
 {
   if (PROP.VALUE != Value)
   {
@@ -1265,7 +811,7 @@ void Button_2::set_value(int Value)
   }
 }
 
-void Button_2::set_type(int Type)
+void Button::set_type(int Type)
 {
   if (PROP.TYPE != Type)
   {
@@ -1275,7 +821,7 @@ void Button_2::set_type(int Type)
   }
 }
 
-void Button_2::set_color(int Background_Color, int Color)
+void Button::set_color(int Background_Color, int Color)
 {
   if ((PROP.BCOLOR != Background_Color) && (PROP.COLOR != Color))
   {  
@@ -1288,7 +834,7 @@ void Button_2::set_color(int Background_Color, int Color)
   }
 }
 
-void Button_2::set_enabled(bool Enabled)
+void Button::set_enabled(bool Enabled)
 {
   if (PROP.ENABLED != Enabled)
   {
@@ -1298,7 +844,7 @@ void Button_2::set_enabled(bool Enabled)
   }
 }
 
-void Button_2::set_hidden(bool Hidden)
+void Button::set_hidden(bool Hidden)
 {
   if (PROP.HIDDEN != Hidden)
   {
@@ -1308,7 +854,7 @@ void Button_2::set_hidden(bool Hidden)
   }
 }
 
-void Button_2::draw(bool Refresh, unsigned long tmeFrame_Time)
+void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the button on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
@@ -1374,7 +920,7 @@ void Button_2::draw(bool Refresh, unsigned long tmeFrame_Time)
 // -------------------------------------------------------------------------------------
 // Button Zone Variable
 
-int Button_Zone_Manager_2::get_pos(int Id)
+int Button_Zone_Manager::get_pos(int Id)
 {
   int ret_pos = -1;
 
@@ -1389,7 +935,7 @@ int Button_Zone_Manager_2::get_pos(int Id)
   return ret_pos;
 }
 
-int Button_Zone_Manager_2::get_pos(string Name)
+int Button_Zone_Manager::get_pos(string Name)
 {
   int ret_pos = -1;
 
@@ -1404,25 +950,25 @@ int Button_Zone_Manager_2::get_pos(string Name)
   return ret_pos;
 }
 
-int Button_Zone_Manager_2::size()
+int Button_Zone_Manager::size()
 // return the size
 {
   return BUTTONS.size();
 }
 
-string Button_Zone_Manager_2::name(int pos)
+string Button_Zone_Manager::name(int pos)
 // return the name at the pos
 {
   return BUTTONS[pos].PROP.NAME;
 }
 
-int Button_Zone_Manager_2::value(int pos)
+int Button_Zone_Manager::value(int pos)
 // return the value at the pos
 {
   return BUTTONS[pos].PROP.VALUE;
 }
 
-void Button_Zone_Manager_2::click_advance(int Id)
+void Button_Zone_Manager::click_advance(int Id)
 {
   if (BUTTONS[Id].PROP.TYPE == 0 || BUTTONS[Id].PROP.TYPE == 1)
   {
@@ -1439,14 +985,14 @@ void Button_Zone_Manager_2::click_advance(int Id)
   }
 }
 
-void Button_Zone_Manager_2::clear()
+void Button_Zone_Manager::clear()
 {
   BUTTONS.clear();
 }
 
-void Button_Zone_Manager_2::create_button()
+void Button_Zone_Manager::create_button()
 {
-  Button_2 tmp_button;
+  Button tmp_button;
 
   tmp_button.PROP = NEW_BUTTON_PROP;
 
@@ -1455,7 +1001,7 @@ void Button_Zone_Manager_2::create_button()
   BUTTONS.push_back(tmp_button);
 }
 
-void Button_Zone_Manager_2::draw(bool Refresh, unsigned long tmeFrame_Time)
+void Button_Zone_Manager::draw(bool Refresh, unsigned long tmeFrame_Time)
 {
   if (BUTTONS.size() >0)
   {
@@ -1466,7 +1012,7 @@ void Button_Zone_Manager_2::draw(bool Refresh, unsigned long tmeFrame_Time)
   }
 }
 
-void Button_Zone_Manager_2::set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX)
+void Button_Zone_Manager::set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX)
 {
   int pos = get_pos(Id);
 
@@ -1476,7 +1022,7 @@ void Button_Zone_Manager_2::set_pos_size(int Id, int PosY, int PosX, int SizeY, 
   }
 }
 
-void Button_Zone_Manager_2::set_pos_size(string Name, int PosY, int PosX, int SizeY, int SizeX)
+void Button_Zone_Manager::set_pos_size(string Name, int PosY, int PosX, int SizeY, int SizeX)
 {
   int pos = get_pos(Name);
 
@@ -1486,7 +1032,7 @@ void Button_Zone_Manager_2::set_pos_size(string Name, int PosY, int PosX, int Si
   }
 }
 
-void Button_Zone_Manager_2::set_name(int Id, string Name)
+void Button_Zone_Manager::set_name(int Id, string Name)
 {
   int pos = get_pos(Id);
 
@@ -1496,7 +1042,7 @@ void Button_Zone_Manager_2::set_name(int Id, string Name)
   }
 }
 
-void Button_Zone_Manager_2::set_name(string Old_Name, string Name)
+void Button_Zone_Manager::set_name(string Old_Name, string Name)
 {
   int pos = get_pos(Old_Name);
 
@@ -1506,7 +1052,7 @@ void Button_Zone_Manager_2::set_name(string Old_Name, string Name)
   }
 }
 
-void Button_Zone_Manager_2::set_label(int Id, string Label)
+void Button_Zone_Manager::set_label(int Id, string Label)
 {
   int pos = get_pos(Id);
 
@@ -1519,7 +1065,7 @@ void Button_Zone_Manager_2::set_label(int Id, string Label)
 
 }
 
-void Button_Zone_Manager_2::set_label(string Name, string Label)
+void Button_Zone_Manager::set_label(string Name, string Label)
 {
   int pos = get_pos(Name);
 
@@ -1529,7 +1075,7 @@ void Button_Zone_Manager_2::set_label(string Name, string Label)
   }
 }
 
-void Button_Zone_Manager_2::set_value(int Id, int Value)
+void Button_Zone_Manager::set_value(int Id, int Value)
 {
   int pos = get_pos(Id);
 
@@ -1539,7 +1085,7 @@ void Button_Zone_Manager_2::set_value(int Id, int Value)
   }
 }
 
-void Button_Zone_Manager_2::set_value(string Name, int Value)
+void Button_Zone_Manager::set_value(string Name, int Value)
 {
   int pos = get_pos(Name);
 
@@ -1549,7 +1095,7 @@ void Button_Zone_Manager_2::set_value(string Name, int Value)
   }
 }
 
-void Button_Zone_Manager_2::set_type(int Id, int Type)
+void Button_Zone_Manager::set_type(int Id, int Type)
 {
   int pos = get_pos(Id);
 
@@ -1559,7 +1105,7 @@ void Button_Zone_Manager_2::set_type(int Id, int Type)
   }
 }
 
-void Button_Zone_Manager_2::set_type(string Name, int Type)
+void Button_Zone_Manager::set_type(string Name, int Type)
 {
   int pos = get_pos(Name);
 
@@ -1569,7 +1115,7 @@ void Button_Zone_Manager_2::set_type(string Name, int Type)
   }
 }
 
-void Button_Zone_Manager_2::set_color(int Id, int Background_Color, int Color)
+void Button_Zone_Manager::set_color(int Id, int Background_Color, int Color)
 {
   int pos = get_pos(Id);
 
@@ -1579,7 +1125,7 @@ void Button_Zone_Manager_2::set_color(int Id, int Background_Color, int Color)
   }
 }
 
-void Button_Zone_Manager_2::set_color(string Name, int Background_Color, int Color)
+void Button_Zone_Manager::set_color(string Name, int Background_Color, int Color)
 {
   int pos = get_pos(Name);
 
@@ -1589,7 +1135,7 @@ void Button_Zone_Manager_2::set_color(string Name, int Background_Color, int Col
   }
 }
 
-void Button_Zone_Manager_2::set_enabled(int Id, bool Enabled)
+void Button_Zone_Manager::set_enabled(int Id, bool Enabled)
 // Change Property by Name.
 {
   int pos = get_pos(Id);
@@ -1600,7 +1146,7 @@ void Button_Zone_Manager_2::set_enabled(int Id, bool Enabled)
   }
 }
 
-void Button_Zone_Manager_2::set_enabled(string Name, bool Enabled)
+void Button_Zone_Manager::set_enabled(string Name, bool Enabled)
 // Change Property by Name.
 {
   int pos = get_pos(Name);
@@ -1611,7 +1157,7 @@ void Button_Zone_Manager_2::set_enabled(string Name, bool Enabled)
   }
 }
 
-void Button_Zone_Manager_2::set_hidden(int Id, bool Hidden)
+void Button_Zone_Manager::set_hidden(int Id, bool Hidden)
 // Change Property by Name.
 {
   int pos = get_pos(Id);
@@ -1622,7 +1168,7 @@ void Button_Zone_Manager_2::set_hidden(int Id, bool Hidden)
   }
 }
 
-void Button_Zone_Manager_2::set_hidden(string Name, bool Hidden)
+void Button_Zone_Manager::set_hidden(string Name, bool Hidden)
 // Change Property by Name.
 {
   int pos = get_pos(Name);
@@ -1633,7 +1179,7 @@ void Button_Zone_Manager_2::set_hidden(string Name, bool Hidden)
   }
 }
 
-string Button_Zone_Manager_2::get_clicked_name()
+string Button_Zone_Manager::get_clicked_name()
 // returns the name of the first clicked button in the list
 {
   string name = "";
@@ -1649,7 +1195,7 @@ string Button_Zone_Manager_2::get_clicked_name()
   return name;
 }
 
-int Button_Zone_Manager_2::get_clicked_value(string Name)
+int Button_Zone_Manager::get_clicked_value(string Name)
 // returns the value of the named clicked button in the list
 {
   int pos = get_pos(Name);
@@ -1664,7 +1210,7 @@ int Button_Zone_Manager_2::get_clicked_value(string Name)
   return ret_int;
 }
 
-int Button_Zone_Manager_2::get_id_of_button_with_value(int Value)
+int Button_Zone_Manager::get_id_of_button_with_value(int Value)
 {
   int ret_int = -1;
   for (int pos = 0; pos < BUTTONS.size(); pos++)
@@ -1677,7 +1223,7 @@ int Button_Zone_Manager_2::get_id_of_button_with_value(int Value)
   return ret_int;
 }
 
-bool Button_Zone_Manager_2::check_click(int x,int y)
+bool Button_Zone_Manager::check_click(int x,int y)
 // Check to see if any button in the list was clicked.
 {
   bool clicked = false;

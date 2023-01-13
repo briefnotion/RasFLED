@@ -393,126 +393,10 @@ class Text_Box
 };
 
 
-
 // -------------------------------------------------------------------------------------
 // Button Classes
 
 class Button_Properties
-// Properties (duh)
-{
-  public: 
-
-  int ID;
-  string NAME = "";
-  string LABEL = "";
-  
-  int VALUE = 0;
-
-  int TYPE = 0;
-  int COLOR = 0;
-  int BCOLOR = 0;
-
-  bool HIDDEN = false;
-  bool ENABLED = true;
-
-  //bool CLEAR = false;
-  
-  int POSY = 0;
-  int POSX = 0;
-  int SIZEY = 0;
-  int SIZEX = 0;
-
-  bool CLICKED = false;
-  bool CHANGED = false;
-};
-
-class Button
-// Routines for create, draw, modify, and behavior.
-{
-  private:
-
-  WINDOW * winButton;
-
-  TIMED_PING BUTTON_PRESSED;
-  int VISIBLE_UPATE_TIME = 500;
-
-  //Debug DEBUG_COUNTER
-  int Counter = 0;
-
-  // Types:
-  // -2 - Disabled
-  // -1 - Hidden
-  //  0 - Single Click
-  //  1 - Toggle Button
-  //  2 - Radio Button (Zone)
-  // FIX ME: Correctly seperate type into prop values of hidden, disabled.
-
-  public:
-
-  Button_Properties PROP;  
-
-  void modify(int id, string name, string label, int value, int type, int color, int bcolor);
-
-  void create();
-
-  void move_resize(int posY, int posX, int sizeY, int sizeX);
-
-  bool changed();
-
-  void advance();
-
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
-};
-
-
-// -------------------------------------------------------------------------------------
-// Button Zone Variable
-class Button_Zone_Manager
-{
-  private:
-
-  //deque<Button_Properties> ZONES;
-
-  deque<Button> BUTTONS;
-
-  public:
-
-  int size();
-
-  string name(int pos);
-
-  int value(int pos);
-
-  void click_advance(int Id);
-
-  void create_button(int Id, string Name, string Label, int Value, int Type, int Color, int BColor);
-
-  void modify(int Id, string Name, string Label, int Value, int Type, int Color, int BColor);
-
-  void move_resize(int Id, int posY, int posX, int sizeY, int sizeX);
-
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
-
-  void change_label(string name, string label);
-
-  void change_value(string name, int value);
-
-  void change_enabled(string Name, bool Enabled);
-
-  void change_hidden(string Name, bool Hidden);
-
-  string get_clicked_name();
-
-  int get_clicked_value(string name);
-
-  bool check_click(int x,int y);
-};
-
-
-// -------------------------------------------------------------------------------------
-// Button Classes
-
-class Button_Properties_2
 // Properties (duh)
 {
   public: 
@@ -543,7 +427,7 @@ class Button_Properties_2
   bool CHANGED = false;
 };
 
-class Button_2
+class Button
 // Routines for create, draw, modify, and behavior.
 {
   private:
@@ -569,7 +453,7 @@ class Button_2
 
   public:
 
-  Button_Properties_2 PROP;
+  Button_Properties PROP;
 
   void create();
 
@@ -601,13 +485,13 @@ class Button_2
 
 // -------------------------------------------------------------------------------------
 // Button Zone Variable
-class Button_Zone_Manager_2
+class Button_Zone_Manager
 {
   private:
 
   //deque<Button_Properties> ZONES;
 
-  deque<Button_2> BUTTONS;
+  deque<Button> BUTTONS;
 
   int get_pos(int Id);
 
@@ -615,7 +499,7 @@ class Button_Zone_Manager_2
 
   public:
 
-  Button_Properties_2 NEW_BUTTON_PROP;
+  Button_Properties NEW_BUTTON_PROP;
 
   int size();
 

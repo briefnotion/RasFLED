@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/source/RasFLED/source/LEDstuff.cpp
-LEDstuff.h
-/home/pi/source/RasFLED/source/LEDstuff.h
-
 /home/pi/source/RasFLED/source/LEDstuff.h
 string.h
 -
@@ -55,10 +51,6 @@ fledcore.h
 /home/pi/source/RasFLED/source/api_rtlairband.h
 string.h
 -
-
-/home/pi/source/RasFLED/source/api_shared_memory.cpp
-api_shared_memory.h
-/home/pi/source/RasFLED/source/api_shared_memory.h
 
 /home/pi/source/RasFLED/source/api_shared_memory.h
 fstream
@@ -162,10 +154,6 @@ LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
-/home/pi/source/RasFLED/source/gadgets.cpp
-gadgets.h
-/home/pi/source/RasFLED/source/gadgets.h
-
 /home/pi/source/RasFLED/source/gadgets.h
 stdio.h
 -
@@ -226,10 +214,6 @@ timedeventsystem.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
-/home/pi/source/RasFLED/source/hardware_status.cpp
-hardware_status.h
-/home/pi/source/RasFLED/source/hardware_status.h
-
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
 -
@@ -245,10 +229,6 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 wiringPi.h
 -
-
-/home/pi/source/RasFLED/source/helper.cpp
-helper.h
-/home/pi/source/RasFLED/source/helper.h
 
 /home/pi/source/RasFLED/source/helper.h
 deque
@@ -377,10 +357,6 @@ deque
 -
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
-
-/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp
-radio_channel_coordinator.h
-/home/pi/source/RasFLED/source/radio_channel_coordinator.h
 
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 deque

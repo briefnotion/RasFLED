@@ -954,24 +954,7 @@ void Radio_Channel::create(int id, string name, string label, int type, int colo
   PROP.TYPE = type;
   PROP.COLOR = color;
   PROP.BCOLOR = bcolor;
-
-  // Create Gadget Window
-  winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
-
-  // Create Button Zone for Gadget
-  bzGadget.create_button (0, "GADGET", "%Gadget", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  
-  bzGadget.create_button (1, "SKIP", "%SKIP", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzGadget.create_button (2, "HOLD", "%HOLD", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzGadget.create_button (3, "CLEAR", "%CLEAR", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-
-  bzGadget.change_hidden("GADGET", true);
-
-  bzGadget.change_enabled("GADGET", false);
-  bzGadget.change_enabled("HOLD", false);
-  bzGadget.change_enabled("SKIP", false);
-  bzGadget.change_enabled("CLEAR", false);
-  
+ 
   // Create Noise Level Bar
   BAR_NOISE_LEVEL.label(PROP.NOISE_LABEL);
   BAR_NOISE_LEVEL.label_size(PROP.NOISE_LABEL.size());
@@ -1010,20 +993,75 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   //wborder(winFrequency,'|','|','-','-','+','+','+','+') ;
   wborder(winFrequency,' ',' ',' ',' ',' ',' ',' ',' ') ;
 
-  // Move Resize Buttons
-  bzGadget.move_resize(0, PROP.POSY, PROP.POSX, PROP.SIZEY, PROP.SIZEX);
+  // Create Buttons
+  bzGadget.clear();
+
+  bzGadget.NEW_BUTTON_PROP.VALUE = 0;
+  bzGadget.NEW_BUTTON_PROP.TYPE = 0;
+  bzGadget.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+  bzGadget.NEW_BUTTON_PROP.SIZEY = PROP.SIZEY;
+  bzGadget.NEW_BUTTON_PROP.SIZEX = PROP.SIZEX;
+  bzGadget.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
+
+  //bzGadget.create_button (0, "GADGET", "%Gadget", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+  //bzGadget.move_resize(0, PROP.POSY, PROP.POSX, PROP.SIZEY, PROP.SIZEX);
+  bzGadget.NEW_BUTTON_PROP.ID = 0;
+  bzGadget.NEW_BUTTON_PROP.NAME = "GADGET";
+  bzGadget.NEW_BUTTON_PROP.LABEL = "\nGadget";
+  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY;
+  bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX;
+  bzGadget.create_button();
   
+  //bzGadget.create_button (1, "SKIP", "%SKIP", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+  //bzGadget.move_resize(1, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *0), Button_YSize, Button_XSize);
+  bzGadget.NEW_BUTTON_PROP.ID = 0;
+  bzGadget.NEW_BUTTON_PROP.NAME = "SKIP";
+  bzGadget.NEW_BUTTON_PROP.LABEL = "\nSKIP";
+  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
+  bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *0);
+  bzGadget.create_button();
+  
+  //bzGadget.create_button (2, "HOLD", "%HOLD", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+  //bzGadget.move_resize(2, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *1), Button_YSize, Button_XSize);
+  bzGadget.NEW_BUTTON_PROP.ID = 0;
+  bzGadget.NEW_BUTTON_PROP.NAME = "HOLD";
+  bzGadget.NEW_BUTTON_PROP.LABEL = "\nHOLD";
+  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
+  bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *1);
+  bzGadget.create_button();
+  
+  //bzGadget.create_button (3, "CLEAR", "%CLEAR", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+  //bzGadget.move_resize(3, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *2), Button_YSize, Button_XSize);
+  bzGadget.NEW_BUTTON_PROP.ID = 0;
+  bzGadget.NEW_BUTTON_PROP.NAME = "CLEAR";
+  bzGadget.NEW_BUTTON_PROP.LABEL = "\nCLEAR";
+  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
+  bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *2);
+  bzGadget.create_button();
+
+  bzGadget.set_hidden("GADGET", true);
+  bzGadget.set_enabled("GADGET", false);
+
+  bzGadget.set_enabled("HOLD", false);
+  bzGadget.set_hidden("HOLD", true);
+
+  bzGadget.set_enabled("SKIP", false);
+  bzGadget.set_hidden("SKIP", true);
+
+  bzGadget.set_enabled("CLEAR", false);
+  bzGadget.set_hidden("CLEAR", true);
+
   if(Button_YSize > PROP.SIZEY)
   {
     Button_YSize = PROP.SIZEY;
-    bzGadget.change_label("SKIP", "SKIP");
-    bzGadget.change_label("HOLD", "HOLD");
-    bzGadget.change_label("CLEAR", "CLEAR");
+    bzGadget.set_label("SKIP", "SKIP");
+    bzGadget.set_label("HOLD", "HOLD");
+    bzGadget.set_label("CLEAR", "CLEAR");
   }
-
-  bzGadget.move_resize(1, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *0), Button_YSize, Button_XSize);
-  bzGadget.move_resize(2, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *1), Button_YSize, Button_XSize);
-  bzGadget.move_resize(3, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *2), Button_YSize, Button_XSize);
 }
 
 bool Radio_Channel::changed()
@@ -1050,7 +1088,7 @@ void Radio_Channel::update_value(API_SQUELCH_DESTINATION &New_Value, unsigned lo
   if(PROP.TYPE == -1)
   {
     PROP.TYPE = 0;
-    bzGadget.change_enabled("GADGET", true);
+    bzGadget.set_enabled("GADGET", true);
   }
 
 }
@@ -1201,11 +1239,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
 
     if(Name == "GADGET")
     {
-      bzGadget.change_enabled("GADGET", false);
+      bzGadget.set_enabled("GADGET", false);
 
-      bzGadget.change_enabled("HOLD", true);
-      bzGadget.change_enabled("SKIP", true);
-      bzGadget.change_enabled("CLEAR", true);
+      bzGadget.set_enabled("HOLD", true);
+      bzGadget.set_hidden("HOLD", false);
+
+      bzGadget.set_enabled("SKIP", true);
+      bzGadget.set_hidden("SKIP", false);
+
+      bzGadget.set_enabled("CLEAR", true);
+      bzGadget.set_hidden("CLEAR", false);
 
       PROP.CHANGED = true;
 
@@ -1213,11 +1256,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
     }
     else if(Name == "HOLD")
     {
-      bzGadget.change_enabled("GADGET", true);
+      bzGadget.set_enabled("GADGET", true);
 
-      bzGadget.change_enabled("HOLD", false);
-      bzGadget.change_enabled("SKIP", false);
-      bzGadget.change_enabled("CLEAR", false);
+      bzGadget.set_enabled("HOLD", false);
+      bzGadget.set_hidden("HOLD", true);
+
+      bzGadget.set_enabled("SKIP", false);
+      bzGadget.set_hidden("SKIP", true);
+
+      bzGadget.set_enabled("CLEAR", false);
+      bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED = true;
 
@@ -1225,11 +1273,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
     }
     else if(Name == "SKIP")
     {
-      bzGadget.change_enabled("GADGET", true);
+      bzGadget.set_enabled("GADGET", true);
 
-      bzGadget.change_enabled("HOLD", false);
-      bzGadget.change_enabled("SKIP", false);
-      bzGadget.change_enabled("CLEAR", false);
+      bzGadget.set_enabled("HOLD", false);
+      bzGadget.set_hidden("HOLD", true);
+
+      bzGadget.set_enabled("SKIP", false);
+      bzGadget.set_hidden("SKIP", true);
+
+      bzGadget.set_enabled("CLEAR", false);
+      bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED == true;
       
@@ -1238,11 +1291,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
     }
     else if(Name == "CLEAR")
     {
-      bzGadget.change_enabled("GADGET", true);
+      bzGadget.set_enabled("GADGET", true);
 
-      bzGadget.change_enabled("HOLD", false);
-      bzGadget.change_enabled("SKIP", false);
-      bzGadget.change_enabled("CLEAR", false);
+      bzGadget.set_enabled("HOLD", false);
+      bzGadget.set_hidden("HOLD", true);
+
+      bzGadget.set_enabled("SKIP", false);
+      bzGadget.set_hidden("SKIP", true);
+
+      bzGadget.set_enabled("CLEAR", false);
+      bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED == true;
       

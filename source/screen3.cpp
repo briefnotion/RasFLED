@@ -319,11 +319,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Cycle_Time.min_max_time_span(10000);
   
   // Prep Gadgets for Radio screen. 
-  bzRadio.create_button(0, "RADIOOFF", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-  bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzRadio.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  bzRadio.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  bzRadio.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
 
   // Radio Channel Frequency gadgets Properties for Multi Screen.
   Radio_Channel tmp_radio_channel;  // Leaving defaults
@@ -798,15 +793,66 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     XRadioPos = 0;
 
     // Prep Radio Buttons
-    bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0), XRadioPos, YBRadioSize, XBRadioSize);
-    bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1), XRadioPos, YBRadioSize, XBRadioSize);
-    bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
-    bzRadio.move_resize(3, YRadioPos + (YBRadioSize *3), XRadioPos, YBRadioSize, XBRadioSize);
-    bzRadio.move_resize(4, YRadioPos + (YBRadioSize *4), XRadioPos, YBRadioSize, XBRadioSize);
 
-    // Hide unneeded buttons.
-    //bzRadio.change_enabled("AIRSTOP", false);
-    //bzRadio.change_enabled("E2", false);
+    bzRadio.clear();
+
+    bzRadio.NEW_BUTTON_PROP.VALUE = 0;
+    bzRadio.NEW_BUTTON_PROP.TYPE = 0;
+    bzRadio.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+    bzRadio.NEW_BUTTON_PROP.SIZEY = YBRadioSize;
+    bzRadio.NEW_BUTTON_PROP.SIZEX = XBRadioSize;
+    bzRadio.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
+
+    //bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0), XRadioPos, YBRadioSize, XBRadioSize);
+    //bzRadio.create_button(0, "RADIOOFF", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
+    bzRadio.NEW_BUTTON_PROP.ID = 0;
+    bzRadio.NEW_BUTTON_PROP.NAME = "RADIOOFF";
+    bzRadio.NEW_BUTTON_PROP.LABEL = "\nOFF";
+    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
+    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *0);
+    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
+    bzRadio.create_button();
+    
+    
+    //bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1), XRadioPos, YBRadioSize, XBRadioSize);
+    //bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.NEW_BUTTON_PROP.ID = 1;
+    bzRadio.NEW_BUTTON_PROP.NAME = "LAFS";
+    bzRadio.NEW_BUTTON_PROP.LABEL = "AIR\nLAF\nSCAN";
+    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_BLUE;
+    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *1);
+    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
+    bzRadio.create_button();
+
+    //bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
+    //bzRadio.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
+    bzRadio.NEW_BUTTON_PROP.ID = 2;
+    bzRadio.NEW_BUTTON_PROP.NAME = "CBS";
+    bzRadio.NEW_BUTTON_PROP.LABEL = "\nCB\nSCAN";
+    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_BLUE;
+    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *2);
+    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
+    bzRadio.create_button();
+
+    //bzRadio.move_resize(3, YRadioPos + (YBRadioSize *3), XRadioPos, YBRadioSize, XBRadioSize);
+    //bzRadio.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
+    bzRadio.NEW_BUTTON_PROP.ID = 3;
+    bzRadio.NEW_BUTTON_PROP.NAME = "NOAA";
+    bzRadio.NEW_BUTTON_PROP.LABEL = "\nNOAA";
+    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_GREEN;
+    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *3);
+    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
+    bzRadio.create_button();
+
+    //bzRadio.move_resize(4, YRadioPos + (YBRadioSize *4), XRadioPos, YBRadioSize, XBRadioSize);
+    //bzRadio.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
+    bzRadio.NEW_BUTTON_PROP.ID = 4;
+    bzRadio.NEW_BUTTON_PROP.NAME = "EMERGENCY";
+    bzRadio.NEW_BUTTON_PROP.LABEL = "\nEMER\nGENCY";
+    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *4);
+    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
+    bzRadio.create_button();
   }
 
   // ---------------------------------------------------------------------------------------
