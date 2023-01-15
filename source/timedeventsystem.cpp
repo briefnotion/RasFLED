@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef TIMEDEVEVENTSYSTEM_CPP
+#define TIMEDEVEVENTSYSTEM_CPP
+
 #include "timedeventsystem.h"
 
 // ***************************************************************************************
@@ -553,3 +556,8 @@ void teSystem(Console &cons, system_data &sdSysData, timed_event teEvent[], unsi
     } // End FOR strip
   } // End FOR group
 }
+
+
+
+
+#endif

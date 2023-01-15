@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef SCREEN3_CPP
+#define SCREEN3_CPP
+
 #include "screen3.h"
 
 using namespace std;
@@ -384,7 +387,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // CYBR Panel
-  if (ScrStat.Window_CYBR == true)
+  if (ScrStat.Window_CYBR.value() == true)
   // Main CYBR Panel
   {
     // Calculate Size and Position
@@ -414,7 +417,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Status Panel
-  if (ScrStat.Window_Status == true)
+  if (ScrStat.Window_Status.value() == true)
   // Main Status Panel
   {
     // Recreate XSplit Size
@@ -507,7 +510,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Buttons
-  if (ScrStat.Window_Buttons == true)
+  if (ScrStat.Window_Buttons.value() == true)
   // Control Buttons
   {
     YButtonPos = 0;
@@ -555,7 +558,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Debug Panel
-  if (ScrStat.Window_Debug == true)
+  if (ScrStat.Window_Debug.value() == true)
   {
     // Calculate Size and Position
     YDebugPos = YSplit;
@@ -593,7 +596,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Color Picker Panel
-  if (ScrStat.Window_CPicker == true)
+  if (ScrStat.Window_CPicker.value() == true)
   {
     // Recreate XSplit Size
     XSplit = XSplit - XCPickerSize * 2;
@@ -679,7 +682,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Timer Panel
-  if (ScrStat.Window_Timer == true)
+  if (ScrStat.Window_Timer.value() == true)
   {
     // Calculate Size and Position
     YTimerPos = YSplit;
@@ -717,7 +720,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Console Panel
-  if (ScrStat.Window_Console == true)
+  if (ScrStat.Window_Console.value() == true)
   // Main Console Screen
   {
     // Calculate Size and Position
@@ -752,7 +755,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Player Panel
-  if (ScrStat.Window_Player == true)
+  if (ScrStat.Window_Player.value() == true)
   // Main Player Screen
   {
     // Calculate Size and Position
@@ -783,7 +786,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Color Radio Buttons Panel
-  if (ScrStat.Window_Radio_Buttons == true)
+  if (ScrStat.Window_Radio_Buttons.value() == true)
   {
     // Recreate XSplit Size
     //XSplit = XSplit - XCPickerSize * 2;
@@ -857,7 +860,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Radio Panel
-  if (ScrStat.Window_Radio == true || ScrStat.Window_Many_Radio == true)
+  if (ScrStat.Window_Radio.value() == true || ScrStat.Window_Many_Radio.value() == true)
   // Main Radio Screen
   {
     // Radio Status Window
@@ -892,7 +895,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
   }
 
-  if (ScrStat.Window_Radio == true)
+  if (ScrStat.Window_Radio.value() == true)
   {
     // Radio Window
     // Calculate Size and Position
@@ -950,7 +953,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Many Radio Panel
-  if (ScrStat.Window_Many_Radio == true)
+  if (ScrStat.Window_Many_Radio.value() == true)
   // Main Radio Screen
   {
     // Radio Window
@@ -1019,7 +1022,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     }
   }
 
-  if (ScrStat.Window_Log_Screen == true)
+  if (ScrStat.Window_Log_Screen.value() == true)
   {
     // Radio Window
     // Calculate Size and Position
@@ -1066,7 +1069,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Color ADS_B Buttons Panel
-  if (ScrStat.Window_ADS_B_Buttons == true)
+  if (ScrStat.Window_ADS_B_Buttons.value() == true)
   {
     // Recreate XSplit Size
     //XSplit = XSplit - XCPickerSize * 2;
@@ -1108,7 +1111,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzADS_B.create_button();
   }
 
-  if (ScrStat.Window_ADS_B_Screen == true)
+  if (ScrStat.Window_ADS_B_Screen.value() == true)
   {
     // ADS_B Window
     // Calculate Size and Position
@@ -1161,7 +1164,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Tabs Panel
-  if (ScrStat.Window_Tabs == true)
+  if (ScrStat.Window_Tabs.value() == true)
   {
     // Calculate Size and Position
     YSplit = YMax - YTabSize;
@@ -1846,11 +1849,11 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   // Check for Timer Window
   if (sdSysData.cdTIMER.is_active() == true)
   {
-    ScrStat.Window_Timer_On();
+    ScrStat.Window_Timer.on(ScrStat.Needs_Refresh);
   }
   else
   {
-    ScrStat.Window_Timer_Off();
+    ScrStat.Window_Timer.off(ScrStat.Needs_Refresh);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1864,37 +1867,37 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   // Draw the Screens
 
   // Draw Console window.
-  if (ScrStat.Window_Console == true)
+  if (ScrStat.Window_Console.value() == true)
   {
     printout(ScrStat);
   }
 
   // Draw Player window.
-  if (ScrStat.Window_Player == true)
+  if (ScrStat.Window_Player.value() == true)
   {
     the_player(ScrStat);
   }
 
   // Draw Radio window.
-  if (ScrStat.Window_Radio == true)
+  if (ScrStat.Window_Radio.value() == true)
   {
     radio(sdSysData, ScrStat);
   }
 
   // Draw Radio window.
-  if (ScrStat.Window_Many_Radio == true)
+  if (ScrStat.Window_Many_Radio.value() == true)
   {
     manyradio(sdSysData, ScrStat);
   }
 
   // Draw Log Screen window.
-  if (ScrStat.Window_ADS_B_Screen == true)
+  if (ScrStat.Window_ADS_B_Screen.value() == true)
   {
     ads_b_screen(sdSysData, ScrStat);
   }
 
   // Draw Log Screen window.
-  if (ScrStat.Window_Log_Screen == true)
+  if (ScrStat.Window_Log_Screen.value() == true)
   {
     log_screen(sdSysData, ScrStat);
   }
@@ -1902,19 +1905,19 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   // Buttons
 
   // Draw Tabs.
-  if (ScrStat.Window_Tabs == true)
+  if (ScrStat.Window_Tabs.value() == true)
   {
     bzTabs.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   }
 
   // Draw buttons on buttons window.
-  if (ScrStat.Window_Buttons == true)
+  if (ScrStat.Window_Buttons.value() == true)
   {
     bzButtons.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   }
 
   // Draw Color Picker window.
-  if (ScrStat.Window_CPicker == true)
+  if (ScrStat.Window_CPicker.value() == true)
   {
     bzCPicker.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   }
@@ -1922,25 +1925,25 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   // Draw Statuses
 
   // Draw Timer window.
-  if (ScrStat.Window_Timer == true)
+  if (ScrStat.Window_Timer.value() == true)
   {
     output_timer(sdSysData, keywatch, ScrStat, mouse);
   }
 
   // Draw Debug window.
-  if (ScrStat.Window_Debug == true)
+  if (ScrStat.Window_Debug.value() == true)
   {
     output_debug2(sdSysData, keywatch, ScrStat, mouse);
   }
 
   // Draw Status window.
-  if (ScrStat.Window_Status == true)
+  if (ScrStat.Window_Status.value() == true)
   {
     output_status(sdSysData, keywatch, ScrStat, mouse);
   }
 
-  // Draw Status window.
-  if (true == true)
+  // Draw CYBR window.
+  if (ScrStat.Window_CYBR.value() == true)
   {
     output_CYBR(sdSysData, ScrStat);
   }
@@ -1951,3 +1954,8 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   refresh();
   ScrStat.Needs_Refresh = false;
 }
+
+
+
+
+#endif

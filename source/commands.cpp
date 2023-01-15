@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef COMMANDS_CPP
+#define COMMANDS_CPP
+
 #include "commands.h"
 
 using namespace std;
@@ -50,3 +53,8 @@ void COMMAND_THREAD::run_command(string Command)
     THREAD_RUNNING = true;
   }
 }
+
+
+
+
+#endif

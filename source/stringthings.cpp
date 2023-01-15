@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef STRINGTHINGS_CPP
+#define STRINGTHINGS_CPP
+
 #include "stringthings.h"
 
 using namespace std;
@@ -436,3 +439,8 @@ bool STRING_FLOAT::conversion_success()
 {
   return CONVERSION_SUCCESS;
 }
+
+
+
+
+#endif

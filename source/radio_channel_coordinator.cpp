@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef RADIO_CHANNEL_COORDINATOR_CPP
+#define RADIO_CHANNEL_COORDINATOR_CPP
+
 #include "radio_channel_coordinator.h"
 
 using namespace std;
@@ -145,3 +148,8 @@ void RADIO_CHANNEL_COORDINATOR::command_send(int Command, int Parameter)
   COMMAND_TO_RADIO.PARAMETER = Parameter;
   COMMAND_TO_RADIO.CHANGED = true;
 }
+
+
+
+
+#endif

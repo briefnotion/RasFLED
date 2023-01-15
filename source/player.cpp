@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef PLAYER_CPP
+#define PLAYER_CPP
+
 #include "player.h"
 
 using namespace std;
@@ -306,3 +309,8 @@ unsigned long PLAYER::get_next_frame_draw_time()
     return 0;
   }
 }
+
+
+
+
+#endif

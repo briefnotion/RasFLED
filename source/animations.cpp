@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef ANIMATIONS_CPP
+#define ANIMATIONS_CPP
+
 #include "animations.h"
 
 
@@ -750,3 +753,8 @@ void vdAdditionalCloseADV00(Console &cons, v_profile_strip strip, timed_event te
   // Seach the strip for light colors and set them to end after animation completes.  
   teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
 }
+
+
+
+
+#endif

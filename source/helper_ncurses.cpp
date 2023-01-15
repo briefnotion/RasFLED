@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef HELPER_NCURSES_CPP
+#define HELPER_NCURSES_CPP
+
 #include "helper_ncurses.h"
 
 using namespace std;
@@ -85,3 +88,8 @@ void CRT_init_all_pairs()
     }
   }
 }
+
+
+
+
+#endif

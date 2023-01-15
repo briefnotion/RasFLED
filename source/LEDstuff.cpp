@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef LEDSTUFF_CPP
+#define LEDSTUFF_CPP
+
 #include "LEDstuff.h"
 
 using namespace std;
@@ -334,3 +337,8 @@ tmpColor.b = (fltPower * crgbColor2.b) + ((1 - fltPower) * crgbColor1.b);
 
 return tmpColor;
 }
+
+
+
+
+#endif

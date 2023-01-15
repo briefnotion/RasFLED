@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef HARDWARE_MODULE_DOOR_CPP
+#define HARDWARE_MODULE_DOOR_CPP
+
 #include "hardware_module_door.h"
 
 // ***************************************************************************************
@@ -259,3 +262,8 @@ void v_DoorMonitorAndAnimationControlModule(Console &cons, system_data &sdSysDat
     }
   }
 }
+
+
+
+
+#endif

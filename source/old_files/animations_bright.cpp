@@ -3,24 +3,16 @@
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
-// *    Department : (R+D)^2                        Name: animations.h
+// *    Department : (R+D)^2                        Name: animations_bright.cpp
 // *       Sub Dept: Programming
 // *    Location ID: 856-45B
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
-#ifndef ANIMATIONS_H
-#define ANIMATIONS_H
+#ifndef ANIMATIONS_BRIGHT_CPP
+#define ANIMATIONS_BRIGHT_CPP
 
-// Standard Header Files
-#include <string.h>
-
-// RASFled related header files
-#include "definitions.h"
-#include "helper.h"
-#include "consoleanddata.h"
-#include "fledcore.h"
-
+#include "animations_bright.h"
 
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES

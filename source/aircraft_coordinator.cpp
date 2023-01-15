@@ -3,11 +3,14 @@
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
-// *    Department : (R+D)^2                        Name: aircraft_coordinator.c
+// *    Department : (R+D)^2                        Name: aircraft_coordinator.cpp
 // *       Sub Dept: Programming
 // *    Location ID: 856-45B
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
+
+#ifndef AIRCRAFT_COORDINATOR_CPP
+#define AIRCRAFT_COORDINATOR_CPP
 
 #include "aircraft_coordinator.h"
 
@@ -339,3 +342,7 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
   }
 }
 
+
+
+
+#endif

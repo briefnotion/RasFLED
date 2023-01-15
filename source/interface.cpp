@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef INTERFACE_CPP
+#define INTERFACE_CPP
+
 #include "interface.h"
 
 // ***************************************************************************************
@@ -1011,3 +1014,8 @@ void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned lon
     processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
   }
 }
+
+
+
+
+#endif

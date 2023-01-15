@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef HELPER_CPP
+#define HELPER_CPP
+
 #include "helper.h"
 
 using namespace std;
@@ -424,3 +427,8 @@ int position_of_scale(int size, int scale, int value)
     return pos;
   }
 }
+
+
+
+
+#endif

@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef FILES_CPP
+#define FILES_CPP
+
 #include "files.h"
 
 using namespace std;
@@ -666,3 +669,8 @@ bool load_playlist(Console &cons, system_data &sdSysData, string strFilename)
 
   return success;
 }
+
+
+
+
+#endif

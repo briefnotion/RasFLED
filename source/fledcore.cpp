@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef FLEDCORE_CPP
+#define FLEDCORE_CPP
+
 #include "fledcore.h"
 
 // ***************************************************************************************
@@ -623,3 +626,8 @@ bool timed_event::execute(Console &cons, system_data &sdSysData, stupid_random s
 return booChanged;
 
 }
+
+
+
+
+#endif

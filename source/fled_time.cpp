@@ -14,6 +14,9 @@
 // *
 // ***************************************************************************************
 
+#ifndef FLED_TIME_CPP
+#define FLED_TIME_CPP
+
 #include "fled_time.h"
 
 using namespace std;
@@ -345,3 +348,8 @@ bool TIMED_PING::blip_moved(unsigned long current_time)
     return false;
   }
 }
+
+
+
+
+#endif

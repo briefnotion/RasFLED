@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef CONSOLEANDDATA_CPP
+#define CONSOLEANDDATA_CPP
+
 #include "consoleanddata.h"
 
 using namespace std;
@@ -80,7 +83,6 @@ void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data 
   {
     Screen.ADSB_Grid.update(sdSysData, tmeCurrentMillis);
   }
-
 }
 
 bool Console::load_reel(fstream &fsPlayer, string filename)
@@ -161,7 +163,7 @@ bool Console::print_movie_frame(fstream &fsPlayer)
 
   if (the_player.booSucess == true)
   {
-    if (ScrStat.Window_Player == true)
+    if (ScrStat.Window_Player.value() == true)
     {
       if (the_player.get_frame(fsPlayer) == false)
       {
@@ -180,13 +182,13 @@ bool Console::print_movie_frame(fstream &fsPlayer)
 void Console::set_screen(system_data &sdSysData)
 // Before drawing and initializing the screen, set the display to how it should look. 
 {
-  ScrStat.Window_CYBR_On();
-  ScrStat.Window_Status_On();
-  ScrStat.Window_Buttons_On();
-  ScrStat.Window_Debug_Off();
-  ScrStat.Window_Console_On();
-  ScrStat.Window_CPicker_Off();
-  ScrStat.Window_Tabs_On();
+  ScrStat.Window_CYBR.on(ScrStat.Needs_Refresh);
+  ScrStat.Window_Status.on(ScrStat.Needs_Refresh);
+  ScrStat.Window_Buttons.on(ScrStat.Needs_Refresh);
+  ScrStat.Window_Debug.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Console.on(ScrStat.Needs_Refresh);
+  ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Tabs.on(ScrStat.Needs_Refresh);
 
   Screen.set(sdSysData, ScrStat);
 }
@@ -197,7 +199,7 @@ void Console::printi(string in)
   // console line time is inaccurate.  Will only refect previous console update time
   //  and not actual time printed.  Current time is not global.  This is a filler.
 
-  if (ScrStat.Window_Console == true)
+  if (ScrStat.Window_Console.value() == true)
   {       
     Screen.tbConsole.add_line(Update_Time, in); // Add line to console line list. 
     Screen.printout(ScrStat);  // Immediately display the line onto the screen.
@@ -295,7 +297,7 @@ void Console::processmouseinput(system_data &sdSysData)
 
       // If a Main Button is clicked, dont need the Color Picker
       //  Close it if it was opened.
-      ScrStat.Window_CPicker_Off();
+      ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
 
       // Next time the screen is refreshed, redraw the button.
       //ScrStat.Buttons_Refresh = true;
@@ -452,12 +454,12 @@ void Console::processmouseinput(system_data &sdSysData)
       // Start Hazard Lights
       {
         keywatch.cmdIn('r');
-        ScrStat.Window_CPicker_On();
+        ScrStat.Window_CPicker.on(ScrStat.Needs_Refresh);
       }
 
       else if(name.compare("CHOSECOLOR") == 0)
       {
-        ScrStat.Window_CPicker_On();
+        ScrStat.Window_CPicker.on(ScrStat.Needs_Refresh);
       }
 
       // Update changes to buttons
@@ -494,17 +496,17 @@ void Console::processmouseinput(system_data &sdSysData)
       // Turn on Tab
       {
         printi("Tab Console");
-        ScrStat.Window_Console_On();        // Console
-        ScrStat.Window_Player_Off();        // Player
+        ScrStat.Window_Console.on(ScrStat.Needs_Refresh);        // Console
+        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
-        ScrStat.Window_Radio_Buttons_Off();
-        ScrStat.Window_Radio_Off();
-        ScrStat.Window_Many_Radio_Off();
+        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh);
+        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
-        ScrStat.Window_ADS_B_Screen_Off();
+        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_Log_Screen_Off();    // Log
+        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
         the_player.pause();
         sdSysData.RADIO_COORD.pause();
       }
@@ -513,17 +515,17 @@ void Console::processmouseinput(system_data &sdSysData)
       // Turn on Tab
       {
         printi("Tab Player");
-        ScrStat.Window_Console_Off();       // Console
-        ScrStat.Window_Player_On();         // Player
+        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+        ScrStat.Window_Player.on(ScrStat.Needs_Refresh);         // Player
 
-        ScrStat.Window_Radio_Buttons_Off(); // Radio
-        ScrStat.Window_Radio_Off();
-        ScrStat.Window_Many_Radio_Off();
+        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
-        ScrStat.Window_ADS_B_Screen_Off();
+        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_Log_Screen_Off();    // Log
+        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
         the_player.play();
         sdSysData.RADIO_COORD.pause();
       }
@@ -532,17 +534,17 @@ void Console::processmouseinput(system_data &sdSysData)
       // Turn on Tab
       {
         printi("Tab Radio");
-        ScrStat.Window_Console_Off();       // Console
-        ScrStat.Window_Player_Off();        // Player
+        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
         
-        ScrStat.Window_Radio_Buttons_On();  // Radio
-        ScrStat.Window_Radio_On();
-        ScrStat.Window_Many_Radio_Off();
+        ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
+        ScrStat.Window_Radio.on(ScrStat.Needs_Refresh);
+        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
-        ScrStat.Window_ADS_B_Screen_Off();
+        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_Log_Screen_Off();    // Log
+        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
         the_player.pause();
         sdSysData.RADIO_COORD.play();
       }
@@ -551,17 +553,17 @@ void Console::processmouseinput(system_data &sdSysData)
       // Turn on Tab
       {
         printi("Tab Radio Multi");
-        ScrStat.Window_Console_Off();       // Console
-        ScrStat.Window_Player_Off();        // Player
+        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
-        ScrStat.Window_Radio_Buttons_On();  // Radio
-        ScrStat.Window_Radio_Off();
-        ScrStat.Window_Many_Radio_On();
+        ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
+        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+        ScrStat.Window_Many_Radio.on(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
-        ScrStat.Window_ADS_B_Screen_Off();
+        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_Log_Screen_Off();    // Log
+        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
         the_player.pause();
         sdSysData.RADIO_COORD.play();
       }
@@ -570,17 +572,17 @@ void Console::processmouseinput(system_data &sdSysData)
       // Turn on Tab
       {
         printi("Tab ADS_B");
-        ScrStat.Window_Console_Off();       // Console
-        ScrStat.Window_Player_Off();        // Player
+        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
-        ScrStat.Window_Radio_Buttons_Off(); // Radio
-        ScrStat.Window_Radio_Off();
-        ScrStat.Window_Many_Radio_Off();
+        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_ADS_B_Buttons_On();   // ADS_B
-        ScrStat.Window_ADS_B_Screen_On();
+        ScrStat.Window_ADS_B_Buttons.on(ScrStat.Needs_Refresh);   // ADS_B
+        ScrStat.Window_ADS_B_Screen.on(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_Log_Screen_Off();    // Log
+        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
         the_player.pause();
         sdSysData.RADIO_COORD.play();
       }
@@ -589,17 +591,17 @@ void Console::processmouseinput(system_data &sdSysData)
       // Turn on Tab
       {
         printi("Tab Radio Multi");
-        ScrStat.Window_Console_Off();       // Console
-        ScrStat.Window_Player_Off();        // Player
+        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
-        ScrStat.Window_Radio_Buttons_Off(); // Radio
-        ScrStat.Window_Radio_Off();
-        ScrStat.Window_Many_Radio_Off();
+        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_ADS_B_Buttons_Off();  // ADS_B
-        ScrStat.Window_ADS_B_Screen_Off();
+        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
-        ScrStat.Window_Log_Screen_On();     // Log
+        ScrStat.Window_Log_Screen.on(ScrStat.Needs_Refresh);     // Log
         the_player.pause();
         sdSysData.RADIO_COORD.play();
       }
@@ -635,68 +637,68 @@ void Console::processmouseinput(system_data &sdSysData)
       if(name.compare("EXITCOLOR") == 0)
       // Start Hazard Lights
       {
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
       }
       else if(name.compare("RED") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('r');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("GREEN") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('g');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("BLUE") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('b');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("PURPLE") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('u');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("YELLOW") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('y');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("CYAN") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('c');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("ORANGE") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('n');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
       else if(name.compare("WHITE") == 0)
       // Start Hazard Lights
       {
         keywatch.cmdIn('w');
-        ScrStat.Window_CPicker_Off();
+        ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
     }
 
     // -----------------------------------
-    if(ScrStat.Window_Radio == true || ScrStat.Window_Many_Radio == true)
+    if(ScrStat.Window_Radio.value() == true || ScrStat.Window_Many_Radio.value() == true)
     {
       if (Screen.bzRadio.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
       // Check for any clicked buttons or if it was just empty space.
@@ -748,7 +750,7 @@ void Console::processmouseinput(system_data &sdSysData)
 
     // -----------------------------------
     // Check Gadgets for Clicked
-    if(ScrStat.Window_Radio == true)
+    if(ScrStat.Window_Radio.value() == true)
     // Check the Radio_Frequencies Radio_Channel Gadgets
     {
       string name = "empty";
@@ -772,7 +774,7 @@ void Console::processmouseinput(system_data &sdSysData)
       }
     }
 
-    if(ScrStat.Window_Many_Radio == true)
+    if(ScrStat.Window_Many_Radio.value() == true)
     // Check the Radio_Frequencies Radio_Channel Gadgets
     {
       string name = "empty";
@@ -797,7 +799,7 @@ void Console::processmouseinput(system_data &sdSysData)
     }
 
     // -----------------------------------
-    if(ScrStat.Window_ADS_B_Screen == true)
+    if(ScrStat.Window_ADS_B_Screen.value() == true)
     {
       if (Screen.bzADS_B.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
       // Check for any clicked buttons or if it was just empty space.
@@ -850,12 +852,12 @@ void Console::output(system_data &sdSysData)
   //  Set Debug
   if (keywatch.get(KEYDEBUG) == 1)
   {
-    ScrStat.Window_Debug_On();
+    ScrStat.Window_Debug.on(ScrStat.Needs_Refresh);
     //ScrStat.Needs_Refresh = true;
   }
   else 
   {
-    ScrStat.Window_Debug_Off();
+    ScrStat.Window_Debug.off(ScrStat.Needs_Refresh);
     //ScrStat.Needs_Refresh = true;
   }
 
@@ -896,3 +898,8 @@ void Console::display(fstream &fsPlayer, system_data &sdSystem, unsigned long tm
     print_movie_frame(fsPlayer);
   }
 }
+
+
+
+
+#endif

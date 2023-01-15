@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef GADGETS_RADIO_CPP
+#define GADGETS_RADIO_CPP
+
 #include "gadgets_radio.h"
 
 // -------------------------------------------------------------------------------------
@@ -1319,4 +1322,4 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
 
 
 
-using namespace std;
+#endif

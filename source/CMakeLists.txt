@@ -55,6 +55,7 @@ add_executable(
   aircraft_coordinator.cpp
   files.cpp
   screen3.cpp
+  system.cpp
   consoleanddata.cpp
   timedeventsystem.cpp
   fledcore.cpp

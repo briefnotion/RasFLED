@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef GADGETS_CPP
+#define GADGETS_CPP
+
 #include "gadgets.h"
 
 using namespace std;
@@ -1759,3 +1762,7 @@ string simple_progress_bar(int size, int max_value, int value)
   return bar;
 }
 
+
+
+
+#endif

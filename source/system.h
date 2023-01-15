@@ -33,6 +33,25 @@ using namespace std;
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
 // ***************************************************************************************
+
+
+class SECTION_STATUS
+{
+  private:
+
+  bool Value = false;
+
+  public:
+
+  void on(bool &Needs_Refresh);
+
+  void off(bool &Needs_Refresh);
+
+  bool value();
+};
+// -------------------------------------------------------------------------------------
+
+
 class configuration
 {
   public:
@@ -169,171 +188,35 @@ class system_data
   // -------------------------------------------------------------------------------------
 
 
-  int get_API_info(boost::interprocess::mapped_region &region_scan)
-  {
-    API_COMMAND command_from_radio;
-    int return_int = -1;
-    
-    //if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
-    {
-      return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, RADIO_COORD.COMMAND_TO_RADIO, command_from_radio);
-      RADIO_COORD.process_command_received(command_from_radio);
-      RADIO_COORD.process(RECEIVED_SQUELCH);
-    }
+  int get_API_info(boost::interprocess::mapped_region &region_scan);
 
-    return return_int;
-  }
+  void init();
 
-  void init()
-  {
-    for(int x=0; x<CONFIG.iNUM_SWITCHES; x++)
-    {
-      boolDOOR_SENSOR_STATUS.push_back(false);
-    }
-
-    for(int x=0; x<CONFIG.iNUM_CHANNELS; x++)
-    {
-      intCHANNEL_GROUP_EVENTS_COUNTS.push_back(0);
-    }
-  }
-
-  void store_Current_Frame_Time(unsigned long tmeCurrent_Time_millis)
-  {
-    tmeCURRENT_FRAME_TIME = tmeCurrent_Time_millis;
-    if (cdTIMER.is_active())
-    {
-      cdTIMER.trigger_check(tmeCurrent_Time_millis);
-      
-    // Check for Timer Window
-    }
-    if(cdTIMER.is_active() == true)
-    {
-      booprintbuffer = true;
-      strprintbuffer =  to_string(cdTIMER.elapsed_time(tmeCurrent_Time_millis)) + "  " + to_string(cdTIMER.is_triggered()) + "  " +  to_string(cdTIMER.is_checked()) + "  ";
-    }
-  }
+  void store_Current_Frame_Time(unsigned long tmeCurrent_Time_millis);
 
   // Reference to the door values
-  void store_door_switch_states()
-  {
-    for(int x=0; x < CONFIG.iNUM_SWITCHES; x++)
-    {
-      boolDOOR_SENSOR_STATUS.at(x) = CONFIG.vSWITCH_PIN_MAP.at(x).value;
-    }
-  }
+  void store_door_switch_states();
 
-  void init_running_color_list()
-  {
-    running_color_list.strRunningColor = "Blank";
-    running_color_list.color[0] = CRGB(0,0,0);
-    running_color_list.color[1] = CRGB(0,64,0);  // Green
-    running_color_list.color[2] = CRGB(48,48,0); // Yellow
-    running_color_list.color[3] = CRGB(64,16,0); // Orange
-    running_color_list.color[4] = CRGB(20,20,20); // White
-    running_color_list.color[5] = CRGB(64,0,0);  // Red
-  }
+  void init_running_color_list();
 
-  CRGB get_running_color()
-  {
-    return running_color_list.color[0];
-  }
+  CRGB get_running_color();
 
-  string get_running_color_str()
-  {
-    return running_color_list.strRunningColor;
-  }
+  string get_running_color_str();
 
-  CRGB get_countdown_color()
-  {
-    if (cdTIMER.is_active() == false)
-    {
-      return running_color_list.color[0];
-    }
-    else
-    {
-      // Compute the timer color.
-      CRGB countdown_color;
+  CRGB get_countdown_color();
 
-      // Get % complete
-      float pos = cdTIMER.timer_position(tmeCURRENT_FRAME_TIME);
+  void set_running_color(CRGB Running_Color, string strColor);
 
-      // Get Section of Color List
-      int section = floor((running_color_list.size -1) * pos);
-      
-      // Determine size in time of each secion.
-      float section_size = 1 / (float)(running_color_list.size -1);
+  void start_timer(int Seconds);
 
-      // Get % Section complete
-      unsigned long section_time_removed = section * (cdTIMER.duration() * section_size);
-      unsigned long section_elaped_time = cdTIMER.elapsed_time(tmeCURRENT_FRAME_TIME) - section_time_removed;
-
-      float pwr = ComputePower(section_elaped_time, cdTIMER.duration() * section_size);
-
-      // Dither Color and get results
-      if (section < running_color_list.size -1)
-      {
-        bigCRGB big_countdown_color = Dither(pwr, running_color_list.color[section], running_color_list.color[section + 1]);
-        
-        countdown_color.r = big_countdown_color.r;
-        countdown_color.g = big_countdown_color.g;
-        countdown_color.b = big_countdown_color.b;
-      }
-      else
-      {
-        //cdTIMER.end();
-        countdown_color = running_color_list.color[running_color_list.size - 1];
-      }
-
-      return countdown_color;
-    }
-  }
-
-  void set_running_color(CRGB Running_Color, string strColor)
-  {
-    running_color_list.color[0] = Running_Color;
-    running_color_list.strRunningColor = strColor;
-    booRunning_State_File_Dirty = true;
-  }
-
-  void start_timer(int Seconds)
-  {
-    cdTIMER.set_timer(tmeCURRENT_FRAME_TIME, Seconds);
-  }
-
-  double store_sleep_time(double tmeSleep)
-  // Pass through variable
-  // Stores the Sleep time to be displayed in diag, then returns the same value.
-  {
-    dblPREVSLEEPTIME.set_data(tmeSleep);
-    return tmeSleep;
-  }
+  double store_sleep_time(double tmeSleep);
   
-  double get_sleep_time(double Current_Time, unsigned long Wake_Time)
-  {
-    // Return, in microseconds, the amount of time required to sleep.
-    
-    double sleeptime = 0;
+  double get_sleep_time(double Current_Time, unsigned long Wake_Time);
 
-    if(Current_Time < Wake_Time)
-    {
-      sleeptime = (unsigned long)Wake_Time - Current_Time;
-    }
-
-    return sleeptime;
-  }
-
-  void read_hardware_status(int Milis_Frequency)
-  {
-    hsHardware_Status.read_hardware_status(tmeCURRENT_FRAME_TIME, Milis_Frequency);
-  }
+  void read_hardware_status(int Milis_Frequency);
 
   // reset monitor times.
-  void refresh()
-  {
-    dblCOMPUTETIME.reset_minmax();
-    dblSLEEPTIME.reset_minmax();
-    dblCYCLETIME.reset_minmax();
-  }
+  void refresh();
  };
 // -------------------------------------------------------------------------------------
 
@@ -365,128 +248,31 @@ class Keys
   Letter Chars[256];      // Full array of all letters
   CommandLine Command;    // Command Line Reference.
 
-  void cmdClear()
-  // Clear Command line
-  {
-    Command.COMMANDLINE = "";
-    Command.PRESSED = true;
-    Command.CLEARED = true;
-  }
+  void cmdClear();
 
-  bool cmdPressed()
-  // Return if Command Line Recently Changed.
-  {
-    return Command.PRESSED;
-  }
+  bool cmdPressed();
   
-  bool cmdCleared()
-  // Return if the Command was cleared. Reset it after read if it was.
-  {
-    if (Command.CLEARED == false)
-    {
-      return false;
-    }
-    else
-    {
-      Command.CLEARED = false;
-      return true;
-    }
-  }
+  bool cmdCleared();
 
-  string cmdRead()
-  // Read Command Line and sets recently changed to false (no longer dirty)
-  {
-    Command.PRESSED = false;
-    return(Command.COMMANDLINE);
-  }
+  string cmdRead();
 
-  void cmdIn(int c)
-  // Add another character to the command line.
-  {
-    if(c == (char)'\n')
-    {
-      // If enter pressed, clear the line.
-      cmdClear();
-    }
-    else
-    {
-      //if( (c>47 && c<57) || (c>65 && c<90) || (c>97 && c<122) )
-      if( (c>=32 && c<126) )
-      {
-        // only accept letters and numbers.
-        Command.COMMANDLINE = Command.COMMANDLINE + (char)c;
-        Command.PRESSED = true;
+  void cmdIn(int c);
 
-        // Limit Command Line Size. Clear when too big.
-        if (Command.COMMANDLINE.size() > 10)
-        {
-          cmdClear();
-        }
-      }
-    }
-  }
+  void cmdInString(string cmd);
 
-  void cmdInString(string cmd)
-  // Add another character to the command line.
-  {
-    Command.COMMANDLINE = cmd;
-    Command.PRESSED = true;
+  void set(int letter, int size);
 
-    if (Command.COMMANDLINE.size() > 10)
-    {
-      cmdClear();
-    }
-  }
+  void in(int c);
 
-  void set(int letter, int size)
-  // Set behavior of letter to be watched.
-  {
-    Chars[letter].COUNT = size - 1;
-    Chars[letter].VALUE = 0;
-  }
+  int get(int c);
 
-  void in(int c)
-  // Letter watched is pressed, change its value atnd set pressed (dirty)
-  {
-    if (Chars[c].ACTIVE == true)
-    {
-      Chars[c].VALUE++;
-      Chars[c].PRESSED = true;
-      if (Chars[c].VALUE > Chars[c].COUNT)
-      {
-        Chars[c].VALUE = 0;
-      }
-    }
-  }
-
-  int get(int c)
-  // return value of letter and reset pressed (clean)
-  {
-    Chars[c].PRESSED = false;
-    return Chars[c].VALUE;
-  }
-
-  int getnoreset(int c)
-  // return value of letter and reset pressed (clean)
-  {
-    return Chars[c].VALUE;
-  }
+  int getnoreset(int c);
 
   // returns true false value of letter, reset pressed (clean)
-  bool getTF(int c)
-  {
-    Chars[c].PRESSED = false;
-    if (Chars[c].VALUE == 0)
-      return false;
-    else
-      return true;
-  }
+  bool getTF(int c);
 
   // returns pressed value (clean or dirty)
-  bool pressed(int c)
-  {
-    return (Chars[c].PRESSED);
-  }
+  bool pressed(int c);
 };
 // -------------------------------------------------------------------------------------
 
@@ -499,7 +285,8 @@ class TheMouse
   int X = 0;
   int Y = 0;
   int B = 0;
-  //MEVENT MOUSE_EVENT;
+
+  //MEVENT MOUSE_EVENT
 
   int XDOWN = 0;
   int YDOWN = 0;
@@ -511,79 +298,26 @@ class TheMouse
 
   public:
 
-  int x()   // X Pos
-  {
-    return X;
-  }
+  int x();   // X Pos
   
-  int y()   // Y Pos
-  {
-    return Y;
-  }
+  int y();   // Y Pos
   
   //MEVENT mouse_event()   // B Pos
-  int b() // B Pos
-  {
-    //return MOUSE_EVENT;
-    return B;
-  }
+  int b(); // B Pos;
 
-  int x_clicked()   // Clicked X pos
-  {
-    return XCLICK;
-  }
+  int x_clicked();   // Clicked X pos
 
-  int y_clicked()   // Clicked Y pos
-  {
-    return YCLICK;
-  }
+  int y_clicked();   // Clicked Y pos
 
-  void check_click()
+  void check_click();
   // Do stuff on click down and click up.
-  {
-    //if (MOUSE_EVENT.bstate & (BUTTON1_CLICKED || BUTTON1_RELEASED))
-    if (B == 1 || B == 4)
-    // Mouse Button Down and Up.
-    {
-      XCLICK = X;
-      YCLICK = Y;
-      CLICKED = true;
-    }
-    //else if (MOUSE_EVENT.bstate & BUTTON1_PRESSED)
-    else if (B == 2)
-    // Mouse Button Down.
-    {
-      XDOWN = X;
-      YDOWN = Y;
-      CLICKED = false;
-    }
-  }
 
   //void store(int x, int y, MEVENT &mouse_event)
-  void store(int x, int y, int b)
+  void store(int x, int y, int b);
   // Put mouse changes into storage.
-  {
-    X = x;
-    Y = y;
-    //MOUSE_EVENT = mouse_event;
-    B = b;
 
-    check_click();
-  }
-
-  bool Clicked()
-  // Check Clicked status.  If true clear click status.
-  {
-    if (CLICKED == false)
-    {
-      return false;
-    }
-    else 
-    {
-      CLICKED = false;
-      return true;
-    }
-  }
+  bool Clicked();
+// Check Clicked status.  If true clear click status.
 };
 // -------------------------------------------------------------------------------------
 
@@ -594,298 +328,22 @@ class ScreenStatus
   public:
   // Main Refresh Indicator
   bool Needs_Refresh = false;
-  
-  //bool Needs_Redraw = false;
 
-  // Windows - Controls to say if a window should be displayed.
-  bool Window_CYBR = false;
-  bool Window_Status = false;
-  bool Window_Buttons = false;
-  bool Window_Debug = false;
-  bool Window_Timer = false;
-  bool Window_CPicker = false;
-  bool Window_Tabs = false;
-  bool Window_Console = false;
-  bool Window_Player = false;
-  bool Window_Radio_Buttons = false;
-  bool Window_Radio = false;
-  bool Window_Many_Radio = false;
-  bool Window_ADS_B_Buttons = false;
-  bool Window_ADS_B_Screen = false;
-  bool Window_Log_Screen = false;
-  
-  // Refresh is set to true only if the value 
-  //  of displaying the window has changed. 
-  //  Yes, too much code for something so redudantly simple. Later.
-  void Window_CYBR_On()
-  {
-    if (Window_CYBR == false)
-    {
-      Window_CYBR = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_CYBR_Off()
-  {
-    if (Window_CYBR == true)
-    {
-      Window_CYBR = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Status_On()
-  {
-    if (Window_Status == false)
-    {
-      Window_Status = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Status_Off()
-  {
-    if (Window_Status == true)
-    {
-      Window_Status = false;
-      Needs_Refresh = true;
-    }
-  }
-
-    void Window_Buttons_On()
-  {
-    if (Window_Buttons == false)
-    {
-      Window_Buttons = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Buttons_Off()
-  {
-    if (Window_Buttons == true)
-    {
-      Window_Buttons = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Debug_On()
-  {
-    if (Window_Debug == false)
-    {
-      Window_Debug = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Debug_Off()
-  {
-    if (Window_Debug == true)
-    {
-      Window_Debug = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Timer_On()
-  {
-    if (Window_Timer == false)
-    {
-      Window_Timer = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Timer_Off()
-  {
-    if (Window_Timer == true)
-    {
-      Window_Timer = false;
-      Needs_Refresh = true;
-    }
-  }
-
-    void Window_CPicker_On()
-  {
-    if (Window_CPicker == false)
-    {
-      Window_CPicker = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_CPicker_Off()
-  {
-    if (Window_CPicker == true)
-    {
-      Window_CPicker = false;
-      Needs_Refresh = true;
-    }
-  }
-  
-  void Window_Console_On()
-  {
-    if (Window_Console == false)
-    {
-      Window_Console = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Console_Off()
-  {
-    if (Window_Console == true)
-    {
-      Window_Console = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Tabs_On()
-  {
-    if (Window_Tabs == false)
-    {
-      Window_Tabs = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Tabs_Off()
-  {
-    if (Window_Tabs == true)
-    {
-      Window_Tabs = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Player_On()
-  {
-    if (Window_Player == false)
-    {
-      Window_Player = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Player_Off()
-  {
-    if (Window_Player == true)
-    {
-      Window_Player = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Radio_Buttons_On()
-  {
-    if (Window_Radio_Buttons == false)
-    {
-      Window_Radio_Buttons = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Radio_Buttons_Off()
-  {
-    if (Window_Radio_Buttons == true)
-    {
-      Window_Radio_Buttons = false;
-      Needs_Refresh = true;
-    }
-  }
-  
-  void Window_Radio_On()
-  {
-    if (Window_Radio == false)
-    {
-      Window_Radio = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Radio_Off()
-  {
-    if (Window_Radio == true)
-    {
-      Window_Radio = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Many_Radio_On()
-  {
-    if (Window_Many_Radio == false)
-    {
-      Window_Many_Radio = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Many_Radio_Off()
-  {
-    if (Window_Many_Radio == true)
-    {
-      Window_Many_Radio = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_ADS_B_Buttons_On()
-  {
-    if (Window_ADS_B_Buttons == false)
-    {
-      Window_ADS_B_Buttons = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_ADS_B_Buttons_Off()
-  {
-    if (Window_ADS_B_Buttons == true)
-    {
-      Window_ADS_B_Buttons = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_ADS_B_Screen_On()
-  {
-    if (Window_ADS_B_Screen == false)
-    {
-      Window_ADS_B_Screen = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_ADS_B_Screen_Off()
-  {
-    if (Window_ADS_B_Screen == true)
-    {
-      Window_ADS_B_Screen = false;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Log_Screen_On()
-  {
-    if (Window_Log_Screen == false)
-    {
-      Window_Log_Screen = true;
-      Needs_Refresh = true;
-    }
-  }
-
-  void Window_Log_Screen_Off()
-  {
-    if (Window_Log_Screen == true)
-    {
-      Window_Log_Screen = false;
-      Needs_Refresh = true;
-    }
-  }
+  SECTION_STATUS Window_CYBR;
+  SECTION_STATUS Window_Status;
+  SECTION_STATUS Window_Buttons;
+  SECTION_STATUS Window_Debug;
+  SECTION_STATUS Window_Timer;
+  SECTION_STATUS Window_CPicker;
+  SECTION_STATUS Window_Tabs;
+  SECTION_STATUS Window_Console;
+  SECTION_STATUS Window_Player;
+  SECTION_STATUS Window_Radio_Buttons;
+  SECTION_STATUS Window_Radio;
+  SECTION_STATUS Window_Many_Radio;
+  SECTION_STATUS Window_ADS_B_Buttons;
+  SECTION_STATUS Window_ADS_B_Screen;
+  SECTION_STATUS Window_Log_Screen;
 };
 // -------------------------------------------------------------------------------------
 

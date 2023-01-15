@@ -3,7 +3,7 @@
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
-// *    Department : (R+D)^2                        Name: api_shared_memory.h
+// *    Department : (R+D)^2                        Name: api_shared_memory.cpp
 // *       Sub Dept: Programming
 // *    Location ID: 856-45B
 // *                                                      (c) 2856 - 2858 Core Dynamics
@@ -13,6 +13,9 @@
 // *  TEST CODE:                 QACODE: A565              CENSORCODE: EQK6}Lc`:Eg>
 // *
 // ***************************************************************************************
+
+#ifndef API_SHARED_MEMORY_CPP
+#define API_SHARED_MEMORY_CPP
 
 #include "api_shared_memory.h"
 
@@ -267,3 +270,8 @@ void API_CHANNEL_MEM::close(mapped_region &region_scan)
   
   (*SQUELCH).MANAGER.BINDS--;
 }
+
+
+
+
+#endif

@@ -9,6 +9,9 @@
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
+#ifndef HARDWARE_STATUS_CPP
+#define HARDWARE_STATUS_CPP
+
 #include "hardware_status.h"
 
 void HARDWARE_STATUS::read_temperature()
@@ -118,3 +121,8 @@ void HARDWARE_STATUS::read_hardware_status(unsigned long tmeCURRENT_FRAME_TIME, 
     //read_low_voltage();
   }
 }
+
+
+
+
+#endif

@@ -16,6 +16,9 @@
 // Note: I dont like the way boost filesystem and standard file system is mixed.  Needs 
 //        a few rewrites.
 
+#ifndef RASAPI_CPP
+#define RASAPI_CPP
+
 #include "rasapi.h"
 
 using namespace std;
@@ -308,3 +311,8 @@ string FILE_WATCH::get_next_line()
   // Return the read line.
   return str_read_line;
 }
+
+
+
+
+#endif
