@@ -144,6 +144,8 @@ class AIRCRAFT_DATA
   int POSITIONED_AIRCRAFT = 0;
 
   FLED_TIME_VAR CONVERTED_TIME;
+
+  int DELTA_MESSAGES = 0;
   
   bool CHANGED = false;
 };

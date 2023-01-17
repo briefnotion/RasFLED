@@ -100,6 +100,58 @@ class PANEL
 
 
 // -------------------------------------------------------------------------------------
+//  CYBR Classes
+class CYBR_LINE
+{
+  public:
+  
+  //int COLOR_VAL[256];
+  
+  array<char, 256> COLOR_VAL;
+
+};
+
+class CYBR_Properties
+// Properties (duh)
+{
+  private:
+
+  public: 
+  
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 0;
+};
+
+
+class CYBR
+{
+  private:
+
+  PANEL CYBR_PANEL;
+ 
+  int CYBR_YLn = 0;
+
+  deque<CYBR_LINE> CYBRValue;
+
+  bool CHANGED = false;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  public:
+  CYBR_Properties PROP;
+
+  void create();
+
+  void input(int Value, int Max_Value, int BColor, int Color);
+
+  void draw(unsigned long tmeFrame_Time);
+};
+
+
+// -------------------------------------------------------------------------------------
 //  Text_Field Classes
 
 class Text_Field_Properties
@@ -413,8 +465,6 @@ class Button_Properties
 
   bool HIDDEN = false;
   bool ENABLED = true;
-
-  //bool CLEAR = false;
   
   int POSY = 0;
   int POSX = 0;

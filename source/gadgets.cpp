@@ -92,6 +92,68 @@ void PANEL::draw(bool Refresh)
 
 
 // -------------------------------------------------------------------------------------
+//  CYBR Classes
+
+  void CYBR::create()
+  {
+    CYBR_PANEL.PROP.SIZEY = PROP.SIZEY;
+    CYBR_PANEL.PROP.SIZEX = PROP.SIZEX; 
+    CYBR_PANEL.PROP.POSY = PROP.POSY;
+    CYBR_PANEL.PROP.POSX = PROP.POSX;
+
+    CYBR_PANEL.set_color(COLOR_BLACK, COLOR_RED);
+    
+    CYBR_PANEL.create();
+
+    CYBR_LINE line;
+
+    CYBRValue.resize(CYBR_PANEL.PROP.SIZEY);
+  }
+
+  void CYBR::input(int Value, int Max_Value, int BColor, int Color)
+  {
+    if (Value > 0)
+    {
+      int pos = position_of_scale(PROP.SIZEY -1 , Max_Value, Value);
+      int col = CRT_get_color_pair(BColor, Color);
+
+      if (pos > PROP.SIZEY)
+      {
+        pos = PROP.SIZEY;
+      }
+
+      CYBRValue[pos].COLOR_VAL[col]++;
+
+      wattron(CYBR_PANEL.winPANEL, COLOR_PAIR(col));
+      mvwprintw(CYBR_PANEL.winPANEL, pos, 0, "%x", CYBRValue[pos].COLOR_VAL[col]);
+      wattroff(CYBR_PANEL.winPANEL, COLOR_PAIR(col));
+    }
+
+  }
+
+  void CYBR::draw(unsigned long tmeFrame_Time)
+  {
+    mvwprintw(CYBR_PANEL.winPANEL, 0, 0, "%d",tmeFrame_Time/100);
+
+    mvwprintw(CYBR_PANEL.winPANEL, CYBR_YLn, 0, "  ");
+
+    CYBRValue[CYBR_YLn].COLOR_VAL.fill(0);
+
+    CYBR_YLn = CYBR_YLn -1;
+    if (CYBR_YLn <0)
+    {
+      CYBR_YLn = PROP.SIZEY -1;
+    }
+    wattron(CYBR_PANEL.winPANEL, A_REVERSE);
+    mvwprintw(CYBR_PANEL.winPANEL, CYBR_YLn, 0, "/\\");
+    wattroff(CYBR_PANEL.winPANEL, A_REVERSE);
+
+    // Commit all our changes to the status portion of the screen (winTop)
+    CYBR_PANEL.draw(true);
+  }
+
+
+// -------------------------------------------------------------------------------------
 //  Text_Field Classes
 
 bool Text_Field::changed()
@@ -267,7 +329,6 @@ void Text_Field_Multi_Line::draw_all_lines(PANEL &Button_Panel, deque<string> &L
 {
   for (int pos = 0; pos < Lines.size(); pos++)
   {
-    //mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, Lines[pos].c_str());  //print line. 
     mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, Lines[pos].c_str());  //print line. 
   }
 }
@@ -905,9 +966,9 @@ void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.HIDDEN == false)
     {
       LINES.draw(BUTTON_PANEL, Refresh);
+      BUTTON_PANEL.draw(Refresh);
     }
-    BUTTON_PANEL.draw(Refresh);
-
+    
     // If the button is simple click, reset its value
     if (PROP.TYPE == 0 && PROP.VALUE == 1)
     {
@@ -1000,7 +1061,6 @@ void Button_Zone_Manager::create_button()
   tmp_button.PROP = NEW_BUTTON_PROP;
 
   tmp_button.create();
-  //tmp_button.modify(Id, Name, Label, Value, Type, Color, BColor);
   BUTTONS.push_back(tmp_button);
 }
 

@@ -187,8 +187,6 @@ bool AIRCRAFT::alert()
   return ALERT;
 }
 
-
-
 bool AIRCRAFT_COORDINATOR::read_json_file(string &JSON_Filename)
 // Read JSON file into Property Tree
 {
@@ -237,7 +235,6 @@ void AIRCRAFT_COORDINATOR::post_post_process()
   }
 }
 
-
 bool AIRCRAFT_COORDINATOR::is_active()
 {
   return IS_ACTIVE;
@@ -262,7 +259,10 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
     {
       // Safegaurd the finicky read.  
       DATA.NOW.store(PROPERTY_TREE.get<string>("now"));
+
+      int prev_message_count = DATA.MESSAGES.get_int_value();
       DATA.MESSAGES.store(PROPERTY_TREE.get<string>("messages"));
+      DATA.DELTA_MESSAGES = DATA.MESSAGES.get_int_value() - prev_message_count;
 
       for (ptree::value_type &aircraft : PROPERTY_TREE.get_child("aircraft"))
       {
@@ -318,6 +318,8 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
         // Store Aircraft ADS-B Data into list.
         DATA.AIRCRAFTS.push_back(tmpAircraft);
       }
+
+
 
       post_post_process();
 

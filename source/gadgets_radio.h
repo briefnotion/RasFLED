@@ -132,9 +132,8 @@ class ADSB_Channel
   int Counter = 0;
 
   public:
+
   // Text Fields  
-  //Text_Field TOP_BAR;
-  
   Text_Field FLIGHT;
   Text_Field SQUAWK;
 
@@ -217,6 +216,8 @@ class ADSB_Channel_Grid
   Text_Field AIRCRAFT_COUNT;
   Text_Field POSITIONED_AIRCRAFT_TITLE;
   Text_Field POSITIONED_AIRCRAFT;
+  Text_Field DELTA_MESSAGES_TITLE;
+  Text_Field DELTA_MESSAGES;
 
   public:
 
@@ -279,7 +280,7 @@ class Radio_Channel
   private:
 
   // Gadget window
-  WINDOW * winFrequency;
+  PANEL FREQUENCY_PANEL;
 
   Button_Zone_Manager bzGadget;
   int Button_YSize = 3;

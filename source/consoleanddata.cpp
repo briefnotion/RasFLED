@@ -48,8 +48,6 @@ void Console::update_freqency_gadgets(system_data &sdSysData)
 {
   //if (ScrStat.Window_Radio == true)
   {
-    // Update Radio_Channels with new info
-    //for(int pos = 0; pos < Screen.Radio_Channel_Count; pos++)
     for(int pos = 0; pos < sdSysData.RADIO_COORD.size(); pos++)
     {
       if(pos < Screen.Radio_Channels.size())
@@ -64,17 +62,6 @@ void Console::update_freqency_gadgets(system_data &sdSysData)
       sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED = false;
     }
   }
-
-  /*
-  //if (ScrStat.Window_Many_Radio == true)
-  {
-    // Update Many_Radio_Channels with new info
-    for(int pos = 0; pos < Screen.Many_Radio_Channel_Count; pos++)
-    {
-      update_freqency_gadgets_QF(sdSysData, pos, Screen.Many_Radio_Channels[pos]);
-    }
-  }
-  */
 }
 
 void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)

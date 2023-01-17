@@ -777,6 +777,21 @@ void ADSB_Channel_Grid::create()
   POSITIONED_AIRCRAFT.set_color(COLOR_BLUE, COLOR_WHITE);
   POSITIONED_AIRCRAFT.PROP.JUSTIFICATION_LEFT = true;
 
+  DELTA_MESSAGES_TITLE.PROP.POSX = 70;
+  DELTA_MESSAGES_TITLE.PROP.POSY = 0;
+  DELTA_MESSAGES_TITLE.PROP.SIZEX = 8;
+  DELTA_MESSAGES_TITLE.PROP.COLORS_ON = true;
+  DELTA_MESSAGES_TITLE.set_color(COLOR_BLUE, COLOR_WHITE);
+  DELTA_MESSAGES_TITLE.PROP.JUSTIFICATION_LEFT = true;
+  DELTA_MESSAGES_TITLE.set_text("DELTA M:");
+
+  DELTA_MESSAGES.PROP.POSX = 79;
+  DELTA_MESSAGES.PROP.POSY = 0;
+  DELTA_MESSAGES.PROP.SIZEX = 5;
+  DELTA_MESSAGES.PROP.COLORS_ON = true;
+  DELTA_MESSAGES.set_color(COLOR_BLUE, COLOR_WHITE);
+  DELTA_MESSAGES.PROP.JUSTIFICATION_LEFT = true;
+
   // Calculate size of ADS-B Channel Grid.
   int x = PROP.SIZEX / (Default_ADS_B.PROP.SIZEX + 1);
   int y = (PROP.SIZEY - 1) /  Default_ADS_B.PROP.SIZEY;
@@ -824,7 +839,6 @@ void ADSB_Channel_Grid::create()
 
   PROP.CHANGED = true;
   PROP.NEEDS_REFRESH_DATA = true;
-
 }
 
 void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
@@ -915,6 +929,7 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL AD
 
   AIRCRAFT_COUNT.set_text(to_string(PROP.AIRCRAFT_LIST.AIRCRAFTS.size()));
   POSITIONED_AIRCRAFT.set_text(to_string(PROP.AIRCRAFT_LIST.POSITIONED_AIRCRAFT));
+  DELTA_MESSAGES.set_text(to_string(PROP.AIRCRAFT_LIST.DELTA_MESSAGES));
 
   TOP_BAR.draw(ADSB_Grid_Panel, Refresh);
   TIME.draw(ADSB_Grid_Panel, Refresh);
@@ -922,6 +937,8 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL AD
   AIRCRAFT_COUNT.draw(ADSB_Grid_Panel, Refresh);
   POSITIONED_AIRCRAFT_TITLE.draw(ADSB_Grid_Panel, Refresh);
   POSITIONED_AIRCRAFT.draw(ADSB_Grid_Panel, Refresh);
+  DELTA_MESSAGES_TITLE.draw(ADSB_Grid_Panel, Refresh);
+  DELTA_MESSAGES.draw(ADSB_Grid_Panel, Refresh);
 
   PROP.CHANGED = false;
   ADSB_Grid_Panel.draw(Refresh);
@@ -989,12 +1006,13 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   PROP.SIZEX = sizeX;
   PROP.SIZEY = sizeY;
 
-  winFrequency = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
+  // Panel
+  FREQUENCY_PANEL.PROP.POSY = PROP.POSY;
+  FREQUENCY_PANEL.PROP.POSX = PROP.POSX;
+  FREQUENCY_PANEL.PROP.SIZEY = PROP.SIZEY;
+  FREQUENCY_PANEL.PROP.SIZEX = PROP.SIZEX;
 
-  refresh();
-
-  //wborder(winFrequency,'|','|','-','-','+','+','+','+') ;
-  wborder(winFrequency,' ',' ',' ',' ',' ',' ',' ',' ') ;
+  FREQUENCY_PANEL.create();
 
   // Create Buttons
   bzGadget.clear();
@@ -1006,8 +1024,6 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.SIZEX = PROP.SIZEX;
   bzGadget.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
 
-  //bzGadget.create_button (0, "GADGET", "%Gadget", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  //bzGadget.move_resize(0, PROP.POSY, PROP.POSX, PROP.SIZEY, PROP.SIZEX);
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "GADGET";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nGadget";
@@ -1016,8 +1032,6 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX;
   bzGadget.create_button();
   
-  //bzGadget.create_button (1, "SKIP", "%SKIP", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-  //bzGadget.move_resize(1, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *0), Button_YSize, Button_XSize);
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "SKIP";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nSKIP";
@@ -1026,8 +1040,6 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *0);
   bzGadget.create_button();
   
-  //bzGadget.create_button (2, "HOLD", "%HOLD", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-  //bzGadget.move_resize(2, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *1), Button_YSize, Button_XSize);
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "HOLD";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nHOLD";
@@ -1036,8 +1048,6 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *1);
   bzGadget.create_button();
   
-  //bzGadget.create_button (3, "CLEAR", "%CLEAR", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-  //bzGadget.move_resize(3, PROP.POSY + (Button_YSize *0), PROP.POSX + (Button_XSize *2), Button_YSize, Button_XSize);
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "CLEAR";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nCLEAR";
@@ -1085,7 +1095,6 @@ void Radio_Channel::update_value(API_SQUELCH_DESTINATION &New_Value, unsigned lo
   VISIBLE_UPDATE_SIGNAL.ping_up(FRAME_TIME, VISIBLE_UPATE_TIME);
 
   PROP.CHANGED = true;
-  //New_Value.FREQUENCY.CHANGED = false;
 
   // Enable gadget to display.
   if(PROP.TYPE == -1)
@@ -1093,7 +1102,6 @@ void Radio_Channel::update_value(API_SQUELCH_DESTINATION &New_Value, unsigned lo
     PROP.TYPE = 0;
     bzGadget.set_enabled("GADGET", true);
   }
-
 }
 
 void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
@@ -1117,7 +1125,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.SKIP == true)
     {
       // Change the colors.
-      wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_MAGENTA)));
+      FREQUENCY_PANEL.set_color(PROP.BCOLOR, COLOR_MAGENTA);
       BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
       BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
     } 
@@ -1127,7 +1135,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
 
       // Change Colors
-      wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, PROP.BCOLOR)));
+      FREQUENCY_PANEL.set_color(COLOR_WHITE, PROP.BCOLOR);
       BAR_NOISE_LEVEL.color_background(COLOR_WHITE);
       BAR_SIGNAL_LEVEL.color_background(COLOR_WHITE);
     }
@@ -1138,7 +1146,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
 
       // Change the colors.
-      wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, PROP.BCOLOR)));
+      FREQUENCY_PANEL.set_color(COLOR_YELLOW, PROP.BCOLOR);
       BAR_NOISE_LEVEL.color_background(COLOR_YELLOW);
       BAR_SIGNAL_LEVEL.color_background(COLOR_YELLOW);
     } 
@@ -1146,7 +1154,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     else if (LINGER_DIRTY_SIGNAL.ping_down(FRAME_TIME) == true)
     {
       // Change the colors.
-      wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, PROP.BCOLOR)));
+      FREQUENCY_PANEL.set_color(COLOR_YELLOW, PROP.BCOLOR);
       BAR_NOISE_LEVEL.color_background(COLOR_YELLOW);
       BAR_SIGNAL_LEVEL.color_background(COLOR_YELLOW);  
     }
@@ -1156,11 +1164,11 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       // Change the colors.
       if(PROP.HELD == false)
       {
-        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_GREEN)));
+        FREQUENCY_PANEL.set_color(PROP.BCOLOR, COLOR_GREEN);
       }
       else
       {
-        wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, COLOR_WHITE)));
+        FREQUENCY_PANEL.set_color(PROP.BCOLOR, COLOR_WHITE);
       }
       
       BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
@@ -1170,7 +1178,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     else
     {
       // Change the colors.
-      wbkgd(winFrequency, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      FREQUENCY_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
       BAR_NOISE_LEVEL.color_background(PROP.BCOLOR);
       BAR_SIGNAL_LEVEL.color_background(PROP.BCOLOR);
     }
@@ -1178,30 +1186,30 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Print Values
     if (PROP.SHOW_FREQUENCY == true)
     {
-      mvwprintw(winFrequency, 0, 0, "%s %3.3f", PROP.FREQUENCY_LABEL.c_str(), ((float)PROP.VALUE.FREQUENCY.FREQUENCY / 1000000));
-      mvwprintw(winFrequency, 0, 17, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
+      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 0, "%s %3.3f", PROP.FREQUENCY_LABEL.c_str(), ((float)PROP.VALUE.FREQUENCY.FREQUENCY / 1000000));
+      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 17, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
     }
     else
     {
-      mvwprintw(winFrequency, 0, 0, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
+      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 0, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
     }
 
     //Draw Bars
     if (PROP.SHOW_SIGNAL == true)
     {
-      BAR_SIGNAL_LEVEL.progress_bar(winFrequency, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), FRAME_TIME);
+      BAR_SIGNAL_LEVEL.progress_bar(FREQUENCY_PANEL.winPANEL, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), FRAME_TIME);
     }
     if (PROP.SHOW_NOISE == true)
     {
-      BAR_NOISE_LEVEL.progress_bar(winFrequency, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
+      BAR_NOISE_LEVEL.progress_bar(FREQUENCY_PANEL.winPANEL, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
     }
 
     //Debug -- displays dedraw count and other variables.
     if (true == DEBUG_COUNTER)
     {
       Counter++;
-      mvwprintw(winFrequency, 0, 0, "%d ", Counter);
-      mvwprintw(winFrequency, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
+      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 0, "%d ", Counter);
+      mvwprintw(FREQUENCY_PANEL.winPANEL, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
     }
 
     // Reset Properties Changed.
@@ -1211,7 +1219,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     WAS_REDRAWN = true;
 
     // Draw the Gadget.
-    wrefresh(winFrequency);
+    wrefresh(FREQUENCY_PANEL.winPANEL);
   }
   else
   {
