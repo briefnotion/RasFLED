@@ -175,6 +175,16 @@ void AIRCRAFT::post_process()
     D_FLIGHT_ANGLE.store (to_string(abs((atan( scent_rate / speed) * (180 / 3.14159)))));
   }
 
+  if (POSITION.LATITUDE.conversion_success() == true && 
+      POSITION.LONGITUDE.conversion_success() == true)
+  {
+    POSITION.GLOBAL_POSITION_FOUND = true;
+  }
+  else
+  {
+    POSITION.GLOBAL_POSITION_FOUND = false;
+  }
+
   // Fill Data Size Field
   count_data();
 

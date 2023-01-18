@@ -74,9 +74,9 @@ class Mini_Compass
 
   void set_color(int Background_Color, int Color);
 
-  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
 
-  void draw(PANEL &Panel, bool Refresh);
+  bool draw(PANEL &Panel, bool Refresh);
 };
 
 // -------------------------------------------------------------------------------------
@@ -114,9 +114,6 @@ class ADSB_Channel
 
   // Gadget window
   PANEL ADSB_PANEL;
-
-  // Time Provided
-  unsigned long FRAME_TIME;             // Internal
 
   // Was gadget redrawn during the previous draw cycle.
   bool WAS_REDRAWN = false;
@@ -173,7 +170,7 @@ class ADSB_Channel
 
   void update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis);
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time);
 };
 
 
@@ -218,6 +215,7 @@ class ADSB_Channel_Grid
   Text_Field POSITIONED_AIRCRAFT;
   Text_Field DELTA_MESSAGES_TITLE;
   Text_Field DELTA_MESSAGES;
+  //BAR DELTA_MESSAGES_BAR;
 
   public:
 
@@ -229,7 +227,7 @@ class ADSB_Channel_Grid
 
   void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel);
 };
 
 // -------------------------------------------------------------------------------------
@@ -289,9 +287,6 @@ class Radio_Channel
   // Show frequency levels in progress bars
   BAR BAR_NOISE_LEVEL;
   BAR BAR_SIGNAL_LEVEL;
-
-  // Time Provided
-  unsigned long FRAME_TIME;             // Internal
 
   // Timing
   TIMED_PING LINGER_DIRTY_SIGNAL;

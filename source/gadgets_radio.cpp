@@ -65,8 +65,10 @@ void Mini_Compass::set_color(int Background_Color, int Color)
 }
 
 
-void Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+bool Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 {
+  bool ret_refreshed = false;
+
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
@@ -195,10 +197,13 @@ void Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     CHANGED = false;
 
     Panel.changed_on();
+    ret_refreshed = true;
   }
+
+  return ret_refreshed;
 }
   
-void Mini_Compass::draw(PANEL &Panel, bool Refresh)
+bool Mini_Compass::draw(PANEL &Panel, bool Refresh)
 {
   return draw(Panel, Refresh, 0);
 }
@@ -434,11 +439,11 @@ void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentM
   PROP.CHANGED = true;
 }
 
-void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
+bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  FRAME_TIME = tmeFrame_Time;
+  bool ret_refreshed = false;
 
   // Check Expiration
   if (EXPIREED.blip_moved(tmeFrame_Time) == true && EXPIREED.ping_down(tmeFrame_Time) == false)
@@ -465,8 +470,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       PROP.COLOR = COLOR_BLACK;
     }
     // If Position Found
-    else if(PROP.AIRCRAFT_DATA.POSITION.LATITUDE.conversion_success() == true && 
-              PROP.AIRCRAFT_DATA.POSITION.LONGITUDE.conversion_success() == true)
+    else if(PROP.AIRCRAFT_DATA.POSITION.GLOBAL_POSITION_FOUND == true)
     {
       PROP.BCOLOR = COLOR_GREEN;
       PROP.COLOR = COLOR_BLACK;
@@ -612,8 +616,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       // Aircraft Geo Coordinates TTL
       if (  PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true &&
-            PROP.AIRCRAFT_DATA.POSITION.LATITUDE.conversion_success() == true && 
-            PROP.AIRCRAFT_DATA.POSITION.LONGITUDE.conversion_success() == true)
+            PROP.AIRCRAFT_DATA.POSITION.GLOBAL_POSITION_FOUND == true)
       {
         COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 65, 0, 0), COLOR_BLACK);
         COORD_TTL_IND.set_text("()");
@@ -649,7 +652,7 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       SIG_STR_IND.set_text("  ");
     }
 
-    // Screen needs to be redrawn.
+    ret_refreshed = true;
   }
 
   // Write All text fields.
@@ -698,6 +701,8 @@ void ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   // Draw the Gadget.
   ADSB_PANEL.draw(Refresh);
+
+  return ret_refreshed;
 }
 
 // -------------------------------------------------------------------------------------
@@ -740,6 +745,7 @@ void ADSB_Channel_Grid::create()
   TOP_BAR.set_color(COLOR_BLUE, COLOR_WHITE);
   TOP_BAR.PROP.JUSTIFICATION_LEFT = true;
 
+  // Time
   TIME.PROP.POSX = 0;
   TIME.PROP.POSY = 0;
   TIME.PROP.SIZEX = 21;
@@ -747,7 +753,8 @@ void ADSB_Channel_Grid::create()
   TIME.set_color(COLOR_BLUE, COLOR_WHITE);
   TIME.PROP.JUSTIFICATION_LEFT = true;
 
-  AIRCRAFT_COUNT_TITLE.PROP.POSX = 27;
+  // Aircraft Count
+  AIRCRAFT_COUNT_TITLE.PROP.POSX = 24;
   AIRCRAFT_COUNT_TITLE.PROP.POSY = 0;
   AIRCRAFT_COUNT_TITLE.PROP.SIZEX = 9;
   AIRCRAFT_COUNT_TITLE.PROP.COLORS_ON = true;
@@ -755,14 +762,15 @@ void ADSB_Channel_Grid::create()
   AIRCRAFT_COUNT_TITLE.PROP.JUSTIFICATION_LEFT = true;
   AIRCRAFT_COUNT_TITLE.set_text("Aircraft:");
 
-  AIRCRAFT_COUNT.PROP.POSX = 37;
+  AIRCRAFT_COUNT.PROP.POSX = 34;
   AIRCRAFT_COUNT.PROP.POSY = 0;
   AIRCRAFT_COUNT.PROP.SIZEX = 4;
   AIRCRAFT_COUNT.PROP.COLORS_ON = true;
   AIRCRAFT_COUNT.set_color(COLOR_BLUE, COLOR_WHITE);
   AIRCRAFT_COUNT.PROP.JUSTIFICATION_LEFT = true;
 
-  POSITIONED_AIRCRAFT_TITLE.PROP.POSX = 51;
+  // Positioned Aircraft
+  POSITIONED_AIRCRAFT_TITLE.PROP.POSX = 39;
   POSITIONED_AIRCRAFT_TITLE.PROP.POSY = 0;
   POSITIONED_AIRCRAFT_TITLE.PROP.SIZEX = 4;
   POSITIONED_AIRCRAFT_TITLE.PROP.COLORS_ON = true;
@@ -770,14 +778,15 @@ void ADSB_Channel_Grid::create()
   POSITIONED_AIRCRAFT_TITLE.PROP.JUSTIFICATION_LEFT = true;
   POSITIONED_AIRCRAFT_TITLE.set_text("Pos:");
 
-  POSITIONED_AIRCRAFT.PROP.POSX = 56;
+  POSITIONED_AIRCRAFT.PROP.POSX = 43;
   POSITIONED_AIRCRAFT.PROP.POSY = 0;
   POSITIONED_AIRCRAFT.PROP.SIZEX = 4;
   POSITIONED_AIRCRAFT.PROP.COLORS_ON = true;
   POSITIONED_AIRCRAFT.set_color(COLOR_BLUE, COLOR_WHITE);
   POSITIONED_AIRCRAFT.PROP.JUSTIFICATION_LEFT = true;
 
-  DELTA_MESSAGES_TITLE.PROP.POSX = 70;
+  // Delta Messages
+  DELTA_MESSAGES_TITLE.PROP.POSX = 48;
   DELTA_MESSAGES_TITLE.PROP.POSY = 0;
   DELTA_MESSAGES_TITLE.PROP.SIZEX = 8;
   DELTA_MESSAGES_TITLE.PROP.COLORS_ON = true;
@@ -785,12 +794,27 @@ void ADSB_Channel_Grid::create()
   DELTA_MESSAGES_TITLE.PROP.JUSTIFICATION_LEFT = true;
   DELTA_MESSAGES_TITLE.set_text("DELTA M:");
 
-  DELTA_MESSAGES.PROP.POSX = 79;
+  DELTA_MESSAGES.PROP.POSX = 57;
   DELTA_MESSAGES.PROP.POSY = 0;
   DELTA_MESSAGES.PROP.SIZEX = 5;
   DELTA_MESSAGES.PROP.COLORS_ON = true;
   DELTA_MESSAGES.set_color(COLOR_BLUE, COLOR_WHITE);
   DELTA_MESSAGES.PROP.JUSTIFICATION_LEFT = true;
+
+  /*
+  // Delta Messages
+  DELTA_MESSAGES_BAR.label("Delta M: ");
+  DELTA_MESSAGES_BAR.label_size(9);
+  DELTA_MESSAGES_BAR.size(15);
+  DELTA_MESSAGES_BAR.max_value(100);
+  DELTA_MESSAGES_BAR.color_background(COLOR_BLUE);
+  DELTA_MESSAGES_BAR.color_foreground(COLOR_WHITE);
+  DELTA_MESSAGES_BAR.print_value(false);
+  DELTA_MESSAGES_BAR.print_min(true);
+  DELTA_MESSAGES_BAR.print_max(true);
+  DELTA_MESSAGES_BAR.min_max(true);
+  DELTA_MESSAGES_BAR.min_max_time_span(20000);
+  */
 
   // Calculate size of ADS-B Channel Grid.
   int x = PROP.SIZEX / (Default_ADS_B.PROP.SIZEX + 1);
@@ -893,10 +917,12 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
   PROP.NEEDS_REFRESH_DATA = false;
 }
 
-void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel)
+bool ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
+  bool ret_refreshed = false;
+
   for (int x = 0; x < ADSB_Channel_Count; x++)
   {
     ADSB_Channel_q[x].draw(Refresh, tmeFrame_Time);
@@ -930,8 +956,11 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL AD
   AIRCRAFT_COUNT.set_text(to_string(PROP.AIRCRAFT_LIST.AIRCRAFTS.size()));
   POSITIONED_AIRCRAFT.set_text(to_string(PROP.AIRCRAFT_LIST.POSITIONED_AIRCRAFT));
   DELTA_MESSAGES.set_text(to_string(PROP.AIRCRAFT_LIST.DELTA_MESSAGES));
-
+  
   TOP_BAR.draw(ADSB_Grid_Panel, Refresh);
+
+  //DELTA_MESSAGES_BAR.guage_bar(ADSB_Grid_Panel.winPANEL, 0, 47, PROP.AIRCRAFT_LIST.DELTA_MESSAGES, tmeFrame_Time);
+
   TIME.draw(ADSB_Grid_Panel, Refresh);
   AIRCRAFT_COUNT_TITLE.draw(ADSB_Grid_Panel, Refresh);
   AIRCRAFT_COUNT.draw(ADSB_Grid_Panel, Refresh);
@@ -943,6 +972,7 @@ void ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL AD
   PROP.CHANGED = false;
   ADSB_Grid_Panel.draw(Refresh);
 
+  return ret_refreshed;
 }
 
 
@@ -1020,8 +1050,8 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.VALUE = 0;
   bzGadget.NEW_BUTTON_PROP.TYPE = 0;
   bzGadget.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
-  bzGadget.NEW_BUTTON_PROP.SIZEY = PROP.SIZEY;
-  bzGadget.NEW_BUTTON_PROP.SIZEX = PROP.SIZEX;
+  bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
+  bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
 
   bzGadget.NEW_BUTTON_PROP.ID = 0;
@@ -1092,7 +1122,7 @@ void Radio_Channel::update_value(API_SQUELCH_DESTINATION &New_Value, unsigned lo
   PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER = New_Value.FREQUENCY.SIGNAL_OUTSIDE_FILTER;
   PROP.VALUE.FREQUENCY.IS_OPEN = New_Value.FREQUENCY.IS_OPEN;
 
-  VISIBLE_UPDATE_SIGNAL.ping_up(FRAME_TIME, VISIBLE_UPATE_TIME);
+  VISIBLE_UPDATE_SIGNAL.ping_up(tmeFrame_Time, VISIBLE_UPATE_TIME);
 
   PROP.CHANGED = true;
 
@@ -1108,11 +1138,9 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  FRAME_TIME = tmeFrame_Time;
-
   // Update if the Dirty Signal indicator has changed.
-  if (LINGER_DIRTY_SIGNAL.blip_moved(FRAME_TIME) == true ||
-      VISIBLE_UPDATE_SIGNAL.blip_moved(FRAME_TIME) == true)
+  if (LINGER_DIRTY_SIGNAL.blip_moved(tmeFrame_Time) == true ||
+      VISIBLE_UPDATE_SIGNAL.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
   }
@@ -1132,7 +1160,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     else if (PROP.VALUE.FREQUENCY.IS_OPEN == true)
     {
       // Reset the linger timer.
-      LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
+      LINGER_DIRTY_SIGNAL.ping_up(tmeFrame_Time, LINGER_TIME);
 
       // Change Colors
       FREQUENCY_PANEL.set_color(COLOR_WHITE, PROP.BCOLOR);
@@ -1143,7 +1171,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     else if (PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER == true)
     {
       // Reset the linger timer.
-      LINGER_DIRTY_SIGNAL.ping_up(FRAME_TIME, LINGER_TIME);
+      LINGER_DIRTY_SIGNAL.ping_up(tmeFrame_Time, LINGER_TIME);
 
       // Change the colors.
       FREQUENCY_PANEL.set_color(COLOR_YELLOW, PROP.BCOLOR);
@@ -1151,7 +1179,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       BAR_SIGNAL_LEVEL.color_background(COLOR_YELLOW);
     } 
     // If lingering dirty signal.
-    else if (LINGER_DIRTY_SIGNAL.ping_down(FRAME_TIME) == true)
+    else if (LINGER_DIRTY_SIGNAL.ping_down(tmeFrame_Time) == true)
     {
       // Change the colors.
       FREQUENCY_PANEL.set_color(COLOR_YELLOW, PROP.BCOLOR);
@@ -1159,7 +1187,7 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       BAR_SIGNAL_LEVEL.color_background(COLOR_YELLOW);  
     }
     // Updated
-    else if (VISIBLE_UPDATE_SIGNAL.ping_down(FRAME_TIME) == true)
+    else if (VISIBLE_UPDATE_SIGNAL.ping_down(tmeFrame_Time) == true)
     {
       // Change the colors.
       if(PROP.HELD == false)
@@ -1197,11 +1225,11 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     //Draw Bars
     if (PROP.SHOW_SIGNAL == true)
     {
-      BAR_SIGNAL_LEVEL.progress_bar(FREQUENCY_PANEL.winPANEL, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), FRAME_TIME);
+      BAR_SIGNAL_LEVEL.progress_bar(FREQUENCY_PANEL.winPANEL, 1, 0, (100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL), tmeFrame_Time);
     }
     if (PROP.SHOW_NOISE == true)
     {
-      BAR_NOISE_LEVEL.progress_bar(FREQUENCY_PANEL.winPANEL, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), FRAME_TIME);
+      BAR_NOISE_LEVEL.progress_bar(FREQUENCY_PANEL.winPANEL, 2, 0, (100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL), tmeFrame_Time);
     }
 
     //Debug -- displays dedraw count and other variables.

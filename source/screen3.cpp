@@ -1380,8 +1380,20 @@ void Screen3::output_CYBR(system_data &sdSysData, ScreenStatus &ScrStat)
   {
     for (int adsb = 0; adsb < sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS.size(); adsb++)
     {
-      CYBR_Status.input(  35 + sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[adsb].RSSI.get_int_value() , 35, COLOR_GREEN, COLOR_BLACK);
+      if (sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[adsb].POSITION.GLOBAL_POSITION_FOUND == true)
+      {
+        CYBR_Status.input( 35 + sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[adsb].RSSI.get_int_value() , 35, COLOR_GREEN, COLOR_BLACK);
+      }
+      else
+      {
+        CYBR_Status.input( 35 + sdSysData.AIRCRAFT_COORD.DATA.AIRCRAFTS[adsb].RSSI.get_int_value() , 35, COLOR_BLACK, COLOR_GREEN);
+      }
+
+      
     }
+
+    CYBR_Status.input(sdSysData.AIRCRAFT_COORD.DATA.DELTA_MESSAGES , 50, COLOR_CYAN, COLOR_BLACK);
+
   }
 
   // Animations

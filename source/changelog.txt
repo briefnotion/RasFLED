@@ -1,3 +1,7 @@
+V 1.40A_230117
+  - FOR TESTING REASONS ONLY.  RADIO CHANNEL BUTTONS DAMAGED.
+  - Changes made to some gadgets.
+
 V 1.39A_230116
   - FOR TESTING REASONS ONLY.  LIMITED FUNCTIONS.
   - Changes made to some gadgets.
