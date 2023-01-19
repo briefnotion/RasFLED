@@ -965,7 +965,11 @@ void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Dont draw lines if hidden
     if (PROP.HIDDEN == false)
     {
-      LINES.draw(BUTTON_PANEL, Refresh);
+      LINES.draw(BUTTON_PANEL, Refresh);  
+    }
+
+    if (PROP.DO_NOT_DRAW == false)
+    {
       BUTTON_PANEL.draw(Refresh);
     }
     
@@ -1783,6 +1787,488 @@ void BAR::guage_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_val
 
   draw_bar(2, winWindow);
 }
+
+
+/*
+// ---------------------------------------------------------------------------------------
+// Bar Classes
+
+void MIN_MAX_TIME_SLICE::clear()
+{
+  ACTIVE = false;
+  MIN_VALUE = 0;
+  MAX_VALUE = 0;
+  SNAPSHOT = "";
+}
+
+bool MIN_MAX_TIME_SLICE::active()
+{
+  return ACTIVE;
+}
+
+void MIN_MAX_TIME_SLICE::store_min_max(int Value)
+{
+  if (ACTIVE == false)
+  {
+    MIN_VALUE = Value;
+    MAX_VALUE = Value;
+    ACTIVE = true;
+  }
+  else
+  {
+    if (Value < MIN_VALUE)
+    {
+      MIN_VALUE = Value;
+    }
+    if (Value > MAX_VALUE)
+    {
+      MAX_VALUE = Value;
+    }
+  }
+}
+
+int MIN_MAX_TIME_SLICE::min()
+{
+  return MIN_VALUE;
+}
+
+int MIN_MAX_TIME_SLICE::max()
+{
+  return MAX_VALUE;
+}
+*/
+
+
+/*
+// ---------------------------------------------------------------------------------------
+// Bar Classes
+
+
+// I dont like this
+int BAR_2::get_min_value()
+{
+  bool found = false;
+  int min = 0;
+
+  for (int x = 0; x < TIME_SLICES.size(); x++)
+  {
+    if (TIME_SLICES[x].active() == true)
+    {
+      if (found == false)
+      {
+        min = TIME_SLICES[x].min();
+        found = true;
+      }
+      else
+      {
+        if (TIME_SLICES[x].min() < min)
+        {
+          min = TIME_SLICES[x].min();
+        }
+      }
+    }
+  }
+  return min;
+}
+
+// I dont like this
+int BAR_2::get_max_value()
+{
+  bool found = false;
+  int max = 0;
+
+  for (int x = 0; x < TIME_SLICES.size(); x++)
+  {
+    if (TIME_SLICES[x].active() == true)
+    {
+      if (found == false)
+      {
+        max = TIME_SLICES[x].max();
+        found = true;
+      }
+      else
+      {
+        if (TIME_SLICES[x].max() > max)
+        {
+          max = TIME_SLICES[x].max();
+        }
+      }
+    }
+  }
+  return max;
+}
+
+void BAR_2::wat_on_background(WINDOW *winWindow)
+// Set background color to print.
+{
+  wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_FOREGROUND)));
+}
+
+void BAR_2::wat_off_background(WINDOW *winWindow)
+// Set background color off to print to red.
+{
+  wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_FOREGROUND)));
+}
+
+void BAR_2::wat_on_red(WINDOW *winWindow)
+// Set color to print to red.
+{
+  wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+}
+
+void BAR_2::wat_off_red(WINDOW *winWindow)
+// Set color off to print to red.
+{
+  wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+}
+
+void BAR_2::wat_on_green_red(WINDOW *winWindow, bool value)
+// Set color to print to green if true. Set color to print to red if false.
+{
+  if(value == true)
+  {
+    wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+  }
+  else
+  {
+    wattron(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+  }
+}
+
+void BAR_2::wat_off_green_red(WINDOW *winWindow, bool value)
+// Set color off to print to green if true. Set color off to print to red if false.
+{
+  if(value == true)
+  {
+    wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_GREEN)));
+  }
+  else
+  {
+    wattroff(winWindow, COLOR_PAIR(CRT_get_color_pair(COLOR_BACKGROUND, COLOR_RED)));
+  }
+}
+
+int BAR_2::get_marker_pos(int value)
+// calculate the size of the fill bar with respects to full bar size.
+{
+  int pos = abs(SIZE*value/MAX_VALUE);
+
+  // Check bounds
+  if (pos > SIZE)
+  {
+    pos = SIZE;
+  }
+
+  return pos;
+}
+
+void BAR_2::print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
+// Draw marker at value on guage.
+//  Draws > if exceeding max of guage size.
+//  Draws < if exceeding min of guage size.
+{
+  char marker = '|';
+  
+  if (value > MAX_VALUE)
+  {
+    marker = '>';
+  }
+  else if (value < MIN_VALUE)
+  {
+    marker = '<';
+  }
+
+  mvwprintw(winWindow, Ypos, Xpos + get_marker_pos(value), "%c", marker);
+}
+
+void BAR_2::draw_bar(int Bar_Type, WINDOW *winWindow)
+// Drawing a progress bar
+// This function is only acessable within this class.
+
+//  Bar Type
+//  1 - Progress Bar
+//  2 - Variable Guage Bar
+//  3 - Mechanical Guage Bar
+
+{
+  string label = "";
+
+  string bar = "";
+  string fill = "";
+  int bar_size = 0;
+
+  // Initial setup of min max timer variable for first run.
+  if (TIME_PROVIDED == true && TIME_SLICE_TIMER.is_set() == false)
+  {
+    TIME_SLICE_TIMER.set(FRAME_TIME, MIN_MAX_TIME_SPAN / 5);
+  }
+
+  // create empty label
+  if (LABEL.size() < LABEL_SIZE)
+  {
+    label = label.append(LABEL_SIZE - LABEL.size(), ' ') + LABEL;
+  }
+  else
+  {
+    label = LABEL;
+  }
+
+  bar_size = get_marker_pos(VALUE);
+
+  // create empty bar
+  bar = bar.append(SIZE +1,' ');
+  
+  // Create Progress Bar
+  if (Bar_Type == 1)
+  {
+    // create fill bar
+    // put bar in empty bar
+    bar.replace(0, bar_size, fill.append(bar_size , '|'  ));
+  }
+
+  // Store Min Max
+  if (MIN_MAX == true)         // If Guage
+  {
+    // Advance the stored values if time is up.
+
+    if (TIME_SLICE_TIMER.is_ready(FRAME_TIME) == true)
+    {
+      if (TIME_SLICES.size() >= TIME_SLICE_COUNT)
+      {
+        TIME_SLICES.pop_back();
+        BAR_TIME_SLICE new_time_slice;
+        TIME_SLICES.push_front(new_time_slice);
+      }
+      else if (TIME_SLICES.size() < TIME_SLICE_COUNT)
+      {
+        BAR_TIME_SLICE new_time_slice;
+        TIME_SLICES.push_front(new_time_slice);
+      }
+    }
+    TIME_SLICES.front().store_min_max(VALUE);
+  }
+
+  // Print bar
+
+  // Print Label
+  mvwprintw(winWindow, YPOS, XPOS, "%s", label.c_str());
+
+  // Print Bar Start "[""
+  mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE, "[");
+
+  if (Bar_Type == 1)
+  {
+    // Print progress bar filler in color
+    wat_on_green_red(winWindow, VALUE > 0);
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
+    wat_off_green_red(winWindow, VALUE > 0);
+  }
+  else if (Bar_Type == 2) // Guage bar blank background
+  {
+    wat_on_red(winWindow);
+    mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE +1, "%s", bar.c_str());
+    wat_off_red(winWindow);
+  }
+
+  // Print Bar End "]""
+  mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +2 , "]");
+
+  // Print Markers
+  
+  // Print Min Max
+  if (MIN_MAX == true)
+  {
+    wat_on_red(winWindow);
+    print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1, get_min_value());
+    print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1, get_max_value());
+    wat_off_red(winWindow);
+  }
+  // Print Indicator Marker
+  wat_on_background(winWindow);
+  print_marker(winWindow, YPOS, XPOS + LABEL_SIZE + 1, VALUE);
+  wat_off_background(winWindow);
+
+  // If Print Values are on
+  if (PRINT_MIN == true || PRINT_VALUE == true || PRINT_MAX == true)
+  {
+    int step = 0;
+    if (PRINT_MIN == true)
+    {
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %3d ", get_min_value());
+      step ++;
+    }
+    if (PRINT_VALUE == true)
+    {
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %3d ", VALUE);
+      step ++;
+    }
+    if (PRINT_MAX == true)
+    {
+      mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +3 + (step *4), " %3d ", get_max_value());
+      step ++;
+    }
+  }
+
+  // Debug
+  //  mvwprintw(winWindow, YPOS, XPOS + LABEL_SIZE + SIZE +7, " %03d %03d %03d", 
+  //                                                    TIME_SLICES.size(), TIME_SLICE_TIMER.get_ready_time(), FRAME_TIME);
+}
+
+void BAR_2::color_background(short Color)
+// Set the propertie for Background Color.
+// Expects NCurses color or color code. 
+{
+  COLOR_BACKGROUND = Color;
+}
+
+void BAR_2::color_foreground(short Color)
+// Set the propertie for Foreground Color.
+// Expects NCurses color or color code. 
+{
+  COLOR_FOREGROUND = Color;
+}
+
+void BAR_2::label(string Label)
+// Set the propertie for displayed label.
+{
+  LABEL = Label;
+}
+
+void BAR_2::label_size(int Label_Size)
+// Set the propertie for displayed label size.
+{
+  LABEL_SIZE = Label_Size;
+}
+
+void BAR_2::size(int Size)
+// Set the propertie for progress bar saize.
+{
+  SIZE = Size;
+}
+
+void BAR_2::max_value(int Max_Value)
+// Set the propertie for progress bar max value.
+{
+  MAX_VALUE = Max_Value;
+}
+
+void BAR_2::print_value(bool Print_Value)
+// Set property to print value entered to right of bar.
+{
+  PRINT_VALUE = Print_Value;
+}
+
+void BAR_2::print_min(bool Print_Min)
+// Set property to print value entered to right of bar.
+{
+  PRINT_MIN = Print_Min;
+}
+
+void BAR_2::print_max(bool Print_Max)
+// Set property to print value entered to right of bar.
+{
+  PRINT_MAX = Print_Max;
+}
+
+// Guage variables
+void BAR_2::min_max(bool min_max)
+// Set property to activate Min Max observations.
+{
+  MIN_MAX = min_max;
+}
+
+// Guage variables
+void BAR_2::min_max_time_span(int Time_Span_in_ms)
+// Set property time amount Min Max will track.
+{
+  MIN_MAX_TIME_SPAN = Time_Span_in_ms;
+}
+
+// Creates a progress bar of 0 to 100 percent.
+//  Returns a string of size.
+//  Of size, the percentage of value to max_value will be filled
+//  with characters.
+void BAR_2::progress_bar(WINDOW *winWindow, int YPos, int XPos, int value)
+// Print progress bar in window at coords with value as progress.
+{
+  YPOS = YPos;
+  XPOS = XPos;
+  VALUE = value;
+
+  draw_bar(1, winWindow);
+}
+
+void BAR_2::progress_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time)
+// Print progress bar in window at coords with value as progress.
+// Also receives time value for max min fade away.
+{
+  YPOS = YPos;
+  XPOS = XPos;
+  VALUE = value;
+
+  TIME_PROVIDED = true;
+  FRAME_TIME = tmeFrame_Time;
+
+  draw_bar(1, winWindow);
+  TIME_PROVIDED = false;
+}
+
+void BAR_2::progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
+// Print progress bar in window at coords with value as progress.
+// Also, allows for other properties to be change.
+{
+  YPOS = YPos;
+  XPOS = XPos;
+  SIZE = size;
+  MAX_VALUE = max_value;
+  VALUE = value;
+
+  draw_bar(1, winWindow);
+}
+
+// Creates a progress bar of 0 to 100 percent.
+//  Returns a string of size.
+//  Of size, the percentage of value to max_value will be filled
+//  with characters.
+void BAR_2::guage_bar(WINDOW *winWindow, int YPos, int XPos, int value)
+// Print guage bar in window at coords with value as progress.
+{
+  YPOS = YPos;
+  XPOS = XPos;
+  VALUE = value;
+
+  draw_bar(2, winWindow);
+}
+
+void BAR_2::guage_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time)
+// Print guage bar in window at coords with value as progress.
+// Also receives time value for max min fade away.
+{
+  YPOS = YPos;
+  XPOS = XPos;
+  VALUE = value;
+
+  TIME_PROVIDED = true;
+  FRAME_TIME = tmeFrame_Time;
+
+  draw_bar(2, winWindow);
+  TIME_PROVIDED = false;
+}
+
+void BAR_2::guage_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value)
+// Print guage bar in window at coords with value as progress.
+// Also, allows for other properties to be change.
+{
+  YPOS = YPos;
+  XPOS = XPos;
+  SIZE = size;
+  MAX_VALUE = max_value;
+  VALUE = value;
+
+  draw_bar(2, winWindow);
+}
+*/
+
 
 // ---------------------------------------------------------------------------------------
 // Gadgets functions

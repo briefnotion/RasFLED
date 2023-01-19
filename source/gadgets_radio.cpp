@@ -1050,53 +1050,63 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.VALUE = 0;
   bzGadget.NEW_BUTTON_PROP.TYPE = 0;
   bzGadget.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
-  bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
-  bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
 
+  // Gadget Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "GADGET";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nGadget";
   bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.HIDDEN = true;
+  bzGadget.NEW_BUTTON_PROP.ENABLED = true;
+  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = true;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY;
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX;
+  bzGadget.NEW_BUTTON_PROP.SIZEY = PROP.SIZEY;
+  bzGadget.NEW_BUTTON_PROP.SIZEX = PROP.SIZEX;
   bzGadget.create_button();
   
+  // Skip Frequency Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "SKIP";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nSKIP";
-  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_GREEN;
+  bzGadget.NEW_BUTTON_PROP.HIDDEN = false;
+  bzGadget.NEW_BUTTON_PROP.ENABLED = true;
+  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = false;
+  bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
+  bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *0);
   bzGadget.create_button();
   
+  // Hold Frequency Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "HOLD";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nHOLD";
-  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
+  bzGadget.NEW_BUTTON_PROP.HIDDEN = false;
+  bzGadget.NEW_BUTTON_PROP.ENABLED = true;
+  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = false;
+  bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
+  bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *1);
   bzGadget.create_button();
   
+  // Clear Hold Skip Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "CLEAR";
   bzGadget.NEW_BUTTON_PROP.LABEL = "\nCLEAR";
   bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
+  bzGadget.NEW_BUTTON_PROP.HIDDEN = false;
+  bzGadget.NEW_BUTTON_PROP.ENABLED = true;
+  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = false;
+  bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
+  bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *2);
   bzGadget.create_button();
-
-  bzGadget.set_hidden("GADGET", true);
-  bzGadget.set_enabled("GADGET", false);
-
-  bzGadget.set_enabled("HOLD", false);
-  bzGadget.set_hidden("HOLD", true);
-
-  bzGadget.set_enabled("SKIP", false);
-  bzGadget.set_hidden("SKIP", true);
-
-  bzGadget.set_enabled("CLEAR", false);
-  bzGadget.set_hidden("CLEAR", true);
 
   if(Button_YSize > PROP.SIZEY)
   {
