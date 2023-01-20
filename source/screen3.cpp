@@ -272,54 +272,86 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
 
   // Countdown Screen
+  
   // Countdown Timer
-  Countdown_Timer.label("Timer: ");
-  Countdown_Timer.label_size(13);
-  Countdown_Timer.size(15);
-  Countdown_Timer.max_value(75);
-  Countdown_Timer.color_background(COLOR_YELLOW);
-  Countdown_Timer.color_foreground(COLOR_WHITE);
-  Countdown_Timer.print_value(false);
+  Countdown_Timer.PROP.LABEL = "Timer: ";
+  Countdown_Timer.PROP.LABEL_SIZE = 13;
+  Countdown_Timer.PROP.COLOR = COLOR_WHITE;
+  Countdown_Timer.PROP.BCOLOR = COLOR_GREEN;
+  Countdown_Timer.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Countdown_Timer.PROP.COLOR_MARKER = COLOR_WHITE;
+  Countdown_Timer.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  Countdown_Timer.PROP.BAR_SIZE = 15;
+  Countdown_Timer.PROP.PROGRESS_BAR = true;
+  Countdown_Timer.PROP.COLORS_ON = true;
 
   // Debug Screen 
-  // Compute Times  
-  Compute_Time.label("Compute: ");
-  Compute_Time.label_size(13);
-  Compute_Time.size(15);
-  Compute_Time.max_value(20);
-  Compute_Time.color_background(COLOR_YELLOW);
-  Compute_Time.color_foreground(COLOR_WHITE);
-  Compute_Time.print_value(false);
-  Compute_Time.print_min(true);
-  Compute_Time.print_max(true);
-  Compute_Time.min_max(true);
-  Compute_Time.min_max_time_span(10000);
+  
+  // Compute Times
+  Compute_Time.PROP.LABEL = "Compute: ";
+  Compute_Time.PROP.LABEL_SIZE = 13;
+  Compute_Time.PROP.COLOR = COLOR_WHITE;
+  Compute_Time.PROP.BCOLOR = COLOR_RED;
+  Compute_Time.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Compute_Time.PROP.COLOR_MARKER = COLOR_WHITE;
+  Compute_Time.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  Compute_Time.PROP.POSY = 0;
+  Compute_Time.PROP.POSX = 7;
+  Compute_Time.PROP.BAR_SIZE = 15;
+  Compute_Time.PROP.GUAGE_BAR = true;
+  Compute_Time.PROP.MIN_MAX = true;
+  Compute_Time.PROP.MAX_VALUE = 20;
+  Compute_Time.PROP.MIN_VALUE = 0;
+  Compute_Time.MIN_MAX_HISTORY.PROP.SLICES = 5;
+  Compute_Time.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
+  Compute_Time.PROP.PRINT_VALUE = false;
+  Compute_Time.PROP.PRINT_MIN = true;
+  Compute_Time.PROP.PRINT_MAX = true;
+  Compute_Time.PROP.COLORS_ON = true;
 
   // Program Sleep Times
-  Sleep_Time.label("Sleep: ");
-  Sleep_Time.label_size(13);
-  Sleep_Time.size(15);
-  Sleep_Time.max_value(20);
-  Sleep_Time.color_background(COLOR_YELLOW);
-  Sleep_Time.color_foreground(COLOR_WHITE);
-  Sleep_Time.print_value(false);
-  Sleep_Time.print_min(true);
-  Sleep_Time.print_max(true);
-  Sleep_Time.min_max(true);
-  Sleep_Time.min_max_time_span(10000);
+  Sleep_Time.PROP.LABEL = "Sleep: ";
+  Sleep_Time.PROP.LABEL_SIZE = 13;
+  Sleep_Time.PROP.COLOR = COLOR_WHITE;
+  Sleep_Time.PROP.BCOLOR = COLOR_RED;
+  Sleep_Time.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Sleep_Time.PROP.COLOR_MARKER = COLOR_WHITE;
+  Sleep_Time.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  Sleep_Time.PROP.POSY = 1;
+  Sleep_Time.PROP.POSX = 7;
+  Sleep_Time.PROP.BAR_SIZE = 15;
+  Sleep_Time.PROP.GUAGE_BAR = true;
+  Sleep_Time.PROP.MIN_MAX = true;
+  Sleep_Time.PROP.MAX_VALUE = 20;
+  Sleep_Time.PROP.MIN_VALUE = 0;
+  Sleep_Time.MIN_MAX_HISTORY.PROP.SLICES = 5;
+  Sleep_Time.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
+  Sleep_Time.PROP.PRINT_VALUE = false;
+  Sleep_Time.PROP.PRINT_MIN = true;
+  Sleep_Time.PROP.PRINT_MAX = true;
+  Sleep_Time.PROP.COLORS_ON = true;
 
   // Program Sleep Times
-  Cycle_Time.label("Cycle: ");
-  Cycle_Time.label_size(13);
-  Cycle_Time.size(15);
-  Cycle_Time.max_value(20);
-  Cycle_Time.color_background(COLOR_YELLOW);
-  Cycle_Time.color_foreground(COLOR_WHITE);
-  Cycle_Time.print_value(false);
-  Cycle_Time.print_min(true);
-  Cycle_Time.print_max(true);
-  Cycle_Time.min_max(true);
-  Cycle_Time.min_max_time_span(10000);
+  Cycle_Time.PROP.LABEL = "Cycle: ";
+  Cycle_Time.PROP.LABEL_SIZE = 13;
+  Cycle_Time.PROP.COLOR = COLOR_WHITE;
+  Cycle_Time.PROP.BCOLOR = COLOR_RED;
+  Cycle_Time.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Cycle_Time.PROP.COLOR_MARKER = COLOR_WHITE;
+  Cycle_Time.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  Cycle_Time.PROP.POSY = 2;
+  Cycle_Time.PROP.POSX = 7;
+  Cycle_Time.PROP.BAR_SIZE = 15;
+  Cycle_Time.PROP.GUAGE_BAR = true;
+  Cycle_Time.PROP.MIN_MAX = true;
+  Cycle_Time.PROP.MAX_VALUE = 20;
+  Cycle_Time.PROP.MIN_VALUE = 0;
+  Cycle_Time.MIN_MAX_HISTORY.PROP.SLICES = 5;
+  Cycle_Time.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
+  Cycle_Time.PROP.PRINT_VALUE = false;
+  Cycle_Time.PROP.PRINT_MIN = true;
+  Cycle_Time.PROP.PRINT_MAX = true;
+  Cycle_Time.PROP.COLORS_ON = true;
   
   // Prep Gadgets for Radio screen. 
 
@@ -556,16 +588,14 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     XDebugSize = XSplit;
 
     // Build Window
-    winDebug = newwin(YDebugSize, XDebugSize, YDebugPos, XDebugPos);
+    DEBUG_PANEL.PROP.SIZEY = YDebugSize;
+    DEBUG_PANEL.PROP.SIZEX = XDebugSize;
+    DEBUG_PANEL.PROP.POSY = YDebugPos;
+    DEBUG_PANEL.PROP.POSX = XDebugPos;
+    DEBUG_PANEL.PROP.COLOR = COLOR_WHITE;
+    DEBUG_PANEL.PROP.BCOLOR = COLOR_RED;
 
-    // Set Y Split
-    YSplit = YSplit + YDebugSize;
-
-    // Debug Window Border
-    wborder(winDebug,' ',' ',' ',' ',' ',' ',' ',' ') ;
-    
-    // Create Debug Screen
-    wrefresh(winDebug);
+    DEBUG_PANEL.create();
 
     // Debug Title Bar
     tiDebug.PROP.POSY = YDebugPos;
@@ -579,8 +609,8 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     tiDebug.PROP.COLOR = COLOR_WHITE;
     tiDebug.create();
 
-    // Set window color
-    wbkgd(winDebug, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
+    // Set Y Split
+    YSplit = YSplit + YDebugSize;
   }
 
   // ---------------------------------------------------------------------------------------
@@ -680,16 +710,17 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     XTimerSize = XSplit;
 
     // Build Window
-    winTimer = newwin(YTimerSize, XTimerSize, YTimerPos, XTimerPos);
+    TIMER_PANEL.PROP.SIZEY = YTimerSize;
+    TIMER_PANEL.PROP.SIZEX = XTimerSize;
+    TIMER_PANEL.PROP.POSY = YTimerPos;
+    TIMER_PANEL.PROP.POSX = XTimerPos;
+    TIMER_PANEL.PROP.COLOR = COLOR_WHITE;
+    TIMER_PANEL.PROP.BCOLOR = COLOR_GREEN;
+
+    TIMER_PANEL.create();
 
     // Set Y Split
     YSplit = YSplit + YTimerSize;
-
-    // Timer Window Border
-    wborder(winTimer,' ',' ',' ',' ',' ',' ',' ',' ') ;
-    
-    // Create Timer Screen
-    wrefresh(winTimer);
     
     // Timer Title Bar
     tiTimer.PROP.POSY = YTimerPos;
@@ -702,9 +733,6 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     tiTimer.PROP.BCOLOR = COLOR_GREEN;
     tiTimer.PROP.COLOR = COLOR_WHITE;
     tiTimer.create();
-
-    // Set window color
-    // wbkgd(winTimer, COLOR_PAIR(5));  //  Set color in window.
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1420,14 +1448,17 @@ void Screen3::output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus
   string strLevel = "";
 
   // Print Timings
-  Compute_Time.label("Compute: " + to_string(sdSysData.dblCOMPUTETIME.get_data()) + " ");
-  Compute_Time.guage_bar(winDebug, 0, 7, sdSysData.dblCOMPUTETIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
+  Compute_Time.PROP.LABEL = "Compute: " + to_string(sdSysData.dblCOMPUTETIME.get_data()) + " ";
+  Compute_Time.update(sdSysData.dblCOMPUTETIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
+  Compute_Time.draw(DEBUG_PANEL, true);
   
-  Sleep_Time.label("Sleep:   " + to_string(sdSysData.dblPREVSLEEPTIME.get_data()) + " ");
-  Sleep_Time.guage_bar(winDebug, 1, 7, sdSysData.dblPREVSLEEPTIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
+  Sleep_Time.PROP.LABEL = "Sleep:   " + to_string(sdSysData.dblPREVSLEEPTIME.get_data()) + " ";
+  Sleep_Time.update(sdSysData.dblPREVSLEEPTIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
+  Sleep_Time.draw(DEBUG_PANEL, true);
   
-  Cycle_Time.label("Cycle:   " + to_string(sdSysData.dblCYCLETIME.get_data()) + " ");
-  Cycle_Time.guage_bar(winDebug, 2, 7, sdSysData.dblCYCLETIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
+  Cycle_Time.PROP.LABEL = "Cycle:   " + to_string(sdSysData.dblCYCLETIME.get_data()) + " ";
+  Cycle_Time.update(sdSysData.dblCYCLETIME.get_data(), sdSysData.tmeCURRENT_FRAME_TIME);
+  Cycle_Time.draw(DEBUG_PANEL, true);
   
   //------------------------
   // Print LED Display Mode
@@ -1449,22 +1480,23 @@ void Screen3::output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus
   }
 
   // Draw RANGE and UPPER OR LOWER VALUES selected.
-  mvwprintw(winDebug, 0, 0, "RNG:%s", strRange.c_str());
-  mvwprintw(winDebug, 1, 0, "LVL:%s", strLevel.c_str());
+  mvwprintw(DEBUG_PANEL.winPANEL, 0, 0, "RNG:%s", strRange.c_str());
+  mvwprintw(DEBUG_PANEL.winPANEL, 1, 0, "LVL:%s", strLevel.c_str());
   //------------------------
 
   // Show Number of Events per Channel
-  mvwprintw(winDebug, 1, 50, "%03d:D1", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
-  mvwprintw(winDebug, 0, 50, "%03d:D2", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
-  mvwprintw(winDebug, 1, 57, "D3:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
-  mvwprintw(winDebug, 0, 57, "D4:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
+  mvwprintw(DEBUG_PANEL.winPANEL, 1, 50, "%03d:D1", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(0));
+  mvwprintw(DEBUG_PANEL.winPANEL, 0, 50, "%03d:D2", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(1));
+  mvwprintw(DEBUG_PANEL.winPANEL, 1, 57, "D3:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(2));
+  mvwprintw(DEBUG_PANEL.winPANEL, 0, 57, "D4:%03d", sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(3));
   
   //------------------------
   //Mouse Position
-  mvwprintw(winDebug, 1, XStatusSize - 14, "Mouse: %03d %03d",mouse.x(),mouse.y());
+  mvwprintw(DEBUG_PANEL.winPANEL, 1, XStatusSize - 14, "Mouse: %03d %03d",mouse.x(),mouse.y());
 
   //------------------------
-  wrefresh(winDebug);
+  DEBUG_PANEL.draw(true);
+
   tiDebug.draw(ScrStat.Needs_Refresh);
 }
 
@@ -1476,9 +1508,6 @@ void Screen3::output_timer(system_data &sdSysData, Keys &keywatch, ScreenStatus 
   unsigned long duration_time = 0;
   long remaining_time = 0;
 
-  // Set window color
-  wbkgd(winTimer, COLOR_PAIR(CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE)));
-
   // Calculate
   duration_time = sdSysData.cdTIMER.duration();
   elaped_time = sdSysData.cdTIMER.elapsed_time(sdSysData.tmeCURRENT_FRAME_TIME);
@@ -1488,12 +1517,14 @@ void Screen3::output_timer(system_data &sdSysData, Keys &keywatch, ScreenStatus 
   string mins = linemerge_right_justify(2, "00", to_string(millis_to_time_minutes(remaining_time)));
   string secs = linemerge_right_justify(2, "00", to_string(millis_to_time_seconds(remaining_time)));
 
-  Countdown_Timer.label("Timer: " + mins + ":" + secs + " ");
-  Countdown_Timer.max_value(duration_time);
-  Countdown_Timer.progress_bar(winTimer, 1, 2, duration_time - elaped_time);
+  Countdown_Timer.PROP.LABEL = "Timer: " + mins + ":" + secs + " ";
+  Countdown_Timer.PROP.MAX_VALUE = duration_time;
+  Countdown_Timer.PROP.POSY = 1;
+  Countdown_Timer.PROP.POSX = 2;
+  Countdown_Timer.update(duration_time - elaped_time, sdSysData.tmeCURRENT_FRAME_TIME);
 
-  //------------------------
-  wrefresh(winTimer);
+  Countdown_Timer.draw(TIMER_PANEL, ScrStat.Needs_Refresh);
+  TIMER_PANEL.draw(ScrStat.Needs_Refresh);
   tiTimer.draw(ScrStat.Needs_Refresh);
 }
 

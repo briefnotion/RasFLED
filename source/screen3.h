@@ -126,7 +126,9 @@ class Screen3
   int YDebugSize = 3;
   int XDebugSize = -1;
 
-  WINDOW * winDebug;
+  //WINDOW * winDebug;
+  PANEL DEBUG_PANEL;
+
   Title_Bar tiDebug;
 
   // Player Debug Counters
@@ -143,7 +145,7 @@ class Screen3
   int YTimerSize = 3;
   int XTimerSize = -1;
 
-  WINDOW * winTimer;
+  PANEL TIMER_PANEL;
   Title_Bar tiTimer;
 
   BAR Countdown_Timer;

@@ -611,145 +611,6 @@ class Button_Zone_Manager
 // ---------------------------------------------------------------------------------------
 // Bar Classes
 
-class BAR_TIME_SLICE
-{
-  private:
-
-  bool ACTIVE = false;
-  int MIN_VALUE = 0;
-  int MAX_VALUE = 0;
-  string SNAPSHOT = "";
-
-  public:
-
-  void clear();
-
-  bool active();
-
-  void store_min_max(int Value);
-
-  int min();
-
-  int max();
-};
-
-class BAR
-// Display Progress Bar or Guage Bar.
-// Needs to be passed an NCurses window
-// Properties can be set when defined.
-{
-  private:
-
-  // Min Max time slice varables.
-  TIMED_IS_READY        TIME_SLICE_TIMER;       // Internal
-  int                   TIME_SLICE_COUNT = 5;   // Internal, could be exterenal.
-  deque<BAR_TIME_SLICE> TIME_SLICES;            // Internal
-  bool                  TIME_PROVIDED = false;  // Internal
-  
-  unsigned long         FRAME_TIME;             // Internal
-  int                   MIN_MAX_TIME_SPAN = 0;  // Span of time made by slices. In ms.
-
-  int COLOR_BACKGROUND = 0; // Guage background color
-  int COLOR_FOREGROUND = 0; // Guage text color, when not std.
-
-  string LABEL = "";        // Displayed left of the gadget.
-  int LABEL_SIZE = 0;       // Character size of label.
-
-  int YPOS = 0;             // Y start position of gadget in window.
-  int XPOS = 0;             // X start position of gadget in window.
-
-  int SIZE = 0;             // Size of bar in gadget.
-
-  int MAX_VALUE = 0;        // Gadget's Max Value to be displayed.
-  int MIN_VALUE = 0;        // Gadget's Min Value to be displayed. not implemented.
-  int VALUE = 0;
-
-  // Guage Variables
-  bool MIN_MAX  = false;    // Gadget will show min max values over time lapse.
-  //bool MIN_MAX_SET = false; // Min Max values stored in min and max when true - internal
-  //int MIN = 0;              // Min value - internal.
-  //int MAX = 0;              // Max value - internal.
-
-  bool PRINT_VALUE = false; // Print value on right of guage.
-  bool PRINT_MIN = false;   // Print Min value on right of guage.
-  bool PRINT_MAX = false;   // Print Max value on right of guage.
-
-  // I dont like this
-  int get_min_value();
-
-  // I dont like this
-  int get_max_value();
-
-  void wat_on_background(WINDOW *winWindow);
-
-  void wat_off_background(WINDOW *winWindow);
-
-  void wat_on_red(WINDOW *winWindow);
-
-  void wat_off_red(WINDOW *winWindow);
-
-  void wat_on_green_red(WINDOW *winWindow, bool value);
-
-  void wat_off_green_red(WINDOW *winWindow, bool value);
-
-  int get_marker_pos(int value);
-
-  void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value);
-
-  void draw_bar(int Bar_Type, WINDOW *winWindow);
-
-  public:
-
-  void color_background(short Color);
-
-  void color_foreground(short Color);
-
-  void label(string Label);
-
-  void label_size(int Label_Size);
-
-  void size(int Size);
-
-  void max_value(int Max_Value);
-
-  void print_value(bool Print_Value);
-
-  void print_min(bool Print_Min);
-
-  void print_max(bool Print_Max);
-
-  // Guage variables
-  void min_max(bool min_max);
-
-  // Guage variables
-  void min_max_time_span(int Time_Span_in_ms);
-
-  // Creates a progress bar of 0 to 100 percent.
-  //  Returns a string of size.
-  //  Of size, the percentage of value to max_value will be filled
-  //  with characters.
-  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value);
-
-  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time);
-
-  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value);
-
-  // Creates a progress bar of 0 to 100 percent.
-  //  Returns a string of size.
-  //  Of size, the percentage of value to max_value will be filled
-  //  with characters.
-  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value);
-
-  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time);
-
-  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value);
-};
-
-
-/*
-// ---------------------------------------------------------------------------------------
-// Bar Classes
-
 class MIN_MAX_TIME_SLICE
 {
   private:
@@ -757,13 +618,10 @@ class MIN_MAX_TIME_SLICE
   bool ACTIVE = false;
   int MIN_VALUE = 0;
   int MAX_VALUE = 0;
-  string SNAPSHOT = "";
+
+  int MIN_MAX_TIME_SPAN = 0;
 
   public:
-
-  void clear();
-
-  bool active();
 
   void store_min_max(int Value);
 
@@ -771,13 +629,48 @@ class MIN_MAX_TIME_SLICE
 
   int max();
 };
-*/
 
-
-/*
 // ---------------------------------------------------------------------------------------
 
-class BAR_2_PROPERTIES
+class MIN_MAX_TIME_PROPERTIES
+{
+  public:
+
+  int SLICES = 0;
+  int TIME_SPAN = 0;
+};
+
+// ---------------------------------------------------------------------------------------
+
+class MIN_MAX_TIME
+{
+  private:
+
+  int SLICE_TIME = 0;
+
+  deque<MIN_MAX_TIME_SLICE> TIME_SLICES;
+
+  unsigned long TIME_SLICE_CREATED_FRAME_TIME = 0;
+
+  public:
+
+  MIN_MAX_TIME_PROPERTIES PROP;
+
+  void create();
+
+  void put_value(int Value, unsigned long tmeFrame_Time);
+
+  int min();
+
+  int max();
+};
+
+
+
+
+// ---------------------------------------------------------------------------------------
+
+class BAR_PROPERTIES
 {
   private:
 
@@ -786,21 +679,32 @@ class BAR_2_PROPERTIES
   string LABEL = "";        // Displayed left of the gadget.
   int LABEL_SIZE = 0;       // Character size of label.
 
-  int TYPE = 0;
-  int COLOR = 0;
-  int BCOLOR = 0;
-  
+  int COLOR = COLOR_WHITE;
+  int BCOLOR = COLOR_BLACK;
+
+  int COLOR_BAR = COLOR_GREEN;
+  int COLOR_BAR_BACK = COLOR_BLACK;
+
+  int COLOR_MARKER = COLOR_WHITE;
+  int COLOR_MARKER_LIMIT = COLOR_RED;
+
   int POSY = 0;             // Y start position of gadget in window.
   int POSX = 0;             // X start position of gadget in window.
   //int SIZEY = 0;
-  int SIZEX = 0;             // Size of bar in gadget.
+  int BAR_SIZE = 0;             // Size of bar in gadget.
+
+  int VALUE = 0;
+
+  // Bar Type (Select Only One)
+  bool PROGRESS_BAR = false;
+  bool GUAGE_BAR = false;
+
+  bool MIN_MAX  = false;    // Gadget will show min max values over time lapse.
 
   int MAX_VALUE = 0;        // Gadget's Max Value to be displayed.
   int MIN_VALUE = 0;        // Gadget's Min Value to be displayed. not implemented.
-  int VALUE = 0;
 
-  bool MIN_MAX  = false;    // Gadget will show min max values over time lapse.
-  int  MIN_MAX_TIME_SPAN = 0;  // Span of time made by slices. In ms.
+  //int  MIN_MAX_TIME_SPAN = 0;  // Span of time made by slices. In ms.
 
   bool PRINT_VALUE = false; // Print value on right of guage.
   bool PRINT_MIN = false;   // Print Min value on right of guage.
@@ -808,103 +712,31 @@ class BAR_2_PROPERTIES
 
   bool COLORS_ON = false;
 };
-*/
 
-/*
-class BAR_2
+
+class BAR
 // Display Progress Bar or Guage Bar.
 // Needs to be passed an NCurses window
 // Properties can be set when defined.
 {
   private:
 
-  // Min Max time slice varables.
-  TIMED_IS_READY        TIME_SLICE_TIMER;       // Internal
-  int                   TIME_SLICE_COUNT = 5;   // Internal, could be exterenal.
-  deque<BAR_TIME_SLICE> TIME_SLICES;            // Internal
-  bool                  TIME_PROVIDED = false;  // Internal
-  
-  unsigned long         FRAME_TIME;             // Internal
-
-
-  // I dont like this
-  int get_min_value();
-
-  // I dont like this
-  int get_max_value();
-
-  void wat_on_background(WINDOW *winWindow);
-
-  void wat_off_background(WINDOW *winWindow);
-
-  void wat_on_red(WINDOW *winWindow);
-
-  void wat_off_red(WINDOW *winWindow);
-
-  void wat_on_green_red(WINDOW *winWindow, bool value);
-
-  void wat_off_green_red(WINDOW *winWindow, bool value);
+  bool CHANGED = true;
 
   int get_marker_pos(int value);
 
   void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value);
 
-  void draw_bar(int Bar_Type, WINDOW *winWindow);
-
   public:
 
-  void color_background(short Color);
+  MIN_MAX_TIME MIN_MAX_HISTORY;
 
-  void color_foreground(short Color);
+  BAR_PROPERTIES PROP;
 
-  void label(string Label);
+  void update(int Value, unsigned long tmeFrame_Time);
 
-  void label_size(int Label_Size);
-
-  void size(int Size);
-
-  void max_value(int Max_Value);
-
-  void print_value(bool Print_Value);
-
-  void print_min(bool Print_Min);
-
-  void print_max(bool Print_Max);
-
-  // Guage variables
-  void min_max(bool min_max);
-
-  // Guage variables
-  void min_max_time_span(int Time_Span_in_ms);
-
-  // Creates a progress bar of 0 to 100 percent.
-  //  Returns a string of size.
-  //  Of size, the percentage of value to max_value will be filled
-  //  with characters.
-  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value);
-
-  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time);
-
-  void progress_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value);
-
-  // Creates a progress bar of 0 to 100 percent.
-  //  Returns a string of size.
-  //  Of size, the percentage of value to max_value will be filled
-  //  with characters.
-  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value);
-
-  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int value, unsigned long tmeFrame_Time);
-
-  void guage_bar(WINDOW *winWindow, int YPos, int XPos, int size, int max_value, int value);
-
-
-  void create();
-
-  void update();
-
-  bool draw(bool Refresh);
+  bool draw(PANEL &Panel, bool Refresh);
 };
-*/
 
 
 // ---------------------------------------------------------------------------------------
