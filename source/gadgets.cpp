@@ -1522,8 +1522,8 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
     }
 
 
-    // Draw Bar or Guage
-    if (PROP.COLORS_ON == true && (PROP.VALUE > PROP.MIN_VALUE || PROP.VALUE < PROP.MAX_VALUE))
+    // Draw Bar Background
+    if (PROP.COLORS_ON == true && PROP.VALUE > PROP.MIN_VALUE && PROP.VALUE < PROP.MAX_VALUE)
     {
       wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_BAR)));
     }
@@ -1544,7 +1544,7 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
       mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE +1, "%s", bar.c_str());
     }
 
-    if (PROP.COLORS_ON == true && (PROP.VALUE > PROP.MIN_VALUE || PROP.VALUE < PROP.MAX_VALUE))
+    if (PROP.COLORS_ON == true && PROP.VALUE > PROP.MIN_VALUE && PROP.VALUE < PROP.MAX_VALUE)
     {
       wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_BAR)));
     }
@@ -1568,7 +1568,6 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
       {
         wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER_LIMIT)));
       }
-
     }
 
     // Print Markers

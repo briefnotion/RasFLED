@@ -213,9 +213,6 @@ class ADSB_Channel_Grid
   Text_Field AIRCRAFT_COUNT;
   Text_Field POSITIONED_AIRCRAFT_TITLE;
   Text_Field POSITIONED_AIRCRAFT;
-  Text_Field DELTA_MESSAGES_TITLE;
-  Text_Field DELTA_MESSAGES;
-
   BAR DELTA_MESSAGES_BAR;
 
   public:
