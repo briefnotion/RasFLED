@@ -999,6 +999,8 @@ void Radio_Channel::create(int id, string name, string label, int type, int colo
   // Create Noise Level Bar
   BAR_NOISE_LEVEL.PROP.LABEL = PROP.NOISE_LABEL;
   BAR_NOISE_LEVEL.PROP.LABEL_SIZE = PROP.NOISE_LABEL.size();
+  BAR_NOISE_LEVEL.PROP.POSY = 2;
+  BAR_NOISE_LEVEL.PROP.POSX = 0;
   BAR_NOISE_LEVEL.PROP.COLOR = COLOR_WHITE;
   BAR_NOISE_LEVEL.PROP.BCOLOR = COLOR_GREEN;
   BAR_NOISE_LEVEL.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
@@ -1017,6 +1019,8 @@ void Radio_Channel::create(int id, string name, string label, int type, int colo
   // Create Signal Level Bar
   BAR_SIGNAL_LEVEL.PROP.LABEL = PROP.SIGNAL_LABEL;
   BAR_SIGNAL_LEVEL.PROP.LABEL_SIZE = PROP.SIGNAL_LABEL.size();
+  BAR_SIGNAL_LEVEL.PROP.POSY = 1;
+  BAR_SIGNAL_LEVEL.PROP.POSX = 0;
   BAR_SIGNAL_LEVEL.PROP.COLOR = COLOR_WHITE;
   BAR_SIGNAL_LEVEL.PROP.BCOLOR = COLOR_GREEN;
   BAR_SIGNAL_LEVEL.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
@@ -1076,11 +1080,16 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   // Skip Frequency Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "SKIP";
-  bzGadget.NEW_BUTTON_PROP.LABEL = "\nSKIP";
+  if(Button_YSize > PROP.SIZEY)
+  {
+    bzGadget.NEW_BUTTON_PROP.LABEL = "SKIP"; 
+  }
+  else 
+  {
+    bzGadget.NEW_BUTTON_PROP.LABEL = "\nSKIP";
+  }
   bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_GREEN;
-  bzGadget.NEW_BUTTON_PROP.HIDDEN = false;
   bzGadget.NEW_BUTTON_PROP.ENABLED = true;
-  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = false;
   bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
   bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
@@ -1090,11 +1099,16 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   // Hold Frequency Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "HOLD";
-  bzGadget.NEW_BUTTON_PROP.LABEL = "\nHOLD";
+  if(Button_YSize > PROP.SIZEY)
+  {
+    bzGadget.NEW_BUTTON_PROP.LABEL = "HOLD"; 
+  }
+  else 
+  {
+    bzGadget.NEW_BUTTON_PROP.LABEL = "\nHOLD";
+  }
   bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
-  bzGadget.NEW_BUTTON_PROP.HIDDEN = false;
   bzGadget.NEW_BUTTON_PROP.ENABLED = true;
-  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = false;
   bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
   bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
@@ -1104,24 +1118,21 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   // Clear Hold Skip Button
   bzGadget.NEW_BUTTON_PROP.ID = 0;
   bzGadget.NEW_BUTTON_PROP.NAME = "CLEAR";
-  bzGadget.NEW_BUTTON_PROP.LABEL = "\nCLEAR";
+  if(Button_YSize > PROP.SIZEY)
+  {
+    bzGadget.NEW_BUTTON_PROP.LABEL = "CLEAR"; 
+  }
+  else 
+  {
+    bzGadget.NEW_BUTTON_PROP.LABEL = "\nCLEAR";
+  }
   bzGadget.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
-  bzGadget.NEW_BUTTON_PROP.HIDDEN = false;
   bzGadget.NEW_BUTTON_PROP.ENABLED = true;
-  bzGadget.NEW_BUTTON_PROP.DO_NOT_DRAW = false;
   bzGadget.NEW_BUTTON_PROP.SIZEY = Button_YSize;
   bzGadget.NEW_BUTTON_PROP.SIZEX = Button_XSize;
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *2);
   bzGadget.create_button();
-
-  if(Button_YSize > PROP.SIZEY)
-  {
-    Button_YSize = PROP.SIZEY;
-    bzGadget.set_label("SKIP", "SKIP");
-    bzGadget.set_label("HOLD", "HOLD");
-    bzGadget.set_label("CLEAR", "CLEAR");
-  }
 }
 
 bool Radio_Channel::changed()
@@ -1171,8 +1182,6 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       // Change the colors.
       FREQUENCY_PANEL.set_color(PROP.BCOLOR, COLOR_MAGENTA);
-      BAR_NOISE_LEVEL.PROP.BCOLOR = PROP.BCOLOR;
-      BAR_SIGNAL_LEVEL.PROP.BCOLOR = PROP.BCOLOR;
     } 
     else if (PROP.VALUE.FREQUENCY.IS_OPEN == true)
     {
@@ -1181,8 +1190,6 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 
       // Change Colors
       FREQUENCY_PANEL.set_color(COLOR_WHITE, PROP.BCOLOR);
-      BAR_NOISE_LEVEL.PROP.BCOLOR = COLOR_WHITE;
-      BAR_SIGNAL_LEVEL.PROP.BCOLOR = COLOR_WHITE;
     }
     // Outside Filter
     else if (PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER == true)
@@ -1192,16 +1199,12 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 
       // Change the colors.
       FREQUENCY_PANEL.set_color(COLOR_YELLOW, PROP.BCOLOR);
-      BAR_NOISE_LEVEL.PROP.BCOLOR = COLOR_YELLOW;
-      BAR_SIGNAL_LEVEL.PROP.BCOLOR = COLOR_YELLOW;
     } 
     // If lingering dirty signal.
     else if (LINGER_DIRTY_SIGNAL.ping_down(tmeFrame_Time) == true)
     {
       // Change the colors.
       FREQUENCY_PANEL.set_color(COLOR_YELLOW, PROP.BCOLOR);
-      BAR_NOISE_LEVEL.PROP.BCOLOR = COLOR_YELLOW;
-      BAR_SIGNAL_LEVEL.PROP.BCOLOR = COLOR_YELLOW;
     }
     // Updated
     else if (VISIBLE_UPDATE_SIGNAL.ping_down(tmeFrame_Time) == true)
@@ -1215,18 +1218,16 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       {
         FREQUENCY_PANEL.set_color(PROP.BCOLOR, COLOR_WHITE);
       }
-      
-      BAR_NOISE_LEVEL.PROP.BCOLOR = PROP.BCOLOR;
-      BAR_SIGNAL_LEVEL.PROP.BCOLOR = PROP.BCOLOR;
     }
     // Listening
     else
     {
       // Change the colors.
       FREQUENCY_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
-      BAR_NOISE_LEVEL.PROP.BCOLOR = PROP.BCOLOR;
-      BAR_SIGNAL_LEVEL.PROP.BCOLOR = PROP.BCOLOR;
     }
+
+    BAR_NOISE_LEVEL.set_color(PROP.BCOLOR, BAR_NOISE_LEVEL.PROP.COLOR);
+    BAR_SIGNAL_LEVEL.set_color(PROP.BCOLOR, BAR_NOISE_LEVEL.PROP.COLOR);
 
     // Print Values
     if (PROP.SHOW_FREQUENCY == true)
@@ -1242,15 +1243,11 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     //Draw Bars
     if (PROP.SHOW_SIGNAL == true)
     {
-      BAR_SIGNAL_LEVEL.PROP.POSY = 1;
-      BAR_SIGNAL_LEVEL.PROP.POSX = 0;
       BAR_SIGNAL_LEVEL.update(100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL, tmeFrame_Time);
       BAR_SIGNAL_LEVEL.draw(FREQUENCY_PANEL, tmeFrame_Time);
     }
     if (PROP.SHOW_NOISE == true)
     {
-      BAR_NOISE_LEVEL.PROP.POSY = 2;
-      BAR_NOISE_LEVEL.PROP.POSX = 0;
       BAR_NOISE_LEVEL.update(100 + PROP.VALUE.FREQUENCY.NOISE_LEVEL, tmeFrame_Time);
       BAR_NOISE_LEVEL.draw(FREQUENCY_PANEL, tmeFrame_Time);
     }
@@ -1304,13 +1301,13 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", false);
 
       bzGadget.set_enabled("HOLD", true);
-      bzGadget.set_hidden("HOLD", false);
+      bzGadget.set_do_not_draw("HOLD", false);
 
       bzGadget.set_enabled("SKIP", true);
-      bzGadget.set_hidden("SKIP", false);
+      bzGadget.set_do_not_draw("SKIP", false);
 
       bzGadget.set_enabled("CLEAR", true);
-      bzGadget.set_hidden("CLEAR", false);
+      bzGadget.set_do_not_draw("CLEAR", false);
 
       PROP.CHANGED = true;
 
@@ -1321,13 +1318,13 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      bzGadget.set_hidden("HOLD", true);
+      bzGadget.set_do_not_draw("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      bzGadget.set_hidden("SKIP", true);
+      bzGadget.set_do_not_draw("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      bzGadget.set_hidden("CLEAR", true);
+      bzGadget.set_do_not_draw("CLEAR", true);
 
       PROP.CHANGED = true;
 
@@ -1338,13 +1335,13 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      bzGadget.set_hidden("HOLD", true);
+      bzGadget.set_do_not_draw("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      bzGadget.set_hidden("SKIP", true);
+      bzGadget.set_do_not_draw("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      bzGadget.set_hidden("CLEAR", true);
+      bzGadget.set_do_not_draw("CLEAR", true);
 
       PROP.CHANGED == true;
       
@@ -1356,13 +1353,13 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      bzGadget.set_hidden("HOLD", true);
+      bzGadget.set_do_not_draw("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      bzGadget.set_hidden("SKIP", true);
+      bzGadget.set_do_not_draw("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      bzGadget.set_hidden("CLEAR", true);
+      bzGadget.set_do_not_draw("CLEAR", true);
 
       PROP.CHANGED == true;
       

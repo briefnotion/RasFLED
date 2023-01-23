@@ -903,15 +903,15 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     tiRadio.PROP.SIZEX = XRadioStatusSize;
     tiRadio.PROP.SIZE = TitleSize;
 
-    tiRadio.PROP.LABEL = "RADIO";
     tiRadio.PROP.BCOLOR = COLOR_BLACK;
     tiRadio.PROP.COLOR = COLOR_WHITE;
-    tiRadio.create();
 
     // Set window color
     wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
   }
 
+  // ---------------------------------------------------------------------------------------
+  // Radio Panel
   if (ScrStat.Window_Radio.value() == true)
   {
     // Radio Window
@@ -934,6 +934,10 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
     // Create Screen
     wrefresh(winRadio);
+
+    // Radio Title Bar
+    tiRadio.PROP.LABEL = "RADIO";
+    tiRadio.create();
 
     // Set window color
     wbkgd(winRadio, COLOR_PAIR(0));
@@ -971,9 +975,8 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
   // ---------------------------------------------------------------------------------------
   // Many Radio Panel
   if (ScrStat.Window_Many_Radio.value() == true)
-  // Main Radio Screen
   {
-    // Radio Window
+    // Many Radio Window
     // Calculate Size and Position
     YManyRadioPos = YSplit;
     XManyRadioPos = XManyRadioPos;
@@ -995,15 +998,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     wrefresh(winManyRadio);
 
     // Radio Title Bar
-    tiRadio.PROP.POSY = YRadioStatusPos;
-    tiRadio.PROP.POSX = XRadioStatusPos;
-    tiRadio.PROP.SIZEY = YRadioStatusSize;
-    tiRadio.PROP.SIZEX = XRadioStatusSize;
-    tiRadio.PROP.SIZE = TitleSize;
-
     tiRadio.PROP.LABEL = "(multi) RADIO";
-    tiRadio.PROP.BCOLOR = COLOR_BLACK;
-    tiRadio.PROP.COLOR = COLOR_WHITE;
     tiRadio.create();
 
     // Set window color
@@ -1039,6 +1034,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     }
   }
 
+  // ---------------------------------------------------------------------------------------
   if (ScrStat.Window_Log_Screen.value() == true)
   {
     // Radio Window

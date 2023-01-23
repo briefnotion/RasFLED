@@ -887,7 +887,7 @@ void Button::set_type(int Type)
 
 void Button::set_color(int Background_Color, int Color)
 {
-  if ((PROP.BCOLOR != Background_Color) && (PROP.COLOR != Color))
+  if (PROP.BCOLOR != Background_Color || PROP.COLOR != Color)
   {  
     PROP.BCOLOR = Background_Color;
     PROP.COLOR = Color;
@@ -913,6 +913,16 @@ void Button::set_hidden(bool Hidden)
   if (PROP.HIDDEN != Hidden)
   {
     PROP.HIDDEN = Hidden;
+
+    PROP.CHANGED = true;
+  }
+}
+
+void Button::set_do_not_draw(bool Do_Not_Draw)
+{
+  if (PROP.DO_NOT_DRAW != Do_Not_Draw)
+  {
+    PROP.DO_NOT_DRAW = Do_Not_Draw;
 
     PROP.CHANGED = true;
   }
@@ -1246,6 +1256,28 @@ void Button_Zone_Manager::set_hidden(string Name, bool Hidden)
   }
 }
 
+void Button_Zone_Manager::set_do_not_draw(int Id, bool Do_Not_Draw)
+// Change Property by Name.
+{
+  int pos = get_pos(Id);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_do_not_draw(Do_Not_Draw);
+  }
+}
+
+void Button_Zone_Manager::set_do_not_draw(string Name, bool Do_Not_Draw)
+// Change Property by Name.
+{
+  int pos = get_pos(Name);
+
+  if (pos > -1)
+  {
+    BUTTONS[pos].set_do_not_draw(Do_Not_Draw);
+  }
+}
+
 string Button_Zone_Manager::get_clicked_name()
 // returns the name of the first clicked button in the list
 {
@@ -1471,6 +1503,17 @@ void BAR::update(int Value, unsigned long tmeFrame_Time)
     }
 
     CHANGED = true;
+  }
+}
+
+void BAR::set_color(int Background_Color, int Color)
+{
+  if (PROP.BCOLOR != Background_Color || PROP.COLOR != Color)
+  {
+    PROP.BCOLOR = Background_Color;
+    PROP.COLOR = Color;
+
+    CHANGED = true;    
   }
 }
 

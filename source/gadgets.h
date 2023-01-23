@@ -528,6 +528,8 @@ class Button
 
   void set_hidden(bool Hidden);
 
+  void set_do_not_draw(bool Do_Not_Draw);
+
   void change_on();
 
   void draw(bool Refresh, unsigned long tmeFrame_Time);
@@ -598,6 +600,10 @@ class Button_Zone_Manager
 
   void set_hidden(string Name, bool Hidden);
 
+  void set_do_not_draw(string Name, bool Do_Not_Draw);
+
+  void set_do_not_draw(int Id, bool Do_Not_Draw);
+  
   string get_clicked_name();
 
   int get_clicked_value(string name);
@@ -734,6 +740,8 @@ class BAR
   BAR_PROPERTIES PROP;
 
   void update(int Value, unsigned long tmeFrame_Time);
+
+  void set_color(int Background_Color, int Color);
 
   bool draw(PANEL &Panel, bool Refresh);
 };
