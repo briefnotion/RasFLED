@@ -73,8 +73,10 @@ void PANEL::set_color(int Background_Color, int Color)
   }
 }
 
-void PANEL::draw(bool Refresh)
+bool PANEL::draw(bool Refresh)
 {
+  bool ret_redrawn = false;
+
   if (CHANGED == true || Refresh == true)
   {
     //Debug -- displays dedraw count and other variables.
@@ -87,7 +89,10 @@ void PANEL::draw(bool Refresh)
     wrefresh(winPANEL);
 
     CHANGED = false;
+    ret_redrawn = true;
   }
+
+  return ret_redrawn;
 }
 
 
@@ -131,7 +136,7 @@ void PANEL::draw(bool Refresh)
 
   }
 
-  void CYBR::draw(unsigned long tmeFrame_Time)
+  bool CYBR::draw(unsigned long tmeFrame_Time)
   {
     mvwprintw(CYBR_PANEL.winPANEL, 0, 0, "%d",tmeFrame_Time/100);
 
@@ -149,7 +154,7 @@ void PANEL::draw(bool Refresh)
     wattroff(CYBR_PANEL.winPANEL, A_REVERSE);
 
     // Commit all our changes to the status portion of the screen (winTop)
-    CYBR_PANEL.draw(true);
+    return CYBR_PANEL.draw(true);
   }
 
 
@@ -518,10 +523,63 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFr
     Panel.changed_on();
   }
 }
-  
+
 void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh)
 {
   draw(Panel, Refresh, 0);
+}
+
+// -------------------------------------------------------------------------------------
+//  Text_Field_Multi_Line Classes
+  
+bool Rotating_Text_Field::changed()
+{
+  return false;
+}
+
+bool Rotating_Text_Field::has_blank()
+{
+  return false;
+}
+
+void Rotating_Text_Field::redraw()
+{
+  
+}
+
+void Rotating_Text_Field::set_inverse(bool Inverse)
+{
+  
+}
+
+void Rotating_Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
+{
+  
+}
+
+void Rotating_Text_Field::set_text(string Text)
+{
+  
+}
+
+void Rotating_Text_Field::clear()
+{
+  
+}
+
+void Rotating_Text_Field::set_color(int Background_Color, int Color)
+{
+  
+}
+
+void Rotating_Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+{
+  
+}
+
+void Rotating_Text_Field::draw(PANEL &Panel, bool Refresh)
+{
+  
 }
 
 
@@ -557,14 +615,14 @@ void Title_Bar::create()
 bool Title_Bar::changed()
 // Returns true if any of the properties have changed.
 {
-  return PROP.CHANGED;
+  return CHANGED;
 }
 
-void Title_Bar::draw(bool Refresh)
+bool Title_Bar::draw(bool Refresh)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  if (PROP.CHANGED == true || Refresh == true)
+  if (CHANGED == true || Refresh == true)
   {
     if (PROP.LABEL != TITLE.PROP.LABEL)
     {
@@ -573,10 +631,10 @@ void Title_Bar::draw(bool Refresh)
 
     TITLE.draw(TITLE_BAR_PANEL, Refresh);
 
-    TITLE_BAR_PANEL.draw(Refresh);
-
-    PROP.CHANGED = false;
+    CHANGED = false;
   }
+  
+  return TITLE_BAR_PANEL.draw(Refresh);
 }
 
 // -------------------------------------------------------------------------------------
@@ -928,10 +986,12 @@ void Button::set_do_not_draw(bool Do_Not_Draw)
   }
 }
 
-void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
+bool Button::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the button on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
+  bool ret_redrawn = false;
+
   // Refresh if time active.
   if (BUTTON_PRESSED.blip_moved(tmeFrame_Time) == true)
   {
@@ -978,6 +1038,7 @@ void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
       LINES.draw(BUTTON_PANEL, Refresh);  
     }
 
+    // Dont draw refresh pannel if do not draw
     if (PROP.DO_NOT_DRAW == false)
     {
       BUTTON_PANEL.draw(Refresh);
@@ -991,7 +1052,10 @@ void Button::draw(bool Refresh, unsigned long tmeFrame_Time)
     }
 
     PROP.CHANGED = false;
+    ret_redrawn = true;
   }
+
+  return ret_redrawn;
 }
 
 
@@ -1078,15 +1142,19 @@ void Button_Zone_Manager::create_button()
   BUTTONS.push_back(tmp_button);
 }
 
-void Button_Zone_Manager::draw(bool Refresh, unsigned long tmeFrame_Time)
+bool Button_Zone_Manager::draw(bool Refresh, unsigned long tmeFrame_Time)
 {
+  TRUTH_CATCH ret_redrawn;
+
   if (BUTTONS.size() >0)
   {
     for (int pos = 0; pos < BUTTONS.size(); pos++)
     {
-      BUTTONS[pos].draw(Refresh, tmeFrame_Time);
+      ret_redrawn.catch_truth(BUTTONS[pos].draw(Refresh, tmeFrame_Time));
     }
   }
+  
+  return ret_redrawn.has_truth();
 }
 
 void Button_Zone_Manager::set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX)
@@ -1665,6 +1733,11 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
   
   return ret_redrawn;
 }
+
+
+// ---------------------------------------------------------------------------------------
+// Keyboard Classes
+
 
 
 // ---------------------------------------------------------------------------------------

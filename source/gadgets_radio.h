@@ -64,8 +64,6 @@ class Mini_Compass
   public:
   Mini_Compass_Properties PROP;
 
-  bool changed();
-
   void set_heading(float Heading, unsigned long tmeFrame_Time);
 
   void set_heading(float Heading);
@@ -74,9 +72,9 @@ class Mini_Compass
 
   void set_color(int Background_Color, int Color);
 
-  bool draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
 
-  bool draw(PANEL &Panel, bool Refresh);
+  void draw(PANEL &Panel, bool Refresh);
 };
 
 // -------------------------------------------------------------------------------------
@@ -312,7 +310,7 @@ class Radio_Channel
 
   void update_value(API_SQUELCH_DESTINATION &New_Value, unsigned long tmeFrame_Time);
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time);
 
   bool was_redrawn();
 

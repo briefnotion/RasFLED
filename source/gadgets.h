@@ -88,14 +88,14 @@ class PANEL
   void create();
   
   void clear();
-
+  
   void blank_out();
 
   void changed_on();
 
   void set_color(int Background_Color, int Color);
 
-  void draw(bool Refresh);
+  bool draw(bool Refresh);
 };
 
 
@@ -147,7 +147,7 @@ class CYBR
 
   void input(int Value, int Max_Value, int BColor, int Color);
 
-  void draw(unsigned long tmeFrame_Time);
+  bool draw(unsigned long tmeFrame_Time);
 };
 
 
@@ -257,6 +257,7 @@ class Text_Field_Multi_Line_Properties
   bool INVERSE = false;
 };
 
+// -------------------------------------------------------------------------------------
 
 class Text_Field_Multi_Line
 {
@@ -301,6 +302,75 @@ class Text_Field_Multi_Line
   void draw(PANEL &Panel, bool Refresh);
 };
 
+// -------------------------------------------------------------------------------------
+
+class Rotating_Text_Field_Properties
+// Properties (duh)
+{
+  private:
+
+  public: 
+  
+  string LABEL = "";
+
+  int TYPE = 0;
+  int COLOR = 0;
+  int BCOLOR = 0;
+  
+  int POSY = 0;
+  int POSX = 0;
+  //int SIZEY = 0;
+  int SIZEX = 0;
+
+  bool JUSTIFICATION_LEFT = false;
+  bool JUSTIFICATION_CENTER = false;
+  bool JUSTIFICATION_RIGHT = false;
+
+  bool UPDATE_INDICATION = false;
+
+  bool DONT_BLANK = false;
+
+  bool COLORS_ON = false;
+  bool INVERSE = false;
+};
+
+
+class Rotating_Text_Field
+{
+  private:
+  TIMED_PING UPDATE_INDICATION_TIMER;
+
+  bool CHANGED = false;
+  bool HAS_BLANK = false;
+
+  int INDICATED_BLINK_TIME = 250;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  public:
+  Text_Field_Properties PROP;
+
+  bool changed();
+
+  bool has_blank();
+
+  void redraw();
+
+  void set_inverse(bool Inverse);
+
+  void set_text(string Text, unsigned long tmeFrame_Time);
+
+  void set_text(string Text);
+  
+  void clear();
+
+  void set_color(int Background_Color, int Color);
+
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+
+  void draw(PANEL &Panel, bool Refresh);
+};
 
 // -------------------------------------------------------------------------------------
 //  Title_Bar Classes
@@ -320,8 +390,6 @@ class Title_Bar_Properties
   int POSX = 0;
   int SIZEY = 0;
   int SIZEX = 0;
-
-  bool CHANGED = false;
 };
 
 class Title_Bar
@@ -333,6 +401,8 @@ class Title_Bar
   PANEL TITLE_BAR_PANEL;
   Text_Field TITLE;
 
+  bool CHANGED = false;
+  
   //Debug
   int Counter = 0;
 
@@ -344,7 +414,7 @@ class Title_Bar
 
   bool changed();
 
-  void draw(bool Refresh);
+  bool draw(bool Refresh);
 };
 
 
@@ -532,7 +602,7 @@ class Button
 
   void change_on();
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time);
 };
 
 
@@ -566,7 +636,7 @@ class Button_Zone_Manager
 
   void create_button();
 
-  void draw(bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time);
 
   void set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX);
 
@@ -672,8 +742,6 @@ class MIN_MAX_TIME
 };
 
 
-
-
 // ---------------------------------------------------------------------------------------
 
 class BAR_PROPERTIES
@@ -746,6 +814,19 @@ class BAR
   bool draw(PANEL &Panel, bool Refresh);
 };
 
+
+// ---------------------------------------------------------------------------------------
+// Keyboard Classes
+
+class KEYPAD
+{
+
+};
+
+class KEYBOARD
+{
+
+};
 
 // ---------------------------------------------------------------------------------------
 // Gadgets functions

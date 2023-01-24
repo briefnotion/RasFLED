@@ -16,13 +16,6 @@
 
 // -------------------------------------------------------------------------------------
 //  ADSB_Channel Classes
-
-bool Mini_Compass::changed()
-// Returns true if any of the properties have changed.
-{
-  return CHANGED;
-}
-
 void Mini_Compass::set_heading(float Heading, unsigned long tmeFrame_Time)
 {
   PROP.CLEARED = false; 
@@ -65,10 +58,8 @@ void Mini_Compass::set_color(int Background_Color, int Color)
 }
 
 
-bool Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+void Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 {
-  bool ret_refreshed = false;
-
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
@@ -197,15 +188,12 @@ bool Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     CHANGED = false;
 
     Panel.changed_on();
-    ret_refreshed = true;
   }
-
-  return ret_refreshed;
 }
   
-bool Mini_Compass::draw(PANEL &Panel, bool Refresh)
+void Mini_Compass::draw(PANEL &Panel, bool Refresh)
 {
-  return draw(Panel, Refresh, 0);
+  draw(Panel, Refresh, 0);
 }
 
 // -------------------------------------------------------------------------------------
@@ -443,7 +431,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  bool ret_refreshed = false;
+  bool ret_redrawn = false;
 
   // Check Expiration
   if (EXPIREED.blip_moved(tmeFrame_Time) == true && EXPIREED.ping_down(tmeFrame_Time) == false)
@@ -651,8 +639,6 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       SIG_STR_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
       SIG_STR_IND.set_text("  ");
     }
-
-    ret_refreshed = true;
   }
 
   // Write All text fields.
@@ -700,9 +686,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   PROP.CHANGED = false;
 
   // Draw the Gadget.
-  ADSB_PANEL.draw(Refresh);
-
-  return ret_refreshed;
+  return ADSB_PANEL.draw(Refresh);;
 }
 
 // -------------------------------------------------------------------------------------
@@ -961,9 +945,7 @@ bool ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL AD
   DELTA_MESSAGES_BAR.draw(ADSB_Grid_Panel, Refresh);
 
   PROP.CHANGED = false;
-  ADSB_Grid_Panel.draw(Refresh);
-
-  return ret_refreshed;
+  return ADSB_Grid_Panel.draw(Refresh);
 }
 
 
@@ -996,46 +978,6 @@ void Radio_Channel::create(int id, string name, string label, int type, int colo
   PROP.COLOR = color;
   PROP.BCOLOR = bcolor;
  
-  // Create Noise Level Bar
-  BAR_NOISE_LEVEL.PROP.LABEL = PROP.NOISE_LABEL;
-  BAR_NOISE_LEVEL.PROP.LABEL_SIZE = PROP.NOISE_LABEL.size();
-  BAR_NOISE_LEVEL.PROP.POSY = 2;
-  BAR_NOISE_LEVEL.PROP.POSX = 0;
-  BAR_NOISE_LEVEL.PROP.COLOR = COLOR_WHITE;
-  BAR_NOISE_LEVEL.PROP.BCOLOR = COLOR_GREEN;
-  BAR_NOISE_LEVEL.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
-  BAR_NOISE_LEVEL.PROP.COLOR_MARKER = COLOR_WHITE;
-  BAR_NOISE_LEVEL.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
-  BAR_NOISE_LEVEL.PROP.BAR_SIZE = PROP.BAR_SIZE;
-  BAR_NOISE_LEVEL.PROP.PROGRESS_BAR = true;
-  BAR_NOISE_LEVEL.PROP.COLORS_ON = true;
-  BAR_NOISE_LEVEL.PROP.MAX_VALUE = 100;
-  BAR_NOISE_LEVEL.PROP.MIN_MAX = true;
-  BAR_NOISE_LEVEL.PROP.PRINT_MIN = BAR_NOISE_LEVEL.PROP.MIN_MAX;
-  BAR_NOISE_LEVEL.PROP.PRINT_MAX = BAR_NOISE_LEVEL.PROP.MIN_MAX;
-  BAR_NOISE_LEVEL.MIN_MAX_HISTORY.PROP.TIME_SPAN = 60000;
-  BAR_NOISE_LEVEL.MIN_MAX_HISTORY.PROP.SLICES = 12;
-
-  // Create Signal Level Bar
-  BAR_SIGNAL_LEVEL.PROP.LABEL = PROP.SIGNAL_LABEL;
-  BAR_SIGNAL_LEVEL.PROP.LABEL_SIZE = PROP.SIGNAL_LABEL.size();
-  BAR_SIGNAL_LEVEL.PROP.POSY = 1;
-  BAR_SIGNAL_LEVEL.PROP.POSX = 0;
-  BAR_SIGNAL_LEVEL.PROP.COLOR = COLOR_WHITE;
-  BAR_SIGNAL_LEVEL.PROP.BCOLOR = COLOR_GREEN;
-  BAR_SIGNAL_LEVEL.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
-  BAR_SIGNAL_LEVEL.PROP.COLOR_MARKER = COLOR_WHITE;
-  BAR_SIGNAL_LEVEL.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
-  BAR_SIGNAL_LEVEL.PROP.BAR_SIZE = PROP.BAR_SIZE;
-  BAR_SIGNAL_LEVEL.PROP.GUAGE_BAR = true;
-  BAR_SIGNAL_LEVEL.PROP.COLORS_ON = true;
-  BAR_SIGNAL_LEVEL.PROP.MAX_VALUE = 100;
-  BAR_SIGNAL_LEVEL.PROP.MIN_MAX = true;
-  BAR_SIGNAL_LEVEL.PROP.PRINT_MIN = BAR_NOISE_LEVEL.PROP.MIN_MAX;
-  BAR_SIGNAL_LEVEL.PROP.PRINT_MAX = BAR_NOISE_LEVEL.PROP.MIN_MAX;
-  BAR_SIGNAL_LEVEL.MIN_MAX_HISTORY.PROP.TIME_SPAN = 60000;
-  BAR_SIGNAL_LEVEL.MIN_MAX_HISTORY.PROP.SLICES = 12;
-
   bool CHANGED = true;
 }
 
@@ -1133,6 +1075,46 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
   bzGadget.NEW_BUTTON_PROP.POSY = PROP.POSY + (Button_YSize *0);
   bzGadget.NEW_BUTTON_PROP.POSX = PROP.POSX + (Button_XSize *2);
   bzGadget.create_button();
+
+    // Create Noise Level Bar
+  BAR_NOISE_LEVEL.PROP.LABEL = PROP.NOISE_LABEL;
+  BAR_NOISE_LEVEL.PROP.LABEL_SIZE = PROP.NOISE_LABEL.size();
+  BAR_NOISE_LEVEL.PROP.POSY = 2;
+  BAR_NOISE_LEVEL.PROP.POSX = 0;
+  BAR_NOISE_LEVEL.PROP.COLOR = PROP.COLOR;
+  BAR_NOISE_LEVEL.PROP.BCOLOR = COLOR_GREEN;
+  BAR_NOISE_LEVEL.PROP.COLOR_BAR_BACK = COLOR_BLACK;
+  BAR_NOISE_LEVEL.PROP.COLOR_MARKER = COLOR_WHITE;
+  BAR_NOISE_LEVEL.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  BAR_NOISE_LEVEL.PROP.BAR_SIZE = PROP.BAR_SIZE;
+  BAR_NOISE_LEVEL.PROP.PROGRESS_BAR = true;
+  BAR_NOISE_LEVEL.PROP.COLORS_ON = true;
+  BAR_NOISE_LEVEL.PROP.MAX_VALUE = 100;
+  BAR_NOISE_LEVEL.PROP.MIN_MAX = true;
+  BAR_NOISE_LEVEL.PROP.PRINT_MIN = BAR_NOISE_LEVEL.PROP.MIN_MAX;
+  BAR_NOISE_LEVEL.PROP.PRINT_MAX = BAR_NOISE_LEVEL.PROP.MIN_MAX;
+  BAR_NOISE_LEVEL.MIN_MAX_HISTORY.PROP.TIME_SPAN = 60000;
+  BAR_NOISE_LEVEL.MIN_MAX_HISTORY.PROP.SLICES = 12;
+
+  // Create Signal Level Bar
+  BAR_SIGNAL_LEVEL.PROP.LABEL = PROP.SIGNAL_LABEL;
+  BAR_SIGNAL_LEVEL.PROP.LABEL_SIZE = PROP.SIGNAL_LABEL.size();
+  BAR_SIGNAL_LEVEL.PROP.POSY = 1;
+  BAR_SIGNAL_LEVEL.PROP.POSX = 0;
+  BAR_SIGNAL_LEVEL.PROP.COLOR = PROP.COLOR;
+  BAR_SIGNAL_LEVEL.PROP.BCOLOR = COLOR_GREEN;
+  BAR_SIGNAL_LEVEL.PROP.COLOR_BAR_BACK = COLOR_BLACK;
+  BAR_SIGNAL_LEVEL.PROP.COLOR_MARKER = COLOR_WHITE;
+  BAR_SIGNAL_LEVEL.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  BAR_SIGNAL_LEVEL.PROP.BAR_SIZE = PROP.BAR_SIZE;
+  BAR_SIGNAL_LEVEL.PROP.GUAGE_BAR = true;
+  BAR_SIGNAL_LEVEL.PROP.COLORS_ON = true;
+  BAR_SIGNAL_LEVEL.PROP.MAX_VALUE = 100;
+  BAR_SIGNAL_LEVEL.PROP.MIN_MAX = true;
+  BAR_SIGNAL_LEVEL.PROP.PRINT_MIN = BAR_NOISE_LEVEL.PROP.MIN_MAX;
+  BAR_SIGNAL_LEVEL.PROP.PRINT_MAX = BAR_NOISE_LEVEL.PROP.MIN_MAX;
+  BAR_SIGNAL_LEVEL.MIN_MAX_HISTORY.PROP.TIME_SPAN = 60000;
+  BAR_SIGNAL_LEVEL.MIN_MAX_HISTORY.PROP.SLICES = 12;
 }
 
 bool Radio_Channel::changed()
@@ -1162,7 +1144,7 @@ void Radio_Channel::update_value(API_SQUELCH_DESTINATION &New_Value, unsigned lo
   }
 }
 
-void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
+bool Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
@@ -1276,8 +1258,8 @@ void Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   }
 
   // Draw the Buttons
-  bzGadget.draw(WAS_REDRAWN, tmeFrame_Time);
-
+  bzGadget.draw(Refresh, tmeFrame_Time);
+  return WAS_REDRAWN;
 }
 
 bool Radio_Channel::was_redrawn()
@@ -1301,13 +1283,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", false);
 
       bzGadget.set_enabled("HOLD", true);
-      bzGadget.set_do_not_draw("HOLD", false);
+      //bzGadget.set_do_not_draw("HOLD", false);
+      bzGadget.set_hidden("HOLD", false);
 
       bzGadget.set_enabled("SKIP", true);
-      bzGadget.set_do_not_draw("SKIP", false);
+      //bzGadget.set_do_not_draw("SKIP", false);
+      bzGadget.set_hidden("SKIP", false);
 
       bzGadget.set_enabled("CLEAR", true);
-      bzGadget.set_do_not_draw("CLEAR", false);
+      //bzGadget.set_do_not_draw("CLEAR", false);
+      bzGadget.set_hidden("CLEAR", false);
 
       PROP.CHANGED = true;
 
@@ -1318,13 +1303,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      bzGadget.set_do_not_draw("HOLD", true);
+      //bzGadget.set_do_not_draw("HOLD", true);
+      bzGadget.set_hidden("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      bzGadget.set_do_not_draw("SKIP", true);
+      //bzGadget.set_do_not_draw("SKIP", true);
+      bzGadget.set_hidden("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      bzGadget.set_do_not_draw("CLEAR", true);
+      //bzGadget.set_do_not_draw("CLEAR", true);
+      bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED = true;
 
@@ -1335,13 +1323,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      bzGadget.set_do_not_draw("HOLD", true);
+      //bzGadget.set_do_not_draw("HOLD", true);
+      bzGadget.set_hidden("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      bzGadget.set_do_not_draw("SKIP", true);
+      //bzGadget.set_do_not_draw("SKIP", true);
+      bzGadget.set_hidden("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      bzGadget.set_do_not_draw("CLEAR", true);
+      //bzGadget.set_do_not_draw("CLEAR", true);
+      bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED == true;
       
@@ -1353,13 +1344,16 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      bzGadget.set_do_not_draw("HOLD", true);
+      //bzGadget.set_do_not_draw("HOLD", true);
+      bzGadget.set_hidden("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      bzGadget.set_do_not_draw("SKIP", true);
+      //bzGadget.set_do_not_draw("SKIP", true);
+      bzGadget.set_hidden("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      bzGadget.set_do_not_draw("CLEAR", true);
+      //bzGadget.set_do_not_draw("CLEAR", true);
+      bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED == true;
       
@@ -1367,8 +1361,6 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
     }
 
     PROP.CHANGED = true;
-
-    //return_check_click = true;
   }
 
   return return_check_click;
