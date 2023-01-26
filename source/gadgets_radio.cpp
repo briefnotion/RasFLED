@@ -1258,7 +1258,7 @@ bool Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   }
 
   // Draw the Buttons
-  bzGadget.draw(Refresh, tmeFrame_Time);
+  bzGadget.draw(Refresh || WAS_REDRAWN, tmeFrame_Time);
   return WAS_REDRAWN;
 }
 
@@ -1361,6 +1361,7 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
     }
 
     PROP.CHANGED = true;
+
   }
 
   return return_check_click;
