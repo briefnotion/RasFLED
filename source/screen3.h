@@ -292,7 +292,7 @@ class Screen3
   VAR_CHANGE_MON vcmMENUOVERHEAD;
 
   string strBuffer = "";      // Buffer string containing a movie frame to be printed.
-  
+
   public:
 
   bool buffer_active = false; // Set to true when a buffer has a new movie frame. 

@@ -1283,15 +1283,15 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", false);
 
       bzGadget.set_enabled("HOLD", true);
-      //bzGadget.set_do_not_draw("HOLD", false);
+      bzGadget.set_do_not_draw("HOLD", false);
       bzGadget.set_hidden("HOLD", false);
 
       bzGadget.set_enabled("SKIP", true);
-      //bzGadget.set_do_not_draw("SKIP", false);
+      bzGadget.set_do_not_draw("SKIP", false);
       bzGadget.set_hidden("SKIP", false);
 
       bzGadget.set_enabled("CLEAR", true);
-      //bzGadget.set_do_not_draw("CLEAR", false);
+      bzGadget.set_do_not_draw("CLEAR", false);
       bzGadget.set_hidden("CLEAR", false);
 
       PROP.CHANGED = true;
@@ -1303,15 +1303,15 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      //bzGadget.set_do_not_draw("HOLD", true);
+      bzGadget.set_do_not_draw("HOLD", true);
       bzGadget.set_hidden("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      //bzGadget.set_do_not_draw("SKIP", true);
+      bzGadget.set_do_not_draw("SKIP", true);
       bzGadget.set_hidden("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      //bzGadget.set_do_not_draw("CLEAR", true);
+      bzGadget.set_do_not_draw("CLEAR", true);
       bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED = true;
@@ -1323,15 +1323,15 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      //bzGadget.set_do_not_draw("HOLD", true);
+      bzGadget.set_do_not_draw("HOLD", true);
       bzGadget.set_hidden("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      //bzGadget.set_do_not_draw("SKIP", true);
+      bzGadget.set_do_not_draw("SKIP", true);
       bzGadget.set_hidden("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      //bzGadget.set_do_not_draw("CLEAR", true);
+      bzGadget.set_do_not_draw("CLEAR", true);
       bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED == true;
@@ -1344,15 +1344,15 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
       bzGadget.set_enabled("GADGET", true);
 
       bzGadget.set_enabled("HOLD", false);
-      //bzGadget.set_do_not_draw("HOLD", true);
+      bzGadget.set_do_not_draw("HOLD", true);
       bzGadget.set_hidden("HOLD", true);
 
       bzGadget.set_enabled("SKIP", false);
-      //bzGadget.set_do_not_draw("SKIP", true);
+      bzGadget.set_do_not_draw("SKIP", true);
       bzGadget.set_hidden("SKIP", true);
 
       bzGadget.set_enabled("CLEAR", false);
-      //bzGadget.set_do_not_draw("CLEAR", true);
+      bzGadget.set_do_not_draw("CLEAR", true);
       bzGadget.set_hidden("CLEAR", true);
 
       PROP.CHANGED == true;
@@ -1361,7 +1361,6 @@ bool Radio_Channel::check_click(int x_clicked, int y_clicked, string &Name)
     }
 
     PROP.CHANGED = true;
-
   }
 
   return return_check_click;
