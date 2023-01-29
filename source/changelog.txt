@@ -1,3 +1,6 @@
+V 1.48A_230129
+  - Changes made to some gadgets.
+
 V 1.47A_230127
   - FOR TESTING REASONS ONLY.
   - Changes made to some gadgets.

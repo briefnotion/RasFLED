@@ -293,6 +293,25 @@ float string_to_float(string String_Value)
   return tmp_float;
 }
 
+/*
+string to_string_round_to_nth(string)
+{
+  // UNDER_CONSTRUCTION
+  if (PROP.SHOW_FREQUENCY == true)
+  {
+    FREQUENCY_TEXT.set_text("  FREQ: " + to_string((PROP.VALUE.FREQUENCY.FREQUENCY / 1000000)) + 
+                            "." + 
+                            to_string((int)((PROP.VALUE.FREQUENCY.FREQUENCY / 1000) - (1000 * (round(PROP.VALUE.FREQUENCY.FREQUENCY / 1000000)))))
+                            );
+    LABEL_TEXT.set_text(PROP.VALUE.FREQUENCY.LABEL);
+  }
+  else
+  {
+    LABEL_TEXT.set_text(PROP.VALUE.FREQUENCY.LABEL);
+  }
+}
+*/
+
 void STRING_STRING::store(string str_value)
 {
   STR_VALUE = str_value;

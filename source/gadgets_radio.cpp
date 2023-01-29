@@ -997,6 +997,28 @@ void Radio_Channel::move_resize(int posY, int posX, int sizeY, int sizeX)
 
   FREQUENCY_PANEL.create();
 
+  // Text Fields
+  FREQUENCY_TEXT.PROP.POSY = 0;
+  FREQUENCY_TEXT.PROP.POSX = 0;
+  FREQUENCY_TEXT.PROP.SIZEX = 17;
+  FREQUENCY_TEXT.PROP.COLORS_ON = true;
+  FREQUENCY_TEXT.PROP.JUSTIFICATION_LEFT = true;
+  
+  LABEL_TEXT.PROP.POSY = 0;
+  LABEL_TEXT.PROP.COLORS_ON = true;
+  LABEL_TEXT.PROP.JUSTIFICATION_LEFT = true;
+
+  if (PROP.SHOW_FREQUENCY == true)
+  {
+    LABEL_TEXT.PROP.POSX = 17;
+    LABEL_TEXT.PROP.SIZEX = PROP.SIZEX - FREQUENCY_TEXT.PROP.SIZEX;
+  }
+  else
+  {
+    LABEL_TEXT.PROP.POSX = 0;
+    LABEL_TEXT.PROP.SIZEX = PROP.SIZEX;
+  }
+
   // Create Buttons
   bzGadget.clear();
 
@@ -1208,21 +1230,24 @@ bool Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       FREQUENCY_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
     }
 
-    BAR_NOISE_LEVEL.set_color(PROP.BCOLOR, BAR_NOISE_LEVEL.PROP.COLOR);
-    BAR_SIGNAL_LEVEL.set_color(PROP.BCOLOR, BAR_NOISE_LEVEL.PROP.COLOR);
-
     // Print Values
     if (PROP.SHOW_FREQUENCY == true)
     {
-      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 0, "%s %3.3f", PROP.FREQUENCY_LABEL.c_str(), ((float)PROP.VALUE.FREQUENCY.FREQUENCY / 1000000));
-      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 17, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
+      FREQUENCY_TEXT.set_text("  FREQ: " + to_string((PROP.VALUE.FREQUENCY.FREQUENCY / 1000000)) + 
+            "." + 
+            to_string((int)((PROP.VALUE.FREQUENCY.FREQUENCY / 1000) - (1000 * (round(PROP.VALUE.FREQUENCY.FREQUENCY / 1000000)))))
+            );
+      LABEL_TEXT.set_text(PROP.VALUE.FREQUENCY.LABEL);
     }
     else
     {
-      mvwprintw(FREQUENCY_PANEL.winPANEL, 0, 0, "%s", (PROP.VALUE.FREQUENCY.LABEL.c_str()));
+      LABEL_TEXT.set_text(PROP.VALUE.FREQUENCY.LABEL);
     }
 
     //Draw Bars
+    BAR_NOISE_LEVEL.set_color(FREQUENCY_PANEL.PROP.BCOLOR, BAR_NOISE_LEVEL.PROP.COLOR);
+    BAR_SIGNAL_LEVEL.set_color(FREQUENCY_PANEL.PROP.BCOLOR, BAR_SIGNAL_LEVEL.PROP.COLOR);
+    
     if (PROP.SHOW_SIGNAL == true)
     {
       BAR_SIGNAL_LEVEL.update(100 + PROP.VALUE.FREQUENCY.SIGNAL_LEVEL, tmeFrame_Time);
@@ -1242,6 +1267,9 @@ bool Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       mvwprintw(FREQUENCY_PANEL.winPANEL, 1, 0, "%d ", PROP.VALUE.FREQUENCY.CHANGED);
     }
 
+    FREQUENCY_TEXT.draw(FREQUENCY_PANEL, Refresh);
+    LABEL_TEXT.draw(FREQUENCY_PANEL, Refresh);
+
     // Reset Properties Changed.
     PROP.VALUE.FREQUENCY.IS_OPEN = false;
     PROP.VALUE.FREQUENCY.SIGNAL_OUTSIDE_FILTER = false;
@@ -1249,7 +1277,7 @@ bool Radio_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     WAS_REDRAWN = true;
 
     // Draw the Gadget.
-    wrefresh(FREQUENCY_PANEL.winPANEL);
+    FREQUENCY_PANEL.draw(Refresh);
   }
   else
   {

@@ -280,6 +280,10 @@ class Radio_Channel
   int Button_YSize = 3;
   int Button_XSize = 9;
 
+  // Text Fields
+  Text_Field LABEL_TEXT;
+  Text_Field FREQUENCY_TEXT;
+
   // Show frequency levels in progress bars
   BAR BAR_NOISE_LEVEL;
   BAR BAR_SIGNAL_LEVEL;
