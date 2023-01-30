@@ -49,6 +49,7 @@ class Mini_Compass_Properties
 };
 
 class Mini_Compass
+// Simple 2x2 Compass indicating direction at 0 to 360 degrees
 {
   private:
   TIMED_PING UPDATE_INDICATION_TIMER;
@@ -65,16 +66,28 @@ class Mini_Compass
   Mini_Compass_Properties PROP;
 
   void set_heading(float Heading, unsigned long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
+  //  tmeFrame_Time is needed for timed animations
 
   void set_heading(float Heading);
+  // Set Value. Updates on screen at next draw
+  //  Animations will be ignored without time reference
   
   void clear();
+  // Clear values
 
   void set_color(int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
 
   void draw(PANEL &Panel, bool Refresh);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations will be ignored without time reference
 };
 
 // -------------------------------------------------------------------------------------
@@ -105,8 +118,15 @@ class ADSB_Channel_Properties
 };
 
 class ADSB_Channel
-// Routines for create, draw, modify, and behavior.
-// Note: Function needs frame time to function.
+// Gadget display single aircraft information to panel with 
+//  primary info.  Includes alt, ground speed, heading, 
+//  some nav info, signal strength, and time to expire. 
+// Set PROP (properties) before calling create routine.
+// Warning:
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
 
@@ -157,18 +177,26 @@ class ADSB_Channel
   ADSB_Channel_Properties PROP;  
 
   void create();
+  // Prepare gadget to be drawn.  
+  //  Define PROP (properties before calling this routine)
+  //    Property Size and Position is necessary before calling create.
 
   void clear();
+  // Clear values
 
   bool changed();
-
-  void update_value(string Flight, string Squawk, string Speed, string Track, 
-                                string D_Vertical_Rate, string Altitude, 
-                                unsigned long tmeFrame_Time);
+  //  Return true is screen will be redrawn on next draw.
+  //  Return false if no changes made.
 
   void update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis);
+  // Update values of gadget
+  //  Gadget will be redrawn if values did changed or animations scheduled. 
 
   bool draw(bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations will be ignored without time reference.
+  // Returns true if panel was redrawn.
 };
 
 
@@ -191,8 +219,19 @@ class ADSB_Channel_Grid_Properties
 
 
 class ADSB_Channel_Grid
-// Routines for create, draw, modify, and behavior.
-// Note: Function needs frame time to function.
+// Creates grid of blank ADS_B gadgets.
+// Gadget pos 0,0 will be blank to hold control buttons.
+// Gadgets are updated automatically by passing list of 
+//  ADS_B data.
+// Grid mananages positions and gadgets will not need to be
+//  accessed.
+// Warning:
+//  If Pos or Size changes, create will need to be called 
+//    again
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
   deque<ADSB_Channel> ADSB_Channel_q;
@@ -202,8 +241,12 @@ class ADSB_Channel_Grid
   int ADSB_Channel_Count = 0;
   
   int find_HEX(string Hex);
+  // Gadget Internal:
+  //  returns gadget position of aircraft with Hex ID
 
   int find_expired();
+  // Gadget Internal:
+  //  returns gadget position of aircraft with time expired.
 
   Text_Field TOP_BAR;
   Text_Field TIME;
@@ -220,10 +263,20 @@ class ADSB_Channel_Grid
   bool IS_ACTIVE = false;
 
   void create();
+  // Prepare gadget grid to be drawn.  
+  //  Define PROP (properties) before calling this routine.
+  //    Property Size and Position is necessary before calling create.
 
   void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
+  // Update values of gadget
+  //  Gadget will be redrawn if values did changed or animations scheduled. 
 
   bool draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations require time reference.
+  //  ADSB_Grid_Panel defines boundaries.
+  // Returns true if panel was redrawn.
 };
 
 // -------------------------------------------------------------------------------------
@@ -268,8 +321,12 @@ class Radio_Channel_Properties
 };
 
 class Radio_Channel
-// Routines for create, draw, modify, and behavior.
-// Note: Function needs frame time to function.
+//  Gadget display radio channel information with 
+//    primary info.  
+//  Set PROP (properties) before calling create routine.
+//  Warning:
+//    Some properties can be changed directly but will not 
+//      trigger the redraw or work correctly. 
 {
   private:
 

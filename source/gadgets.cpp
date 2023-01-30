@@ -530,8 +530,8 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh)
 }
 
 // -------------------------------------------------------------------------------------
-//  Text_Field_Multi_Line Classes
-  
+/*
+//  Text_Field_Multi_Line Classes  
 bool Rotating_Text_Field::changed()
 {
   return false;
@@ -581,7 +581,7 @@ void Rotating_Text_Field::draw(PANEL &Panel, bool Refresh)
 {
   
 }
-
+*/
 
 // -------------------------------------------------------------------------------------
 //  Title_Bar Classes
@@ -890,19 +890,6 @@ void Button::change_on()
   PROP.CHANGED = true;
 }
 
-void Button::set_pos_size(int PosY, int PosX, int SizeY, int SizeX)
-{
-  if ((PROP.POSY != PosY) && (PROP.POSX != PosX) && (PROP.SIZEY != SizeY) && (PROP.SIZEX != SizeX))
-  {
-    PROP.POSY = PosY;
-    PROP.POSX = PosX;
-    PROP.SIZEY = SizeY;
-    PROP.SIZEX = SizeX;
-
-    PROP.CHANGED = true;
-  }
-}
-
 void Button::set_name(string Name)
 {
   if (PROP.NAME != Name)
@@ -1155,26 +1142,6 @@ bool Button_Zone_Manager::draw(bool Refresh, unsigned long tmeFrame_Time)
   }
   
   return ret_redrawn.has_truth();
-}
-
-void Button_Zone_Manager::set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX)
-{
-  int pos = get_pos(Id);
-
-  if (pos > -1)
-  {
-    BUTTONS[pos].set_pos_size(PosY, PosX, SizeY, SizeX);
-  }
-}
-
-void Button_Zone_Manager::set_pos_size(string Name, int PosY, int PosX, int SizeY, int SizeX)
-{
-  int pos = get_pos(Name);
-
-  if (pos > -1)
-  {
-    BUTTONS[pos].set_pos_size(PosY, PosX, SizeY, SizeX);
-  }
 }
 
 void Button_Zone_Manager::set_name(int Id, string Name)

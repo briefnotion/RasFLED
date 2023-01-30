@@ -33,6 +33,7 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Panel Class
 class WINDOW_BODER_PROPERTIES
+// Panel border characters.
 {
   public:
   char TOP_LEFT = ' ';
@@ -66,6 +67,14 @@ class PANEL_PROPERTIES
 
 
 class PANEL
+// Gadget containing blank window with boundaries to hold 
+//  gadgets
+// Set all PROP (properties) before calling create routine.
+// Warning:
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
 
@@ -82,30 +91,41 @@ class PANEL
   private:
 
   void draw_border();
+  // Gadget Internal:
+  //  Draw panel border.
 
   public:
 
   void create();
+  // Prepare gadget to be drawn.  
+  //  Define all PROP (properties before calling this routine)
+  //    Property Size and Position is necessary before calling create.
   
   void clear();
+  // Clear values
   
   void blank_out();
+  // Set all characters on panel to space.
 
   void changed_on();
+  // Force panel to redraw on next draw routine call
 
   void set_color(int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   bool draw(bool Refresh);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
 };
 
 
 // -------------------------------------------------------------------------------------
 //  CYBR Classes
 class CYBR_LINE
+// Simp stat vert bar clipped in delta time.  Multi 
+//  input as RGB with deets inc with each ping.
 {
   public:
-  
-  //int COLOR_VAL[256];
   
   array<char, 256> COLOR_VAL;
 
@@ -144,10 +164,13 @@ class CYBR
   CYBR_Properties PROP;
 
   void create();
+  // Pop into existance.
 
   void input(int Value, int Max_Value, int BColor, int Color);
+  // Inc deet count of Value. Deet answers to its color.
 
   bool draw(unsigned long tmeFrame_Time);
+  // Spit out the pixs.  Preme watev time stamp.
 };
 
 
@@ -186,6 +209,14 @@ class Text_Field_Properties
 
 
 class Text_Field
+// Simple text field
+// Complexity scales with properties.
+// Set PROP (properties) before calling draw routine.
+// Warning:
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
   TIMED_PING UPDATE_INDICATION_TIMER;
@@ -202,26 +233,42 @@ class Text_Field
   Text_Field_Properties PROP;
 
   bool changed();
+  // Return true is screen will be redrawn on next draw.
+  // Return false if no changes made.
 
   bool has_blank();
+  // Return true if label value is "".
 
   void redraw();
+  // Set to true to force redraw.
 
   void set_inverse(bool Inverse);
+  // Set Back Color and Color to reverse.
 
   void set_text(string Text, unsigned long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
+  //  tmeFrame_Time is needed for timed animations
 
   void set_text(string Text);
+  // Set Value. Updates on screen at next draw
+  //  Animations will be ignored without time reference
   
   void clear();
+  // Clear values
 
   void set_color(int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
 
   void draw(PANEL &Panel, bool Refresh);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations will be ignored without time reference
 };
-
 
 // -------------------------------------------------------------------------------------
 //  Text_Field_Multi_Line Classes
@@ -260,6 +307,15 @@ class Text_Field_Multi_Line_Properties
 // -------------------------------------------------------------------------------------
 
 class Text_Field_Multi_Line
+// Multiline text field
+// Complexity scales with properties.
+// Set PROP (properties) before calling draw routine.
+// Warning:
+//  Line breaks with \n
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
   TIMED_PING UPDATE_INDICATION_TIMER;
@@ -278,32 +334,51 @@ class Text_Field_Multi_Line
   private:
   
   void draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int PosY, int PosX);
+  // Gadget Internal:
+  //  Draw panel border.
 
   public:
 
   int line_count();
+  // Returns size of lines.
 
   bool changed();
+  // Return true is screen will be redrawn on next draw.
+  // Return false if no changes made.
 
   bool has_blank();
+  // Return true if label value is "".
 
   void redraw();
+  // Set to true to force redraw.
 
   void set_inverse(bool Inverse);
+  // Set Back Color and Color to reverse.
 
   void set_text(string Text, unsigned long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
+  //  tmeFrame_Time is needed for timed animations
 
   void set_text(string Text);
+  // Set Value. Updates on screen at next draw
+  //  Animations will be ignored without time reference
 
   void set_color(int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
 
   void draw(PANEL &Panel, bool Refresh);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations will be ignored without time reference
 };
 
 // -------------------------------------------------------------------------------------
-
+/*
 class Rotating_Text_Field_Properties
 // Properties (duh)
 {
@@ -371,8 +446,9 @@ class Rotating_Text_Field
 
   void draw(PANEL &Panel, bool Refresh);
 };
-
+*/
 // -------------------------------------------------------------------------------------
+
 //  Title_Bar Classes
 class Title_Bar_Properties
 // Properties (duh)
@@ -393,7 +469,11 @@ class Title_Bar_Properties
 };
 
 class Title_Bar
-// Routines for create, draw, modify, and behavior.
+// Title bar.
+// Set PROP (properties) before calling draw routine.
+// Warning:
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
 {
   private:
 
@@ -411,10 +491,16 @@ class Title_Bar
   Title_Bar_Properties PROP;  
 
   void create();
+// Prepare gadget to be drawn.  
+//  Define all PROP (properties before calling this routine)
+//    Property Size and Position is necessary before calling create.
 
   bool changed();
+  // Return true is screen will be redrawn on next draw.
+  // Return false if no changes made.
 
   bool draw(bool Refresh);
+  // Draw all changes to Panel.
 };
 
 
@@ -549,7 +635,14 @@ class Button_Properties
 };
 
 class Button
-// Routines for create, draw, modify, and behavior.
+// Gadget display single button to panel with 
+//  primary info.
+// Set PROP (properties) before calling create routine.
+// Warning:
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
 
@@ -577,38 +670,58 @@ class Button
   Button_Properties PROP;
 
   void create();
+  // Prepare gadget to be drawn.  
+  //  Define PROP (properties before calling this routine)
+  //    Property Size and Position is necessary before calling create.
 
   bool changed();
+  // Return true is screen will be redrawn on next draw.
+  // Return false if no changes made.
 
   void advance();
-
-  void set_pos_size(int PosY, int PosX, int SizeY, int SizeX);
+  // Increse button value by 1.
   
   void set_name(string Name);
+  // Set Value. Updates on screen at next draw
   
   void set_label(string Label);
+  // Set Value. Updates on screen at next draw
 
   void set_value(int Value);
+  // Set Value. Updates on screen at next draw
 
   void set_type(int Type);
+  // Set Value. Updates on screen at next draw
 
   void set_color(int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   void set_enabled(bool Enabled);
+  // Set Value. Updates on screen at next draw
 
   void set_hidden(bool Hidden);
+  // Set Value. Updates on screen at next draw
 
   void set_do_not_draw(bool Do_Not_Draw);
+  // Set Value. Updates on screen at next draw
 
   void change_on();
+  // Force panel to redraw on next draw routine call
 
   bool draw(bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
 };
 
 
 // -------------------------------------------------------------------------------------
 // Button Zone Variable
 class Button_Zone_Manager
+// Control a group of buttons.
+// Provides interface to check button values.
+// To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
 
@@ -617,8 +730,12 @@ class Button_Zone_Manager
   deque<Button> BUTTONS;
 
   int get_pos(int Id);
+  // Gadget Internal:
+  //  Get position of button by Id.
 
   int get_pos(string Name);
+  // Gadget Internal:
+  //  Get position of button by Name.
 
   public:
 
@@ -627,60 +744,85 @@ class Button_Zone_Manager
   int size();
 
   string name(int pos);
+  // Return name of button in list position.
 
   int value(int pos);
+  // Return value of button in list position.
 
   void click_advance(int Id);
+  // Increse button in pos value by 1.
 
   void clear();
+  // Clear button list
 
   void create_button();
+  // Add new button to button list with 
+  // properties of NEW_BUTTON_PROP.
 
   bool draw(bool Refresh, unsigned long tmeFrame_Time);
-
-  void set_pos_size(int Id, int PosY, int PosX, int SizeY, int SizeX);
-
-  void set_pos_size(string Name, int PosY, int PosX, int SizeY, int SizeX);
+  // Draw all buttons to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
 
   void set_name(int Id, string Name);
+  // Set Value. Updates on screen at next draw
 
   void set_name(string Old_Name, string Name);
+  // Set Value. Updates on screen at next draw
 
   void set_label(int Id, string Label);
+  // Set Value. Updates on screen at next draw
 
   void set_label(string Name, string Label);
+  // Set Value. Updates on screen at next draw
 
   void set_value(int Id, int Value);
+  // Set Value. Updates on screen at next draw
 
   void set_value(string Name, int Value);
+  // Set Value. Updates on screen at next draw
 
   void set_type(int Id, int Type);
+  // Set Value. Updates on screen at next draw
 
   void set_type(string Name, int Type);
+  // Set Value. Updates on screen at next draw
 
   void set_color(int Id, int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   void set_color(string Name, int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   void set_enabled(int Id, bool Enabled);
+  // Set Value. Updates on screen at next draw
 
   void set_enabled(string Name, bool Enabled);
+  // Set Value. Updates on screen at next draw
 
   void set_hidden(int Id, bool Hidden);
+  // Set Value. Updates on screen at next draw
 
   void set_hidden(string Name, bool Hidden);
+  // Set Value. Updates on screen at next draw
 
   void set_do_not_draw(string Name, bool Do_Not_Draw);
+  // Set Value. Updates on screen at next draw
 
   void set_do_not_draw(int Id, bool Do_Not_Draw);
+  // Set Value. Updates on screen at next draw
   
   string get_clicked_name();
+  // Returns name of clicked button.
 
   int get_clicked_value(string name);
+  // Returns value of clicked button.
 
   int get_id_of_button_with_value(int Value);
+  // Returns id of button with value of 1.
 
   bool check_click(int x,int y);
+  // sets cliced on of any buttons in list underneith x,y coords
 };
 
 
@@ -688,6 +830,7 @@ class Button_Zone_Manager
 // Bar Classes
 
 class MIN_MAX_TIME_SLICE
+// Simple min max data point.
 {
   private:
 
@@ -700,15 +843,19 @@ class MIN_MAX_TIME_SLICE
   public:
 
   void store_min_max(int Value);
+  // Store value and updates min max.
 
   int min();
+  // Returns min value of data point.
 
   int max();
+  // Returns max value of data point.
 };
 
 // ---------------------------------------------------------------------------------------
 
 class MIN_MAX_TIME_PROPERTIES
+// Min Max list properties.
 {
   public:
 
@@ -719,6 +866,7 @@ class MIN_MAX_TIME_PROPERTIES
 // ---------------------------------------------------------------------------------------
 
 class MIN_MAX_TIME
+// Contains list of min max time slices.
 {
   private:
 
@@ -745,6 +893,9 @@ class MIN_MAX_TIME
 // ---------------------------------------------------------------------------------------
 
 class BAR_PROPERTIES
+// Bar properties.
+// To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
 {
   private:
 
@@ -798,8 +949,12 @@ class BAR
   bool CHANGED = true;
 
   int get_marker_pos(int value);
+  // Gadget Internal:
+  //  Determine position of Marker in bar
 
   void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value);
+  // Gadget Internal:
+  //  Draw marker in proper position of bar
 
   public:
 
@@ -808,10 +963,13 @@ class BAR
   BAR_PROPERTIES PROP;
 
   void update(int Value, unsigned long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
 
   void set_color(int Background_Color, int Color);
+  // Set Value. Updates on screen at next draw
 
   bool draw(PANEL &Panel, bool Refresh);
+  // Draw all changes to Panel. Updates on screen at next draw
 };
 
 
@@ -833,6 +991,7 @@ class KEYBOARD
 
 // Drawing a progress bar
 string simple_progress_bar(int size, int max_value, int value);
+// draw simple bar.
 
 
 

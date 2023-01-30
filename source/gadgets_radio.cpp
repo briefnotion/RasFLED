@@ -17,6 +17,8 @@
 // -------------------------------------------------------------------------------------
 //  ADSB_Channel Classes
 void Mini_Compass::set_heading(float Heading, unsigned long tmeFrame_Time)
+// Set Value. Updates on screen at next draw
+//  tmeFrame_Time is needed for timed animations
 {
   PROP.CLEARED = false; 
 
@@ -34,20 +36,24 @@ void Mini_Compass::set_heading(float Heading, unsigned long tmeFrame_Time)
 }
 
 void Mini_Compass::set_heading(float Heading)
+// Set Value. Updates on screen at next draw
+//  Animations will be ignored without time reference
 {
   set_heading(Heading, 0);
 }
 
 void Mini_Compass::clear()
+// Clear values
 {
   Text_Field_Properties cleared_properties;
 
   PROP.CLEARED = true;
-  PROP.HEADING = 0;
+  PROP.HEADING = -1;
   CHANGED = true;
 }
 
 void Mini_Compass::set_color(int Background_Color, int Color)
+// Set Value. Updates on screen at next draw
 {
   if (Background_Color != PROP.BCOLOR || Color != PROP.COLOR)
   {
@@ -59,6 +65,9 @@ void Mini_Compass::set_color(int Background_Color, int Color)
 
 
 void Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+// Draw all changes to Panel. Updates on screen at next draw
+//  Set Refresh to true to force redraw.
+//  tmeFrame_Time is needed for timed animations
 {
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
@@ -192,6 +201,9 @@ void Mini_Compass::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 }
   
 void Mini_Compass::draw(PANEL &Panel, bool Refresh)
+// Draw all changes to Panel. Updates on screen at next draw
+//  Set Refresh to true to force redraw.
+//  Animations will be ignored without time reference
 {
   draw(Panel, Refresh, 0);
 }
@@ -203,9 +215,9 @@ void Mini_Compass::draw(PANEL &Panel, bool Refresh)
 //  ADSB_Channel Classes
 
 void ADSB_Channel::create()
-// Define and behavior.  
-// Like set but leaves off position and size details.
-// Does not create window.
+// Prepare gadget to be drawn.  
+//  Define PROP (properties before calling this routine)
+//    Property Size and Position is necessary before calling create.
 {
   // Create Gadget Window
   // Create Panel
@@ -380,6 +392,7 @@ void ADSB_Channel::create()
 }
 
 void ADSB_Channel::clear()
+// Clear values
 {
   // Clear Variables
   ADSB_Channel_Properties cleared_properties;
@@ -412,12 +425,15 @@ void ADSB_Channel::clear()
 }
 
 bool ADSB_Channel::changed()
-// Returns true if any of the properties have changed.
+//  Return true is screen will be redrawn on next draw.
+//  Return false if no changes made.
 {
   return PROP.CHANGED;
 }
 
 void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis)
+// Update values of gadget
+//  Gadget will be redrawn if values did changed or animations scheduled. 
 {
   // Start or Continue expiration timer
   EXPIREED.ping_up(tmeCurrentMillis, EXPIRATION_TIME);
@@ -428,8 +444,10 @@ void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentM
 }
 
 bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
-// Draw the text_box on the screen if the value has changed or if  
-//  the Refresh parameter is true.
+// Draw all changes to Panel.
+//  Set Refresh to true to force redraw.
+//  Animations will be ignored without time reference.
+// Returns true if panel was redrawn.
 {
   bool ret_redrawn = false;
 
@@ -692,6 +710,8 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 // -------------------------------------------------------------------------------------
 
 int ADSB_Channel_Grid::find_HEX(string Hex)
+// Gadget Internal:
+//  returns gadget position of aircraft with Hex ID
 {
   int return_int = -1;
   for(int x=0; (x < ADSB_Channel_q.size()) && (return_int == -1); x++)
@@ -705,6 +725,8 @@ int ADSB_Channel_Grid::find_HEX(string Hex)
 }
 
 int ADSB_Channel_Grid::find_expired()
+// Gadget Internal:
+//  returns gadget position of aircraft with time expired.
 {
   int return_int = -1;
   for(int x=0; (x < ADSB_Channel_q.size()) && (return_int == -1); x++)
@@ -718,6 +740,9 @@ int ADSB_Channel_Grid::find_expired()
 }
 
 void ADSB_Channel_Grid::create()
+// Prepare gadget grid to be drawn.  
+//  Define PROP (properties before calling this routine)
+//    Property Size and Position is necessary before calling create.
 {
   ADSB_Channel Default_ADS_B; // Default ADSB Gadget.
   
@@ -841,6 +866,8 @@ void ADSB_Channel_Grid::create()
 }
 
 void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
+// Update values of gadget
+//  Gadget will be redrawn if values did changed or animations scheduled. 
 {
   int pos_found = 0;
   int pos_avail = 0;
@@ -893,8 +920,11 @@ void ADSB_Channel_Grid::update(system_data &sdSysData, unsigned long &tmeCurrent
 }
 
 bool ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL ADSB_Grid_Panel)
-// Draw the text_box on the screen if the value has changed or if  
-//  the Refresh parameter is true.
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations require time reference.
+  //  ADSB_Grid_Panel defines boundaries.
+  // Returns true if panel was redrawn.
 {
   bool ret_refreshed = false;
 

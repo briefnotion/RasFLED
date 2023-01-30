@@ -63,7 +63,7 @@ bool string_to_float(string String_Value, float &Float_Value);
 
 float string_to_float(string String_Value);
 
-//string to_string_round_to_nth(string);
+//string to_string_round_to_nth(float Value, int nth);
 
 int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue);
 // Returns color in ranges of 1st to 5th of values

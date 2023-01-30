@@ -294,21 +294,16 @@ float string_to_float(string String_Value)
 }
 
 /*
-string to_string_round_to_nth(string)
+string to_string_round_to_nth(float Value, int nth)
 {
   // UNDER_CONSTRUCTION
-  if (PROP.SHOW_FREQUENCY == true)
-  {
-    FREQUENCY_TEXT.set_text("  FREQ: " + to_string((PROP.VALUE.FREQUENCY.FREQUENCY / 1000000)) + 
+
+  string ret_string;
+
+    ret_string = to_string(Value) + 
                             "." + 
-                            to_string((int)((PROP.VALUE.FREQUENCY.FREQUENCY / 1000) - (1000 * (round(PROP.VALUE.FREQUENCY.FREQUENCY / 1000000)))))
-                            );
-    LABEL_TEXT.set_text(PROP.VALUE.FREQUENCY.LABEL);
-  }
-  else
-  {
-    LABEL_TEXT.set_text(PROP.VALUE.FREQUENCY.LABEL);
-  }
+                            to_string((int)((Value / (10 * nth))) - ((10 * nth) * (round(Value))));
+
 }
 */
 
