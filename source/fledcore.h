@@ -117,7 +117,9 @@ class timed_event
 
   // -------------------------------------------------------------------------------------
 
-  bool execute(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime);
+  bool execute1(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime);
+
+  bool execute2(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime);
 };
 
 

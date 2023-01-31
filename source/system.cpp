@@ -79,13 +79,6 @@ void system_data::store_Current_Frame_Time(unsigned long tmeCurrent_Time_millis)
   if (cdTIMER.is_active())
   {
     cdTIMER.trigger_check(tmeCurrent_Time_millis);
-    
-  // Check for Timer Window
-  }
-  if(cdTIMER.is_active() == true)
-  {
-    booprintbuffer = true;
-    strprintbuffer =  to_string(cdTIMER.elapsed_time(tmeCurrent_Time_millis)) + "  " + to_string(cdTIMER.is_triggered()) + "  " +  to_string(cdTIMER.is_checked()) + "  ";
   }
 }
 

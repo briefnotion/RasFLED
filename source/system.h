@@ -170,20 +170,14 @@ class system_data
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
 
-
   // Console Display Variables from other
 
   // Test Mode
   int t_group = 0;
   int t_strip = 0;
 
-  // PrintBufferData - temparory fix to print things when the console cant be accessed.
-  bool booprintbuffer   = false;
-  string strprintbuffer = "";
-  /* Usage:
-      booprintbuffer = true;
-      strprintbuffer = to_string(section_elaped_time) + "       ";
-    Does not clean up after itself */
+  // Render Version
+  int LED_ENGINE = 1;
 
   // -------------------------------------------------------------------------------------
 

@@ -1,4 +1,16 @@
-V 1.48A_230130
+V 1.50A_230131
+  - Slight rewrite of the LED Animation Render Engine.
+      The goal was to make it both easier to read, with the hope 
+      of running more optimally, or effeiciently.
+
+      Temporary commands to change LED Engine:
+      " lede1" - for original (V.1) LED Engine.
+      " lede2" - for testing new (V.2) engine.
+
+      The rasfled starts with LED Engine V.1 as default, and will 
+        only change when command is entered.
+
+V 1.49A_230130
   - No changes made.
 
 V 1.48A_230129

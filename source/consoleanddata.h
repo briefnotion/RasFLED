@@ -84,6 +84,7 @@ class Console
   void printi(string in);
 
   void deb(string strPrintI);
+  
   void printwait(string in);
 
   void readkeyboardinput2();

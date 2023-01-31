@@ -403,7 +403,7 @@ bigCRGB timed_event::crgb_anim_color(stupid_random sRND, unsigned long tmeCurren
 
 // -------------------------------------------------------------------------------------
 
-bool timed_event::execute(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
+bool timed_event::execute1(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
 //  Sets all requested light paths, start to end position, to begin their animation
 //    at a future time.
 
@@ -624,6 +624,188 @@ bool timed_event::execute(Console &cons, system_data &sdSysData, stupid_random s
   } // End teDATA size check.
 
 return booChanged;
+
+}
+
+bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
+{
+  bool booPixelColorChanged = false;
+  CRGB empty_color;
+  bigCRGB tempColor;
+  unsigned long tmeStartAnim;
+
+  bool booEventActive = false;
+  bool booEventComplete = true;
+
+  bigCRGB bigcrgbNewColor[intLEDCOUNT];
+
+  // Process only if events exist.
+  if (teDATA.size() > 0)
+  {
+    // Process each event, one by one.
+    for (int event = 0; event < teDATA.size(); event++)
+    {
+      // Clear the tmp colors, in case they have data in them at the start of each 
+      //  event process.
+      tempColor.r = 0;
+      tempColor.g = 0;
+      tempColor.b = 0;
+
+      booEventComplete = true;
+      booEventActive = false;
+
+      // Only continue processing the event if the event hasnt been completed.
+      // or if the event shouldnt be skipped because of display in day is off.
+      if (teDATA[event].booCOMPLETE == false)
+      {
+        // OK, so an event is schedule, but is it ready to start?
+        if (tmeCurrentTime >= teDATA[event].tmeSTARTTIME)
+        {
+
+          // Set event as being processed. Necessary to not be erased during event clean up.
+          //  Only Completed Active Events should be erased.  Non Active events falsely look
+          //  completed.
+          booEventActive = true;
+
+          // Start with first led of event
+          for (int led = teDATA[event].intSTARTPOS; led < teDATA[event].intENDPOS; led++)
+          {
+            // Figure out when the LED is suposed to start doing something.
+            tmeStartAnim = teDATA[event].tmeSTARTTIME
+                          + (abs((led - teDATA[event].intSTARTPOS))
+                              * teDATA[event].intSPEED);
+
+            if ((tmeCurrentTime >= tmeStartAnim))
+            {
+              // -------------------------------------------------------------------
+              // This Routine can be applied to all animation types. Its just not
+              //  implemented until needed.  Also kept seperate becuase it uses
+              //  a few more clock cycles. e.g. PulseDither and PulseToDither 
+              //  can be created.  But not the Twinkle.  Twinkle is passing direct
+              //  colors. 
+              // -------------------------------------------------------------------
+
+              switch (teDATA[event].bytANIMATION)
+              {
+                case AnEvSweep:
+                  {
+                    // Calculate how much this Event will chaange the pixel.
+                    //  Breaking the norm, but also passing the led ID and
+                    //  original 4 colors to ... (consider rewrite)
+                    if(teDATA[event].booOFFDURINGDAY == true && sdSysData.booDay_On == true)
+                    {
+                      tempColor.r=0;
+                      tempColor.g=0;
+                      tempColor.b=0;
+                    }
+                    else
+                    {
+                      tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
+                                                  led, event, teDATA[event]);
+                    }
+
+                    //  Update the events completeness if its still active.
+                    if (tempColor.complete == false)
+                    {
+                      booEventComplete = false;
+                    }
+
+                    // Check for inverted color and invert if necessary.
+                    if (teDATA[event].booINVERTCOLOR == false)
+                    {
+                      bigcrgbNewColor[led].r = bigcrgbNewColor[led].r + tempColor.r;
+                      bigcrgbNewColor[led].g = bigcrgbNewColor[led].g + tempColor.g;
+                      bigcrgbNewColor[led].b = bigcrgbNewColor[led].b + tempColor.b;
+                    }
+                    else
+                    {
+                      bigcrgbNewColor[led].r = bigcrgbNewColor[led].r - tempColor.r;
+                      bigcrgbNewColor[led].g = bigcrgbNewColor[led].g - tempColor.g;
+                      bigcrgbNewColor[led].b = bigcrgbNewColor[led].b - tempColor.b;
+                    }
+
+                    booPixelColorChanged = true;
+                    break;
+                  } // End Case AnEvSweep
+              } // End Switch Statement
+            } // End if tmeCurrentTime >= tmeStartAnim
+          }
+        }
+      }
+
+      // Only PostCheck Events that are started and marked completed by the 
+      //  animation renderer.
+      if (booEventActive == true && booEventComplete == true)
+      {
+        teDATA[event].booCOMPLETE = true;
+        teDATA[event].PostCheck(tmeCurrentTime);
+      }
+
+    } // END for event 
+
+    // Erase all completed events
+    for(int e = 0; e < teDATA.size(); e++ )
+    {
+      if (teDATA[e].booCOMPLETE == true)
+      {
+        teDATA.erase(teDATA.begin() + e);
+      }
+    }
+
+    // All events ran. Prep for copy to hwLEDArray.
+
+    // Normalize and Bring big pixels to hwLEDArray
+    if (booPixelColorChanged == true)
+    {
+      for (int led = 0; led < intLEDCOUNT; led++)
+      {
+        // R
+        if (bigcrgbNewColor[led].r < 0)
+        {
+          hwLEDArray[led].r = 0;
+        }
+        else if (bigcrgbNewColor[led].r > 255)
+        {
+          hwLEDArray[led].r = 255;
+        }
+        else
+        {
+          hwLEDArray[led].r = bigcrgbNewColor[led].r;
+        }
+        
+        // G
+        if (bigcrgbNewColor[led].g < 0)
+        {
+          hwLEDArray[led].g = 0;
+        }
+        else if (bigcrgbNewColor[led].g > 255)
+        {
+          hwLEDArray[led].g = 255;
+        }
+        else
+        {
+          hwLEDArray[led].g = bigcrgbNewColor[led].g;
+        }
+        
+        // B
+        if (bigcrgbNewColor[led].b < 0)
+        {
+          hwLEDArray[led].b = 0;
+        }
+        else if (bigcrgbNewColor[led].b > 255)
+        {
+          hwLEDArray[led].b = 255;
+        }
+        else
+        {
+          hwLEDArray[led].b = bigcrgbNewColor[led].b;
+        }
+        
+      }
+    }
+  } // END if teDATA.size > 0
+  
+  return booPixelColorChanged;
 
 }
 
