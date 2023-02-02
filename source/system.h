@@ -338,6 +338,7 @@ class ScreenStatus
   SECTION_STATUS Window_ADS_B_Buttons;
   SECTION_STATUS Window_ADS_B_Screen;
   SECTION_STATUS Window_Log_Screen;
+  SECTION_STATUS Window_Alerts_Screen;
 };
 // -------------------------------------------------------------------------------------
 

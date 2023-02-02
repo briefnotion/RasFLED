@@ -628,6 +628,16 @@ return booChanged;
 }
 
 bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
+//  Sets all requested light paths, start to end position, to begin their animation
+//    at a future time.
+
+//  Event Animations:
+//    0 - Clear:  Clears future event and sets to no future future.
+//    1 - Sweep:  Sets light paths for all LEDs from start to end posion.
+//                  Speed is the time difference in miliseconds between each adjacent
+//                  light path.
+//                  Duration, destination color, and LED animation will also be passed
+//                  to its light path.
 {
   bool booPixelColorChanged = false;
   CRGB empty_color;
@@ -654,6 +664,9 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
       booEventComplete = true;
       booEventActive = false;
 
+      int led_start = 0;
+      int led_end = 0;
+
       // Only continue processing the event if the event hasnt been completed.
       // or if the event shouldnt be skipped because of display in day is off.
       if (teDATA[event].booCOMPLETE == false)
@@ -667,8 +680,20 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
           //  completed.
           booEventActive = true;
 
-          // Start with first led of event
-          for (int led = teDATA[event].intSTARTPOS; led < teDATA[event].intENDPOS; led++)
+          // Determin direction of LED animation.
+          if(teDATA[event].intSTARTPOS < teDATA[event].intENDPOS)
+          {
+            led_start = teDATA[event].intSTARTPOS;
+            led_end = teDATA[event].intENDPOS;
+          }
+          else
+          {
+            led_start = teDATA[event].intENDPOS;
+            led_end = teDATA[event].intSTARTPOS;
+          }
+
+          // Process each LED of the event.
+          for (int led = led_start; led < led_end; led++)
           {
             // Figure out when the LED is suposed to start doing something.
             tmeStartAnim = teDATA[event].tmeSTARTTIME

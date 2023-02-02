@@ -110,9 +110,9 @@ bool PANEL::draw(bool Refresh)
     
     CYBR_PANEL.create();
 
-    CYBR_LINE line;
-
     CYBRValue.resize(CYBR_PANEL.PROP.SIZEY);
+
+    CYBR_YLn = 0;
   }
 
   void CYBR::input(int Value, int Max_Value, int BColor, int Color)
@@ -272,7 +272,7 @@ void Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
       // Print Center Justified
       if (PROP.JUSTIFICATION_CENTER == true)
       {
-        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, linefill(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, center_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
       // Print Right Justified
       else if (PROP.JUSTIFICATION_RIGHT == true)
@@ -330,11 +330,16 @@ void Text_Field::draw(PANEL &Panel, bool Refresh)
 // -------------------------------------------------------------------------------------
 //  Text_Field_Multi_Line Classes
 
-void Text_Field_Multi_Line::draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int PosY, int PosX)
+void Text_Field_Multi_Line::draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int SizeY, int PosY, int PosX)
 {
-  for (int pos = 0; pos < Lines.size(); pos++)
+  for (int pos = 0; pos < SizeY; pos++)
   {
-    mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, Lines[pos].c_str());  //print line. 
+    mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, line_create(PROP.SIZEX, ' ').c_str());   //clear line. 
+    
+    if (pos < Lines.size())
+    {
+      mvwprintw(Button_Panel.winPANEL, PosY + pos, PosX, Lines[pos].c_str());                    //print line. 
+    }
   }
 }
 
@@ -415,7 +420,7 @@ void Text_Field_Multi_Line::set_text(string Text, unsigned long tmeFrame_Time)
           // Print Center Justified
           if (PROP.JUSTIFICATION_CENTER == true)
           {
-            PROP.LABEL_MULTI_LINE.push_back(linefill(PROP.SIZEX, line));
+            PROP.LABEL_MULTI_LINE.push_back(center_justify(PROP.SIZEX, line));
           }
           // Print Right Justified
           else if (PROP.JUSTIFICATION_RIGHT == true)
@@ -468,10 +473,6 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFr
 
   if (CHANGED == true || Refresh == true)
   {
-    // Clear Panel
-    //  In future, clear only printable lines.
-    Panel.clear();
-
     // Check for Reverse Text
     if (PROP.INVERSE == true)
     {
@@ -491,7 +492,7 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFr
     }
 
     // Check for Text Modification
-    draw_all_lines(Panel, PROP.LABEL_MULTI_LINE, PROP.POSY, PROP.POSX);
+    draw_all_lines(Panel, PROP.LABEL_MULTI_LINE, PROP.SIZEY, PROP.POSY, PROP.POSX);
 
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)

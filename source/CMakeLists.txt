@@ -43,6 +43,7 @@ add_executable(
   animations.cpp
   gadgets.cpp
   gadgets_radio.cpp
+  gadgets_alerts.cpp
   interface.cpp
   player.cpp
   radio_channel_coordinator.cpp

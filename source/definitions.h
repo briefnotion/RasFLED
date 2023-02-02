@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.50A"
+#define Revision "00000001.51A"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -62,7 +62,10 @@
 // -------------------------------------------------------------------------------------
 // Door Switches
 
-#define DOOR_SWITCH_LEEWAY_TIME 300   // Leeway time for door switches in ms.
+//#define DOOR_SWITCH_LEEWAY_TIME 60  // Debounce - Leeway time for door switches in ms.
+//#define DOOR_SWITCH_LEEWAY_TIME 120 // Debounce - Leeway time for door switches in ms.
+//#define DOOR_SWITCH_LEEWAY_TIME 240 // Debounce - Leeway time for door switches in ms.
+#define DOOR_SWITCH_LEEWAY_TIME 480   // Debounce - Leeway time for door switches in ms.
 
 // -------------------------------------------------------------------------------------
 // LED Strip Declarations

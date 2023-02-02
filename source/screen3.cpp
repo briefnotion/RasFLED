@@ -1176,6 +1176,50 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
   }
 
   // ---------------------------------------------------------------------------------------
+  if (ScrStat.Window_Alerts_Screen.value() == true)
+  {
+    // Alerts Window
+    // Calculate Size and Position
+    YALERTS_ScreenPos = YSplit;
+    XALERTS_ScreenPos = XALERTS_ScreenPos;
+    YALERTS_ScreenSize = YMax - YSplit - YTabSize;
+    XALERTS_ScreenSize =  XSplit;
+
+    // Build Window
+    ALERTS_PANEL.PROP.SIZEY = YALERTS_ScreenSize;
+    ALERTS_PANEL.PROP.SIZEX = XALERTS_ScreenSize;
+    ALERTS_PANEL.PROP.POSY = YALERTS_ScreenPos;
+    ALERTS_PANEL.PROP.POSX = XALERTS_ScreenPos;
+    ALERTS_PANEL.PROP.COLOR = COLOR_WHITE;
+    ALERTS_PANEL.PROP.BCOLOR = COLOR_RED;
+
+    ALERTS_PANEL.create();
+
+    // Alerts Title Bar
+    tiALERTS_Screen.PROP.POSY = YALERTS_ScreenPos;
+    tiALERTS_Screen.PROP.POSX = XALERTS_ScreenPos;
+    tiALERTS_Screen.PROP.SIZEY = YALERTS_ScreenSize;
+    tiALERTS_Screen.PROP.SIZEX = XALERTS_ScreenSize;
+    tiALERTS_Screen.PROP.SIZE = TitleSize;
+    
+    tiALERTS_Screen.PROP.LABEL = "ALERTS";
+    tiALERTS_Screen.PROP.BCOLOR = COLOR_RED;
+    tiALERTS_Screen.PROP.COLOR = COLOR_WHITE;
+    tiALERTS_Screen.create();
+
+    // Set Y Split      
+    YSplit = YSplit + YLog_ScreenSize;
+
+    // Create Screen
+    ALERTS_GRID.PROP.POSY = YALERTS_ScreenPos;
+    ALERTS_GRID.PROP.POSX = XALERTS_ScreenPos;
+    ALERTS_GRID.PROP.SIZEY = YALERTS_ScreenSize;
+    ALERTS_GRID.PROP.SIZEX = XALERTS_ScreenSize;
+
+    ALERTS_GRID.create();
+  }
+
+  // ---------------------------------------------------------------------------------------
   // Tabs Panel
   if (ScrStat.Window_Tabs.value() == true)
   {
@@ -1196,9 +1240,6 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
     bzTabs.NEW_BUTTON_PROP.SIZEY = YTabSize;
     bzTabs.NEW_BUTTON_PROP.SIZEX = XTabSize;
-    bzTabs.NEW_BUTTON_PROP.BORDER.TOP_RIGHT = '|';
-    bzTabs.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
-    bzTabs.NEW_BUTTON_PROP.BORDER.BOT_RIGHT = '|';
 
     bzTabs.NEW_BUTTON_PROP.ID = 0;
     bzTabs.NEW_BUTTON_PROP.NAME = "TABCONSOLE";
@@ -1241,6 +1282,19 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
     bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 5 +6);
     bzTabs.create_button();
+
+    bzTabs.NEW_BUTTON_PROP.ID = 10;
+    bzTabs.NEW_BUTTON_PROP.NAME = "TAB_ALERTS_SCREEN";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "ALERTS";
+    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 6 +8);
+
+    bzTabs.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
+    bzTabs.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
+    
+    bzTabs.create_button();
+    bzTabs.set_enabled(10, false);
+
 
     if (id_of_val_1 > -1)
     {
@@ -1794,7 +1848,6 @@ void Screen3::manyradio(system_data &sdSysData, ScreenStatus &ScrStat)
   }
 }
 
-
 // ---------------------------------------------------------------------------------------
 void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
@@ -1806,14 +1859,6 @@ void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 
   if(ScrStat.Needs_Refresh == true)
   {
-    /*
-    Default_ADS_B.update_value("Data", sdSysData.tmeCURRENT_FRAME_TIME);
-
-    Default_ADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-    */
-    // Refresh Screen
-    //wrefresh(winADS_B_Screen);
-
     // Print Title
     tiADS_B_Screen.draw(true);
   }
@@ -1828,6 +1873,19 @@ void Screen3::log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // Print Title
   tiLog_Screen.draw(ScrStat.Needs_Refresh);
+}
+
+// ---------------------------------------------------------------------------------------
+void Screen3::alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+// Shows the Player Window
+{
+  ALERTS_GRID.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, ALERTS_PANEL);
+
+  if(ScrStat.Needs_Refresh == true)
+  {
+    // Print Title
+    tiALERTS_Screen.draw(true);
+  }
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1909,6 +1967,12 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   if (ScrStat.Window_Log_Screen.value() == true)
   {
     log_screen(sdSysData, ScrStat);
+  }
+
+  // Draw Alerts Screen window.
+  if (ScrStat.Window_Alerts_Screen.value() == true)
+  {
+    alerts_screen(sdSysData, ScrStat);
   }
 
   // Buttons

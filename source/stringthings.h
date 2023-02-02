@@ -33,35 +33,66 @@ class WORDLINE
   void storeline(string strLine);
 };
 
+string line_create(int Size, char Character);
+// Returns an character filled line of Size.
+
 string linefill(int size, string text);
+// is broken
+// Returns a space filled line of size with text in center.
 
 string linemerge(int size, string line, string text);
+// Overlaps and centers text onto line.
+// Returns value at size. 
 
 string linemerge_left_justify(int size, string line, string text);
+// Overlaps and right justifies text onto line.
+// Returns value at size of size. 
 
 string linemerge_left_justify(string line, string text);
+// Overlaps and left justifies text onto line.
+// No Truncate.
+// Returns value at size of line or text size, whichever
+//  is larger.
 
 string linemerge_right_justify(int size, string line, string text);
+// Overlaps and right justifies text onto line.
+// Returns value at size. 
 
 string right_justify(int size, string text);
+// Overlaps and right justifies text onto line.
+// Returns value at size. 
 
 string left_justify(int size, string text);
+// Overlaps and left justifies text onto line.
+// Returns value at size. 
+
+string center_justify(int size, string text);
+// Overlaps and left justifies text onto line.
+// Returns value at size. 
 
 bool string_to_int(string String_Value, int &Int_Value);
+// Convert in String_Value number to out Int_Value.
+//  Returns true if value sucessful.
 
 int string_to_int(string String_Value);
 
 bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value);
+// Convert in String_Value number to out Int_Value.
+//  Returns true if value sucessful.
 
 unsigned long string_to_ulong(string String_Value);
 
 bool string_to_ulonglong(string String_Value, unsigned long long &Unsigned_Long_Long_Value);
+// Convert in String_Value number to out Int_Value.
+//  Returns true if value sucessful.
 
 unsigned long long string_to_ulonglong(string String_Value);
 
 bool string_to_float(string String_Value, float &Float_Value);
 
 float string_to_float(string String_Value);
+// Convert in String_Value number to out Float_Value.
+//  Returns true if value sucessful.
 
 //string to_string_round_to_nth(float Value, int nth);
 

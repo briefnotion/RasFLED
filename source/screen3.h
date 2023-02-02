@@ -24,6 +24,7 @@
 #include "player.h"
 #include "gadgets.h"
 #include "gadgets_radio.h"
+#include "gadgets_alerts.h"
 #include "radio_channel_coordinator.h"
 
 using namespace std;
@@ -265,7 +266,20 @@ class Screen3
 
   // ADS_B Gadget Grid
   ADSB_Channel_Grid ADSB_Grid;
-  //ADS_B_List_Box tbads_b_Data;
+
+  private:
+  // ALERTS Screen Variables --------------------
+
+  int YALERTS_ScreenPos = -1;
+  int XALERTS_ScreenPos = 0;
+  int YALERTS_ScreenSize = -1;
+  int XALERTS_ScreenSize = -1;
+
+  PANEL ALERTS_PANEL;
+  Title_Bar tiALERTS_Screen;
+
+  public:
+  ALERTS_PANEL_GRID ALERTS_GRID;
 
   private:
   // Log Screen Variables --------------------
@@ -344,12 +358,14 @@ class Screen3
   // ---------------------------------------------------------------------------------------
   void manyradio(system_data &sdSysData, ScreenStatus &ScrStat);
 
-
   // ---------------------------------------------------------------------------------------
   void ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat);
 
   // ---------------------------------------------------------------------------------------
   void log_screen(system_data &sdSysData, ScreenStatus &ScrStat);
+
+  // ---------------------------------------------------------------------------------------
+  void alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat);
 
   // ---------------------------------------------------------------------------------------
 

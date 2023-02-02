@@ -71,6 +71,13 @@ void WORDLINE::storeline(string strLine)
   }
 }
 
+string line_create(int Size, char Character)
+{
+  string line = "";
+
+  return line.append(Size, Character);
+}
+
 string linefill(int size, string text)
 // Returns a space filled line of size with text in center.
 {
@@ -194,6 +201,29 @@ string left_justify(int size, string text)
   else
   {
     return_string = text + return_string.append(size - text.size() ,' ');
+  }
+
+  return return_string;
+}
+
+string center_justify(int size, string text)
+// Overlaps and left justifies text onto line.
+// Returns value at size. 
+{
+  string return_string = "";
+
+  if (text.size() > size)
+  {
+    return_string = left_justify(size, text);
+  }
+  else if (text.size() == size)
+  {
+    return_string = text;
+  }
+  else
+  {
+    return_string.resize(size, ' ');
+    return_string.replace(((size/2)-(text.size()/2)), text.size(), text);
   }
 
   return return_string;

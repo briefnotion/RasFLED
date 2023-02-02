@@ -333,7 +333,7 @@ class Text_Field_Multi_Line
 
   private:
   
-  void draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int PosY, int PosX);
+  void draw_all_lines(PANEL &Button_Panel, deque<string> &Lines, int SizeY, int PosY, int PosX);
   // Gadget Internal:
   //  Draw panel border.
 
@@ -972,9 +972,9 @@ class BAR
   // Draw all changes to Panel. Updates on screen at next draw
 };
 
-
+/*
 // ---------------------------------------------------------------------------------------
-// Keyboard Classes
+// Planned Classes
 
 class KEYPAD
 {
@@ -985,6 +985,12 @@ class KEYBOARD
 {
 
 };
+
+class VOLUME_CONTROL
+{
+
+};
+*/
 
 // ---------------------------------------------------------------------------------------
 // Gadgets functions
