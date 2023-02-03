@@ -91,6 +91,8 @@ class Console
 
   void processkeyboadinput(system_data &sdSysData);
 
+  void tab_open_alerts(system_data &sdSysData);
+
   void processmouseinput(system_data &sdSysData);
 
   void update_displayed_time(unsigned long &time);

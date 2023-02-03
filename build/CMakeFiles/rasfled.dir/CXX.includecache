@@ -32,6 +32,14 @@ stringthings.h
 fled_time.h
 /home/pi/source/RasFLED/source/fled_time.h
 
+/home/pi/source/RasFLED/source/alert_system.h
+stdio.h
+-
+string.h
+-
+deque
+-
+
 /home/pi/source/RasFLED/source/animations.cpp
 animations.h
 /home/pi/source/RasFLED/source/animations.h
@@ -187,6 +195,8 @@ stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 system.h
 /home/pi/source/RasFLED/source/system.h
+alert_system.h
+/home/pi/source/RasFLED/source/alert_system.h
 gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
 helper_ncurses.h
@@ -424,10 +434,6 @@ rpihw.h
 pwm.h
 /home/pi/source/RasFLED/source/rpi_ws281x-master/pwm.h
 
-/home/pi/source/RasFLED/source/screen3.cpp
-screen3.h
-/home/pi/source/RasFLED/source/screen3.h
-
 /home/pi/source/RasFLED/source/screen3.h
 stdio.h
 -
@@ -487,6 +493,8 @@ radio_channel_coordinator.h
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 aircraft_coordinator.h
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
+alert_system.h
+/home/pi/source/RasFLED/source/alert_system.h
 
 /home/pi/source/RasFLED/source/timedeventsystem.cpp
 timedeventsystem.h

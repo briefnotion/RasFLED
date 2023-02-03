@@ -1293,7 +1293,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
     
     bzTabs.create_button();
-    bzTabs.set_enabled(10, false);
+    //bzTabs.set_enabled(10, false);
 
 
     if (id_of_val_1 > -1)
@@ -1879,7 +1879,7 @@ void Screen3::log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 void Screen3::alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
 {
-  ALERTS_GRID.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, ALERTS_PANEL);
+  ALERTS_GRID.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, sdSysData.ALERTS, ALERTS_PANEL);
 
   if(ScrStat.Needs_Refresh == true)
   {

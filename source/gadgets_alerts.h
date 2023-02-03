@@ -22,6 +22,7 @@
 #include "stringthings.h"
 #include "system.h"
 
+#include "alert_system.h"
 #include "gadgets.h"
 #include "helper_ncurses.h"
 
@@ -33,7 +34,7 @@ using namespace std;
 #define LEDGEND_SCALER  2
 
 // -------------------------------------------------------------------------------------
-//  Class
+//  Panel Class
 
 //  Alerts Panel Properties
 class ALERTS_PANEL_GRID_PROPERTIES
@@ -206,11 +207,13 @@ class ALERTS_PANEL_GRID
   // Update values of panel
   //  Gadget will be redrawn if values did changed or animations scheduled. 
 
-  bool draw(bool Refresh, unsigned long tmeFrame_Time, PANEL Alerts_Panel);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time, ALERT_SYSTEM Alerts, PANEL Alerts_Panel);
   // Draw all changes to Panel.
   //  Set Refresh to true to force redraw.
   //  Animations require time reference.
   // Returns true if panel was redrawn.
 };
+
+
 
 #endif

@@ -27,6 +27,7 @@
 #include "api_rtlairband.h"
 #include "radio_channel_coordinator.h"
 #include "aircraft_coordinator.h"
+#include "alert_system.h"
 
 using namespace std;
 
@@ -134,6 +135,8 @@ class system_data
   STAT_DATA_DOUBLE dblSLEEPTIME;     // Calculated time needed to sleep.
   STAT_DATA_DOUBLE dblCYCLETIME;     // Amount of time to complete an entire cycle.
   STAT_DATA_DOUBLE dblPREVSLEEPTIME; // Stored value returned on pref sleep cycle.
+
+  ALERT_SYSTEM ALERTS;
 
   // Door Module Support
   deque<bool> boolDOOR_SENSOR_STATUS;

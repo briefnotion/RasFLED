@@ -627,6 +627,73 @@ return booChanged;
 
 }
 
+void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_data &sdSysData, stupid_random &sRND, unsigned long &tmeCurrentTime, 
+                                    bigCRGB bigcrgbNewColor[], bool &booEventComplete, bool &booPixelColorChanged) // return
+{
+  bigCRGB tempColor;
+  unsigned long tmeStartAnim;
+
+  // Figure out when the LED is suposed to start doing something.
+  tmeStartAnim = teDATA.tmeSTARTTIME
+                + (abs((led - teDATA.intSTARTPOS))
+                    * teDATA.intSPEED);
+
+  if ((tmeCurrentTime >= tmeStartAnim))
+  {
+    // -------------------------------------------------------------------
+    // This Routine can be applied to all animation types. Its just not
+    //  implemented until needed.  Also kept seperate becuase it uses
+    //  a few more clock cycles. e.g. PulseDither and PulseToDither 
+    //  can be created.  But not the Twinkle.  Twinkle is passing direct
+    //  colors. 
+    // -------------------------------------------------------------------
+
+    switch (teDATA.bytANIMATION)
+    {
+      case AnEvSweep:
+        {
+          // Calculate how much this Event will chaange the pixel.
+          //  Breaking the norm, but also passing the led ID and
+          //  original 4 colors to ... (consider rewrite)
+          if(teDATA.booOFFDURINGDAY == true && sdSysData.booDay_On == true)
+          {
+            tempColor.r=0;
+            tempColor.g=0;
+            tempColor.b=0;
+          }
+          else
+          {
+            tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
+                                        led, 0, teDATA);  // Remove event param
+          }
+
+          //  Update the events completeness if its still active.
+          if (tempColor.complete == false)
+          {
+            booEventComplete = false;
+          }
+
+          // Check for inverted color and invert if necessary.
+          if (teDATA.booINVERTCOLOR == false)
+          {
+            bigcrgbNewColor[led].r = bigcrgbNewColor[led].r + tempColor.r;
+            bigcrgbNewColor[led].g = bigcrgbNewColor[led].g + tempColor.g;
+            bigcrgbNewColor[led].b = bigcrgbNewColor[led].b + tempColor.b;
+          }
+          else
+          {
+            bigcrgbNewColor[led].r = bigcrgbNewColor[led].r - tempColor.r;
+            bigcrgbNewColor[led].g = bigcrgbNewColor[led].g - tempColor.g;
+            bigcrgbNewColor[led].b = bigcrgbNewColor[led].b - tempColor.b;
+          }
+
+          booPixelColorChanged = true;
+          break;
+        } // End Case AnEvSweep
+    } // End Switch Statement
+  } // End if tmeCurrentTime >= tmeStartAnim
+}
+
 bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime)
 //  Sets all requested light paths, start to end position, to begin their animation
 //    at a future time.
@@ -641,9 +708,7 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
 {
   bool booPixelColorChanged = false;
   CRGB empty_color;
-  bigCRGB tempColor;
-  unsigned long tmeStartAnim;
-
+  
   bool booEventActive = false;
   bool booEventComplete = true;
 
@@ -655,12 +720,6 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
     // Process each event, one by one.
     for (int event = 0; event < teDATA.size(); event++)
     {
-      // Clear the tmp colors, in case they have data in them at the start of each 
-      //  event process.
-      tempColor.r = 0;
-      tempColor.g = 0;
-      tempColor.b = 0;
-
       booEventComplete = true;
       booEventActive = false;
 
@@ -683,78 +742,23 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
           // Determin direction of LED animation.
           if(teDATA[event].intSTARTPOS < teDATA[event].intENDPOS)
           {
-            led_start = teDATA[event].intSTARTPOS;
-            led_end = teDATA[event].intENDPOS;
+            for (int led = teDATA[event].intSTARTPOS; led < teDATA[event].intENDPOS; led++)
+            {
+              process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
+                                bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+            }
           }
           else
           {
-            led_start = teDATA[event].intENDPOS;
-            led_end = teDATA[event].intSTARTPOS;
+            for (int led = teDATA[event].intENDPOS; led > teDATA[event].intSTARTPOS; led--)
+            {
+              process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
+                                bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+            }
           }
 
           // Process each LED of the event.
-          for (int led = led_start; led < led_end; led++)
-          {
-            // Figure out when the LED is suposed to start doing something.
-            tmeStartAnim = teDATA[event].tmeSTARTTIME
-                          + (abs((led - teDATA[event].intSTARTPOS))
-                              * teDATA[event].intSPEED);
 
-            if ((tmeCurrentTime >= tmeStartAnim))
-            {
-              // -------------------------------------------------------------------
-              // This Routine can be applied to all animation types. Its just not
-              //  implemented until needed.  Also kept seperate becuase it uses
-              //  a few more clock cycles. e.g. PulseDither and PulseToDither 
-              //  can be created.  But not the Twinkle.  Twinkle is passing direct
-              //  colors. 
-              // -------------------------------------------------------------------
-
-              switch (teDATA[event].bytANIMATION)
-              {
-                case AnEvSweep:
-                  {
-                    // Calculate how much this Event will chaange the pixel.
-                    //  Breaking the norm, but also passing the led ID and
-                    //  original 4 colors to ... (consider rewrite)
-                    if(teDATA[event].booOFFDURINGDAY == true && sdSysData.booDay_On == true)
-                    {
-                      tempColor.r=0;
-                      tempColor.g=0;
-                      tempColor.b=0;
-                    }
-                    else
-                    {
-                      tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
-                                                  led, event, teDATA[event]);
-                    }
-
-                    //  Update the events completeness if its still active.
-                    if (tempColor.complete == false)
-                    {
-                      booEventComplete = false;
-                    }
-
-                    // Check for inverted color and invert if necessary.
-                    if (teDATA[event].booINVERTCOLOR == false)
-                    {
-                      bigcrgbNewColor[led].r = bigcrgbNewColor[led].r + tempColor.r;
-                      bigcrgbNewColor[led].g = bigcrgbNewColor[led].g + tempColor.g;
-                      bigcrgbNewColor[led].b = bigcrgbNewColor[led].b + tempColor.b;
-                    }
-                    else
-                    {
-                      bigcrgbNewColor[led].r = bigcrgbNewColor[led].r - tempColor.r;
-                      bigcrgbNewColor[led].g = bigcrgbNewColor[led].g - tempColor.g;
-                      bigcrgbNewColor[led].b = bigcrgbNewColor[led].b - tempColor.b;
-                    }
-
-                    booPixelColorChanged = true;
-                    break;
-                  } // End Case AnEvSweep
-              } // End Switch Statement
-            } // End if tmeCurrentTime >= tmeStartAnim
-          }
         }
       }
 

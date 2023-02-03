@@ -1098,21 +1098,26 @@ int Button_Zone_Manager::value(int pos)
   return BUTTONS[pos].PROP.VALUE;
 }
 
-void Button_Zone_Manager::click_advance(int Id)
+void Button_Zone_Manager::click_advance(int Position)
 {
-  if (BUTTONS[Id].PROP.TYPE == 0 || BUTTONS[Id].PROP.TYPE == 1)
+  if (BUTTONS[Position].PROP.TYPE == 0 || BUTTONS[Position].PROP.TYPE == 1)
   {
-    BUTTONS[Id].advance();
+    BUTTONS[Position].advance();
   }
-  else if (BUTTONS[Id].PROP.TYPE == 2)
+  else if (BUTTONS[Position].PROP.TYPE == 2)
   {
     for (int pos = 0; pos < BUTTONS.size(); pos++)
     {
       BUTTONS[pos].PROP.VALUE = 0;
       BUTTONS[pos].PROP.CHANGED = true;
     }
-    BUTTONS[Id].PROP.VALUE = 1;
+    BUTTONS[Position].PROP.VALUE = 1;
   }
+}
+
+void Button_Zone_Manager::click_advance(string Name)
+{
+  click_advance(get_pos(Name));
 }
 
 void Button_Zone_Manager::clear()

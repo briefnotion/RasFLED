@@ -263,6 +263,27 @@ void Console::processkeyboadinput(system_data &sdSysData)
   }
 }
 
+void Console::tab_open_alerts(system_data &sdSysData)
+{
+  printi("Tab Alerts");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+
+  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);     // Log
+
+  ScrStat.Window_Alerts_Screen.on(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.play();
+}
+
 void Console::processmouseinput(system_data &sdSysData)
 {
   if (mouse.Clicked() == true)
@@ -614,23 +635,7 @@ void Console::processmouseinput(system_data &sdSysData)
       if(name.compare("TAB_ALERTS_SCREEN") == 0)
       // Turn on Tab
       {
-        printi("Tab Alerts");
-        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
-        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
-
-        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
-        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);     // Log
-
-        ScrStat.Window_Alerts_Screen.on(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.pause();
-        sdSysData.RADIO_COORD.play();
+        tab_open_alerts(sdSysData);
       }
 
       // Update changes to buttons
@@ -910,6 +915,11 @@ void Console::display(fstream &fsPlayer, system_data &sdSystem, unsigned long tm
   //  movie player. 
   if (Console_Display.is_ready(tmeCurrentMillis) == true)
   {
+    if (sdSystem.ALERTS.triggered() == true)
+    {
+      tab_open_alerts(sdSystem);
+    }
+
     // Update display screen.
     output(sdSystem);
 

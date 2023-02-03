@@ -749,8 +749,11 @@ class Button_Zone_Manager
   int value(int pos);
   // Return value of button in list position.
 
-  void click_advance(int Id);
+  void click_advance(int Position);
   // Increse button in pos value by 1.
+  // NEEDS TO BE PHASED OUT AND REPLACED WITH ID
+  
+  void click_advance(string Name);
 
   void clear();
   // Clear button list

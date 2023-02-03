@@ -418,6 +418,14 @@ int loop()
 
   // ---------------------------------------------------------------------------------------
 
+  cons.printi("Initializing Alert System ...");
+
+  // Prepare Alerts
+  sdSystem.ALERTS.PROP.SWITCH_COUNT = sdSystem.CONFIG.iNUM_SWITCHES;
+  sdSystem.ALERTS.create();
+
+  // ---------------------------------------------------------------------------------------
+
   // Define Door Sensors.
   cons.printi("Initializing Hardware Sensors ...");
   for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
@@ -536,6 +544,8 @@ int loop()
   // Start the the compute timer (stopwatch) for first iteration. 
   effi_timer.start_timer((unsigned long)tmeFled.tmeFrameMillis);
   
+  // **************************************************************************************
+  // MAIN LOOP START
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
     // Close all completed and active threads after sleep cycle is complete.
@@ -809,6 +819,12 @@ int loop()
 
         // ADS-B - Update all ADS-B gadgets with new data.
         cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
+
+        // Update Alerts to Screen
+        for (int door=0; door < sdSystem.CONFIG.vhwDOORS.size(); door++)
+        {
+          sdSystem.ALERTS.update_switch(door, sdSystem.CONFIG.vhwDOORS.at(door).booVALUE);
+        }
 
         // Redraw the console screen with what the screen determines needs to be displayed.
         cons.display(fsPlayer, sdSystem, tmeCurrentMillis);

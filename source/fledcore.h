@@ -119,6 +119,9 @@ class timed_event
 
   bool execute1(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime);
 
+  void process_led_light(int &led, timed_event_data &teDATA, system_data &sdSysData, stupid_random &sRND, unsigned long &tmeCurrentTime, 
+                          bigCRGB bigcrgbNewColor[], bool &booEventComplete, bool &booPixelColorChanged); // return
+
   bool execute2(Console &cons, system_data &sdSysData, stupid_random sRND, CRGB hwLEDArray[], unsigned long tmeCurrentTime);
 };
 
