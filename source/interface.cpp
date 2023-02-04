@@ -561,6 +561,22 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
     }
 
+    /*
+    // -------------------------------------------------------------------------------------
+    // For Deguging Gadgets
+    // Debug Counter On
+    if (check_command(cons, " debugcon", "Debug Counter On"))
+    {
+      sdSysData.DEBUG_COUNTER = true;
+    }
+
+    // Debug Counter Off
+    if (check_command(cons, " debugcoff", "Debug Counter On"))
+    {
+      sdSysData.DEBUG_COUNTER = false;
+    }
+    */
+
     // -------------------------------------------------------------------------------------
     // Render Version -------------
     // LED Engine Version 1

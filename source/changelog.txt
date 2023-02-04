@@ -1,3 +1,7 @@
+V 1.53A_230204
+  - FOR TESTING REASONS ONLY.
+  - Continued work on the alerts screen.
+
 V 1.52A_230203
   - FOR TESTING REASONS ONLY.
   - Changes made to LED Engine V.2.
@@ -797,7 +801,7 @@ V 0.45_220323
       Overhead Lights, which is being stubborn.
   - Added an end timer command.
   - Updated the help screen, which is getting too big.
-  - Removed some load playlist degug info from program start. 
+  - Removed some load playlist debug info from program start. 
 
 V 0.44_220322
   - Merged the buttons into the button zone manager so that buttons can be managed 

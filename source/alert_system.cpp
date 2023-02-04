@@ -19,6 +19,21 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Alert Class
 
+bool ALERT_SYSTEM::check_exist()
+{
+  bool alert_exist = false;
+
+  for (int swi = 0; swi < PROP.SWITCH_COUNT; swi++)
+  {
+    if (SWITCHES[swi] == true)
+    {
+      alert_exist = true;
+    }
+  }
+
+  return alert_exist;
+}
+
 void ALERT_SYSTEM::create()
 {
   bool tmp_switch = false;
@@ -26,6 +41,21 @@ void ALERT_SYSTEM::create()
   for (int swi = 0; swi < PROP.SWITCH_COUNT; swi++)
   {
     SWITCHES.push_back(tmp_switch);
+  }
+
+  CHANGED = true;
+}
+
+bool ALERT_SYSTEM::changed()
+{
+  if (CHANGED == true)
+  {
+    CHANGED = false;
+    return true;
+  }
+  else
+  {
+    return false;
   }
 }
 
@@ -53,39 +83,8 @@ void ALERT_SYSTEM::update_switch(int Switch, bool Value)
       }
     }
 
-    //CHANGED = true;
+    CHANGED = true;
   }
-}
-
-void ALERT_SYSTEM::check_clear()
-{
-  bool alert_exist = false;
-
-  for (int swi = 0; swi < PROP.SWITCH_COUNT; swi++)
-  {
-    if (SWITCHES[swi] == true)
-    {
-      alert_exist = true;
-    }
-  }
-
-  if (alert_exist != ALERT)
-  {
-    if (alert_exist == true)
-    {
-      ALERT = true;
-    }
-    else
-    {
-      ALERT = false;
-      ALERTED = false;
-      TRIGGERED = false;
-    }
-  }
-  //else
-  //{
-  //  CHANGED = false;
-  //}
 }
 
 bool ALERT_SYSTEM::triggered()
@@ -98,6 +97,27 @@ bool ALERT_SYSTEM::triggered()
   {
     TRIGGERED = false;
     return true;
+  }
+}
+
+bool ALERT_SYSTEM::alert_cleared()
+{
+  if (ALERT == true)
+  {
+    if (check_exist() == true)
+    {
+      return false;
+    }
+    else
+    {
+      ALERT = false;
+      ALERTED = false;
+      return true;
+    }
+  }
+  else
+  {
+    return false;
   }
 }
 

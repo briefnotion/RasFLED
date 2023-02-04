@@ -91,7 +91,21 @@ class Console
 
   void processkeyboadinput(system_data &sdSysData);
 
+  void tab_open_console(system_data &sdSysData);
+
+  void tab_open_player(system_data &sdSysData);
+
+  void tab_open_radio(system_data &sdSysData);
+
+  void tab_open_many_radio(system_data &sdSysData);
+
+  void tab_open_ads_b_screen(system_data &sdSysData);
+
+  void tab_open_log_screen(system_data &sdSysData);
+
   void tab_open_alerts(system_data &sdSysData);
+
+  void tab_handler(string Button_Name, system_data &sdSysData);
 
   void processmouseinput(system_data &sdSysData);
 

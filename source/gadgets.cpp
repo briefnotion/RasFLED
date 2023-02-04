@@ -389,6 +389,8 @@ void Text_Field_Multi_Line::set_text(string Text, unsigned long tmeFrame_Time)
       bool done = false;
       int p = 0;
 
+      PROP.LABEL = Text;
+
       PROP.LABEL_MULTI_LINE.clear();
 
       HAS_BLANK = true;
@@ -1361,6 +1363,19 @@ int Button_Zone_Manager::get_id_of_button_with_value(int Value)
     }
   }
   return ret_int;
+}
+
+string Button_Zone_Manager::get_name_of_button_with_value(int Value)
+{
+  string ret_string = "";
+  for (int pos = 0; pos < BUTTONS.size(); pos++)
+  {
+    if (BUTTONS[pos].PROP.VALUE == Value)
+    {
+      ret_string = BUTTONS[pos].PROP.NAME;
+    }
+  }
+  return ret_string;
 }
 
 bool Button_Zone_Manager::check_click(int x,int y)

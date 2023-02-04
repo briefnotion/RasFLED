@@ -46,21 +46,26 @@ class ALERT_SYSTEM
 
   deque<bool> SWITCHES;
 
-  //bool CHANGED = false;
+  bool check_exist();
 
+  bool CHANGED = false;
+  
   public:
 
   ALERT_SYSTEM_PROPERTIES PROP;
 
   void create();
 
+  bool changed();
+  // Change value will be reset to false after being read.
+
   bool switch_value(int Switch);
 
   void update_switch(int Switch, bool Value);
 
-  void check_clear();
-
   bool triggered();
+
+  bool alert_cleared();
 };
 
 

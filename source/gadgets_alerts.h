@@ -65,11 +65,6 @@ class ALERTS_PANEL_GRID
 //    routines or set routines of internal gadgets.
 {
   private:
-  //deque<ADSB_Channel> ADSB_Channel_q;
-
-  //ADSB_Channel test;
-
-  //int ADSB_Channel_Count = 0;
 
   Text_Field CAR_LABEL;
   Text_Field_Multi_Line CAR_BODY;
@@ -77,12 +72,6 @@ class ALERTS_PANEL_GRID
   Text_Field_Multi_Line CAR_LD_B;
   Text_Field_Multi_Line CAR_RD_F;
   Text_Field_Multi_Line CAR_RD_B;
-  //Text_Field TIME;
-  //Text_Field AIRCRAFT_COUNT_TITLE;
-  //Text_Field AIRCRAFT_COUNT;
-  //Text_Field POSITIONED_AIRCRAFT_TITLE;
-  //Text_Field POSITIONED_AIRCRAFT;
-  //BAR DELTA_MESSAGES_BAR;
 
   
 
@@ -193,6 +182,8 @@ class ALERTS_PANEL_GRID
   string CAR_RD02_BACK_CLOSED = "|\n";  //  2
   string CAR_RD03_BACK_CLOSED = "|\n";  //  3
   string CAR_RD04_BACK_CLOSED = "|"  ;  //  4
+
+  //bool CHANGED = false;
 
   public:
 

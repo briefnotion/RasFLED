@@ -824,6 +824,9 @@ class Button_Zone_Manager
   int get_id_of_button_with_value(int Value);
   // Returns id of button with value of 1.
 
+  string get_name_of_button_with_value(int Value);
+  // Returns id of button with value of 1.
+
   bool check_click(int x,int y);
   // sets cliced on of any buttons in list underneith x,y coords
 };

@@ -263,6 +263,132 @@ void Console::processkeyboadinput(system_data &sdSysData)
   }
 }
 
+void Console::tab_open_console(system_data &sdSysData)
+{
+  printi("Tab Console");
+  ScrStat.Window_Console.on(ScrStat.Needs_Refresh);        // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+
+  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.pause();
+}
+
+void Console::tab_open_player(system_data &sdSysData)
+{
+  printi("Tab Player");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.on(ScrStat.Needs_Refresh);         // Player
+
+  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.play();
+  sdSysData.RADIO_COORD.pause();
+}
+
+void Console::tab_open_radio(system_data &sdSysData)
+{
+  printi("Tab Radio");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+  
+  ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
+  ScrStat.Window_Radio.on(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.play();
+}
+
+void Console::tab_open_many_radio(system_data &sdSysData)
+{
+  printi("Tab Radio Multi");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+
+  ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.on(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.play();
+}
+
+void Console::tab_open_ads_b_screen(system_data &sdSysData)
+{
+  printi("Tab ADS_B");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+
+  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.on(ScrStat.Needs_Refresh);   // ADS_B
+  ScrStat.Window_ADS_B_Screen.on(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.play();
+}
+
+void Console::tab_open_log_screen(system_data &sdSysData)
+{
+  printi("Tab Log");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+
+  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.on(ScrStat.Needs_Refresh);     // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.play();
+}
+
 void Console::tab_open_alerts(system_data &sdSysData)
 {
   printi("Tab Alerts");
@@ -284,31 +410,64 @@ void Console::tab_open_alerts(system_data &sdSysData)
   sdSysData.RADIO_COORD.play();
 }
 
+void Console::tab_handler(string Button_Name, system_data &sdSysData)
+{
+  if (Button_Name == "TABCONSOLE")
+  // Turn on Tab
+  {
+    tab_open_console(sdSysData);
+  }
+
+  if (Button_Name == "TABPLAYER")
+  // Turn on Tab
+  {
+    tab_open_player(sdSysData);
+  }
+
+  if (Button_Name == "TABRADIO")
+  // Turn on Tab
+  {
+    tab_open_radio(sdSysData);
+  }
+
+  if (Button_Name == "TABMANYRADIO")
+  // Turn on Tab
+  {
+    tab_open_many_radio(sdSysData);
+  }
+
+  if (Button_Name == "TAB_ADS_B_SCREEN")
+  // Turn on Tab
+  {
+    tab_open_ads_b_screen(sdSysData);
+  }
+
+  if (Button_Name == "TAB_LOG_SCREEN")
+  // Turn on Tab
+  {
+    tab_open_log_screen(sdSysData);
+  }
+
+  if (Button_Name == "TAB_ALERTS_SCREEN")
+  // Turn on Tab
+  {
+    tab_open_alerts(sdSysData);
+  }
+}
+
 void Console::processmouseinput(system_data &sdSysData)
 {
   if (mouse.Clicked() == true)
   {
-    // Get Clicked Button Name and Value
-    int id = -1;
-    string name = "";
-    int value = 0;
-
     // -----------------------------------
     // Check to see if any main buttons are clicked.
     if (Screen.bzButtons.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
     // Check for any clicked buttons or if it was just empty space.
     //  If anything was clicked, the list in the bzButtons will be updated.
     {
-      // Go through all the buttons in the screen and update their values, 
-      //  this will also update their values in the bzButtons list.
-      //Screen.update_buttons();
-
       // If a Main Button is clicked, dont need the Color Picker
       //  Close it if it was opened.
       ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
-
-      // Next time the screen is refreshed, redraw the button.
-      //ScrStat.Buttons_Refresh = true;
 
       // Get name and value of button in list that was clicked, then set it 
       //  as unclicked.
@@ -316,41 +475,26 @@ void Console::processmouseinput(system_data &sdSysData)
       int value = 0;
       name = Screen.bzButtons.get_clicked_name();
       value = Screen.bzButtons.get_clicked_value(name);
-
-      // ---debug
-      // Print Returned Value
-      //printi("");
-      //printi("returned " + to_string(value) + " " + name);
-
-      /* ---debug
-      // Print Zones
-      printi("");
-      for(int pos=0; pos < Screen.bzButtons.size(); pos++)
-      {
-        printi(Screen.bzButtons.name(pos));
-      }
-      printi("");
-      */
       
-      if (name.compare("MENUCONTROL") == 0)
+      if (name == "MENUCONTROL")
       // Load System Buttons
       {
         Screen.buttons_menu_control(sdSysData);
       }
 
-      if (name.compare("MENUSYSTEM") == 0)
+      if (name == "MENUSYSTEM")
       // Load System Buttons
       {
         Screen.buttons_menu_system(sdSysData);
       }
       
-      else if (name.compare("MENUHOME") == 0)
+      else if (name == "MENUHOME")
       // Load Home Buttons
       {
         Screen.buttons_menu_home(sdSysData);
       }
 
-      else if (name.compare("MENUOVERHEAD") == 0)
+      else if (name == "MENUOVERHEAD")
       // Load Home Buttons
       {
         if(sdSysData.booOverheadRunning == false)
@@ -364,19 +508,19 @@ void Console::processmouseinput(system_data &sdSysData)
         }
       }
 
-      else if(name.compare("EXIT") == 0)
+      else if(name == "EXIT")
       // Exit RasFLED
       {
         keywatch.cmdInString("X");
       }
 
-      else if(name.compare("SHUTDOWN_NOW") == 0)
+      else if(name == "SHUTDOWN_NOW")
       // Shutdown the entire system
       {
         keywatch.cmdInString(" comshutd");
       }
 
-      else if (name.compare("DAYNIGHT") == 0)
+      else if (name == "DAYNIGHT")
       // Day Night Mode
       {
         if (sdSysData.booDay_On == false)
@@ -393,7 +537,7 @@ void Console::processmouseinput(system_data &sdSysData)
         }
       }
 
-      else if(name.compare("LIGHTSOFF") == 0)
+      else if(name == "LIGHTSOFF")
       // Turn Lights On or Off
       {
         if(sdSysData.Lights_On == true)
@@ -406,7 +550,7 @@ void Console::processmouseinput(system_data &sdSysData)
         }
       }
 
-      else if(name.compare("TIMER") == 0)
+      else if(name == "TIMER")
       // Start / Stop Timer
       if (sdSysData.cdTIMER.is_active() == false)
       {
@@ -417,27 +561,27 @@ void Console::processmouseinput(system_data &sdSysData)
         keywatch.cmdInString(" `");
       }
 
-      else if(name.compare("OVERHEAD") == 0)
+      else if(name == "OVERHEAD")
       // Start Overhead Lights
       {
         keywatch.cmdInString("oo");
         Screen.buttons_menu_home(sdSysData);
       }
 
-      else if(name.compare("FLASH") == 0)
+      else if(name == "FLASH")
       // Flash Lights
       {
         keywatch.cmdInString("ff");
       }
 
-      else if(name.compare("CLEARANIMS") == 0)
+      else if(name == "CLEARANIMS")
       // Clear Most Animations
       {
         keywatch.cmdInString("``");
         Screen.buttons_menu_home(sdSysData);
       }
 
-      else if(name.compare("HAZARD") == 0)
+      else if(name == "HAZARD")
       // Start Hazard Lights or turn off.
       {
         if (sdSysData.booHazardRunning == false)
@@ -451,28 +595,24 @@ void Console::processmouseinput(system_data &sdSysData)
         }
       }
 
-      else if(name.compare("DEBUG") == 0)
+      else if(name == "DEBUG")
       // Start Hazard Lights
       {
         keywatch.cmdInString("/");
         Screen.buttons_menu_home(sdSysData);
       }
 
-      else if(name.compare("RUNNINGCOLOR") == 0)
+      else if(name == "RUNNINGCOLOR")
       // Start Hazard Lights
       {
         keywatch.cmdIn('r');
         ScrStat.Window_CPicker.on(ScrStat.Needs_Refresh);
       }
 
-      else if(name.compare("CHOSECOLOR") == 0)
+      else if(name == "CHOSECOLOR")
       {
         ScrStat.Window_CPicker.on(ScrStat.Needs_Refresh);
       }
-
-      // Update changes to buttons
-      //Screen.update_buttons();
-
     }
 
     // Check to see if any Tab buttons are clicked.
@@ -480,178 +620,7 @@ void Console::processmouseinput(system_data &sdSysData)
     // Check for any clicked buttons or if it was just empty space.
     //  If anything was clicked, the list in the bzTabs will be updated.
     {
-
-      // Go through all the buttons in the screen and update their values, 
-      //  this will also update their values in the bzButtons list.
-      //Screen.update_tabs();
-
-      string name = "";
-      int value = 0;
-      name = Screen.bzTabs.get_clicked_name();
-      value = Screen.bzTabs.get_clicked_value(name);
-
-      /* DEBUG STUFFS
-      printi("");
-      for(int pos=0; pos < Screen.bzTabs.size(); pos++)
-      {
-        printi(Screen.bzTabs.name(pos));
-        printi(to_string(Screen.bzTabs.value(pos)));
-      }
-      printi("");
-      */
-
-      if(name.compare("TABCONSOLE") == 0)
-      // Turn on Tab
-      {
-        printi("Tab Console");
-        ScrStat.Window_Console.on(ScrStat.Needs_Refresh);        // Console
-        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
-
-        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
-        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
-
-        ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.pause();
-        sdSysData.RADIO_COORD.pause();
-      }
-
-      if(name.compare("TABPLAYER") == 0)
-      // Turn on Tab
-      {
-        printi("Tab Player");
-        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
-        ScrStat.Window_Player.on(ScrStat.Needs_Refresh);         // Player
-
-        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
-        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
-
-        ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.play();
-        sdSysData.RADIO_COORD.pause();
-      }
-
-      if(name.compare("TABRADIO") == 0)
-      // Turn on Tab
-      {
-        printi("Tab Radio");
-        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
-        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
-        
-        ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
-        ScrStat.Window_Radio.on(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
-        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
-
-        ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.pause();
-        sdSysData.RADIO_COORD.play();
-      }
-
-      if(name.compare("TABMANYRADIO") == 0)
-      // Turn on Tab
-      {
-        printi("Tab Radio Multi");
-        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
-        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
-
-        ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
-        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.on(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
-        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
-
-        ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.pause();
-        sdSysData.RADIO_COORD.play();
-      }
-
-      if(name.compare("TAB_ADS_B_SCREEN") == 0)
-      // Turn on Tab
-      {
-        printi("Tab ADS_B");
-        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
-        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
-
-        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.on(ScrStat.Needs_Refresh);   // ADS_B
-        ScrStat.Window_ADS_B_Screen.on(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
-
-        ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.pause();
-        sdSysData.RADIO_COORD.play();
-      }
-
-      if(name.compare("TAB_LOG_SCREEN") == 0)
-      // Turn on Tab
-      {
-        printi("Tab Radio Multi");
-        ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
-        ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
-
-        ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-        ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-        ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
-        ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
-
-        ScrStat.Window_Log_Screen.on(ScrStat.Needs_Refresh);     // Log
-
-        ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
-
-        the_player.pause();
-        sdSysData.RADIO_COORD.play();
-      }
-
-      if(name.compare("TAB_ALERTS_SCREEN") == 0)
-      // Turn on Tab
-      {
-        tab_open_alerts(sdSysData);
-      }
-
-      // Update changes to buttons
-      //Screen.update_tabs();
-
-
-      /* DEBUG STUFFS
-      printi("");
-      for(int pos=0; pos < Screen.bzTabs.size(); pos++)
-      {
-        printi(Screen.bzTabs.name(pos));
-        printi(to_string(Screen.bzTabs.value(pos)));
-      }
-      printi("");
-      */
-
+      tab_handler(Screen.bzTabs.get_clicked_name(), sdSysData);
     }
 
     // -----------------------------------
@@ -660,67 +629,64 @@ void Console::processmouseinput(system_data &sdSysData)
     // Check for any clicked buttons or if it was just empty space.
     //  If anything was clicked, the list in the bzCPicker will be updated.
     {
-      string name = "empty";
-      int value = 0;
-      name = Screen.bzCPicker.get_clicked_name();
-      value = Screen.bzCPicker.get_clicked_value(name);
+      string name = Screen.bzCPicker.get_clicked_name();
     
       //Color Picker Window
-      if(name.compare("EXITCOLOR") == 0)
+      if(name == "EXITCOLOR")
       // Start Hazard Lights
       {
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
       }
-      else if(name.compare("RED") == 0)
+      else if(name == "RED")
       // Start Hazard Lights
       {
         keywatch.cmdIn('r');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("GREEN") == 0)
+      else if(name == "GREEN")
       // Start Hazard Lights
       {
         keywatch.cmdIn('g');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("BLUE") == 0)
+      else if(name == "BLUE")
       // Start Hazard Lights
       {
         keywatch.cmdIn('b');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("PURPLE") == 0)
+      else if(name == "PURPLE")
       // Start Hazard Lights
       {
         keywatch.cmdIn('u');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("YELLOW") == 0)
+      else if(name == "YELLOW")
       // Start Hazard Lights
       {
         keywatch.cmdIn('y');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("CYAN") == 0)
+      else if(name == "CYAN")
       // Start Hazard Lights
       {
         keywatch.cmdIn('c');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("ORANGE") == 0)
+      else if(name == "ORANGE")
       // Start Hazard Lights
       {
         keywatch.cmdIn('n');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
       }
-      else if(name.compare("WHITE") == 0)
+      else if(name == "WHITE")
       // Start Hazard Lights
       {
         keywatch.cmdIn('w');
@@ -736,43 +702,40 @@ void Console::processmouseinput(system_data &sdSysData)
       // Check for any clicked buttons or if it was just empty space.
       //  If anything was clicked, the list in the bzRadio will be updated.
       {
-        string name = "empty";
-        int value = 0;
-        name = Screen.bzRadio.get_clicked_name();
-        value = Screen.bzRadio.get_clicked_value(name);
+        string name = Screen.bzRadio.get_clicked_name();
       
         //Color Picker Window
-        if(name.compare("AIRSTOP") == 0)
+        if(name == "AIRSTOP")
         // Turn Off Radio via kill command
         {
           keywatch.cmdInString(" airstop");
         }
-        else if(name.compare("LAFS") == 0)
+        else if(name == "LAFS")
         // Lafayette Scan Script
         {
           keywatch.cmdInString(" lafs");
         }
-        else if(name.compare("LAFM") == 0)
+        else if(name == "LAFM")
         // Lafayette Multi Script
         {
           keywatch.cmdInString(" lafm");
         }
-        else if(name.compare("CBS") == 0)
+        else if(name == "CBS")
         // CB Scan Script
         {
           keywatch.cmdInString(" cbs");
         }
-        else if(name.compare("RADIOOFF") == 0)
+        else if(name == "RADIOOFF")
         // 
         {
           keywatch.cmdInString(" radoff");
         }
-        else if(name.compare("NOAA") == 0)
+        else if(name == "NOAA")
         // 
         {
           keywatch.cmdInString(" rnoaa");
         }
-        else if(name.compare("EMERGENCY") == 0)
+        else if(name == "EMERGENCY")
         // 
         {
           keywatch.cmdInString(" remergenc");
@@ -837,12 +800,9 @@ void Console::processmouseinput(system_data &sdSysData)
       // Check for any clicked buttons or if it was just empty space.
       //  If anything was clicked, the list in the bzzADS_B will be updated.
       {
-        string name = "empty";
-        int value = 0;
-        name = Screen.bzADS_B.get_clicked_name();
-        value = Screen.bzADS_B.get_clicked_value(name);
+        string name = Screen.bzADS_B.get_clicked_name();
       
-        if(name.compare("ADS_BON") == 0)
+        if(name == "ADS_BON")
         // Turn On ADS_B Receiver
         {
           if(sdSysData.AIRCRAFT_COORD.is_active() == false)
@@ -855,13 +815,13 @@ void Console::processmouseinput(system_data &sdSysData)
           }
         }
         /*
-        else if(name.compare("ADS_BOFF") == 0)
+        else if(name == "ADS_BOFF")
         // Turn Off ADS_B Receiver
         {
           keywatch.cmdInString(" absboff");
         }
         */
-        else if(name.compare("ADS_B_SNAPSHOT") == 0)
+        else if(name == "ADS_B_SNAPSHOT")
         // Turn Off ADS_B Receiver
         {
           keywatch.cmdInString(" adsbsnap");
@@ -918,6 +878,12 @@ void Console::display(fstream &fsPlayer, system_data &sdSystem, unsigned long tm
     if (sdSystem.ALERTS.triggered() == true)
     {
       tab_open_alerts(sdSystem);
+      printwait("ALERT");
+    }
+    else if (sdSystem.ALERTS.alert_cleared() == true)
+    {
+      tab_handler(Screen.bzTabs.get_name_of_button_with_value(1), sdSystem);
+      printwait("ALERT CLEARED");
     }
 
     // Update display screen.

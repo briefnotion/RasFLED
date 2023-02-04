@@ -138,6 +138,9 @@ class system_data
 
   ALERT_SYSTEM ALERTS;
 
+  // For Debuging Gadgets
+  //bool DEBUG_COUNTER = false;
+
   // Door Module Support
   deque<bool> boolDOOR_SENSOR_STATUS;
 
