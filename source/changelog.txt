@@ -1,3 +1,6 @@
+V 1.54A_230205
+  - Continued work on the alerts screen.
+
 V 1.53A_230204
   - FOR TESTING REASONS ONLY.
   - Continued work on the alerts screen.

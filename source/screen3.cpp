@@ -1148,7 +1148,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     tiADS_B_Screen.PROP.SIZEX = XADS_B_ScreenSize;
     tiADS_B_Screen.PROP.SIZE = TitleSize;
     
-    tiADS_B_Screen.PROP.LABEL = "ADS_B";
+    tiADS_B_Screen.PROP.LABEL = "ADS-B";
     tiADS_B_Screen.PROP.BCOLOR = COLOR_BLACK;
     tiADS_B_Screen.PROP.COLOR = COLOR_WHITE;
     tiADS_B_Screen.create();
@@ -1271,7 +1271,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
     bzTabs.NEW_BUTTON_PROP.ID = 6;
     bzTabs.NEW_BUTTON_PROP.NAME = "TAB_ADS_B_SCREEN";
-    bzTabs.NEW_BUTTON_PROP.LABEL = "ADS";
+    bzTabs.NEW_BUTTON_PROP.LABEL = "ADS-B";
     bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
     bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 4 +4);
     bzTabs.create_button();
