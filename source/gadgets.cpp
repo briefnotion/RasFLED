@@ -534,7 +534,7 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh)
 
 // -------------------------------------------------------------------------------------
 /*
-//  Text_Field_Multi_Line Classes  
+//  Rotating_Text_Field Classes  
 bool Rotating_Text_Field::changed()
 {
   return false;

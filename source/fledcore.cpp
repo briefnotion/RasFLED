@@ -655,17 +655,8 @@ void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_d
           // Calculate how much this Event will chaange the pixel.
           //  Breaking the norm, but also passing the led ID and
           //  original 4 colors to ... (consider rewrite)
-          if(teDATA.booOFFDURINGDAY == true && sdSysData.booDay_On == true)
-          {
-            tempColor.r=0;
-            tempColor.g=0;
-            tempColor.b=0;
-          }
-          else
-          {
-            tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
-                                        led, 0, teDATA);  // Remove event param
-          }
+          tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
+                                      led, 0, teDATA);  // Remove event param
 
           //  Update the events completeness if its still active.
           if (tempColor.complete == false)
@@ -709,7 +700,6 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
   bool booPixelColorChanged = false;
   CRGB empty_color;
   
-  bool booEventActive = false;
   bool booEventComplete = true;
 
   bigCRGB bigcrgbNewColor[intLEDCOUNT];
@@ -720,69 +710,56 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
     // Process each event, one by one.
     for (int event = 0; event < teDATA.size(); event++)
     {
-      booEventComplete = true;
-      booEventActive = false;
-
       int led_start = 0;
       int led_end = 0;
 
       // Only continue processing the event if the event hasnt been completed.
       // or if the event shouldnt be skipped because of display in day is off.
-      if (teDATA[event].booCOMPLETE == false)
+      if (teDATA[event].booCOMPLETE == false && 
+                    (teDATA[event].booOFFDURINGDAY == false || sdSysData.booDay_On == false))
       {
         // OK, so an event is schedule, but is it ready to start?
         if (tmeCurrentTime >= teDATA[event].tmeSTARTTIME)
         {
-
-          // Set event as being processed. Necessary to not be erased during event clean up.
-          //  Only Completed Active Events should be erased.  Non Active events falsely look
-          //  completed.
-          booEventActive = true;
-
+          
+          booEventComplete = true;
+          
           // Determin direction of LED animation.
-          if(teDATA[event].intSTARTPOS < teDATA[event].intENDPOS)
+          if(teDATA[event].intSTARTPOS <= teDATA[event].intENDPOS)
           {
-            for (int led = teDATA[event].intSTARTPOS; led < teDATA[event].intENDPOS; led++)
+            for (int led = teDATA[event].intSTARTPOS; led <= teDATA[event].intENDPOS; led++)
             {
-              process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
-                                bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+              if (led >= 0 && led < intLEDCOUNT)
+              {
+                process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
+                                  bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+              }
             }
           }
           else
           {
-            for (int led = teDATA[event].intENDPOS; led > teDATA[event].intSTARTPOS; led--)
+            for (int led = teDATA[event].intENDPOS; led <= teDATA[event].intSTARTPOS; led++)
             {
-              process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
-                                bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+              if (led >= 0 && led < intLEDCOUNT)
+              {
+                process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
+                                  bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+              }
             }
           }
-
-          // Process each LED of the event.
-
+          
+          // Only PostCheck Events that are started and marked completed by the 
+          //  animation renderer.
+          if (booEventComplete == true)
+          {
+            teDATA[event].booCOMPLETE = true;
+            teDATA[event].PostCheck(tmeCurrentTime);
+          }
         }
       }
-
-      // Only PostCheck Events that are started and marked completed by the 
-      //  animation renderer.
-      if (booEventActive == true && booEventComplete == true)
-      {
-        teDATA[event].booCOMPLETE = true;
-        teDATA[event].PostCheck(tmeCurrentTime);
-      }
-
     } // END for event 
 
-    // Erase all completed events
-    for(int e = 0; e < teDATA.size(); e++ )
-    {
-      if (teDATA[e].booCOMPLETE == true)
-      {
-        teDATA.erase(teDATA.begin() + e);
-      }
-    }
-
     // All events ran. Prep for copy to hwLEDArray.
-
     // Normalize and Bring big pixels to hwLEDArray
     if (booPixelColorChanged == true)
     {
@@ -829,9 +806,18 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
         {
           hwLEDArray[led].b = bigcrgbNewColor[led].b;
         }
-        
       }
     }
+    
+    // Erase all completed events
+    for(int e = 0; e < teDATA.size(); e++ )
+    {
+      if (teDATA[e].booCOMPLETE == true)
+      {
+        teDATA.erase(teDATA.begin() + e);
+      }
+    }
+
   } // END if teDATA.size > 0
   
   return booPixelColorChanged;

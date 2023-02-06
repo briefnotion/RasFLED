@@ -162,6 +162,10 @@ LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
+/home/pi/source/RasFLED/source/gadgets.cpp
+gadgets.h
+/home/pi/source/RasFLED/source/gadgets.h
+
 /home/pi/source/RasFLED/source/gadgets.h
 stdio.h
 -
@@ -205,6 +209,10 @@ gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
+
+/home/pi/source/RasFLED/source/gadgets_radio.cpp
+gadgets_radio.h
+/home/pi/source/RasFLED/source/gadgets_radio.h
 
 /home/pi/source/RasFLED/source/gadgets_radio.h
 stdio.h
@@ -475,6 +483,10 @@ deque
 -
 ncurses.h
 -
+
+/home/pi/source/RasFLED/source/system.cpp
+system.h
+/home/pi/source/RasFLED/source/system.h
 
 /home/pi/source/RasFLED/source/system.h
 stdio.h

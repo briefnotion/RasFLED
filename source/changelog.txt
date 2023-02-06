@@ -1,3 +1,8 @@
+V 1.55A_230206
+  - FOR TESTING REASONS ONLY.
+  - LED Engine V.2 is default on.
+  - Continued work on the alerts screen.
+
 V 1.54A_230205
   - Continued work on the alerts screen.
 
