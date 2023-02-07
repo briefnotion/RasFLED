@@ -1,3 +1,6 @@
+V 1.55B_230207
+  - Small Change in LED Engine V.2
+
 V 1.55A_230206
   - FOR TESTING REASONS ONLY.
   - LED Engine V.2 is default on.

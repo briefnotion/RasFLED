@@ -727,24 +727,19 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
           // Determin direction of LED animation.
           if(teDATA[event].intSTARTPOS <= teDATA[event].intENDPOS)
           {
-            for (int led = teDATA[event].intSTARTPOS; led <= teDATA[event].intENDPOS; led++)
+            for (int led = teDATA[event].intSTARTPOS; (led <= teDATA[event].intENDPOS) && (led >= 0 && led < intLEDCOUNT); led++)
             {
-              if (led >= 0 && led < intLEDCOUNT)
-              {
-                process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
-                                  bigcrgbNewColor, booEventComplete, booPixelColorChanged);
-              }
+              process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
+                                bigcrgbNewColor, booEventComplete, booPixelColorChanged);
+
             }
           }
           else
           {
-            for (int led = teDATA[event].intENDPOS; led <= teDATA[event].intSTARTPOS; led++)
+            for (int led = teDATA[event].intENDPOS; (led <= teDATA[event].intSTARTPOS) && (led >= 0 && led < intLEDCOUNT); led++)
             {
-              if (led >= 0 && led < intLEDCOUNT)
-              {
-                process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
-                                  bigcrgbNewColor, booEventComplete, booPixelColorChanged);
-              }
+              process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
+                                bigcrgbNewColor, booEventComplete, booPixelColorChanged);
             }
           }
           
