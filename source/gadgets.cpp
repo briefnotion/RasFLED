@@ -832,6 +832,18 @@ void Text_Box::clear_text()
 // -------------------------------------------------------------------------------------
 // Button Classes
 
+int Button::get_auto_color(int BColor)
+{
+  if (BColor == COLOR_BLUE || BColor == COLOR_RED)
+  {
+    return COLOR_WHITE;
+  }
+  else
+  {
+    return COLOR_BLACK;
+  }
+}
+
 void Button::create()
 //void create(int id, string name, string label, int value, int type, int color, int bcolor)
 // Define button and behavior.  
@@ -996,13 +1008,18 @@ bool Button::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.ENABLED == true && PROP.HIDDEN == false && 
                         (PROP.TYPE == 0 || PROP.TYPE == 1 || PROP.TYPE == 2))
     {
-      // Start by setting button color.
-      BUTTON_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
-
       if (PROP.VALUE == 0 && BUTTON_PRESSED.ping_down(tmeFrame_Time) == false)
       // Dont reverse the colors if Button off or no ping
       {
-        BUTTON_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+        // Start by setting button color.
+        if (PROP.AUTO_COLOR == false)
+        {
+          BUTTON_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+        }
+        else
+        {
+          BUTTON_PANEL.set_color(PROP.BCOLOR, get_auto_color(PROP.BCOLOR));
+        }
       }
       else
       {

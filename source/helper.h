@@ -245,11 +245,12 @@ int position_of_scale(int size, int scale, int value);
 // Calculate position of value on scale (eg 100%) with size.
 //  Will not return anything larger than size.
 
-/*
-bool is_between(int Value, int Number_1, int Number_2);
-// Comarison opperator returns true if Value is in between 
-//  Num 1 and Num 2, regardless if Number 1 is less than or 
-//  greater than Number 2.
-*/
+bool is_within(int Value, int Number_1, int Number_2);
+// Comarison opperator returns true if Value is in between  
+//  or equal to Num 1 and Num 2, regardless if Number 1 
+//  is less than or greater than Number 2.
+
+
+
 
 #endif

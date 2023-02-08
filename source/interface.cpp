@@ -578,20 +578,6 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     */
 
     // -------------------------------------------------------------------------------------
-    // Render Version -------------
-    // LED Engine Version 1
-    if (check_command(cons, " lede1", "LED Engine V.1 Active"))
-    {
-      sdSysData.LED_ENGINE = 1;
-    }
-
-    // LED Engine Version 2
-    if (check_command(cons, " lede2", "LED Engine V.2 Active"))
-    {
-      sdSysData.LED_ENGINE = 2;
-    }
-
-    // -------------------------------------------------------------------------------------
     // ABS-B -------------
     // Command Line (load fastart.sh)
     if (check_command(cons, " absbon", "ABS-B On"))

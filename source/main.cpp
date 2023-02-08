@@ -618,38 +618,21 @@ int loop()
       // MOVE RENAME ELIMINATE ??? !!!
       bool booUpdate = false;
 
-      //  Run ALL GLOBAL Timed Events
-      teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
-    
-      if(sdSystem.LED_ENGINE == 1)
-      {
-        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-        {
-          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-          {
-            int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
-            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
-              = teEvents[channel].execute1(cons, sdSystem, sRND, 
-                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-                  tmeCurrentMillis);
-          }
-        }
-      }
-      else if(sdSystem.LED_ENGINE == 2)
-      {
-        for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-        {
-          for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-          {
-            int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
-            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
-              = teEvents[channel].execute2(cons, sdSystem, sRND, 
-                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-                  tmeCurrentMillis);
-          }
-        }
-      }
+    //  Run ALL GLOBAL Timed Events
+    teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
 
+      for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+      {
+        for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+        {
+          int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
+            = teEvents[channel].execute2(cons, sdSystem, sRND, 
+                sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                tmeCurrentMillis);
+        }
+      }
+      
       // ---------------------------------------------------------------------------------------
       // Render all the LEDs if changes have been made.
 

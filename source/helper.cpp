@@ -428,6 +428,31 @@ int position_of_scale(int size, int scale, int value)
   }
 }
 
+bool is_within(int Value, int Number_1, int Number_2)
+{
+  if (Number_1 <= Number_2)
+  {
+    if (Number_1 <= Value && Value <= Number_2)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    if (Number_2 <= Value && Value <= Number_1)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+}
 
 
 

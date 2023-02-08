@@ -618,6 +618,7 @@ class Button_Properties
   int TYPE = 0;
   int COLOR = 0;
   int BCOLOR = 0;
+  bool AUTO_COLOR = true;
 
   bool HIDDEN = false;
   bool ENABLED = true;
@@ -668,6 +669,12 @@ class Button
   public:
 
   Button_Properties PROP;
+
+  private:
+
+  int get_auto_color(int BColor);
+  
+  public:
 
   void create();
   // Prepare gadget to be drawn.  
