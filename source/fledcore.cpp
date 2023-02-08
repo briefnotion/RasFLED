@@ -505,7 +505,7 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
           {
             for (int led = teDATA[event].intSTARTPOS; led <= teDATA[event].intENDPOS; led++)
             {
-              if (is_within(led, 0, intLEDCOUNT))
+              if (is_within(led, 0, intLEDCOUNT -1))
               {
                 process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
                                   bigcrgbNewColor, booEventComplete, booPixelColorChanged);
@@ -517,7 +517,7 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
           {
             for (int led = teDATA[event].intENDPOS; led <= teDATA[event].intSTARTPOS; led++)
             {
-              if (is_within(led, 0, intLEDCOUNT))
+              if (is_within(led, 0, intLEDCOUNT -1))
               {
                 process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
                                   bigcrgbNewColor, booEventComplete, booPixelColorChanged);

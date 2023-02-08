@@ -1,10 +1,12 @@
-V 1.56A_230208
+V 1.56B_230208
   - Removed LED Engine V.1
   - Removed:
     Temporary commands to change LED Engine:
     " lede1" - for original (V.1) LED Engine.
     " lede2" - for testing new (V.2) engine.
   - Changes made to some gadgets.
+  - B:
+    Small Change in LED Engine V.2
 
 V 1.55B_230207
   - Small Change in LED Engine V.2
