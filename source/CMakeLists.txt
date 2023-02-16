@@ -38,6 +38,7 @@ add_executable(
   stringthings.cpp
   fled_time.cpp
   helper_ncurses.cpp
+  json_interface.cpp
   rasapi.cpp
   hardware_module_door.cpp
   hardware_status.cpp

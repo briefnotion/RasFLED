@@ -452,7 +452,8 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
   bool ret_redrawn = false;
 
   // Check Expiration
-  if (EXPIREED.blip_moved(tmeFrame_Time) == true && EXPIREED.ping_down(tmeFrame_Time) == false)
+  if ((EXPIREED.blip_moved(tmeFrame_Time) == true && EXPIREED.ping_down(tmeFrame_Time) == false) || 
+      (Refresh == true && EXPIREED.ping_down(tmeFrame_Time) == false))
   {
     // Clear all data and reset to start empty state.
     clear();

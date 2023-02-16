@@ -41,6 +41,13 @@ using namespace std;
 //  some time when I created the load playlist routines.  They dont belong here 
 //  anyway.  So, Ill move em out later. 
 
+class FILE_TO_STRING
+{
+  public:
+
+  bool booRead_File(string strFilename, string &File_String);
+};
+
 class FILE_TO_DEQUE
 {
   public:

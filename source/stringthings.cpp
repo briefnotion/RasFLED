@@ -229,6 +229,25 @@ string center_justify(int size, string text)
   return return_string;
 }
 
+//const std::string WHITESPACE = " \n\r\t\f\v";
+ 
+string left_trim(const string &Text)
+{
+  size_t start = Text.find_first_not_of(" \n\r\t\f\v");
+  return (start == string::npos) ? "" : Text.substr(start);
+}
+ 
+string right_trim(const string &Text)
+{
+  size_t end = Text.find_last_not_of(" \n\r\t\f\v");
+  return (end == string::npos) ? "" : Text.substr(0, end + 1);
+}
+ 
+string trim(const string &Text) 
+{
+  return right_trim(left_trim(Text));
+}
+
 bool string_to_int(string String_Value, int &Int_Value)
 // Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.

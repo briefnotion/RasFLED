@@ -32,6 +32,7 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 //  Panel Class
+
 class WINDOW_BODER_PROPERTIES
 // Panel border characters.
 {

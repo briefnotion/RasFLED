@@ -70,6 +70,15 @@ string center_justify(int size, string text);
 // Overlaps and left justifies text onto line.
 // Returns value at size. 
 
+string left_trim(const string &Text);
+// Remove leading spaces and special characters from text.
+
+string right_trim(const string &Text);
+// Remove trailing spaces and special characters from text.
+
+string trim(const string &Text);
+// Remove leading and trailing spaces and special characters from text.
+
 bool string_to_int(string String_Value, int &Int_Value);
 // Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.

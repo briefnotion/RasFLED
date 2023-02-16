@@ -1003,6 +1003,7 @@ bool Button::draw(bool Refresh, unsigned long tmeFrame_Time)
   if (PROP.CHANGED == true || Refresh == true)
   {
     LINES.set_text(PROP.LABEL);
+    LINES.redraw();
     
     //Set Color, Set Reverse if On, Draw Sencils for Buttons
     if (PROP.ENABLED == true && PROP.HIDDEN == false && 

@@ -313,6 +313,26 @@ timedeventsystem.h
 /home/pi/source/RasFLED/source/timedeventsystem.h
 commands.h
 /home/pi/source/RasFLED/source/commands.h
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
+
+/home/pi/source/RasFLED/source/json_interface.cpp
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
+
+/home/pi/source/RasFLED/source/json_interface.h
+stdio.h
+-
+string.h
+-
+deque
+-
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
+files.h
+/home/pi/source/RasFLED/source/files.h
+rasapi.h
+/home/pi/source/RasFLED/source/rasapi.h
 
 /home/pi/source/RasFLED/source/main.cpp
 main.h

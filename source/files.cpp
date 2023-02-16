@@ -30,6 +30,50 @@ using namespace std;
 //  some time when I created the load playlist routines.  They dont belong here 
 //  anyway.  So, Ill move em out later. 
 
+
+bool FILE_TO_STRING::booRead_File(string strFilename, string &File_String)
+{
+  fstream fsFile;
+  bool booSuccess = false;
+
+  bool booActive = false;
+
+  fsFile.open(strFilename, ios::in);
+
+
+  if (!fsFile)
+  {
+    booActive = false;
+    booSuccess = false;
+  }
+  else 
+  {
+    booActive = true;
+  }
+
+  if (booActive == true)
+  {
+    string strRead = "";
+
+    while(booActive == true)
+    {
+      getline(fsFile,strRead);
+
+      File_String = File_String + strRead;
+
+      if(fsFile.eof())
+      {
+        booActive = false;
+        booSuccess = true;
+      }
+    }
+  }
+
+  return booSuccess;
+
+}
+
+
 bool FILE_TO_DEQUE::booRead_File(string strFilename, deque<string> &qFile)
 {
   fstream fsFile;
@@ -58,7 +102,6 @@ bool FILE_TO_DEQUE::booRead_File(string strFilename, deque<string> &qFile)
     {
       getline(fsFile,strRead);
 
-      //strFile = strFile + strRead;
       qFile.push_back(strRead);
 
       if(fsFile.eof())

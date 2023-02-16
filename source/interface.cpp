@@ -327,6 +327,49 @@ bool check_command_with_num_param(Console &cons, string command, string descript
   return boo_return;  
 }
 
+void print_json_nodes(Console &cons, JSON_ENTRY Json_entry, int Level, int Count)
+{
+  Level++;
+  cons.printwait(to_string(Level) + ":" + to_string(Count) + " [" + Json_entry.LABEL + "]  [" + Json_entry.VALUE + "]"); 
+                  //"|   <---" + Json_entry.BUFFER1);
+
+  if (Json_entry.DATA.size() > 0)
+  {
+    for (int x = 0; x < Json_entry.DATA.size(); x++)
+    {
+      {
+        //cons.printwait("  ----v");
+        print_json_nodes(cons, Json_entry.DATA[x], Level, x);
+      }
+    }
+  }
+}
+
+
+void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
+{
+  cons.printwait("Test ...");
+
+  JSON_INTERFACE json;
+
+  json.PROP.FILENAME = "/home/pi/flightaware/test.json";
+
+
+  cons.printwait("------------------");
+
+  if (json.load_json() == true)
+  {
+    cons.printwait("  Read Sucess");
+  }
+  else
+  {
+    cons.printwait("  Read Failed");
+  }
+
+  print_json_nodes(cons, json.ROOT, 0, 0);
+
+  cons.printwait("Test OK");
+}
 
 // Process and call routines as entered on the command line.
 void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
@@ -350,6 +393,15 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
     
     // Call routines that match the info on the command line.
+
+    // Test Routine
+    if(cons.keywatch.Command.COMMANDLINE == " test")
+    {
+      // Keep values below 128
+      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+      run_test(cons, sdSysData, tmeCurrentTime, teEvent);
+      cons.keywatch.cmdClear();
+    }
     
     // Program Exit
     if (check_command(cons,"X", "Program Exit") || check_command(cons, "exit", "Program Exit"))

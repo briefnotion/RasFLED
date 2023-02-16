@@ -21,6 +21,8 @@
 #include "timedeventsystem.h"
 #include "commands.h"
 
+// Test
+#include "json_interface.h"
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
@@ -98,6 +100,10 @@ bool check_command(Console &cons, string command, string description);
 
 bool check_command_with_num_param(Console &cons, string command, string description, int num_start, int num_len, int &Parameter);
 
+void print_json_nodes(Console &cons, JSON_ENTRY Json_entry, int Level, int Count);
+
+// Test Routine Area
+void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
 
 // Process and call routines as entered on the command line.
 void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
