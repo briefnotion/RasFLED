@@ -40,8 +40,6 @@ class JSON_ENTRY
   
   int errcountcap = 1000;
 
-  bool IS_LIST = false;
-
   string parse_label(string Text, int Pos_Colon);
 
   string parse_value(string Text, int Pos_Colon);
@@ -64,6 +62,10 @@ class JSON_ENTRY
   string LABEL = "";
   string VALUE = "";
   deque<JSON_ENTRY> DATA;
+
+  bool IS_VALUE = false;
+  bool IS_SET = false;
+  bool IS_LIST = false;
 
   bool set_list(string Entry);
 

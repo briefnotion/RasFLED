@@ -258,17 +258,23 @@ bool JSON_ENTRY::parse_item_list(string Entry)
         // Store value or data
         if (is_value_set == false && is_value_list == false)
         {
+          new_json_entry.IS_VALUE = true;
+
           new_json_entry.LABEL = trim(sub_label);
           new_json_entry.VALUE = trim(sub_value);
         }
         else
         if (is_value_set == true)
         {
+          new_json_entry.IS_SET = true;
+
           new_json_entry.set_set(sub_value, sub_label);
         }
         else
         // if (is_value_list == true)
         {
+          new_json_entry.IS_LIST = true;
+
           new_json_entry.set_list(sub_entry);
         }
 
@@ -298,7 +304,6 @@ bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
   bool is_value_list = false;
 
   string label = "";
-  string value = "";
 
   Entry = trim(Entry);
 
@@ -319,6 +324,8 @@ bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
         // Remove processing portion
           sub_entry = Entry.substr(0, entry_size);
           Entry = Entry.erase(0, entry_size);
+
+          new_json_entry.IS_LIST = true;
 
           new_json_entry.set_list(sub_entry);
 
@@ -387,7 +394,7 @@ bool JSON_INTERFACE::load_json()
     {
       JSON_ENTRY new_json_entry;
 
-      ROOT.LABEL = "ROOT";
+      ROOT.IS_LIST = true;
       if (ROOT.set_list(file_text) == true)
       {
         ret_success = true;

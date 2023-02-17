@@ -327,24 +327,90 @@ bool check_command_with_num_param(Console &cons, string command, string descript
   return boo_return;  
 }
 
+
+
 void print_json_nodes(Console &cons, JSON_ENTRY Json_entry, int Level, int Count)
 {
   Level++;
-  cons.printwait(to_string(Level) + ":" + to_string(Count) + " [" + Json_entry.LABEL + "]  [" + Json_entry.VALUE + "]"); 
-                  //"|   <---" + Json_entry.BUFFER1);
 
-  if (Json_entry.DATA.size() > 0)
+  if (Json_entry.IS_VALUE == true)
   {
-    for (int x = 0; x < Json_entry.DATA.size(); x++)
+    cons.printwait(to_string(Level) + ":V:" + to_string(Count) + line_create(Level *3, ' ') + 
+                    " [" + Json_entry.LABEL + "]  [" + Json_entry.VALUE + "]"); 
+  } else
+  if (Json_entry.IS_SET == true)
+  {
+    cons.printwait(to_string(Level) + ":S:" + to_string(Count) + line_create(Level *3, ' ') + 
+                    " [" + Json_entry.LABEL + "]  "); 
+  }
+
+  if (Json_entry.IS_VALUE == false)
+  {
+    if (Json_entry.DATA.size() > 0)
     {
+      for (int x = 0; x < Json_entry.DATA.size(); x++)
       {
-        //cons.printwait("  ----v");
-        print_json_nodes(cons, Json_entry.DATA[x], Level, x);
+        {
+          //cons.printwait("  ----v");
+          print_json_nodes(cons, Json_entry.DATA[x], Level, x);
+        }
       }
     }
   }
 }
 
+void print_json_build(Console &cons, JSON_ENTRY Json_entry, int Level, string Trailing_Seperator)
+{
+  Level++;
+
+  if (Json_entry.IS_VALUE == true)
+  {
+    cons.printwait(line_create(Level *2, ' ') + Json_entry.LABEL + " : " + Json_entry.VALUE + Trailing_Seperator); 
+  } else
+  if (Json_entry.IS_SET == true)
+  {
+    cons.printwait(line_create(Level *2, ' ') + Json_entry.LABEL + " : "); 
+    Level++;
+    cons.printwait(line_create(Level *2, ' ') + "["); 
+  } else
+  if (Json_entry.IS_LIST == true)
+  {
+    cons.printwait(line_create(Level *2, ' ') + "{"); 
+  }
+
+  if (Json_entry.IS_VALUE == false)
+  {
+    if (Json_entry.DATA.size() > 0)
+    {
+      for (int x = 0; x < Json_entry.DATA.size(); x++)
+      {
+        {
+          string New_Trailing_Seperator = "";
+
+          if ( x < Json_entry.DATA.size() -1)
+          {
+            New_Trailing_Seperator = " , ";
+          }
+          else
+          {
+            New_Trailing_Seperator = "";
+          }
+          print_json_build(cons, Json_entry.DATA[x], Level, New_Trailing_Seperator);
+        }
+      }
+    }
+  }
+
+  if (Json_entry.IS_SET == true)
+  {
+    cons.printwait(line_create(Level *2, ' ') + "]" + Trailing_Seperator); 
+    Level--;
+  } else
+  if (Json_entry.IS_LIST == true)
+  {
+    cons.printwait(line_create(Level *2, ' ') + "}" + Trailing_Seperator); 
+  }
+}
 
 void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
@@ -368,7 +434,14 @@ void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTim
 
   print_json_nodes(cons, json.ROOT, 0, 0);
 
+  cons.printwait("");
+
+  print_json_build(cons, json.ROOT, -1, "");
+
+  cons.printwait("");
   cons.printwait("Test OK");
+
+
 }
 
 // Process and call routines as entered on the command line.

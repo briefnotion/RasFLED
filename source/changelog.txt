@@ -1,3 +1,6 @@
+V 1.58A_230217
+  - Continued building a simple JSON file reader and writer.
+
 V 1.57A_230216
   - Started building a simple JSON file reader and writer.
   - Changes made to some gadgets.
