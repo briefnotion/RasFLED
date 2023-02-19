@@ -110,6 +110,8 @@ bool FILE_TO_DEQUE::booRead_File(string strFilename, deque<string> &qFile)
         booSuccess = true;
       }
     }
+    
+    fsFile.close();
   }
 
   return booSuccess;

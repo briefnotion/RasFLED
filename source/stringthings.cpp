@@ -248,6 +248,22 @@ string trim(const string &Text)
   return right_trim(left_trim(Text));
 }
 
+string remove_first_and_last_characters(char Character, string Text)
+{
+  Text = trim(Text);
+  if (Text.size() > 1)
+  {
+    if (Text[0] == Character)
+    {
+      if (Text[Text.size() -1] == Character)
+      {
+        Text = Text.substr(1, Text.size() -2);
+      }
+    }
+  }
+  return Text;
+}
+
 bool string_to_int(string String_Value, int &Int_Value)
 // Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.

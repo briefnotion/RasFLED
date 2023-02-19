@@ -312,6 +312,48 @@ string FILE_WATCH::get_next_line()
   return str_read_line;
 }
 
+string file_to_string(string strFilename)
+{
+  fstream fsFile;
+
+  string File_String = "";
+
+  bool booSuccess = false;
+  bool booActive = false;
+
+  fsFile.open(strFilename, ios::in);
+
+  if (!fsFile)
+  {
+    booActive = false;
+    booSuccess = false;
+  }
+  else 
+  {
+    booActive = true;
+  }
+
+  if (booActive == true)
+  {
+    string strRead = "";
+
+    while(booActive == true)
+    {
+      getline(fsFile,strRead);
+
+      File_String = File_String + strRead;
+
+      if(fsFile.eof())
+      {
+        booActive = false;
+        booSuccess = true;
+      }
+    }
+  }
+
+  return File_String;
+
+}
 
 
 

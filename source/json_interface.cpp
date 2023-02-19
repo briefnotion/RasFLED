@@ -260,8 +260,8 @@ bool JSON_ENTRY::parse_item_list(string Entry)
         {
           new_json_entry.IS_VALUE = true;
 
-          new_json_entry.LABEL = trim(sub_label);
-          new_json_entry.VALUE = trim(sub_value);
+          new_json_entry.LABEL = remove_first_and_last_characters('"', sub_label);
+          new_json_entry.VALUE = remove_first_and_last_characters('"', sub_value);
         }
         else
         if (is_value_set == true)
@@ -309,7 +309,7 @@ bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
 
   if (remove_brackets(Entry) == true)
   {
-    LABEL = trim(Set_Name);
+    LABEL = remove_first_and_last_characters('"', Set_Name);
 
     int errcount = 0;
 
@@ -355,6 +355,20 @@ bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
   return true;
 }
 
+int JSON_ENTRY::find_pos_of_label_in_list(string Label_In_List)
+{
+  bool ret_pos = -1;
+
+  for (int pos = 0; pos < DATA.size() && ret_pos > -1; pos++)
+  {
+    if (DATA[pos].label() == Label_In_List)
+    {
+      ret_pos = pos;
+    }
+  }
+
+  return ret_pos;
+}
 
 bool JSON_ENTRY::set_list(string Entry)
 {
@@ -380,29 +394,140 @@ bool JSON_ENTRY::set_set(string Entry, string Set_Name)
   return ret_success;
 }
 
-bool JSON_INTERFACE::load_json()
+string JSON_ENTRY::label()
+{
+  return LABEL;
+}
+
+string JSON_ENTRY::value()
+{
+  return VALUE;
+}
+
+string JSON_ENTRY::value_from_list(string Label_In_List)
+{
+  string ret_value = "";
+
+  int pos = find_pos_of_label_in_list(Label_In_List);
+
+  if (pos > -1)
+  {
+    ret_value = DATA[pos].value();
+  }
+
+  return ret_value;
+}
+
+void JSON_INTERFACE::json_debug_to_string_deque(deque<string> &JSON_Print_Build, JSON_ENTRY Json_entry, int Level, int Count)
+{
+  Level++;
+
+  if (Json_entry.IS_VALUE == true)
+  {
+    JSON_Print_Build.push_back(to_string(Level) + ":V:" + to_string(Count) + line_create(Level *3, ' ') + 
+                    " [" + Json_entry.label() + "]  [" + Json_entry.value() + "]"); 
+  } else
+  if (Json_entry.IS_SET == true)
+  {
+    JSON_Print_Build.push_back(to_string(Level) + ":S:" + to_string(Count) + line_create(Level *3, ' ') + 
+                    " [" + Json_entry.label() + "]  "); 
+  }
+
+  if (Json_entry.IS_VALUE == false)
+  {
+    if (Json_entry.DATA.size() > 0)
+    {
+      for (int x = 0; x < Json_entry.DATA.size(); x++)
+      {
+        {
+          json_debug_to_string_deque(JSON_Print_Build, Json_entry.DATA[x], Level, x);
+        }
+      }
+    }
+  }
+}
+
+void JSON_INTERFACE::json_to_string_deque(deque<string> &JSON_Print_Build, JSON_ENTRY Json_entry, int Level, string Trailing_Seperator)
+{
+  Level++;
+
+  if (Json_entry.IS_VALUE == true)
+  {
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + Json_entry.label() + " : " + Json_entry.value() + Trailing_Seperator); 
+  } else
+  if (Json_entry.IS_SET == true)
+  {
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + Json_entry.label() + " : "); 
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + "["); 
+  } else
+  if (Json_entry.IS_LIST == true)
+  {
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + "{"); 
+  }
+
+  if (Json_entry.IS_VALUE == false)
+  {
+    if (Json_entry.DATA.size() > 0)
+    {
+      for (int x = 0; x < Json_entry.DATA.size(); x++)
+      {
+        {
+          string New_Trailing_Seperator = "";
+
+          if ( x < Json_entry.DATA.size() -1)
+          {
+            New_Trailing_Seperator = " , ";
+          }
+          else
+          {
+            New_Trailing_Seperator = "";
+          }
+          json_to_string_deque(JSON_Print_Build, Json_entry.DATA[x], Level, New_Trailing_Seperator);
+        }
+      }
+    }
+  }
+
+  if (Json_entry.IS_SET == true)
+  {
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + "]" + Trailing_Seperator); 
+    Level--;
+  } else
+  if (Json_entry.IS_LIST == true)
+  {
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + "}" + Trailing_Seperator); 
+  }
+}
+
+bool JSON_INTERFACE::load_json_from_string(string JSON_Text)
 {
   bool ret_success = false;
 
-  string file_text = "";
+  JSON_Text = trim(JSON_Text);
 
-  if (FILE_JSON.booRead_File(PROP.FILENAME, file_text) == true)
+  if (JSON_Text.size() > 0)
   {
-    file_text = trim(file_text);
+    JSON_ENTRY new_json_entry;
 
-    if (file_text.size() > 0)
+    ROOT.IS_LIST = true;
+    if (ROOT.set_list(JSON_Text) == true)
     {
-      JSON_ENTRY new_json_entry;
-
-      ROOT.IS_LIST = true;
-      if (ROOT.set_list(file_text) == true)
-      {
-        ret_success = true;
-      }
+      ret_success = true;
     }
   }
 
   return ret_success;
 }
+
+void JSON_INTERFACE::json_debug_build_to_string_deque(deque<string> &JSON_Print_Build)
+{
+  json_debug_to_string_deque(JSON_Print_Build, ROOT, 0, 0);
+}
+
+void JSON_INTERFACE::json_print_build_to_string_deque(deque<string> &JSON_Print_Build)
+{
+  json_to_string_deque(JSON_Print_Build, ROOT, -1, "");
+}
+
 
 #endif

@@ -23,6 +23,7 @@
 // RASFled related header files
 #include "stringthings.h"
 #include "fled_time.h"
+#include "json_interface.h"
 
 /*
 aircraft.json
@@ -159,12 +160,16 @@ class AIRCRAFT_COORDINATOR
 
   bool IS_ACTIVE = false;
 
+  JSON_INTERFACE AIRCRAFT_JSON;
+
   public:
   AIRCRAFT_DATA DATA;
 
   private:
 
   bool read_json_file(string &JSON_Filename);
+
+  bool read_json_file_for_interface(string JSON_Text);
 
   string tree_value(string First, ptree::value_type &Branch);
 
@@ -173,6 +178,8 @@ class AIRCRAFT_COORDINATOR
   public:
 
   bool is_active();
+
+  bool process_2(string JSON_Text);
 
   bool process(string JSON_Filename);
 

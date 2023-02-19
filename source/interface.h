@@ -101,10 +101,6 @@ bool check_command(Console &cons, string command, string description);
 bool check_command_with_num_param(Console &cons, string command, string description, int num_start, int num_len, int &Parameter);
 
 // Test Routine Area
-void print_json_nodes(Console &cons, JSON_ENTRY Json_entry, int Level, int Count);
-
-void print_out_json(Console &cons, JSON_ENTRY Json_entry, int Level, string Trailing_Seperator);
-
 void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
 
 // Process and call routines as entered on the command line.

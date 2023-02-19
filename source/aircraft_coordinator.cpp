@@ -215,6 +215,12 @@ bool AIRCRAFT_COORDINATOR::read_json_file(string &JSON_Filename)
   return boo_return;
 }
 
+bool AIRCRAFT_COORDINATOR::read_json_file_for_interface(string JSON_Text)
+// Read JSON file into Property Tree
+{
+  return AIRCRAFT_JSON.load_json_from_string(JSON_Text);
+}
+
 string AIRCRAFT_COORDINATOR::tree_value(string First, ptree::value_type &Branch)
 // Search for First and return value from property tree.
 {
@@ -248,6 +254,18 @@ void AIRCRAFT_COORDINATOR::post_post_process()
 bool AIRCRAFT_COORDINATOR::is_active()
 {
   return IS_ACTIVE;
+}
+
+bool AIRCRAFT_COORDINATOR::process_2(string JSON_Text)
+{
+  bool ret_success = false;
+
+  if (AIRCRAFT_JSON.load_json_from_string(JSON_Text))
+  {
+    ret_success = true;
+  }
+
+  return ret_success;
 }
 
 bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)

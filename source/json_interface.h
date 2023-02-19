@@ -14,14 +14,10 @@
 
 // Standard Header Files
 #include <stdio.h>
-//#include <ncurses.h>
 #include <string.h>
 #include <deque>
 
 #include "stringthings.h"
-//#include "system.h"
-//#include "helper_ncurses.h"
-#include "files.h"
 #include "rasapi.h"
 
 using namespace std;
@@ -57,45 +53,49 @@ class JSON_ENTRY
 
   bool parse_item_set(string Entry, string Set_Name);
 
-  public:
-
   string LABEL = "";
   string VALUE = "";
+
+  public:
+
   deque<JSON_ENTRY> DATA;
 
   bool IS_VALUE = false;
   bool IS_SET = false;
   bool IS_LIST = false;
 
+  int find_pos_of_label_in_list(string Label_In_List);
+
   bool set_list(string Entry);
 
   bool set_set(string Entry, string Set_Name);
-};
 
-class JSON_INTERFACE_PROPERTIES
-// Properties (duh)
-{
-  public: 
-  string FILENAME = "";
+  string label();
+
+  string value();
+
+  string value_from_list(string Label_In_List);
 
 };
 
 class JSON_INTERFACE
 {
   private:
+  
+  void json_debug_to_string_deque(deque<string> &JSON_Print_Build, JSON_ENTRY Json_entry, int Level, int Count);
 
-  FILE_TO_STRING FILE_JSON;
+  void json_to_string_deque(deque<string> &JSON_Print_Build, JSON_ENTRY Json_entry, int Level, string Trailing_Seperator);
 
   public: 
 
-  JSON_INTERFACE_PROPERTIES PROP;
-
   JSON_ENTRY ROOT;
 
-  bool load_json();
+  bool load_json_from_string(string JSON_Text);
+  // boolean failure and success decisions not complete
 
-  string sub();
+  void json_debug_build_to_string_deque(deque<string> &JSON_Print_Build);
 
+  void json_print_build_to_string_deque(deque<string> &JSON_Print_Build);
 };
 
 

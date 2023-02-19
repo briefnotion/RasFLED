@@ -79,6 +79,10 @@ string right_trim(const string &Text);
 string trim(const string &Text);
 // Remove leading and trailing spaces and special characters from text.
 
+string remove_first_and_last_characters(char Character, string Text);
+// For removing things like start and ending quotes.
+// Value will be trimmed.
+
 bool string_to_int(string String_Value, int &Int_Value);
 // Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.

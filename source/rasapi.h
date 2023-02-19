@@ -101,6 +101,6 @@ class FILE_WATCH
   string get_next_line();
 };
 
-
+string file_to_string(string strFilename);
 
 #endif

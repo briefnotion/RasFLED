@@ -767,6 +767,8 @@ int loop()
       if (watcher_aircraft_json.changed() == true)
       {
         sdSystem.AIRCRAFT_COORD.process(FILES_AIRCRAFT_JSON);
+
+        //sdSystem.AIRCRAFT_COORD.process_2(file_to_string(FILES_AIRCRAFT_JSON));
       }
 
       // --- Grabbing Data From Keyboard and update whatever is associated to the key pressed.
