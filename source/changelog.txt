@@ -1,3 +1,7 @@
+V 1.60A_230219
+  - Continued building a simple JSON file reader and writer.
+  - Changed Aircraft Coordinator JSON file proceesor.
+
 V 1.59A_230218
   - Continued building a simple JSON file reader and writer.
 

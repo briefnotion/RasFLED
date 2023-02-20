@@ -16,10 +16,6 @@
 #include <string>
 #include <math.h>
 
-// Boost libraries
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-
 // RASFled related header files
 #include "stringthings.h"
 #include "fled_time.h"
@@ -46,8 +42,6 @@ messages:   total number of Mode S messages received from this aircraft
 seen:       how long ago (in seconds before "now") a message was last received from this aircraft
 rssi:       recent average RSSI (signal power), in dbFS; this will always be negative.
 */
-
-using namespace boost::property_tree;
 
 class ALERT_ENTRY
 {
@@ -156,7 +150,6 @@ class AIRCRAFT_DATA
 class AIRCRAFT_COORDINATOR
 {
   private:
-  ptree PROPERTY_TREE;
 
   bool IS_ACTIVE = false;
 
@@ -167,11 +160,7 @@ class AIRCRAFT_COORDINATOR
 
   private:
 
-  bool read_json_file(string &JSON_Filename);
-
   bool read_json_file_for_interface(string JSON_Text);
-
-  string tree_value(string First, ptree::value_type &Branch);
 
   void post_post_process();
 
@@ -179,10 +168,7 @@ class AIRCRAFT_COORDINATOR
 
   bool is_active();
 
-  bool process_2(string JSON_Text);
-
-  bool process(string JSON_Filename);
-
+  bool process(string JSON_Text);
 };
 
 

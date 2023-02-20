@@ -38,8 +38,6 @@ rssi:       recent average RSSI (signal power), in dbFS; this will always be neg
 
 
 //using namespace std;
-using namespace boost::property_tree;
-
 string AIRCRAFT::simple_float_to_string(int Decimal_Positions, float Number)
 {
   int c1 = 0;
@@ -197,43 +195,10 @@ bool AIRCRAFT::alert()
   return ALERT;
 }
 
-bool AIRCRAFT_COORDINATOR::read_json_file(string &JSON_Filename)
-// Read JSON file into Property Tree
-{
-  bool boo_return = false;
-
-  // No easy way to avoid all types of errors.
-  try
-  {
-    read_json(JSON_Filename, PROPERTY_TREE);
-    boo_return = true;
-  }
-  catch (std::exception const& e)
-  {
-    //boo_return = false;
-  }
-  return boo_return;
-}
-
 bool AIRCRAFT_COORDINATOR::read_json_file_for_interface(string JSON_Text)
 // Read JSON file into Property Tree
 {
   return AIRCRAFT_JSON.load_json_from_string(JSON_Text);
-}
-
-string AIRCRAFT_COORDINATOR::tree_value(string First, ptree::value_type &Branch)
-// Search for First and return value from property tree.
-{
-  // No easy way to avoid all types of errors.
-  //  Exception thrown if First cant be found.
-  try
-  {
-    return Branch.second.get<string>(First);
-  }
-  catch (std::exception const& e)
-  {
-    return "";
-  }
 }
 
 void AIRCRAFT_COORDINATOR::post_post_process()
@@ -256,25 +221,11 @@ bool AIRCRAFT_COORDINATOR::is_active()
   return IS_ACTIVE;
 }
 
-bool AIRCRAFT_COORDINATOR::process_2(string JSON_Text)
+bool AIRCRAFT_COORDINATOR::process(string JSON_Text)
 {
   bool ret_success = false;
 
   if (AIRCRAFT_JSON.load_json_from_string(JSON_Text))
-  {
-    ret_success = true;
-  }
-
-  return ret_success;
-}
-
-bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
-// Read JSON Aircraft file, parse data, and store data to the Aircraft Data list.
-//  Returns true if sucessfule
-//  Returns false if fails.
-//    Possible reason for fail is if file not found.
-{
-  if (read_json_file(JSON_Filename) == true)
   {
     IS_ACTIVE = true;
 
@@ -282,84 +233,156 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
     DATA.AIRCRAFTS.clear();
     DATA.POSITIONED_AIRCRAFT = 0;
 
-    // Read data from property tree.
-    try
+    for(int root = 0; root < AIRCRAFT_JSON.ROOT.DATA.size(); root++)
     {
-      // Safegaurd the finicky read.  
-      DATA.NOW.store(PROPERTY_TREE.get<string>("now"));
-
-      int prev_message_count = DATA.MESSAGES.get_int_value();
-      DATA.MESSAGES.store(PROPERTY_TREE.get<string>("messages"));
-      DATA.DELTA_MESSAGES = DATA.MESSAGES.get_int_value() - prev_message_count;
-
-      for (ptree::value_type &aircraft : PROPERTY_TREE.get_child("aircraft"))
+      // Load Top Level Messages
+      if (AIRCRAFT_JSON.ROOT.DATA[root].label() == "now")
       {
-        AIRCRAFT tmpAircraft;
-
-        string first = "";
-        string second = "";
-
-        string tmp = "";
-        string version = "";
-
-        // Idents
-        tmpAircraft.HEX.store(tree_value("hex", aircraft));
-        tmpAircraft.SQUAWK.store(tree_value("squawk", aircraft));
-        tmpAircraft.FLIGHT.store(tree_value("flight", aircraft));
-        tmpAircraft.VERSION.store(tree_value("version", aircraft));
-
-        // Speed Rate Positions
-        tmpAircraft.SPEED.store(tree_value("gs", aircraft));
-        tmpAircraft.SEEN_POS.store(tree_value("seen_pos", aircraft));
-        tmpAircraft.ALTITUDE.store(tree_value("alt_baro", aircraft));
-        tmpAircraft.ALTITUDE_GEOM.store(tree_value("alt_geom", aircraft));
-        tmpAircraft.NAV_ALTITUDE_MCP.store(tree_value("nav_altitude_mcp", aircraft));
-        tmpAircraft.VERT_RATE.store(tree_value("baro_rate", aircraft));
-        tmpAircraft.GEOM_RATE.store(tree_value("geom_rate", aircraft));
-        tmpAircraft.TRACK.store(tree_value("track", aircraft));
-        tmpAircraft.NAV_HEADING.store(tree_value("nav_heading", aircraft));
-        tmpAircraft.POSITION.LATITUDE.store(tree_value("lat", aircraft));
-        tmpAircraft.POSITION.LONGITUDE.store(tree_value("lon", aircraft));
-        tmpAircraft.NAV_MODES.store(tree_value("nav_modes", aircraft));
-        
-        // Aircraft Configuration
-        tmpAircraft.EMERGENCY.store(tree_value("emergency", aircraft));
-        /*  Not yet grabbing all data.
-              .
-              .
-              .
-        */
-
-        // Radio Information
-        tmpAircraft.MESSAGES.store(tree_value("messages", aircraft));
-        tmpAircraft.SEEN.store(tree_value("seen", aircraft));
-        tmpAircraft.RSSI.store(tree_value("rssi", aircraft));
-
-        if(tmpAircraft.POSITION.LATITUDE.conversion_success() == true &&  tmpAircraft.POSITION.LONGITUDE.conversion_success() == true)
-        {
-          DATA.POSITIONED_AIRCRAFT ++;
-        }
-
-        
-        tmpAircraft.post_process();
-
-        // Store Aircraft ADS-B Data into list.
-        DATA.AIRCRAFTS.push_back(tmpAircraft);
+        DATA.NOW.store(AIRCRAFT_JSON.ROOT.DATA[root].value());
+      }
+      if (AIRCRAFT_JSON.ROOT.DATA[root].label() == "messages")
+      {
+        int prev_message_count = DATA.MESSAGES.get_int_value();
+        DATA.MESSAGES.store(AIRCRAFT_JSON.ROOT.DATA[root].value());
+        DATA.DELTA_MESSAGES = DATA.MESSAGES.get_int_value() - prev_message_count;
       }
 
+      // Process Aircraft List
+      if (AIRCRAFT_JSON.ROOT.DATA[root].label() == "aircraft")
+      {
+        for (int aircraft_list = 0; 
+              aircraft_list < AIRCRAFT_JSON.ROOT.DATA[root].DATA.size(); aircraft_list++)
+        {
+          // For Each Aircraft
 
+          AIRCRAFT tmpAircraft;
 
-      post_post_process();
+          string first = "";
+          string second = "";
 
-      DATA.CHANGED = true;
+          string tmp = "";
+          string version = "";
+
+          // Process Messages in Aircraft
+          for (int data_element = 0; 
+                data_element < AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA.size(); data_element++)
+          {
+            // For Each Data Element
+
+            // Idents
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "hex")
+            {
+              tmpAircraft.HEX.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "squawk")
+            {
+              tmpAircraft.SQUAWK.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "flight")
+            {
+              tmpAircraft.FLIGHT.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "version")
+            {
+              tmpAircraft.VERSION.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            
+            // Speed Rate Positions
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "gs")
+            {
+              tmpAircraft.SPEED.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "seen_pos")
+            {
+              tmpAircraft.SEEN_POS.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "alt_baro")
+            {
+              tmpAircraft.ALTITUDE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "alt_geom")
+            {
+              tmpAircraft.ALTITUDE_GEOM.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "nav_altitude_mcp")
+            {
+              tmpAircraft.NAV_ALTITUDE_MCP.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "baro_rate")
+            {
+              tmpAircraft.VERT_RATE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "geom_rate")
+            {
+              tmpAircraft.GEOM_RATE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "track")
+            {
+              tmpAircraft.TRACK.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "nav_heading")
+            {
+              tmpAircraft.NAV_HEADING.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "lat")
+            {
+              tmpAircraft.POSITION.LATITUDE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "lon")
+            {
+              tmpAircraft.POSITION.LONGITUDE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "nav_modes")
+            {
+              tmpAircraft.NAV_MODES.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            
+            // Aircraft Configuration
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "emergency")
+            {
+              tmpAircraft.EMERGENCY.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            
+            //  Not yet grabbing all data.
+            //      .
+            //      .
+            //      .
+
+            // Radio Information
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "messages")
+            {
+              tmpAircraft.MESSAGES.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "seen")
+            {
+              tmpAircraft.SEEN.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "rssi")
+            {
+              tmpAircraft.RSSI.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
+            }
+          }
+
+          if(tmpAircraft.POSITION.LATITUDE.conversion_success() == true &&  tmpAircraft.POSITION.LONGITUDE.conversion_success() == true)
+          {
+            DATA.POSITIONED_AIRCRAFT ++;
+          }
+
+          // Process Data Recieved on Aircraft
+          tmpAircraft.post_process();
+
+          // Store Aircraft ADS-B Data into list.
+          DATA.AIRCRAFTS.push_back(tmpAircraft);
+        }
+      }
     }
-    catch (std::exception const& e)
-    {
-      // Do nothing
-    }
 
-    return true;
-  }
+    // Process Data Recieved on All Aircraft
+    post_post_process();
+    DATA.CHANGED = true;
+    ret_success = true;
+  }  
   else
   {
     if(IS_ACTIVE == true)
@@ -368,10 +391,11 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Filename)
     }
 
     IS_ACTIVE = false;
-    return false;
+    ret_success = false;
   }
-}
 
+  return ret_success;
+}
 
 
 

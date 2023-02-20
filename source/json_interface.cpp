@@ -17,7 +17,7 @@
 using namespace std;
 
 // -------------------------------------------------------------------------------------
-//  Panel Class
+//  JSON Class
 
 string JSON_ENTRY::parse_label(string Text, int Label_Size)
 {
@@ -355,6 +355,15 @@ bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
   return true;
 }
 
+void JSON_ENTRY::clear_data()
+{
+  for (int x = 0; x < DATA.size(); x++)
+  {
+    DATA[x].clear_data();
+  }
+  DATA.clear();
+}
+
 int JSON_ENTRY::find_pos_of_label_in_list(string Label_In_List)
 {
   bool ret_pos = -1;
@@ -502,6 +511,9 @@ void JSON_INTERFACE::json_to_string_deque(deque<string> &JSON_Print_Build, JSON_
 bool JSON_INTERFACE::load_json_from_string(string JSON_Text)
 {
   bool ret_success = false;
+
+  // Clear Contents
+  ROOT.clear_data();
 
   JSON_Text = trim(JSON_Text);
 

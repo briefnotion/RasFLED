@@ -64,6 +64,8 @@ class JSON_ENTRY
   bool IS_SET = false;
   bool IS_LIST = false;
 
+  void clear_data();
+
   int find_pos_of_label_in_list(string Label_In_List);
 
   bool set_list(string Entry);

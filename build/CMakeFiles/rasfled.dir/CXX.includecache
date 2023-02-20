@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/source/RasFLED/source/LEDstuff.cpp
-LEDstuff.h
-/home/pi/source/RasFLED/source/LEDstuff.h
-
 /home/pi/source/RasFLED/source/LEDstuff.h
 string.h
 -
@@ -20,16 +16,16 @@ helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 
+/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
+aircraft_coordinator.h
+/home/pi/source/RasFLED/source/aircraft_coordinator.h
+
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
 -
 string
 -
 math.h
--
-boost/property_tree/ptree.hpp
--
-boost/property_tree/json_parser.hpp
 -
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
@@ -65,10 +61,6 @@ fledcore.h
 /home/pi/source/RasFLED/source/api_rtlairband.h
 string.h
 -
-
-/home/pi/source/RasFLED/source/api_shared_memory.cpp
-api_shared_memory.h
-/home/pi/source/RasFLED/source/api_shared_memory.h
 
 /home/pi/source/RasFLED/source/api_shared_memory.h
 fstream
@@ -262,10 +254,6 @@ timedeventsystem.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
-/home/pi/source/RasFLED/source/hardware_status.cpp
-hardware_status.h
-/home/pi/source/RasFLED/source/hardware_status.h
-
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
 -
@@ -281,10 +269,6 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 wiringPi.h
 -
-
-/home/pi/source/RasFLED/source/helper.cpp
-helper.h
-/home/pi/source/RasFLED/source/helper.h
 
 /home/pi/source/RasFLED/source/helper.h
 deque
@@ -315,6 +299,10 @@ timedeventsystem.h
 /home/pi/source/RasFLED/source/timedeventsystem.h
 commands.h
 /home/pi/source/RasFLED/source/commands.h
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
+
+/home/pi/source/RasFLED/source/json_interface.cpp
 json_interface.h
 /home/pi/source/RasFLED/source/json_interface.h
 
@@ -427,10 +415,6 @@ deque
 -
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
-
-/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp
-radio_channel_coordinator.h
-/home/pi/source/RasFLED/source/radio_channel_coordinator.h
 
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 deque
