@@ -282,14 +282,6 @@ void SETTINGS::parse_and_save_setting(string strSettingLine)
 
 // -------------------------------------------------------------------------------------
 
-void check_create_working_dir(Console &cons)
-{
-  cons.printi("  Checking File System");
-  cons.printi("    CHECK NOT IMPLEMENTED");
-  string dir = FILES_DIRECTORY;
-  cons.printi("      You must manually create " + dir + " if first time run.");
-}
-
 void dump_qfile(Console &cons, deque<string> &qFile)
 // As the name implies.  Clears it out also.  For testing.
 {

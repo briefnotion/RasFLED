@@ -1,0 +1,110 @@
+{
+  "Switches" :
+  [
+    "Switch 0" : 25 ,
+    "Switch 1" : 24 ,
+    "Switch 2" : 23 ,
+    "Switch 3" : 22
+  ] ,
+  "LEDs" :
+  [
+    "SyStem_Name" : "Car" ,
+    "SyStem_ID" : 0 ,
+    "LED Groups" :
+    [
+      {
+        "LED_Group_Name" : "Back_Driver" ,
+        "LED_Group_ID" : 0 ,
+        "Strip Group" :
+        [
+          {
+            "LED_Strip_ID" : 0 ,
+            "LED_Strip_Name" : "Door" ,
+            "Position" : "Back" ,
+            "LED_Count" : 70 ,
+            "Direction" : "Forward" ,
+            "Type" : "Standing"
+          } ,
+          {
+            "LED_Strip_ID" : 1 ,
+            "LED_Strip_Name" : "Overhead" ,
+            "Position" : "Back" ,
+            "LED_Count" : 52 ,
+            "Direction" : "Forward" ,
+            "Type" : "Standing"
+          }
+        ]
+      } ,
+      {
+        "LED_Group_Name" : "Front_Driver" ,
+        "LED_Group_ID" : 1 ,
+        "Strip Group" :
+        [
+          {
+            "LED_Strip_ID" : 0 ,
+            "LED_Strip_Name" : "Overhead" ,
+            "Position" : "Front" ,
+            "LED_Count" : 52 ,
+            "Direction" : "Forward" ,
+            "Type" : "Hanging"
+          } ,
+          {
+            "LED_Strip_ID" : 1 ,
+            "LED_Strip_Name" : "Door" ,
+            "Position" : "Front" ,
+            "LED_Count" : 66 ,
+            "Direction" : "Forward" ,
+            "Type" : "Standing"
+          }
+        ]
+      } ,
+      {
+        "LED_Group_Name" : "Back_Passenger" ,
+        "LED_Group_ID" : 2 ,
+        "Strip Group" :
+        [
+          {
+            "LED_Strip_ID" : 0 ,
+            "LED_Strip_Name" : "Door" ,
+            "Position" : "Back" ,
+            "LED_Count" : 70 ,
+            "Direction" : "Forward" ,
+            "Type" : "Standing"
+          } ,
+          {
+            "LED_Strip_ID" : 1 ,
+            "LED_Strip_Name" : "Overhead" ,
+            "Position" : "Back" ,
+            "LED_Count" : 52 ,
+            "Direction" : "Forward" ,
+            "Type" : "Standing"
+          }
+        ]
+      } ,
+      {
+        "LED_Group_Name" : "Front_Passenger" ,
+        "LED_Group_ID" : 3 ,
+        "Strip Group" :
+        [
+          {
+            "LED_Strip_ID" : 0 ,
+            "LED_Strip_Name" : "Overhead" ,
+            "Position" : "Front" ,
+            "LED_Count" : 52 ,
+            "Direction" : "Forward" ,
+            "Type" : "Hanging"
+          } ,
+          {
+            "LED_Strip_ID" : 1 ,
+            "LED_Strip_Name" : "Door" ,
+            "Position" : "Front" ,
+            "LED_Count" : 66 ,
+            "Direction" : "Forward" ,
+            "Type" : "Standing"
+          }
+        ]
+      }
+    ]
+  ]
+}
+

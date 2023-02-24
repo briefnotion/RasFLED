@@ -62,11 +62,13 @@ class JSON_ENTRY
 
   bool IS_VALUE = false;
   bool IS_SET = false;
-  bool IS_LIST = false;
+  bool IS_LIST = true;
 
   void clear_data();
 
-  int find_pos_of_label_in_list(string Label_In_List);
+  int find_label_pos(string Label_In_List);
+
+  int size_of_set(string Set_Label);
 
   bool set_list(string Entry);
 
@@ -78,6 +80,11 @@ class JSON_ENTRY
 
   string value_from_list(string Label_In_List);
 
+  void create_label_value(string Label, string Value);
+
+  void put_json_in_list(JSON_ENTRY Entry);
+
+  void put_json_in_set(string Set_Name, JSON_ENTRY Entry);
 };
 
 class JSON_INTERFACE

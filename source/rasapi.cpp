@@ -312,7 +312,13 @@ string FILE_WATCH::get_next_line()
   return str_read_line;
 }
 
-string file_to_string(string strFilename)
+bool check_create_working_dir(string Directory)
+{
+  // Not Coded
+  return false;
+}
+
+string file_to_string(string Dir_Filename, bool &Success)
 {
   fstream fsFile;
 
@@ -321,7 +327,7 @@ string file_to_string(string strFilename)
   bool booSuccess = false;
   bool booActive = false;
 
-  fsFile.open(strFilename, ios::in);
+  fsFile.open(Dir_Filename, ios::in);
 
   if (!fsFile)
   {
@@ -351,8 +357,49 @@ string file_to_string(string strFilename)
     }
   }
 
+  Success = booSuccess;
   return File_String;
+}
 
+string file_to_string(string Dir_Filename)
+{
+  bool success = false;
+  return file_to_string(Dir_Filename, success);
+}
+
+bool deque_string_to_file(string Dir_Filename, deque<string> &qFile)
+{
+  fstream fsFile;
+  bool booSuccess = false;
+
+  bool booActive = false;
+
+  fsFile.open(Dir_Filename, ios::out);
+
+  if (!fsFile)
+  {
+    booActive = false;
+    booSuccess = false;
+  }
+  else 
+  {
+    booActive = true;
+  }
+
+  if (booActive == true)
+  {
+    while(qFile.empty() == false)
+    {
+      fsFile << qFile.front();
+      fsFile << endl;
+      qFile.pop_front();
+    }
+    fsFile << endl;
+    fsFile.close();
+    booSuccess = true;
+  }
+
+  return booSuccess;
 }
 
 

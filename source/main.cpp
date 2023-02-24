@@ -356,14 +356,18 @@ int loop()
 
   // File System
   string Working_Directory = FILES_DIRECTORY;
-  check_create_working_dir(cons);
+  string Configuration_Files_JSON = FILES_CONFIGURATION_JSON;
+  //check_create_working_dir(FILES_DIRECTORY);
 
+  //  -----
   // Create Filenames as Variables
   string Configuration_Filename = Working_Directory + FILES_CONFIGURATION;
   string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
 
   // Loading Configuration from files
   // yes, it resaves the file.  as is for now.
+
+  /*
   if (load_configuration(cons, sdSystem, Configuration_Filename) != true)
   {
     // generate a configuration file to be edited from static defaults
@@ -377,7 +381,23 @@ int loop()
       cons.printi("    Configuration file not created.");
     }
   }
+  */
+  //  -----
 
+  if (load_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == false);
+  {
+    cons.printi("  Configuration file not loaded.  Generating Working Configuration File.");
+    if (save_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == false)
+    {
+      cons.printi("    Configuration file not created.");
+    }
+    else
+    {
+      cons.printi("    Configuration file created.");
+      load_configuration(cons, sdSystem, Configuration_Filename);
+    }
+  }
+  
   // Loading Running State
   cons.printi("  Loading running state ...");
   // yes, it resaves the file.  as is for now.
@@ -992,6 +1012,10 @@ int main(int argc, char *argv[])
   else if (ret == 1)
   {
     printf("Exit For Reboot\n");
+  }
+  else if (ret == 2)
+  {
+    printf("Controled Exit\n");
   }
   else
   {

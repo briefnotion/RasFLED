@@ -138,7 +138,9 @@ bool PANEL::draw(bool Refresh)
 
   bool CYBR::draw(unsigned long tmeFrame_Time)
   {
+    wattron(CYBR_PANEL.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
     mvwprintw(CYBR_PANEL.winPANEL, 0, 0, "%d",tmeFrame_Time/100);
+    wattroff(CYBR_PANEL.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
 
     mvwprintw(CYBR_PANEL.winPANEL, CYBR_YLn, 0, "  ");
 
@@ -149,9 +151,9 @@ bool PANEL::draw(bool Refresh)
     {
       CYBR_YLn = PROP.SIZEY -1;
     }
-    wattron(CYBR_PANEL.winPANEL, A_REVERSE);
+    wattron(CYBR_PANEL.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
     mvwprintw(CYBR_PANEL.winPANEL, CYBR_YLn, 0, "/\\");
-    wattroff(CYBR_PANEL.winPANEL, A_REVERSE);
+    wattroff(CYBR_PANEL.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
 
     // Commit all our changes to the status portion of the screen (winTop)
     return CYBR_PANEL.draw(true);

@@ -248,6 +248,11 @@ string trim(const string &Text)
   return right_trim(left_trim(Text));
 }
 
+string quotify(string Text)
+{
+  return "\"" + Text + "\"";
+}
+
 string remove_first_and_last_characters(char Character, string Text)
 {
   Text = trim(Text);
@@ -265,8 +270,6 @@ string remove_first_and_last_characters(char Character, string Text)
 }
 
 bool string_to_int(string String_Value, int &Int_Value)
-// Convert in String_Value number to out Int_Value.
-//  Returns true if value sucessful.
 {
   try
   {
@@ -288,8 +291,6 @@ int string_to_int(string String_Value)
 }
 
 bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value)
-// Convert in String_Value number to out Int_Value.
-//  Returns true if value sucessful.
 {
   try
   {
@@ -312,12 +313,9 @@ unsigned long string_to_ulong(string String_Value)
 }
 
 bool string_to_ulonglong(string String_Value, unsigned long long &Unsigned_Long_Long_Value)
-// Convert in String_Value number to out Int_Value.
-//  Returns true if value sucessful.
 {
   try
   {
-    //Long_Value = strtol(String_Value, NULL, 10);
     Unsigned_Long_Long_Value = stoull(String_Value);
     return true;
   }
@@ -336,8 +334,6 @@ unsigned long long string_to_ulonglong(string String_Value)
 }
 
 bool string_to_float(string String_Value, float &Float_Value)
-// Convert in String_Value number to out Float_Value.
-//  Returns true if value sucessful.
 {
   try
   {

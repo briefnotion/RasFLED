@@ -251,7 +251,7 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Text)
       if (AIRCRAFT_JSON.ROOT.DATA[root].label() == "aircraft")
       {
         for (int aircraft_list = 0; 
-              aircraft_list < AIRCRAFT_JSON.ROOT.DATA[root].DATA.size(); aircraft_list++)
+              aircraft_list < AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA.size(); aircraft_list++)
         {
           // For Each Aircraft
 

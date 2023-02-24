@@ -79,6 +79,9 @@ string right_trim(const string &Text);
 string trim(const string &Text);
 // Remove leading and trailing spaces and special characters from text.
 
+string quotify(string Text);
+// Put quotes around string;
+
 string remove_first_and_last_characters(char Character, string Text);
 // For removing things like start and ending quotes.
 // Value will be trimmed.
@@ -88,24 +91,36 @@ bool string_to_int(string String_Value, int &Int_Value);
 //  Returns true if value sucessful.
 
 int string_to_int(string String_Value);
+// Convert in String_Value number to out int.
+//  Returns true if value sucessful.
+// ! No Error Checking
 
 bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value);
 // Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.
 
 unsigned long string_to_ulong(string String_Value);
+// Convert in String_Value number to out ulong.
+//  Returns true if value sucessful.
+// ! No Error Checking
 
 bool string_to_ulonglong(string String_Value, unsigned long long &Unsigned_Long_Long_Value);
-// Convert in String_Value number to out Int_Value.
+// Convert in String_Value number to out Unsigned_Long_Long_Value.
 //  Returns true if value sucessful.
 
 unsigned long long string_to_ulonglong(string String_Value);
+// Convert in String_Value number to out Unsigned_Long_Long_Value.
+//  Returns true if value sucessful.
+// ! No Error Checking
 
 bool string_to_float(string String_Value, float &Float_Value);
+// Convert in String_Value number to out Float_Value.
+//  Returns true if value sucessful.
 
 float string_to_float(string String_Value);
 // Convert in String_Value number to out Float_Value.
 //  Returns true if value sucessful.
+// ! No Error Checking
 
 //string to_string_round_to_nth(float Value, int nth);
 

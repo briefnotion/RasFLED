@@ -42,8 +42,7 @@ int JSON_ENTRY::find_closing(string Text, int Start_Pos, char Opening, char Clos
     {
       counter++;
     }
-    else
-    if (Text[pos] == Closing)
+    else if (Text[pos] == Closing)
     {
       counter--;
     }
@@ -259,13 +258,16 @@ bool JSON_ENTRY::parse_item_list(string Entry)
         if (is_value_set == false && is_value_list == false)
         {
           new_json_entry.IS_VALUE = true;
+          new_json_entry.IS_LIST = false;
+          new_json_entry.IS_SET = false;
 
           new_json_entry.LABEL = remove_first_and_last_characters('"', sub_label);
           new_json_entry.VALUE = remove_first_and_last_characters('"', sub_value);
         }
-        else
-        if (is_value_set == true)
+        else if (is_value_set == true)
         {
+          new_json_entry.IS_VALUE = false;
+          new_json_entry.IS_LIST = false;
           new_json_entry.IS_SET = true;
 
           new_json_entry.set_set(sub_value, sub_label);
@@ -273,7 +275,9 @@ bool JSON_ENTRY::parse_item_list(string Entry)
         else
         // if (is_value_list == true)
         {
+          new_json_entry.IS_VALUE = false;
           new_json_entry.IS_LIST = true;
+          new_json_entry.IS_SET = false;
 
           new_json_entry.set_list(sub_entry);
         }
@@ -289,6 +293,8 @@ bool JSON_ENTRY::parse_item_list(string Entry)
   }
   return true;
 }
+
+
 bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
 {
   bool ret_success = true;
@@ -314,43 +320,54 @@ bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
     int errcount = 0;
 
     while (Entry.size() > 0 && errcount < errcountcap)
-    {
-      if (check_entry(Entry, entry_size, label_size, value_size, is_value_set, is_value_list))
+    {if (check_entry(Entry, entry_size, label_size, value_size, is_value_set, is_value_list))
       {
         JSON_ENTRY new_json_entry;
 
-        if (is_value_list == true)
-        {
         // Remove processing portion
-          sub_entry = Entry.substr(0, entry_size);
-          Entry = Entry.erase(0, entry_size);
+        sub_entry = Entry.substr(0, entry_size);
+        Entry = Entry.erase(0, entry_size);
 
+        // Get Label and Value
+        sub_label = parse_label(sub_entry, label_size);
+        sub_value = parse_value(sub_entry, label_size);
+
+        // Store value or data
+        if (is_value_set == false && is_value_list == false)
+        {
+          new_json_entry.IS_VALUE = true;
+          new_json_entry.IS_LIST = false;
+          new_json_entry.IS_SET = false;
+
+          new_json_entry.LABEL = remove_first_and_last_characters('"', sub_label);
+          new_json_entry.VALUE = remove_first_and_last_characters('"', sub_value);
+        }
+        else if (is_value_set == true)
+        {
+          new_json_entry.IS_VALUE = false;
+          new_json_entry.IS_LIST = false;
+          new_json_entry.IS_SET = true;
+
+          new_json_entry.set_set(sub_value, sub_label);
+        }
+        else
+        // if (is_value_list == true)
+        {
+          new_json_entry.IS_VALUE = false;
           new_json_entry.IS_LIST = true;
+          new_json_entry.IS_SET = false;
 
           new_json_entry.set_list(sub_entry);
+        }
 
-          DATA.push_back(new_json_entry);
-
-        }
-        else
-        if (is_value_set == true)
-        {
-          //VALUE = "a set" + Entry;
-        }
-        else
-        {
-          //VALUE = "a value - " + Entry;
-        }
+        DATA.push_back(new_json_entry);
       }
-      
+
+      // Curb Runaway
       errcount++;
-
+      trim(Entry);
+      
     }
-
-    // Curb Runaway
-    errcount++;
-    trim(Entry);
-
   }
   return true;
 }
@@ -364,11 +381,11 @@ void JSON_ENTRY::clear_data()
   DATA.clear();
 }
 
-int JSON_ENTRY::find_pos_of_label_in_list(string Label_In_List)
+int JSON_ENTRY::find_label_pos(string Label_In_List)
 {
-  bool ret_pos = -1;
+  int ret_pos = -1;
 
-  for (int pos = 0; pos < DATA.size() && ret_pos > -1; pos++)
+  for (int pos = 0; pos < DATA.size() && ret_pos == -1; pos++)
   {
     if (DATA[pos].label() == Label_In_List)
     {
@@ -377,6 +394,11 @@ int JSON_ENTRY::find_pos_of_label_in_list(string Label_In_List)
   }
 
   return ret_pos;
+}
+
+int JSON_ENTRY::size_of_set(string Set_Label)
+{
+  return DATA[find_label_pos(Set_Label)].DATA.size();
 }
 
 bool JSON_ENTRY::set_list(string Entry)
@@ -417,7 +439,7 @@ string JSON_ENTRY::value_from_list(string Label_In_List)
 {
   string ret_value = "";
 
-  int pos = find_pos_of_label_in_list(Label_In_List);
+  int pos = find_label_pos(Label_In_List);
 
   if (pos > -1)
   {
@@ -427,18 +449,64 @@ string JSON_ENTRY::value_from_list(string Label_In_List)
   return ret_value;
 }
 
+void JSON_ENTRY::create_label_value(string Label, string Value)
+{
+  JSON_ENTRY new_entry;
+
+  new_entry.LABEL = Label;
+  new_entry.VALUE = Value;
+
+  new_entry.IS_VALUE = true;
+  new_entry.IS_LIST = false;
+  new_entry.IS_SET = false;
+
+  DATA.push_back(new_entry);
+}
+
+void JSON_ENTRY::put_json_in_list(JSON_ENTRY Entry)
+{
+  JSON_ENTRY new_list;
+
+  new_list.IS_VALUE = false;
+  new_list.IS_LIST = true;
+  new_list.IS_SET = false;
+  
+  new_list.DATA = Entry.DATA;
+  
+  DATA.push_back(new_list);
+}
+
+void JSON_ENTRY::put_json_in_set(string Set_Name, JSON_ENTRY Entry)
+{
+  JSON_ENTRY new_set;
+
+  new_set.IS_VALUE = false;
+  new_set.IS_LIST = false;
+  new_set.IS_SET = true;
+
+  new_set.LABEL = Set_Name; // strange access
+  new_set.DATA = Entry.DATA;
+
+  DATA.push_back(new_set);
+}
+
 void JSON_INTERFACE::json_debug_to_string_deque(deque<string> &JSON_Print_Build, JSON_ENTRY Json_entry, int Level, int Count)
 {
   Level++;
 
   if (Json_entry.IS_VALUE == true)
   {
-    JSON_Print_Build.push_back(to_string(Level) + ":V:" + to_string(Count) + line_create(Level *3, ' ') + 
+    JSON_Print_Build.push_back(to_string(Level) + ":V:" + to_string(Count) + ":-" + line_create(Level *3, ' ') + 
                     " [" + Json_entry.label() + "]  [" + Json_entry.value() + "]"); 
-  } else
-  if (Json_entry.IS_SET == true)
+  } 
+  else if (Json_entry.IS_SET == true)
   {
-    JSON_Print_Build.push_back(to_string(Level) + ":S:" + to_string(Count) + line_create(Level *3, ' ') + 
+    JSON_Print_Build.push_back(to_string(Level) + ":S:" + to_string(Count) + ":" + to_string(Json_entry.DATA.size()) + line_create(Level *3, ' ') + 
+                    " [" + Json_entry.label() + "]  "); 
+  }
+  else if (Json_entry.IS_LIST == true)
+  {
+    JSON_Print_Build.push_back(to_string(Level) + ":L:" + to_string(Count) + ":" + to_string(Json_entry.DATA.size()) + line_create(Level *3, ' ') + 
                     " [" + Json_entry.label() + "]  "); 
   }
 
@@ -463,13 +531,13 @@ void JSON_INTERFACE::json_to_string_deque(deque<string> &JSON_Print_Build, JSON_
   if (Json_entry.IS_VALUE == true)
   {
     JSON_Print_Build.push_back(line_create(Level *2, ' ') + Json_entry.label() + " : " + Json_entry.value() + Trailing_Seperator); 
-  } else
-  if (Json_entry.IS_SET == true)
+  } 
+  else if (Json_entry.IS_SET == true)
   {
-    JSON_Print_Build.push_back(line_create(Level *2, ' ') + Json_entry.label() + " : "); 
+    JSON_Print_Build.push_back(line_create(Level *2, ' ') + Json_entry.label() + " :"); 
     JSON_Print_Build.push_back(line_create(Level *2, ' ') + "["); 
-  } else
-  if (Json_entry.IS_LIST == true)
+  } 
+  else if (Json_entry.IS_LIST == true)
   {
     JSON_Print_Build.push_back(line_create(Level *2, ' ') + "{"); 
   }
@@ -485,7 +553,7 @@ void JSON_INTERFACE::json_to_string_deque(deque<string> &JSON_Print_Build, JSON_
 
           if ( x < Json_entry.DATA.size() -1)
           {
-            New_Trailing_Seperator = " , ";
+            New_Trailing_Seperator = " ,";
           }
           else
           {
@@ -501,8 +569,8 @@ void JSON_INTERFACE::json_to_string_deque(deque<string> &JSON_Print_Build, JSON_
   {
     JSON_Print_Build.push_back(line_create(Level *2, ' ') + "]" + Trailing_Seperator); 
     Level--;
-  } else
-  if (Json_entry.IS_LIST == true)
+  } 
+  else if (Json_entry.IS_LIST == true)
   {
     JSON_Print_Build.push_back(line_create(Level *2, ' ') + "}" + Trailing_Seperator); 
   }

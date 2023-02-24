@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.60A"
+#define Revision "00000001.61A"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -34,6 +34,7 @@
 #define FILES_DIRECTORY           "/etc/RasFLED/"
 //#define FILES_DIRECTORY           "./"
 #define FILES_CONFIGURATION       "configuration.cfg"
+#define FILES_CONFIGURATION_JSON  "configuration.json"
 #define FILES_RUNNING_STATE_SAVE  "runningstate.cfg"
 #define FILES_PLAYLIST            "playlist.cfg"
 

@@ -1,3 +1,13 @@
+V 1.61A_230220
+  - FOR TESTING REASONS ONLY.
+      Configuration file will not self generate.  Copy and rename the 
+      good configuration.json from the test directory if needed.
+  - Continued building a simple JSON file reader and writer.
+      Added some very archaic funtions to create and parse 
+        JSON structure.
+  - Changes made to CYBR gadget.
+  - Changes made to aircraft coordinator routines.
+
 V 1.60A_230219
   - Continued building a simple JSON file reader and writer.
   - Changed Aircraft Coordinator JSON file proceesor.

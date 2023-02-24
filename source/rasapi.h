@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <time.h>
+#include <deque>
 
 // Boost libraries
 #include <boost/filesystem.hpp>
@@ -101,6 +102,18 @@ class FILE_WATCH
   string get_next_line();
 };
 
-string file_to_string(string strFilename);
+bool check_create_working_dir(string Directory);
+// Not Coded
+
+string file_to_string(string Dir_Filename, bool &Success);
+// Opens and loads a file to return as a string.
+// Reurns Success true false value.
+
+string file_to_string(string Dir_Filename);
+// Opens and loads a file to return as a string.
+
+bool deque_string_to_file(string Dir_Filename, deque<string> &qFile);
+// Opens and saves a dequed string into a file.
+// Reurns false if failed.
 
 #endif

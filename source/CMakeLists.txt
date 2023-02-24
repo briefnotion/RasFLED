@@ -34,6 +34,7 @@ add_executable(
   LEDstuff.cpp
   api_shared_memory.cpp
   commands.cpp
+  configuration_storage.cpp
   helper.cpp
   stringthings.cpp
   fled_time.cpp

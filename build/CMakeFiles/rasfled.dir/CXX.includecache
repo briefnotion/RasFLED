@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/pi/source/RasFLED/source/LEDstuff.cpp
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
+
 /home/pi/source/RasFLED/source/LEDstuff.h
 string.h
 -
@@ -15,10 +19,6 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
-
-/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
-aircraft_coordinator.h
-/home/pi/source/RasFLED/source/aircraft_coordinator.h
 
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
@@ -62,6 +62,10 @@ fledcore.h
 string.h
 -
 
+/home/pi/source/RasFLED/source/api_shared_memory.cpp
+api_shared_memory.h
+/home/pi/source/RasFLED/source/api_shared_memory.h
+
 /home/pi/source/RasFLED/source/api_shared_memory.h
 fstream
 -
@@ -85,6 +89,22 @@ string.h
 -
 future
 -
+
+/home/pi/source/RasFLED/source/configuration_storage.cpp
+configuration_storage.h
+/home/pi/source/RasFLED/source/configuration_storage.h
+
+/home/pi/source/RasFLED/source/configuration_storage.h
+string.h
+-
+time.h
+-
+deque
+-
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
+consoleanddata.h
+/home/pi/source/RasFLED/source/consoleanddata.h
 
 /home/pi/source/RasFLED/source/consoleanddata.cpp
 consoleanddata.h
@@ -254,6 +274,10 @@ timedeventsystem.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
+/home/pi/source/RasFLED/source/hardware_status.cpp
+hardware_status.h
+/home/pi/source/RasFLED/source/hardware_status.h
+
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
 -
@@ -269,6 +293,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 wiringPi.h
 -
+
+/home/pi/source/RasFLED/source/helper.cpp
+helper.h
+/home/pi/source/RasFLED/source/helper.h
 
 /home/pi/source/RasFLED/source/helper.h
 deque
@@ -299,10 +327,6 @@ timedeventsystem.h
 /home/pi/source/RasFLED/source/timedeventsystem.h
 commands.h
 /home/pi/source/RasFLED/source/commands.h
-json_interface.h
-/home/pi/source/RasFLED/source/json_interface.h
-
-/home/pi/source/RasFLED/source/json_interface.cpp
 json_interface.h
 /home/pi/source/RasFLED/source/json_interface.h
 
@@ -385,6 +409,8 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 files.h
 /home/pi/source/RasFLED/source/files.h
+configuration_storage.h
+/home/pi/source/RasFLED/source/configuration_storage.h
 rasapi.h
 /home/pi/source/RasFLED/source/rasapi.h
 consoleanddata.h
@@ -416,6 +442,10 @@ deque
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 
+/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp
+radio_channel_coordinator.h
+/home/pi/source/RasFLED/source/radio_channel_coordinator.h
+
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 deque
 -
@@ -434,6 +464,8 @@ sys/stat.h
 string.h
 -
 time.h
+-
+deque
 -
 boost/filesystem.hpp
 -
