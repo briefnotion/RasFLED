@@ -134,6 +134,69 @@ bool save_json_configuration(Console &cons, system_data &sdSysData, string Direc
   JSON_ENTRY led_group;
   JSON_ENTRY car_group;
 
+  // -------------------------------------------------------------------------------------
+
+  // Set Default Settings
+
+  // build pinmap
+    // On off buttons, door sensors, switches.
+  switch_map  PINs;
+  PINs.pin    = 22;      // GPIO.22 - Pin 31 - Hardware Open Close Door Sensor 0
+  sdSysData.CONFIG.vSWITCH_PIN_MAP.push_back(PINs);
+  PINs.pin    = 23;      // GPIO.23 - Pin 33 - Hardware Open Close Door Sensor 1
+  sdSysData.CONFIG.vSWITCH_PIN_MAP.push_back(PINs);
+  PINs.pin    = 24;      // GPIO.24 - Pin 35 - Hardware Open Close Door Sensor 2
+  sdSysData.CONFIG.vSWITCH_PIN_MAP.push_back(PINs);
+  PINs.pin    = 25;      // GPIO.25 - Pin 37 - Hardware Open Close Door Sensor 3
+  sdSysData.CONFIG.vSWITCH_PIN_MAP.push_back(PINs);
+
+  // build led main, groups, and strips
+  // build led main
+  v_profile_strip_main tmp_led_main;
+  tmp_led_main.set(0, "Car");
+  sdSysData.CONFIG.LED_MAIN.push_back(tmp_led_main);
+
+  // build led groups
+  sdSysData.CONFIG.LED_MAIN.at(0).add_group(0, "Back_Driver");
+  sdSysData.CONFIG.LED_MAIN.at(0).add_group(1, "Front_Driver");
+  sdSysData.CONFIG.LED_MAIN.at(0).add_group(2, "Back_Passenger");
+  sdSysData.CONFIG.LED_MAIN.at(0).add_group(3, "Front_Passenger");
+
+  // build led strips
+
+      // Quick Build Reference
+  int iLED_Size_Door_Back_Driver          = 70;
+  int iLED_Size_Door_Back_Passenger       = 70;
+  int iLED_Size_Door_Front_Driver         = 66;
+  int iLED_Size_Door_Front_Passenger      = 66;
+
+  int iLED_Size_Overhead_Back_Driver      = 52;
+  int iLED_Size_Overhead_Back_Passenger   = 52;
+  int iLED_Size_Overhead_Front_Driver     = 52;
+  int iLED_Size_Overhead_Front_Passenger  = 52;
+
+      // Back Driver
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(0).add_strip(0,"Door", "Back", iLED_Size_Door_Back_Driver, true, true);
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(0).add_strip(1,"Overhead", "Back", iLED_Size_Overhead_Back_Driver, true, true);
+
+      // Front Driver
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Driver, true, false);
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(1).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Driver, true, true);
+  
+      // Back Passenger
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(2).add_strip(0,"Door", "Back", iLED_Size_Door_Back_Passenger, true, true);
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(2).add_strip(1,"Overhead", "Back", iLED_Size_Overhead_Back_Passenger, true, true);
+
+      // Front Passenger
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(0,"Overhead", "Front", iLED_Size_Overhead_Front_Passenger, true, false);
+  sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(3).add_strip(1,"Door", "Front", iLED_Size_Door_Front_Passenger, true, true);
+  
+  sdSysData.CONFIG.LED_MAIN.at(0).update_start_positions();
+
+  // -------------------------------------------------------------------------------------
+  
+  // Create JSON Entry based on current settings
+
   // Switches
   for (int x=0; x < sdSysData.CONFIG.iNUM_SWITCHES; x++)
   {
@@ -142,7 +205,7 @@ bool save_json_configuration(Console &cons, system_data &sdSysData, string Direc
 
   configuration_json.ROOT.put_json_in_set(quotify("Switches"), switches);
   switches.clear_data();
-
+ 
   // LEDs
   car_group.create_label_value(quotify("SyStem_Name"), quotify(sdSysData.CONFIG.LED_MAIN.at(0).strNAME));
   car_group.create_label_value(quotify("SyStem_ID"), to_string(sdSysData.CONFIG.LED_MAIN.at(0).intID));
@@ -209,7 +272,6 @@ bool save_json_configuration(Console &cons, system_data &sdSysData, string Direc
   
   // Write string list of file
   ret_success = deque_string_to_file(Directory+ Filename, configuration_file_dq_string);
-
 
   return ret_success;
 }

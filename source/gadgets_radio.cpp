@@ -267,6 +267,7 @@ void ADSB_Channel::create()
   ALTITUDE_IND.PROP.COLOR = COLOR_BLACK;
   ALTITUDE_IND.PROP.BCOLOR = COLOR_BLACK;
   ALTITUDE_IND.PROP.SIZEX = 1;
+  ALTITUDE_IND.PROP.SIZEY = 2;
   ALTITUDE_IND.PROP.DONT_BLANK = true;
   ALTITUDE_IND.PROP.JUSTIFICATION_LEFT = true;
 
@@ -297,6 +298,7 @@ void ADSB_Channel::create()
   D_VERTICAL_RATE_IND.PROP.COLOR = COLOR_BLACK;
   D_VERTICAL_RATE_IND.PROP.BCOLOR = COLOR_BLACK;
   D_VERTICAL_RATE_IND.PROP.SIZEX = 1;
+  D_VERTICAL_RATE_IND.PROP.SIZEY = 2;
   D_VERTICAL_RATE_IND.PROP.DONT_BLANK = true;
   D_VERTICAL_RATE_IND.PROP.JUSTIFICATION_LEFT = true;
 
@@ -315,6 +317,7 @@ void ADSB_Channel::create()
   SPEED_IND.PROP.COLOR = COLOR_BLACK;
   SPEED_IND.PROP.BCOLOR = COLOR_BLACK;
   SPEED_IND.PROP.SIZEX = 1;
+  SPEED_IND.PROP.SIZEY = 2;
   SPEED_IND.PROP.DONT_BLANK = true;
   SPEED_IND.PROP.JUSTIFICATION_LEFT = true;
 
@@ -359,6 +362,7 @@ void ADSB_Channel::create()
   COORD_TTL_IND.PROP.SIZEX = 2;
   COORD_TTL_IND.PROP.DONT_BLANK = true;
   COORD_TTL_IND.PROP.JUSTIFICATION_LEFT = true;
+  COORD_TTL_IND.PROP.UPDATE_INDICATION = true;
 
   // Aircraft Data TTL Indicator
   DATA_TTL_IND.PROP.POSY = 0;
@@ -481,6 +485,20 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       PROP.BCOLOR = COLOR_GREEN;
       PROP.COLOR = COLOR_BLACK;
+
+      if (LATITUDE == PROP.AIRCRAFT_DATA.POSITION.LATITUDE.get_float_value() && 
+          LONGITUDE == PROP.AIRCRAFT_DATA.POSITION.LONGITUDE.get_float_value())
+      {
+        // Position has not changed.
+      }
+      else
+      {
+        // Coordinate Indicate Blink
+        COORD_TTL_IND.blink(tmeFrame_Time);
+        LATITUDE = PROP.AIRCRAFT_DATA.POSITION.LATITUDE.get_float_value();
+        LONGITUDE = PROP.AIRCRAFT_DATA.POSITION.LONGITUDE.get_float_value();
+      }
+
     }
     // If No Position Found but Data Exist
     else
@@ -536,7 +554,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     {
       // Aircraft Altitude data ok
       ALTITUDE_IND.set_color(color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000), ALTITUDE_IND.PROP.COLOR);
-      ALTITUDE_IND.set_text("^");
+      ALTITUDE_IND.set_text("^\nv");
       ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
     }
     else
@@ -565,7 +583,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
     {
       D_VERTICAL_RATE_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10), COLOR_BLACK);
-      D_VERTICAL_RATE_IND.set_text("^");
+      D_VERTICAL_RATE_IND.set_text("^\nv");
     }
     else
     {
@@ -579,7 +597,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.AIRCRAFT_DATA.SPEED.conversion_success()==true)
     {
       SPEED_IND.set_color(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600), COLOR_BLACK);
-      SPEED_IND.set_text("^");
+      SPEED_IND.set_text("^\nv");
     }
     else
     {
@@ -800,9 +818,9 @@ void ADSB_Channel_Grid::create()
   DELTA_MESSAGES_BAR.PROP.LABEL_SIZE = 6;
   DELTA_MESSAGES_BAR.PROP.COLOR = COLOR_WHITE;
   DELTA_MESSAGES_BAR.PROP.BCOLOR = COLOR_BLUE;
-  DELTA_MESSAGES_BAR.PROP.COLOR_BAR_BACK = COLOR_BLUE;
+  DELTA_MESSAGES_BAR.PROP.COLOR_BAR_BACK = COLOR_BLACK;
   DELTA_MESSAGES_BAR.PROP.COLOR_MARKER = COLOR_WHITE;
-  DELTA_MESSAGES_BAR.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
+  DELTA_MESSAGES_BAR.PROP.COLOR_MARKER_LIMIT = COLOR_YELLOW;
   DELTA_MESSAGES_BAR.PROP.POSY = 0;
   DELTA_MESSAGES_BAR.PROP.POSX = 48;
   DELTA_MESSAGES_BAR.PROP.BAR_SIZE = 10;

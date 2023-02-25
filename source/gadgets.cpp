@@ -163,6 +163,15 @@ bool PANEL::draw(bool Refresh)
 // -------------------------------------------------------------------------------------
 //  Text_Field Classes
 
+void Text_Field::blink(unsigned long tmeFrame_Time)
+{
+  if (PROP.UPDATE_INDICATION == true)
+  {
+    UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, INDICATED_BLINK_TIME);
+    CHANGED = true;
+  }
+}
+
 bool Text_Field::changed()
 // Returns true if any of the properties have changed.
 {

@@ -143,6 +143,10 @@ class ADSB_Channel
 
   string compass_mini_bottom(float Heading);
 
+  // Last known good cood data
+  float LATITUDE = 0;
+  float LONGITUDE = 0;
+
   //Debug
   int Counter = 0;
 
@@ -153,14 +157,14 @@ class ADSB_Channel
   Text_Field SQUAWK;
 
   Text_Field ALTITUDE;
-  Text_Field ALTITUDE_IND;
+  Text_Field_Multi_Line ALTITUDE_IND;
   Text_Field NAV_ALTITUDE_MCP; 
 
   Text_Field D_VERTICAL_RATE;
-  Text_Field D_VERTICAL_RATE_IND;
+  Text_Field_Multi_Line D_VERTICAL_RATE_IND;
 
   Text_Field SPEED;
-  Text_Field SPEED_IND;
+  Text_Field_Multi_Line SPEED_IND;
 
   Text_Field TRACK;
   Mini_Compass TRACK_MINI_COMPASS;

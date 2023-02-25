@@ -367,34 +367,21 @@ int loop()
   // Loading Configuration from files
   // yes, it resaves the file.  as is for now.
 
-  /*
-  if (load_configuration(cons, sdSystem, Configuration_Filename) != true)
+  if (load_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == true)
   {
-    // generate a configuration file to be edited from static defaults
-    cons.printi("  Configuration file not loaded.  Generating Configuration File.");
-    if (save_configuration(cons, sdSystem, Configuration_Filename) == true)
-    {
-      cons.printi("    Configuration file created.");
-    }
-    else
-    {
-      cons.printi("    Configuration file not created.");
-    }
+    cons.printi("  Configuration file loaded.");
   }
-  */
-  //  -----
-
-  if (load_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == false);
+  else
   {
     cons.printi("  Configuration file not loaded.  Generating Working Configuration File.");
-    if (save_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == false)
+
+    if (save_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == true)
     {
-      cons.printi("    Configuration file not created.");
+      cons.printi("    Configuration file created.");
     }
     else
     {
-      cons.printi("    Configuration file created.");
-      load_configuration(cons, sdSystem, Configuration_Filename);
+      cons.printi("    Configuration file not created.");
     }
   }
   

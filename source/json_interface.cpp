@@ -595,7 +595,7 @@ bool JSON_INTERFACE::load_json_from_string(string JSON_Text)
       ret_success = true;
     }
   }
-
+  
   return ret_success;
 }
 

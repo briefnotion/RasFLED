@@ -116,20 +116,8 @@ void dump_qfile(Console &cons, deque<string> &qFile);
 // Load Saved State
 bool load_saved_running_state(Console &cons, system_data &sdSysData, string strFilename);
 
-
 // Save Saved State
 bool save_running_state(Console &cons, system_data &sdSysData, string strFilename);
-
-// -------------------------------------------------------------------------------------
-//  Configuration
-
-// Load Configuration
-bool load_configuration(Console &cons, system_data &sdSysData, string strFilename);
-
-// -------------------------------------------------------------------------------------
-// Save Configuration
-bool save_configuration(Console &cons, system_data &sdSysData, string strFilename);
-
 
 // -------------------------------------------------------------------------------------
 // Load Playlist

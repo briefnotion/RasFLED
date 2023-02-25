@@ -233,6 +233,12 @@ class Text_Field
   public:
   Text_Field_Properties PROP;
 
+  void blink(unsigned long tmeFrame_Time);
+  // Causes the text field to blink as if the data has
+  //  changed.
+  // Note:
+  //  UPDATE_INDICATION will need to be set to true.
+
   bool changed();
   // Return true is screen will be redrawn on next draw.
   // Return false if no changes made.

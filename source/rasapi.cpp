@@ -332,7 +332,6 @@ string file_to_string(string Dir_Filename, bool &Success)
   if (!fsFile)
   {
     booActive = false;
-    booSuccess = false;
   }
   else 
   {
