@@ -1,3 +1,9 @@
+V 1.63A_230227
+  - Changed playlist.cfg format and created playlist.json.
+  - Changed the runningstate.cfg to a runningstate.json.
+  - Removed files.cpp and files.h.
+  - Changes made to some gadgets.
+
 V 1.62A_230226
   - Configuration file will self generate if not in the settings folder.
   - Changes made to some gadgets.

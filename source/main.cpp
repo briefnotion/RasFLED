@@ -356,12 +356,11 @@ int loop()
 
   // File System
   string Working_Directory = FILES_DIRECTORY;
-  string Configuration_Files_JSON = FILES_CONFIGURATION_JSON;
+  string Configuration_Files_JSON = FILES_CONFIGURATION;
   //check_create_working_dir(FILES_DIRECTORY);
 
   //  -----
   // Create Filenames as Variables
-  string Configuration_Filename = Working_Directory + FILES_CONFIGURATION;
   string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
 
   // Loading Configuration from files
@@ -388,7 +387,7 @@ int loop()
   // Loading Running State
   cons.printi("  Loading running state ...");
   // yes, it resaves the file.  as is for now.
-  if (load_saved_running_state(cons, sdSystem, Running_State_Filename) != true)
+  if (load_saved_running_state_json(cons, sdSystem, Running_State_Filename) != true)
   {
     cons.printi("    Running state file not loaded.");
   }
@@ -461,7 +460,7 @@ int loop()
   string Playlist_Filename = Working_Directory + FILES_PLAYLIST;
 
   cons.printi("Initializing Player ...");
-  if (load_playlist(cons, sdSystem, Playlist_Filename) == true)
+  if (load_playlist_json(cons, sdSystem, Playlist_Filename) == true)
   {
     if (cons.play_next_movie(fsPlayer) == true)
     {
@@ -840,7 +839,7 @@ int loop()
       // Also delayed, File maintenance.
       if (sdSystem.booRunning_State_File_Dirty == true)
       {
-        save_running_state(cons, sdSystem, Running_State_Filename);
+        save_running_state_json(cons, sdSystem, Running_State_Filename);
 
         // set false even if there was a save error to avoid repeats.
         sdSystem.booRunning_State_File_Dirty = false;

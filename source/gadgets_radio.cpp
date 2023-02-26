@@ -478,7 +478,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     else if (PROP.AIRCRAFT_DATA.data_count() == 0 && PROP.AIRCRAFT_DATA.HEX.conversion_success() == true)
     {
       PROP.BCOLOR = COLOR_BLUE;
-      PROP.COLOR = COLOR_BLACK;
+      PROP.COLOR = COLOR_WHITE;
     }
     // If Position Found
     else if(PROP.AIRCRAFT_DATA.POSITION.GLOBAL_POSITION_FOUND == true)
@@ -553,7 +553,18 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.AIRCRAFT_DATA.ALTITUDE.conversion_success()==true)
     {
       // Aircraft Altitude data ok
-      ALTITUDE_IND.set_color(color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000), ALTITUDE_IND.PROP.COLOR);
+      int tmp_bcolor = color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000);
+      int tmp_color = 0;
+      if (tmp_bcolor == COLOR_BLUE || tmp_bcolor == COLOR_RED)
+      {
+        tmp_color = COLOR_WHITE;
+      }
+      else
+      {
+        tmp_color = COLOR_BLACK;
+      }
+
+      ALTITUDE_IND.set_color(tmp_bcolor, tmp_color);
       ALTITUDE_IND.set_text("^\nv");
       ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
     }
@@ -562,15 +573,15 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       if (PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value() == "ground")
       // Aircraft Altitude data says on ground
       {
-        ALTITUDE_IND.set_color(COLOR_RED, COLOR_BLACK);
-        ALTITUDE_IND.set_text("X");
+        ALTITUDE_IND.set_color(COLOR_RED, COLOR_WHITE);
+        ALTITUDE_IND.set_text("X\nX");
         ALTITUDE.set_text("GROUND");
       }
       else
       {
         // Aircraft Altitude data unknown
         ALTITUDE_IND.set_color(PROP.BCOLOR, PROP.BCOLOR);
-        ALTITUDE_IND.set_text(" ");
+        ALTITUDE_IND.set_text(" \n ");
         ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
       }
     }
@@ -582,7 +593,18 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Vertical Rate and Vertical Rate Indicator
     if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
     {
-      D_VERTICAL_RATE_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10), COLOR_BLACK);
+      int tmp_bcolor = color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10);
+      int tmp_color = 0;
+      if (tmp_bcolor == COLOR_BLUE || tmp_bcolor == COLOR_RED)
+      {
+        tmp_color = COLOR_WHITE;
+      }
+      else
+      {
+        tmp_color = COLOR_BLACK;
+      }
+
+      D_VERTICAL_RATE_IND.set_color(tmp_bcolor, tmp_color);
       D_VERTICAL_RATE_IND.set_text("^\nv");
     }
     else
@@ -596,7 +618,18 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Speed and Speed Indicator
     if (PROP.AIRCRAFT_DATA.SPEED.conversion_success()==true)
     {
-      SPEED_IND.set_color(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600), COLOR_BLACK);
+      int tmp_bcolor = color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600);
+      int tmp_color = 0;
+      if (tmp_bcolor == COLOR_BLUE || tmp_bcolor == COLOR_RED)
+      {
+        tmp_color = COLOR_WHITE;
+      }
+      else
+      {
+        tmp_color = COLOR_BLACK;
+      }
+
+      SPEED_IND.set_color(tmp_bcolor, tmp_color);
       SPEED_IND.set_text("^\nv");
     }
     else

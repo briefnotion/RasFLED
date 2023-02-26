@@ -19,6 +19,13 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  JSON Class
 
+// Needs:
+//  Proper list length.
+//  Traverse path.
+//  Consolidate setlist setset
+//  Quotation recognition for commas in quotes
+//  Less error prone.
+
 string JSON_ENTRY::parse_label(string Text, int Label_Size)
 {
   return Text.substr(0, Label_Size);

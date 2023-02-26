@@ -51,7 +51,6 @@ add_executable(
   player.cpp
   radio_channel_coordinator.cpp
   aircraft_coordinator.cpp
-  files.cpp
   screen3.cpp
   system.cpp
   consoleanddata.cpp

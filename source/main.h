@@ -101,7 +101,6 @@
 // RASFled related header files
 #include "definitions.h"
 #include "helper.h"
-#include "files.h"
 #include "configuration_storage.h"
 #include "rasapi.h"
 #include "consoleanddata.h"

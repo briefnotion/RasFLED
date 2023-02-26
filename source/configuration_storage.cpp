@@ -123,7 +123,6 @@ bool save_json_configuration(Console &cons, system_data &sdSysData, string Direc
   bool ret_success = false;
 
   deque<string> configuration_file_dq_string;
-  deque<string> configuration_file_dq_string_debug;
 
   JSON_INTERFACE configuration_json;
 
@@ -272,6 +271,126 @@ bool save_json_configuration(Console &cons, system_data &sdSysData, string Direc
   
   // Write string list of file
   ret_success = deque_string_to_file(Directory+ Filename, configuration_file_dq_string);
+
+  return ret_success;
+}
+
+
+// -------------------------------------------------------------------------------------
+//  Running State
+
+// Load Saved State
+bool load_saved_running_state_json(Console &cons, system_data &sdSysData, string strFilename)
+{
+  JSON_INTERFACE state_json;
+
+  CRGB color;
+
+  string red = "";
+  string green = "";
+  string blue = "";
+
+  string color_string = "";
+
+  string color_desc = "";
+
+  bool ret_success = false;
+
+  string json_state_file = file_to_string(strFilename, ret_success);
+
+  if (ret_success == true)
+  {
+    ret_success = state_json.load_json_from_string(json_state_file);
+
+    if (ret_success == true)
+    {
+      cons.printi("  " + strFilename + " read success");
+    
+      // Parse the settings
+      red = state_json.ROOT.value_from_list("red");
+      green = state_json.ROOT.value_from_list("green");
+      blue = state_json.ROOT.value_from_list("blue");
+
+      color_string = red + "," + green + "," + blue;
+
+      color = color.StringtoCRGB(color_string);
+
+      color_desc = state_json.ROOT.value_from_list("description");
+
+      cons.printi("  Setting running color to CRGB(" + to_string(color.r) + 
+                                                  "," + to_string(color.g) + 
+                                                  "," + to_string(color.b) + 
+                                                  "), " + 
+                                                  color_desc);
+
+      sdSysData.set_running_color(color , color_desc);
+    }
+  }
+
+  if (ret_success == false)
+  {
+    cons.printi("  " + strFilename + " read error");
+    cons.printi("  Setting running color to CRGB(32,32,32), White");
+    color = CRGB(32,32,32);
+    color_desc = "White";
+    sdSysData.set_running_color(color , color_desc);
+  }
+
+  return ret_success;
+}
+
+
+// Save Saved State
+bool save_running_state_json(Console &cons, system_data &sdSysData, string strFilename)
+{
+  JSON_INTERFACE state_json;
+  deque<string> state_dq_string;
+
+  bool ret_success = false;
+
+  CRGB color = sdSysData.get_running_color();
+
+  state_json.ROOT.create_label_value(quotify("red"), quotify(to_string((int)(color.r))));
+  state_json.ROOT.create_label_value(quotify("green"), quotify(to_string((int)(color.g))));
+  state_json.ROOT.create_label_value(quotify("blue"), quotify(to_string((int)(color.b))));
+  state_json.ROOT.create_label_value(quotify("description"), quotify(sdSysData.get_running_color_str()));
+
+  state_json.json_print_build_to_string_deque(state_dq_string);
+  ret_success = deque_string_to_file(strFilename, state_dq_string);
+
+  return ret_success;
+}
+
+// -------------------------------------------------------------------------------------
+// Load Playlist
+bool load_playlist_json(Console &cons, system_data &sdSysData, string strFilename)
+{
+  JSON_INTERFACE movies_json;
+
+  bool ret_success = false;
+
+  string json_movie_file = file_to_string(strFilename, ret_success);
+  
+  if (ret_success == true)
+  {
+    ret_success = movies_json.load_json_from_string(json_movie_file);
+
+    if (ret_success == true)
+    {
+      cons.printi("  " + strFilename + " read success");
+
+      for (int list = 0; list < movies_json.ROOT.DATA.size(); list++)
+      {
+        cons.the_player.Play_List.add_to_list(movies_json.ROOT.DATA[list].value());
+      }
+    }
+  }
+
+  if (ret_success == false)
+  {
+    cons.printi("  " + strFilename + " read error");
+    cons.printi("  Playlist not loaded.");
+  }
 
   return ret_success;
 }

@@ -13,15 +13,11 @@
 #define CONFIGURATION_STORAGE_H
 
 // Standard Header Files
-//#include <fstream>
-//#include <iostream>
-//#include <sys/stat.h>
-#include <string.h>
-#include <time.h>
 #include <deque>
 
 #include "json_interface.h"
 #include "consoleanddata.h"
+#include "LEDstuff.h"
 
 using namespace std;
 
@@ -34,6 +30,20 @@ bool load_json_configuration(Console &cons, system_data &sdSysData, string Direc
 // -------------------------------------------------------------------------------------
 // Save Configuration
 bool save_json_configuration(Console &cons, system_data &sdSysData, string Directory, string Filename);
+
+// -------------------------------------------------------------------------------------
+//  Running State
+
+// Load Saved State
+bool load_saved_running_state_json(Console &cons, system_data &sdSysData, string strFilename);
+
+// Save Saved State
+bool save_running_state_json(Console &cons, system_data &sdSysData, string strFilename);
+
+// -------------------------------------------------------------------------------------
+// Load Playlist
+bool load_playlist_json(Console &cons, system_data &sdSysData, string strFilename);
+
 
 
 
