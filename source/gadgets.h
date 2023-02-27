@@ -855,20 +855,24 @@ class MIN_MAX_TIME_SLICE
   private:
 
   bool ACTIVE = false;
-  int MIN_VALUE = 0;
-  int MAX_VALUE = 0;
+  float VALUE = 0;
+  float MIN_VALUE = 0;
+  float MAX_VALUE = 0;
 
   int MIN_MAX_TIME_SPAN = 0;
 
   public:
 
-  void store_min_max(int Value);
+  void store_min_max(float Value);
   // Store value and updates min max.
 
-  int min();
+  float value();
+  // Returns stored value of data point.
+
+  float min();
   // Returns min value of data point.
 
-  int max();
+  float max();
   // Returns max value of data point.
 };
 
@@ -879,14 +883,22 @@ class MIN_MAX_TIME_PROPERTIES
 {
   public:
 
-  int SLICES = 0;
-  int TIME_SPAN = 0;
+  int SLICES = 0;                     // Number of slices to retain
+  int TIME_SPAN = 0;                  // Time to wait till next slice is created.
+                                      // Measured in ms.  1000 = 1 sec.
+  float DIRECTION_NUTRAL_RANGE = 0;   // Average value change over number of 
+                                      //  slice to register difference.
 };
 
 // ---------------------------------------------------------------------------------------
 
 class MIN_MAX_TIME
 // Contains list of min max time slices.
+// Note:
+//  Values can be imprecise because values aren't
+//    measured seperately accross time spans.
+//    Only first or most recent value saved.
+//  Missing time is not taken into account.
 {
   private:
 
@@ -896,17 +908,38 @@ class MIN_MAX_TIME
 
   unsigned long TIME_SLICE_CREATED_FRAME_TIME = 0;
 
+  void create();
+
   public:
 
   MIN_MAX_TIME_PROPERTIES PROP;
 
-  void create();
+  void put_value(float Value, unsigned long tmeFrame_Time);
+  // Stores value in time slice
+  //  Creates new slice if slice time has passed.
 
-  void put_value(int Value, unsigned long tmeFrame_Time);
+  float min_float();
+  // Returns Min value of variable over time slice
+  //  as float value.
 
   int min();
+  // Returns Min value of variable over time slice
+  //  as int value.
+
+  float max_float();
+  // Returns Max value of variable over time slice
+  //  as float value.
 
   int max();
+  // Returns Max value of variable over time slice
+  //  as int value.
+
+  int direction();
+  // Returns direction (pos, same, neg) of varible over time slice.
+  //  period. 
+  //  Returns -1 if value is falling.
+  //  Returns 0 if value is relatively (DIRECTION_NUTRAL_RANGE) the same. 
+  //  Returns 1 if value is increasing.
 };
 
 
@@ -944,10 +977,17 @@ class BAR_PROPERTIES
   bool PROGRESS_BAR = false;
   bool GUAGE_BAR = false;
 
-  bool MIN_MAX  = false;    // Gadget will show min max values over time lapse.
+  // Display Min Max Values
+  bool MIN_MAX = false;    // Gadget will show min max values over time lapse.
 
-  int MAX_VALUE = 0;        // Gadget's Max Value to be displayed.
-  int MIN_VALUE = 0;        // Gadget's Min Value to be displayed. not implemented.
+  bool MIN_MAX_INDICATORS = true; // Draw Min Max Indictor Bars.
+
+  int MAX_VALUE = 0;            // Gadget's Max Value to be displayed.
+  int MIN_VALUE = 0;            // Gadget's Min Value to be displayed. not implemented.
+
+  bool MIN_MAX_FILLER = true;   // Will only draw if colors are on
+  int MIN_MAX_FILLER_BCOLOR = COLOR_MAGENTA;
+  int MIN_MAX_FILLER_COLOR = COLOR_BLUE;
 
   //int  MIN_MAX_TIME_SPAN = 0;  // Span of time made by slices. In ms.
 
@@ -975,6 +1015,8 @@ class BAR
   void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value);
   // Gadget Internal:
   //  Draw marker in proper position of bar
+
+  void print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, int max);
 
   public:
 

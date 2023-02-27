@@ -1,3 +1,9 @@
+V 1.64A_230228
+  - Added variable direction() function to MIN_MAX_TIME class.
+  - Changes made to radio gadgets.
+  - Change made in fled.core
+  - Changes made to some gadgets.
+
 V 1.63A_230227
   - Changed playlist.cfg format and created playlist.json.
   - Changed the runningstate.cfg to a runningstate.json.

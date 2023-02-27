@@ -243,11 +243,11 @@ void ADSB_Channel::create()
 
   // Squawk
   SQUAWK.PROP.POSY = 0;
-  SQUAWK.PROP.POSX = 15;
+  SQUAWK.PROP.POSX = 16;
   SQUAWK.PROP.COLORS_ON = true;
   SQUAWK.PROP.COLOR = COLOR_BLACK;
   SQUAWK.PROP.BCOLOR = COLOR_BLACK;
-  SQUAWK.PROP.SIZEX = 6;
+  SQUAWK.PROP.SIZEX = 5;
   SQUAWK.PROP.DONT_BLANK = true;
   SQUAWK.PROP.JUSTIFICATION_RIGHT = true;
   SQUAWK.PROP.UPDATE_INDICATION = true;
@@ -259,6 +259,11 @@ void ADSB_Channel::create()
   ALTITUDE.PROP.DONT_BLANK = true;
   ALTITUDE.PROP.JUSTIFICATION_RIGHT = true;
   ALTITUDE.PROP.UPDATE_INDICATION = true;
+
+  // Altitude Strengh Direction
+  ALTITUDE_DIRECION.PROP.SLICES = 5;
+  ALTITUDE_DIRECION.PROP.TIME_SPAN = 1000;
+  ALTITUDE_DIRECION.PROP.DIRECTION_NUTRAL_RANGE = 50;
 
   // Altitude Indicator
   ALTITUDE_IND.PROP.POSY = 1;
@@ -309,6 +314,11 @@ void ADSB_Channel::create()
   SPEED.PROP.DONT_BLANK = true;
   SPEED.PROP.JUSTIFICATION_LEFT = true;
   SPEED.PROP.UPDATE_INDICATION = true;
+
+  // Altitude Strengh Direction
+  SPEED_DIRECION.PROP.SLICES = 5;
+  SPEED_DIRECION.PROP.TIME_SPAN = 1000;
+  SPEED_DIRECION.PROP.DIRECTION_NUTRAL_RANGE = 1;
 
   // Speed Indicator
   SPEED_IND.PROP.POSY = 1;
@@ -374,15 +384,20 @@ void ADSB_Channel::create()
   DATA_TTL_IND.PROP.DONT_BLANK = true;
   DATA_TTL_IND.PROP.JUSTIFICATION_LEFT = true;
 
-    // Signal Strenght Indicator
+  // Signal Strengh Indicator
   SIG_STR_IND.PROP.POSY = 0;
   SIG_STR_IND.PROP.POSX = 13;
   SIG_STR_IND.PROP.COLORS_ON = true;
   SIG_STR_IND.PROP.COLOR = COLOR_BLACK;
   SIG_STR_IND.PROP.BCOLOR = COLOR_BLACK;
-  SIG_STR_IND.PROP.SIZEX = 2;
+  SIG_STR_IND.PROP.SIZEX = 3;
   SIG_STR_IND.PROP.DONT_BLANK = true;
   SIG_STR_IND.PROP.JUSTIFICATION_LEFT = true;
+
+  // Signal Strengh Direction
+  SIG_STR_DIRECION.PROP.SLICES = 5;
+  SIG_STR_DIRECION.PROP.TIME_SPAN = 1000;
+  SIG_STR_DIRECION.PROP.DIRECTION_NUTRAL_RANGE = .5;
 
   // Message
   MESSAGE.PROP.POSY = PROP.SIZEY - 1;
@@ -565,7 +580,24 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       }
 
       ALTITUDE_IND.set_color(tmp_bcolor, tmp_color);
-      ALTITUDE_IND.set_text("^\nv");
+
+      // Direction of value.
+      ALTITUDE_DIRECION.put_value(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), tmeFrame_Time);
+      int altitude_direction = ALTITUDE_DIRECION.direction();        
+      if (altitude_direction == 1)
+      {
+        ALTITUDE_IND.set_text("^\n|");
+      }
+      else if (altitude_direction == 0)
+      {
+        ALTITUDE_IND.set_text("_\n ");
+      }
+      else
+      {
+        ALTITUDE_IND.set_text("|\nv");
+      }
+      
+
       ALTITUDE.set_text(PROP.AIRCRAFT_DATA.ALTITUDE.get_str_value(), tmeFrame_Time);
     }
     else
@@ -630,12 +662,27 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       }
 
       SPEED_IND.set_color(tmp_bcolor, tmp_color);
-      SPEED_IND.set_text("^\nv");
+
+      // Direction of value.
+      SPEED_DIRECION.put_value(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), tmeFrame_Time);
+      int speed_direction = SPEED_DIRECION.direction();        
+      if (speed_direction == 1)
+      {
+        SPEED_IND.set_text("^\n|");
+      }
+      else if (speed_direction == 0)
+      {
+        SPEED_IND.set_text("_\n ");
+      }
+      else
+      {
+        SPEED_IND.set_text("|\nv");
+      }
     }
     else
     {
       SPEED_IND.set_color(PROP.BCOLOR, COLOR_BLACK);
-      SPEED_IND.set_text(" ");
+      SPEED_IND.set_text(" \n ");
     }
 
     SPEED.set_text(PROP.AIRCRAFT_DATA.SPEED.get_str_value(), tmeFrame_Time);
@@ -695,7 +742,22 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       if (PROP.AIRCRAFT_DATA.RSSI.conversion_success()==true)
       {
         SIG_STR_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36), COLOR_BLACK);
-        SIG_STR_IND.set_text("()");
+
+        // Direction of value.
+        SIG_STR_DIRECION.put_value(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), tmeFrame_Time);
+        int sig_direction = SIG_STR_DIRECION.direction();        
+        if (sig_direction == 1)
+        {
+          SIG_STR_IND.set_text("(^)");
+        }
+        else if (sig_direction == 0)
+        {
+          SIG_STR_IND.set_text("(-)");
+        }
+        else
+        {
+          SIG_STR_IND.set_text("(v)");
+        }
       }
     }
     else
@@ -851,16 +913,20 @@ void ADSB_Channel_Grid::create()
   DELTA_MESSAGES_BAR.PROP.LABEL_SIZE = 6;
   DELTA_MESSAGES_BAR.PROP.COLOR = COLOR_WHITE;
   DELTA_MESSAGES_BAR.PROP.BCOLOR = COLOR_BLUE;
-  DELTA_MESSAGES_BAR.PROP.COLOR_BAR_BACK = COLOR_BLACK;
-  DELTA_MESSAGES_BAR.PROP.COLOR_MARKER = COLOR_WHITE;
+  DELTA_MESSAGES_BAR.PROP.COLOR_BAR_BACK = COLOR_BLUE;
+  DELTA_MESSAGES_BAR.PROP.COLOR_MARKER = COLOR_BLACK;
   DELTA_MESSAGES_BAR.PROP.COLOR_MARKER_LIMIT = COLOR_YELLOW;
   DELTA_MESSAGES_BAR.PROP.POSY = 0;
   DELTA_MESSAGES_BAR.PROP.POSX = 48;
   DELTA_MESSAGES_BAR.PROP.BAR_SIZE = 10;
   DELTA_MESSAGES_BAR.PROP.GUAGE_BAR = true;
-  DELTA_MESSAGES_BAR.PROP.MIN_MAX = true;
   DELTA_MESSAGES_BAR.PROP.MAX_VALUE = 50;
   DELTA_MESSAGES_BAR.PROP.MIN_VALUE = 0;
+  DELTA_MESSAGES_BAR.PROP.MIN_MAX = true;
+  DELTA_MESSAGES_BAR.PROP.MIN_MAX_FILLER = true;
+  DELTA_MESSAGES_BAR.PROP.MIN_MAX_FILLER_BCOLOR = COLOR_WHITE;
+  DELTA_MESSAGES_BAR.PROP.MIN_MAX_FILLER_COLOR = COLOR_BLACK;
+  DELTA_MESSAGES_BAR.PROP.MIN_MAX_INDICATORS = false;
   DELTA_MESSAGES_BAR.MIN_MAX_HISTORY.PROP.SLICES = 5;
   DELTA_MESSAGES_BAR.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
   DELTA_MESSAGES_BAR.PROP.PRINT_VALUE = false;

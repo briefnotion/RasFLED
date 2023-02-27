@@ -1436,8 +1436,10 @@ bool Button_Zone_Manager::check_click(int x,int y)
 // ---------------------------------------------------------------------------------------
 // Min Max Time Classes
 
-void MIN_MAX_TIME_SLICE::store_min_max(int Value)
+void MIN_MAX_TIME_SLICE::store_min_max(float Value)
 {
+  VALUE = Value;
+
   if (ACTIVE == false)
   {
     MIN_VALUE = Value;
@@ -1457,12 +1459,17 @@ void MIN_MAX_TIME_SLICE::store_min_max(int Value)
   }
 }
 
-int MIN_MAX_TIME_SLICE::min()
+float MIN_MAX_TIME_SLICE::value()
+{
+  return VALUE;
+}
+
+float MIN_MAX_TIME_SLICE::min()
 {
   return MIN_VALUE;
 }
 
-int MIN_MAX_TIME_SLICE::max()
+float MIN_MAX_TIME_SLICE::max()
 {
   return MAX_VALUE;
 }
@@ -1474,7 +1481,7 @@ void MIN_MAX_TIME::create()
   SLICE_TIME =  PROP.TIME_SPAN / PROP.SLICES;
 }
 
-void MIN_MAX_TIME::put_value(int Value, unsigned long tmeFrame_Time)
+void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
 {
   if (tmeFrame_Time > TIME_SLICE_CREATED_FRAME_TIME + SLICE_TIME)
   {
@@ -1499,9 +1506,9 @@ void MIN_MAX_TIME::put_value(int Value, unsigned long tmeFrame_Time)
 
 }
 
-int MIN_MAX_TIME::min()
+float MIN_MAX_TIME::min_float()
 {
-  int min = 0;
+  float min = 0;
 
   if (TIME_SLICES.size()> 0)
   {
@@ -1519,9 +1526,14 @@ int MIN_MAX_TIME::min()
   return min;
 }
 
-int MIN_MAX_TIME::max()
+int MIN_MAX_TIME::min()
 {
-  int max = 0;
+  return min_float();
+}
+
+float MIN_MAX_TIME::max_float()
+{
+  float max = 0;
 
   if (TIME_SLICES.size()> 0)
   {
@@ -1539,6 +1551,36 @@ int MIN_MAX_TIME::max()
   return max;
 }
 
+int MIN_MAX_TIME::max()
+{
+  return max_float();
+}
+
+int MIN_MAX_TIME::direction()
+{
+  int ret_direction = 0;
+
+  float value_difference = 0;
+
+  if (TIME_SLICES.size()> 0)
+  {
+    for (int x = 1; x < TIME_SLICES.size(); x++)
+    {
+      value_difference = value_difference + (TIME_SLICES[x].value() - TIME_SLICES[x-1].value());
+    }
+
+    if (value_difference > (PROP.DIRECTION_NUTRAL_RANGE * TIME_SLICES.size()))
+    {
+      ret_direction = -1;
+    }
+    else if (value_difference < (0 - (PROP.DIRECTION_NUTRAL_RANGE * TIME_SLICES.size())))
+    {
+      ret_direction = 1;
+    }
+  }
+
+  return ret_direction;
+}
 
 // ---------------------------------------------------------------------------------------
 // Bar Classes
@@ -1546,7 +1588,7 @@ int MIN_MAX_TIME::max()
 int BAR::get_marker_pos(int Value)
 // calculate the size of the fill bar with respects to full bar size.
 {
-  int pos = abs(PROP.BAR_SIZE * Value / PROP.MAX_VALUE);
+  int pos = abs((PROP.BAR_SIZE) * Value / PROP.MAX_VALUE);
 
   // Check bounds
   if (pos > PROP.BAR_SIZE )
@@ -1574,6 +1616,33 @@ void BAR::print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
   }
 
   mvwprintw(winWindow, Ypos, Xpos + get_marker_pos(value), "%c", marker);
+}
+
+void BAR::print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, int max)
+// Draw marker at value on guage.
+//  Draws > if exceeding max of guage size.
+//  Draws < if exceeding min of guage size.
+{
+  string fill_bar = "";
+  int start = 0;
+  int end = 0;
+  int lenght = 0;
+
+  start = get_marker_pos(min);
+  end = get_marker_pos(max);
+
+  if (end > PROP.BAR_SIZE)
+  {
+    end = PROP.BAR_SIZE;
+  }
+
+  lenght = end - start;
+  
+  if (lenght > 0)
+  {
+    fill_bar.append(lenght, ':');
+    mvwprintw(winWindow, Ypos, Xpos + start, "%s", fill_bar.c_str());    
+  }
 }
 
 void BAR::update(int Value, unsigned long tmeFrame_Time)
@@ -1611,6 +1680,12 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
   string bar = "";
   string fill = "";
   int marker_pos = 0;
+  int bar_min = 0;
+  int bar_max = 0;
+
+  // Color Management Variables
+  int bar_color = 0;
+  int indicaor_background_color = 0;
 
   if (CHANGED == true || Refresh == true)
   {
@@ -1619,7 +1694,31 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
       wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
     }
 
-    // Print Label
+    // Prepare Colors
+    if (PROP.COLORS_ON == true)
+    {
+      // Alert background color if value is negative
+      if (PROP.VALUE >= PROP.MIN_VALUE && PROP.VALUE <= PROP.MAX_VALUE)
+      {
+        bar_color = PROP.COLOR_BAR_BACK;
+      }
+      else
+      {
+        bar_color = PROP.COLOR_MARKER_LIMIT;
+      }
+
+      // Prepare background colors for indicators
+      if (PROP.MIN_MAX_FILLER == true)
+      {
+        indicaor_background_color = PROP.MIN_MAX_FILLER_BCOLOR;
+      }
+      else
+      {
+        indicaor_background_color = PROP.COLOR_BAR_BACK;
+      }
+    }
+
+    // Print Label and Bar outsoid.
     if (PROP.LABEL.size() < PROP.LABEL_SIZE)
     {
       label = label.append(PROP.LABEL_SIZE - PROP.LABEL.size(), ' ') + PROP.LABEL;
@@ -1646,47 +1745,48 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
 
     if (PROP.COLORS_ON == true)
     {
+      // Set Panel Color
       wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
     }
 
-
-    // Draw Bar Background
-    if (PROP.COLORS_ON == true && PROP.VALUE > PROP.MIN_VALUE && PROP.VALUE < PROP.MAX_VALUE)
+    // Clear Bar Background
+    if (PROP.COLORS_ON == true)
     {
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_BAR)));
-    }
-    else
-    {
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER_LIMIT)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(bar_color, PROP.COLOR_BAR)));
     }
 
-    if (PROP.PROGRESS_BAR == true)  // Progress Bar
-    {
-      // Put filled bar in empty bar
-      bar.replace(0, marker_pos, fill.append(marker_pos , '|'  ));
+    mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE +1, "%s", bar.c_str());
 
-      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE +1, "%s", bar.c_str());
-    }
-    else                            // Guage Bar
+    if (PROP.COLORS_ON == true)
     {
-      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE +1, "%s", bar.c_str());
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(bar_color, PROP.COLOR_BAR)));
     }
 
-    if (PROP.COLORS_ON == true && PROP.VALUE > PROP.MIN_VALUE && PROP.VALUE < PROP.MAX_VALUE)
+    // Min Max filler bar.
+    if (PROP.MIN_MAX_FILLER == true && PROP.COLORS_ON == true)
     {
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_BAR)));
-    }
-    else
-    {
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER_LIMIT)));
+      if (PROP.PROGRESS_BAR == true)
+      {
+        bar_min = 0;
+        bar_max = PROP.VALUE;
+      }
+      else if (PROP.GUAGE_BAR == true)
+      {
+        bar_min = MIN_MAX_HISTORY.min();
+        bar_max = MIN_MAX_HISTORY.max();
+      }
+
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
+      print_min_max_filler(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + 1, bar_min, bar_max);
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
     }
 
-    // Min Max
-    if (PROP.MIN_MAX == true)
+    // Print Min Max Indicators
+    if (PROP.MIN_MAX_INDICATORS == true)
     {
       if (PROP.COLORS_ON == true)
       {
-        wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER_LIMIT)));
+        wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.COLOR_MARKER_LIMIT)));
       }
 
       print_marker(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + 1, MIN_MAX_HISTORY.min());
@@ -1694,24 +1794,24 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
 
       if (PROP.COLORS_ON == true)
       {
-        wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER_LIMIT)));
+        wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.COLOR_MARKER_LIMIT)));
       }
     }
 
-    // Print Markers
+    // Print Value Marker
     if (PROP.COLORS_ON == true)
     {
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.COLOR_MARKER)));
     }
 
     print_marker(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + 1, PROP.VALUE);
 
     if (PROP.COLORS_ON == true)
     {
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, PROP.COLOR_MARKER)));
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.COLOR_MARKER)));
     }
 
-    // If Print Values are on
+    // If Print Min Max Values are on
     if (PROP.PRINT_MIN == true || PROP.PRINT_VALUE == true || PROP.PRINT_MAX == true)
     {
       int step = 0;

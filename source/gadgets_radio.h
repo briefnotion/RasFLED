@@ -143,6 +143,11 @@ class ADSB_Channel
 
   string compass_mini_bottom(float Heading);
 
+  // Directional varables
+  MIN_MAX_TIME ALTITUDE_DIRECION;
+  MIN_MAX_TIME SPEED_DIRECION;
+  MIN_MAX_TIME SIG_STR_DIRECION;
+
   // Last known good cood data
   float LATITUDE = 0;
   float LONGITUDE = 0;

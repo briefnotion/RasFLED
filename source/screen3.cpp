@@ -278,12 +278,17 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Countdown_Timer.PROP.LABEL_SIZE = 13;
   Countdown_Timer.PROP.COLOR = COLOR_WHITE;
   Countdown_Timer.PROP.BCOLOR = COLOR_GREEN;
-  Countdown_Timer.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Countdown_Timer.PROP.COLOR_BAR_BACK = COLOR_GREEN;
   Countdown_Timer.PROP.COLOR_MARKER = COLOR_WHITE;
   Countdown_Timer.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
   Countdown_Timer.PROP.BAR_SIZE = 15;
   Countdown_Timer.PROP.PROGRESS_BAR = true;
   Countdown_Timer.PROP.COLORS_ON = true;
+  Countdown_Timer.PROP.MIN_MAX = false;
+  Countdown_Timer.PROP.MIN_MAX_FILLER = true;
+  Countdown_Timer.PROP.MIN_MAX_FILLER_BCOLOR = COLOR_YELLOW;
+  Countdown_Timer.PROP.MIN_MAX_FILLER_COLOR = COLOR_WHITE;
+  Countdown_Timer.PROP.MIN_MAX_INDICATORS = false;
 
   // Debug Screen 
   
@@ -302,6 +307,10 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Compute_Time.PROP.MIN_MAX = true;
   Compute_Time.PROP.MAX_VALUE = 20;
   Compute_Time.PROP.MIN_VALUE = 0;
+  Compute_Time.PROP.MIN_MAX_INDICATORS = true;
+  Compute_Time.PROP.MIN_MAX_FILLER = true;
+  Compute_Time.PROP.MIN_MAX_FILLER_BCOLOR = COLOR_GREEN;
+  Compute_Time.PROP.MIN_MAX_FILLER_COLOR = COLOR_WHITE;
   Compute_Time.MIN_MAX_HISTORY.PROP.SLICES = 5;
   Compute_Time.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
   Compute_Time.PROP.PRINT_VALUE = false;
@@ -324,6 +333,10 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Sleep_Time.PROP.MIN_MAX = true;
   Sleep_Time.PROP.MAX_VALUE = 20;
   Sleep_Time.PROP.MIN_VALUE = 0;
+  Sleep_Time.PROP.MIN_MAX_INDICATORS = true;
+  Sleep_Time.PROP.MIN_MAX_FILLER = true;
+  Sleep_Time.PROP.MIN_MAX_FILLER_BCOLOR = COLOR_GREEN;
+  Sleep_Time.PROP.MIN_MAX_FILLER_COLOR = COLOR_WHITE;
   Sleep_Time.MIN_MAX_HISTORY.PROP.SLICES = 5;
   Sleep_Time.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
   Sleep_Time.PROP.PRINT_VALUE = false;
@@ -346,6 +359,10 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Cycle_Time.PROP.MIN_MAX = true;
   Cycle_Time.PROP.MAX_VALUE = 20;
   Cycle_Time.PROP.MIN_VALUE = 0;
+  Cycle_Time.PROP.MIN_MAX_INDICATORS = true;
+  Cycle_Time.PROP.MIN_MAX_FILLER = true;
+  Cycle_Time.PROP.MIN_MAX_FILLER_BCOLOR = COLOR_GREEN;
+  Cycle_Time.PROP.MIN_MAX_FILLER_COLOR = COLOR_WHITE;
   Cycle_Time.MIN_MAX_HISTORY.PROP.SLICES = 5;
   Cycle_Time.MIN_MAX_HISTORY.PROP.TIME_SPAN = 10000;
   Cycle_Time.PROP.PRINT_VALUE = false;
