@@ -884,7 +884,8 @@ class MIN_MAX_TIME_PROPERTIES
   public:
 
   int SLICES = 0;                     // Number of slices to retain
-  int TIME_SPAN = 0;                  // Time to wait till next slice is created.
+  int TIME_SPAN = 0;                  // Elaped time from first to last slice.
+                                      //  e.g: 10,000ms over 5 slices = 1 slice per 2 sec
                                       // Measured in ms.  1000 = 1 sec.
   float DIRECTION_NUTRAL_RANGE = 0;   // Average value change over number of 
                                       //  slice to register difference.

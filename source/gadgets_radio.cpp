@@ -262,7 +262,7 @@ void ADSB_Channel::create()
 
   // Altitude Strengh Direction
   ALTITUDE_DIRECION.PROP.SLICES = 5;
-  ALTITUDE_DIRECION.PROP.TIME_SPAN = 1000;
+  ALTITUDE_DIRECION.PROP.TIME_SPAN = 5000;
   ALTITUDE_DIRECION.PROP.DIRECTION_NUTRAL_RANGE = 50;
 
   // Altitude Indicator
@@ -317,7 +317,7 @@ void ADSB_Channel::create()
 
   // Altitude Strengh Direction
   SPEED_DIRECION.PROP.SLICES = 5;
-  SPEED_DIRECION.PROP.TIME_SPAN = 1000;
+  SPEED_DIRECION.PROP.TIME_SPAN = 5000;
   SPEED_DIRECION.PROP.DIRECTION_NUTRAL_RANGE = 1;
 
   // Speed Indicator
@@ -396,7 +396,7 @@ void ADSB_Channel::create()
 
   // Signal Strengh Direction
   SIG_STR_DIRECION.PROP.SLICES = 5;
-  SIG_STR_DIRECION.PROP.TIME_SPAN = 1000;
+  SIG_STR_DIRECION.PROP.TIME_SPAN = 5000;
   SIG_STR_DIRECION.PROP.DIRECTION_NUTRAL_RANGE = .5;
 
   // Message
@@ -722,8 +722,19 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       // Aircraft Geo Coordinates TTL
       if (  PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true &&
             PROP.AIRCRAFT_DATA.POSITION.GLOBAL_POSITION_FOUND == true)
-      {
-        COORD_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 65, 0, 0), COLOR_BLACK);
+      { // text_color_view
+        int tmp_bcolor = color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 65, 0, 0);
+        int tmp_color = 0;
+        if (tmp_bcolor == COLOR_BLUE || tmp_bcolor == COLOR_RED)
+        {
+          tmp_color = COLOR_WHITE;
+        }
+        else
+        {
+          tmp_color = COLOR_BLACK;
+        }
+
+        COORD_TTL_IND.set_color(tmp_bcolor, tmp_color);
         COORD_TTL_IND.set_text("()");
       }
       else
@@ -733,15 +744,37 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
 
       // Aircraft Data TTL
       if (PROP.AIRCRAFT_DATA.SEEN.conversion_success()==true)
-      {
-        DATA_TTL_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 170, 290, 0, 0), COLOR_BLACK);
+      { // text_color_view
+        int tmp_bcolor = color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 170, 290, 0, 0);
+        int tmp_color = 0;
+        if (tmp_bcolor == COLOR_BLUE || tmp_bcolor == COLOR_RED)
+        {
+          tmp_color = COLOR_WHITE;
+        }
+        else
+        {
+          tmp_color = COLOR_BLACK;
+        }
+
+        DATA_TTL_IND.set_color(tmp_bcolor, tmp_color);
         DATA_TTL_IND.set_text("()");
       }
 
       // Aircraft RSSI Strength
       if (PROP.AIRCRAFT_DATA.RSSI.conversion_success()==true)
-      {
-        SIG_STR_IND.set_color(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36), COLOR_BLACK);
+      { // text_color_view
+        int tmp_bcolor = color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36);
+        int tmp_color = 0;
+        if (tmp_bcolor == COLOR_BLUE || tmp_bcolor == COLOR_RED)
+        {
+          tmp_color = COLOR_WHITE;
+        }
+        else
+        {
+          tmp_color = COLOR_BLACK;
+        }
+
+        SIG_STR_IND.set_color(tmp_bcolor, tmp_color);
 
         // Direction of value.
         SIG_STR_DIRECION.put_value(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), tmeFrame_Time);

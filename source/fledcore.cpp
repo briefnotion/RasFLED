@@ -590,12 +590,12 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
     for(int e = 0; e < teDATA.size(); e++ )
     {
       // Correction needed to find and remove events that somehow escaped the completed flag.
-      if (tmeCurrentTime > teDATA[e].tmeSTARTTIME + 
-                            teDATA[e].intDURATION + 
-                            (abs(teDATA[e].intSTARTPOS - teDATA[e].intENDPOS) * teDATA[e].intSPEED))
-      {
-        teDATA[e].booCOMPLETE = true;
-      }
+      //if (tmeCurrentTime > teDATA[e].tmeSTARTTIME + 
+      //                      teDATA[e].intDURATION + 
+      //                      (abs(teDATA[e].intSTARTPOS - teDATA[e].intENDPOS) * teDATA[e].intSPEED))
+      //{
+      //  teDATA[e].booCOMPLETE = true;
+      //}
 
       if (teDATA[e].booCOMPLETE == true)
       {
