@@ -89,7 +89,32 @@ void CRT_init_all_pairs()
   }
 }
 
+void tmp_text_color_correction(int Background_Color, 
+                  int &New_Temp_Background_Color, int &New_Temp_Text_Color)
+{
+  New_Temp_Background_Color = Background_Color;
+  if (Background_Color == COLOR_BLUE || Background_Color == COLOR_RED)
+  {
+    New_Temp_Text_Color = COLOR_WHITE;
+  }
+  else
+  {
+    New_Temp_Text_Color = COLOR_BLACK;
+  }
 
+}
+
+int text_color_correction(int BColor)
+{
+  if (BColor == COLOR_BLUE || BColor == COLOR_RED)
+  {
+    return COLOR_WHITE;
+  }
+  else
+  {
+    return COLOR_BLACK;
+  }
+}
 
 
 #endif

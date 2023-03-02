@@ -678,8 +678,6 @@ class Button
   Button_Properties PROP;
 
   private:
-
-  int get_auto_color(int BColor);
   
   public:
 
@@ -856,6 +854,7 @@ class MIN_MAX_TIME_SLICE
 
   bool ACTIVE = false;
   float VALUE = 0;
+  int SAMPLES = 0;
   float MIN_VALUE = 0;
   float MAX_VALUE = 0;
 

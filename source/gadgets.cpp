@@ -843,18 +843,6 @@ void Text_Box::clear_text()
 // -------------------------------------------------------------------------------------
 // Button Classes
 
-int Button::get_auto_color(int BColor)
-{
-  if (BColor == COLOR_BLUE || BColor == COLOR_RED)
-  {
-    return COLOR_WHITE;
-  }
-  else
-  {
-    return COLOR_BLACK;
-  }
-}
-
 void Button::create()
 //void create(int id, string name, string label, int value, int type, int color, int bcolor)
 // Define button and behavior.  
@@ -1030,7 +1018,7 @@ bool Button::draw(bool Refresh, unsigned long tmeFrame_Time)
         }
         else
         {
-          BUTTON_PANEL.set_color(PROP.BCOLOR, get_auto_color(PROP.BCOLOR));
+          BUTTON_PANEL.set_color(PROP.BCOLOR, text_color_correction(PROP.BCOLOR));
         }
       }
       else
@@ -1438,7 +1426,8 @@ bool Button_Zone_Manager::check_click(int x,int y)
 
 void MIN_MAX_TIME_SLICE::store_min_max(float Value)
 {
-  VALUE = Value;
+  VALUE = VALUE + Value;
+  SAMPLES++;
 
   if (ACTIVE == false)
   {
@@ -1461,7 +1450,14 @@ void MIN_MAX_TIME_SLICE::store_min_max(float Value)
 
 float MIN_MAX_TIME_SLICE::value()
 {
-  return VALUE;
+  if (SAMPLES > 0)
+  {
+    return VALUE / SAMPLES;
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 float MIN_MAX_TIME_SLICE::min()
@@ -1487,22 +1483,22 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
   {
     if (TIME_SLICES.size() >= PROP.SLICES)
     {
-      TIME_SLICES.pop_back();
+      TIME_SLICES.pop_front();
       MIN_MAX_TIME_SLICE new_time_slice;
       create();
-      TIME_SLICES.push_front(new_time_slice);
+      TIME_SLICES.push_back(new_time_slice);
     }
     else if (TIME_SLICES.size() < PROP.SLICES)
     {
       MIN_MAX_TIME_SLICE new_time_slice;
       create();
-      TIME_SLICES.push_front(new_time_slice);
+      TIME_SLICES.push_back(new_time_slice);
     }
 
     TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;
   }
 
-  TIME_SLICES.front().store_min_max(Value);
+  TIME_SLICES.back().store_min_max(Value);
 
 }
 
@@ -1569,13 +1565,13 @@ int MIN_MAX_TIME::direction()
       value_difference = value_difference + (TIME_SLICES[x].value() - TIME_SLICES[x-1].value());
     }
 
-    if (value_difference > (PROP.DIRECTION_NUTRAL_RANGE * TIME_SLICES.size()))
-    {
-      ret_direction = -1;
-    }
-    else if (value_difference < (0 - (PROP.DIRECTION_NUTRAL_RANGE * TIME_SLICES.size())))
+    if (value_difference > (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
     {
       ret_direction = 1;
+    }
+    else if (value_difference < (-1) * (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
+    {
+      ret_direction = -1;
     }
   }
 

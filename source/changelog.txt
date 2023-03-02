@@ -1,4 +1,8 @@
-V 1.64A_230229
+V 1.66A_230229
+  - Changes made to progress bar / guage bar gadget.
+  - Changes made to ADSB gadget.
+
+V 1.65A_230229
   - Changes made to radio gadgets.
   - Reverted change made in fled.core
 
