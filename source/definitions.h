@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.66"
+#define Revision "00000001.67"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -36,6 +36,7 @@
 #define FILES_CONFIGURATION       "configuration.json"
 #define FILES_RUNNING_STATE_SAVE  "runningstate.json"
 #define FILES_PLAYLIST            "playlist.json"
+#define FILES_ANIMATIONS          "animations.json"
 
 #define FILES_DEAMON_LOG          "/var/log/daemon.log"             // Raspi System Log
 #define FILES_AIRCRAFT_JSON       "/run/dump1090-fa/aircraft.json"  // FlightAware Aircraft JSON File

@@ -1,3 +1,7 @@
+V 1.67A_230302
+  - Started build animations load system.
+  - Changed other, mostly insignificant, things.
+
 V 1.66A_230229
   - Changes made to progress bar / guage bar gadget.
   - Changes made to ADSB gadget.

@@ -14,12 +14,14 @@
 
 // Standard Header Files
 #include <string.h>
+#include <deque>
 
 // RASFled related header files
 #include "definitions.h"
 #include "helper.h"
 #include "consoleanddata.h"
 #include "fledcore.h"
+#include "json_interface.h"
 
 
 // ***************************************************************************************
@@ -44,6 +46,58 @@
 //bool booClearOnEnd,
 //bool booDAYNIGHT;
 
+// -------------------------------------------------------------------------------------
+// Animations
+
+class ANIMATION_EVENT
+{
+  public:
+
+  string Label;
+  unsigned long Current_Time = 0;
+  int Start_Delay_Time = 0;
+  int Duration_Of_Brighness = 0;
+  int Speed_Of_LED_Walk = 0;
+  char Animation_Walk_Type;
+  char Animation_Of_LED;
+  bool Invert_Color = false;
+  CRGB Start_Color_1;
+  CRGB Dest_Color_1;
+  CRGB Start_Color_2;
+  CRGB Dest_Color_2;
+  int LED_Start_Pos = 0;
+  int LED_End_Pos = 0;
+  bool Repeat = false;
+  bool Clear_On_End = false;
+  bool Off_During_Day = false;
+};
+
+class ANIMATION
+{
+  public:
+
+  string LABEL = "";
+  deque<ANIMATION_EVENT> EVENTS;
+
+  void add_event(ANIMATION_EVENT Event);
+};
+
+class ANIMATIONS_LIST
+{
+  private:
+
+  deque<ANIMATION> LIST;
+
+  int find_pos_of_animation(string Label);
+
+  public:
+
+  void create_animation(string Label);
+
+  void add_event_to_animation(string Animation_Label, ANIMATION_EVENT Event);
+
+  void load_animations(string Directory, string Filename);
+};
 
 // -------------------------------------------------------------------------------------
 // Calculate time it takes for an animation event to run.

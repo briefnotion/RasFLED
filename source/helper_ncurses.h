@@ -43,11 +43,11 @@ int CRT_get_color_pair(short Background_Color, short Foreground_Color);
 
 void CRT_init_all_pairs();
 
-void tmp_text_color_correction(int Background_Color, 
-                  int &New_Temp_Background_Color, int &New_Temp_Text_Color);
+int text_color_correction(int Background_Color);
 // Color correction to increase contrast between text background and foreground colors. 
 
-int text_color_correction(int BColor);
+void tmp_text_color_correction(int Background_Color, 
+                  int &New_Temp_Background_Color, int &New_Temp_Text_Color);
 // Color correction to increase contrast between text background and foreground colors. 
 
 #endif
