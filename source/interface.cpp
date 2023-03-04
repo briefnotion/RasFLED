@@ -652,7 +652,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       sdSysData.Command_Thread.run_command("cp -r /run/dump1090-fa/ /home/pi/flightaware/snapshot." + sdSysData.AIRCRAFT_COORD.DATA.NOW.get_str_value());
 
       // Start Power Down Animation
-      //process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(15, 15, 0));
+      process_power_animation(cons, sdSysData, tmeCurrentTime, teEvent, CRGB(0, 30, 0));
     }
     // -------------------------------------------------------------------------------------
     // PLAYLIST

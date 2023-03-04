@@ -28,7 +28,16 @@ using namespace std;
 #define LEDGEND_SCALER  2
 
 // -------------------------------------------------------------------------------------
-//  Class
+//  Supporting Functions
+
+bool remove_opens_and_closes(string &Entry, char Open, char Close);
+
+string parse_label(string Text, int Pos_Colon);
+
+string parse_value(string Text, int Pos_Colon);
+
+// -------------------------------------------------------------------------------------
+//  JSON Class
 
 class JSON_ENTRY
 {
@@ -36,22 +45,12 @@ class JSON_ENTRY
   
   int errcountcap = 1000;
 
-  string parse_label(string Text, int Pos_Colon);
-
-  string parse_value(string Text, int Pos_Colon);
-
   int find_closing(string Text, int Start_Pos, char Opening, char Closing);
-
-  bool remove_brackets(string &Entry);
-
-  bool remove_curls(string &Entry);
 
   bool check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Label, int &Size_Of_Value, 
                               bool &Is_A_Set, bool &Is_A_List);
 
-  bool parse_item_list(string Entry);
-
-  bool parse_item_set(string Entry, string Set_Name);
+  bool parse_item_list(string Entry, bool Is_Set, string Set_Name);
 
   string LABEL = "";
   string VALUE = "";

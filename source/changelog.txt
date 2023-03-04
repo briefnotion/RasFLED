@@ -1,3 +1,6 @@
+V 1.68A_230303
+  - Changes made to JSON interface.
+
 V 1.67A_230302
   - Started build animations load system.
   - Changed other, mostly insignificant, things.

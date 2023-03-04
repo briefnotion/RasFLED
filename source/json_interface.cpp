@@ -26,16 +26,44 @@ using namespace std;
 //  Quotation recognition for commas in quotes
 //  Less error prone.
 
-string JSON_ENTRY::parse_label(string Text, int Label_Size)
+// -------------------------------------------------------------------------------------
+//  Supporting Functions
+
+bool remove_opens_and_closes(string &Entry, char Open, char Close)
+{
+  bool ret_success = false;
+
+  int start = 0;
+  int last = 0;
+
+  // Filter out Brackets.
+  start = Entry.find(Open);
+  if (start != std::string::npos)
+  {
+    last = Entry.find_last_of(Close);
+    if (last != std::string::npos)
+    {
+      Entry = Entry.substr(start +1, last -1);
+
+      ret_success = true;
+    }
+  }
+
+  return ret_success;
+}
+
+string parse_label(string Text, int Label_Size)
 {
   return Text.substr(0, Label_Size);
 }
 
-string JSON_ENTRY::parse_value(string Text, int Label_Size)
+string parse_value(string Text, int Label_Size)
 {
   return Text.erase(0, Label_Size +1);
-  //return Text;
 }
+
+// -------------------------------------------------------------------------------------
+//  JSON Class
 
 int JSON_ENTRY::find_closing(string Text, int Start_Pos, char Opening, char Closing)
 {
@@ -55,53 +83,6 @@ int JSON_ENTRY::find_closing(string Text, int Start_Pos, char Opening, char Clos
     }
   }
   return ret_position;
-}
-
-
-bool JSON_ENTRY::remove_brackets(string &Entry)
-{
-  bool ret_success = false;
-
-  int start = 0;
-  int last = 0;
-
-  // Filter out Brackets.
-  start = Entry.find('[');
-  if (start != std::string::npos)
-  {
-    last = Entry.find_last_of(']');
-    if (last != std::string::npos)
-    {
-      Entry = Entry.substr(start +1, last -1);
-
-      ret_success = true;
-    }
-  }
-
-  return ret_success;
-}
-
-bool JSON_ENTRY::remove_curls(string &Entry)
-{
-  bool ret_success = false;
-
-  int start = 0;
-  int last = 0;
-
-  // Filter out Brackets.
-  start = Entry.find('{');
-  if (start != std::string::npos)
-  {
-    last = Entry.find_last_of('}');
-    if (last != std::string::npos)
-    {
-      Entry = Entry.substr(start +1, last -1);
-
-      ret_success = true;
-    }
-  }
-
-  return ret_success;
 }
 
 bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Label, int &Size_Of_Value, 
@@ -199,6 +180,8 @@ bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Lab
     {
       value_end_pos = pos;
 
+      // Check to make sure , is not in quotes.
+
       if (Entry[pos] == ',')
       {
         value_end_pos--;
@@ -224,7 +207,7 @@ bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Lab
   return true;
 }
 
-bool JSON_ENTRY::parse_item_list(string Entry)
+bool JSON_ENTRY::parse_item_list(string Entry, bool Is_Set, string Set_Name)
 {
   bool ret_success = true;
 
@@ -243,86 +226,21 @@ bool JSON_ENTRY::parse_item_list(string Entry)
 
   Entry = trim(Entry);
 
-  if (remove_curls(Entry) == true)
+  if (Is_Set == true)
   {
-
-    int errcount = 0;
-
-    while (Entry.size() > 0 && errcount < errcountcap)
-    {if (check_entry(Entry, entry_size, label_size, value_size, is_value_set, is_value_list))
-      {
-        JSON_ENTRY new_json_entry;
-
-        // Remove processing portion
-        sub_entry = Entry.substr(0, entry_size);
-        Entry = Entry.erase(0, entry_size);
-
-        // Get Label and Value
-        sub_label = parse_label(sub_entry, label_size);
-        sub_value = parse_value(sub_entry, label_size);
-
-        // Store value or data
-        if (is_value_set == false && is_value_list == false)
-        {
-          new_json_entry.IS_VALUE = true;
-          new_json_entry.IS_LIST = false;
-          new_json_entry.IS_SET = false;
-
-          new_json_entry.LABEL = remove_first_and_last_characters('"', sub_label);
-          new_json_entry.VALUE = remove_first_and_last_characters('"', sub_value);
-        }
-        else if (is_value_set == true)
-        {
-          new_json_entry.IS_VALUE = false;
-          new_json_entry.IS_LIST = false;
-          new_json_entry.IS_SET = true;
-
-          new_json_entry.set_set(sub_value, sub_label);
-        }
-        else
-        // if (is_value_list == true)
-        {
-          new_json_entry.IS_VALUE = false;
-          new_json_entry.IS_LIST = true;
-          new_json_entry.IS_SET = false;
-
-          new_json_entry.set_list(sub_entry);
-        }
-
-        DATA.push_back(new_json_entry);
-      }
-
-      // Curb Runaway
-      errcount++;
-      trim(Entry);
-      
+    ret_success = remove_opens_and_closes(Entry, '[', ']');
+    if (ret_success == true)
+    {
+      LABEL = remove_first_and_last_characters('"', Set_Name);
     }
   }
-  return true;
-}
-
-
-bool JSON_ENTRY::parse_item_set(string Entry, string Set_Name)
-{
-  bool ret_success = true;
-
-  string sub_entry = "";
-  string sub_label = "";
-  string sub_value = "";
-
-  int entry_size = 0;
-  int label_size = 0;
-  int value_size = 0;
-  bool is_value_set = false;
-  bool is_value_list = false;
-
-  string label = "";
-
-  Entry = trim(Entry);
-
-  if (remove_brackets(Entry) == true)
+  else
   {
-    LABEL = remove_first_and_last_characters('"', Set_Name);
+    ret_success = remove_opens_and_closes(Entry, '{', '}');
+  }
+
+  if (ret_success == true)
+  {
 
     int errcount = 0;
 
@@ -412,7 +330,7 @@ bool JSON_ENTRY::set_list(string Entry)
 {
   bool ret_success = false;
 
-  if (parse_item_list(Entry) == true)
+  if (parse_item_list(Entry, false, "") == true)
   {
     ret_success = true;
   }
@@ -424,7 +342,7 @@ bool JSON_ENTRY::set_set(string Entry, string Set_Name)
 {
   bool ret_success = false;
 
-  if (parse_item_set(Entry, Set_Name) == true)
+  if (parse_item_list(Entry, true, Set_Name) == true)
   {
     ret_success = true;
   }

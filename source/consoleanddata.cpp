@@ -814,13 +814,6 @@ void Console::processmouseinput(system_data &sdSysData)
             keywatch.cmdInString(" absboff");
           }
         }
-        /*
-        else if(name == "ADS_BOFF")
-        // Turn Off ADS_B Receiver
-        {
-          keywatch.cmdInString(" absboff");
-        }
-        */
         else if(name == "ADS_B_SNAPSHOT")
         // Turn Off ADS_B Receiver
         {
