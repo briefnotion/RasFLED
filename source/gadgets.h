@@ -544,8 +544,6 @@ class Text_Line_List
 
   void add(unsigned long tmeCurrentMillis, string line);
 
-  bool avail();
-
   Text_Line get_line_to_print(int pos);
 
   void clear();
@@ -716,9 +714,6 @@ class Button
 
   void set_do_not_draw(bool Do_Not_Draw);
   // Set Value. Updates on screen at next draw
-
-  void change_on();
-  // Force panel to redraw on next draw routine call
 
   bool draw(bool Refresh, unsigned long tmeFrame_Time);
   // Draw all changes to Panel. Updates on screen at next draw

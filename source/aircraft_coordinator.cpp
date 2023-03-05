@@ -195,12 +195,6 @@ bool AIRCRAFT::alert()
   return ALERT;
 }
 
-bool AIRCRAFT_COORDINATOR::read_json_file_for_interface(string JSON_Text)
-// Read JSON file into Property Tree
-{
-  return AIRCRAFT_JSON.load_json_from_string(JSON_Text);
-}
-
 void AIRCRAFT_COORDINATOR::post_post_process()
 // Calculate full aircraft data.
 {
@@ -251,7 +245,7 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Text)
       if (AIRCRAFT_JSON.ROOT.DATA[root].label() == "aircraft")
       {
         for (int aircraft_list = 0; 
-              aircraft_list < AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA.size(); aircraft_list++)
+              aircraft_list < AIRCRAFT_JSON.ROOT.DATA[root].DATA.size(); aircraft_list++)
         {
           // For Each Aircraft
 

@@ -160,8 +160,6 @@ class AIRCRAFT_COORDINATOR
 
   private:
 
-  bool read_json_file_for_interface(string JSON_Text);
-
   void post_post_process();
 
   public:

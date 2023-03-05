@@ -1063,7 +1063,7 @@ bool ADSB_Channel_Grid::draw(bool Refresh, unsigned long tmeFrame_Time, PANEL AD
                 );
 
 
-  AIRCRAFT_COUNT.set_text(to_string(PROP.AIRCRAFT_LIST.AIRCRAFTS.size()));
+  AIRCRAFT_COUNT.set_text(to_string(PROP.AIRCRAFT_LIST.AIRCRAFTS.size() -1));
   POSITIONED_AIRCRAFT.set_text(to_string(PROP.AIRCRAFT_LIST.POSITIONED_AIRCRAFT));
 
   DELTA_MESSAGES_BAR.update(PROP.AIRCRAFT_LIST.DELTA_MESSAGES, tmeFrame_Time);

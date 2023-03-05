@@ -36,6 +36,8 @@ string parse_label(string Text, int Pos_Colon);
 
 string parse_value(string Text, int Pos_Colon);
 
+int pos_of_first_non_space(int Start, string Text);
+
 // -------------------------------------------------------------------------------------
 //  JSON Class
 
@@ -43,7 +45,7 @@ class JSON_ENTRY
 {
   private:
   
-  int errcountcap = 1000;
+  int errcountcap = 10000;
 
   int find_closing(string Text, int Start_Pos, char Opening, char Closing);
 

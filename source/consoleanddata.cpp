@@ -197,11 +197,6 @@ void Console::printi(string in)
   }
 }
 
-void Console::deb(string strPrintI)
-{
-  printi("DEBUG: " + strPrintI);
-}
-
 void Console::printwait(string in)
 // Print out a line to console during next refresh.
 {

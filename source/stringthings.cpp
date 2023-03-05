@@ -16,61 +16,6 @@
 
 using namespace std;
 
-
-bool WORDLINE::empty()
-{
-  return words.empty();
-}
-
-int WORDLINE::size()
-{
-  return words.size();
-}
-
-string WORDLINE::pop()
-{
-  string word = "";
-  if(words.empty() == false)
-  {
-    word = words.front();
-    words.pop_front();
-  }
-  return word;
-}
-
-void WORDLINE::storeline(string strLine)
-{
-  int c1 = 0;
-  string word = "";
-  bool juststop = false;
-
-  while((strLine.length() > 0) && (juststop == false))
-  {
-    c1 = strLine.find(" ");
-
-    if(c1==std::string::npos)
-    {
-      c1 = strLine.length();
-      juststop = true;
-    }
-
-    if (c1 > 0)
-    {
-      word = strLine.substr(0,c1).c_str();
-      
-      if(word.length()>0)
-      {
-        words.push_back(word);
-      }
-    }
-
-    if(juststop == false)
-    {
-      strLine = strLine.substr(c1+1,strLine.length()-(c1+1));
-    }
-  }
-}
-
 string line_create(int Size, char Character)
 {
   string line = "";
@@ -86,23 +31,6 @@ string linefill(int size, string text)
   line = line.append(size,' ');
 
   line.replace(((size/2)-(text.length()/2)), text.length(), text);
-  line.resize(size);
-  return line;
-}
-
-string linemerge(int size, string line, string text)
-// Overlaps and centers text onto line.
-// Returns value at size. 
-{
-  int text_size = text.length();
-  
-  if (text_size > size)
-  {
-    text.resize(size);
-    text_size = text.length();
-  }
-
-  line.replace(((size/2)-(text_size/2)), text_size, text);
   line.resize(size);
   return line;
 }

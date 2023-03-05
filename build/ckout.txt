@@ -1,0 +1,1307 @@
+../source/helper.h:54:1: style: The class 'countdown_timer' does not have a constructor although it has private member variables. [noConstructor]
+class countdown_timer
+^
+../source/helper.h:91:1: style: The class 'stupid_random' does not have a constructor although it has private member variables. [noConstructor]
+class stupid_random
+^
+../source/LEDstuff.h:86:9: style: Class 'v_profile_strip' is unsafe, 'v_profile_strip::crgbARRAY' can leak by wrong usage. [unsafeClassCanLeak]
+  CRGB *crgbARRAY;
+        ^
+../source/LEDstuff.cpp:98:15: style: C-style pointer casting [cstyleCast]
+  crgbARRAY = (CRGB*)malloc(sizeof(CRGB) * intLED_COUNT);
+              ^
+../source/LEDstuff.cpp:58:11: style: The scope of the variable 'c2' can be reduced. [variableScope]
+  int c1, c2;
+          ^
+../source/LEDstuff.cpp:83:45: performance: Function parameter 'strName' should be passed by const reference. [passedByValue]
+void v_profile_strip::set(int intId, string strName, string strPosition, int intStart_Pos, bool forward, bool bot_at_start)
+                                            ^
+../source/LEDstuff.cpp:83:61: performance: Function parameter 'strPosition' should be passed by const reference. [passedByValue]
+void v_profile_strip::set(int intId, string strName, string strPosition, int intStart_Pos, bool forward, bool bot_at_start)
+                                                            ^
+../source/LEDstuff.cpp:146:39: performance: Function parameter 'position' should be passed by const reference. [passedByValue]
+bool v_profile_strip::position(string position)
+                                      ^
+../source/LEDstuff.cpp:160:40: performance: Function parameter 'strName' should be passed by const reference. [passedByValue]
+int v_profile_strip_group::find(string strName)
+                                       ^
+../source/LEDstuff.cpp:173:45: performance: Function parameter 'strName' should be passed by const reference. [passedByValue]
+string v_profile_strip_group::status(string strName)
+                                            ^
+../source/LEDstuff.cpp:178:47: performance: Function parameter 'strName' should be passed by const reference. [passedByValue]
+void v_profile_strip_group::status_set(string strName, string strStatus)
+                                              ^
+../source/LEDstuff.cpp:178:63: performance: Function parameter 'strStatus' should be passed by const reference. [passedByValue]
+void v_profile_strip_group::status_set(string strName, string strStatus)
+                                                              ^
+../source/LEDstuff.cpp:189:51: performance: Function parameter 'strName' should be passed by const reference. [passedByValue]
+void v_profile_strip_group::set(int intId, string strName, int intStart_Pos)
+                                                  ^
+../source/LEDstuff.cpp:242:50: performance: Function parameter 'strName' should be passed by const reference. [passedByValue]
+void v_profile_strip_main::set(int intId, string strName)
+                                                 ^
+../source/LEDstuff.cpp:72:15: error: Uninitialized variable: r [uninitvar]
+  return CRGB(r,g,b);
+              ^
+../source/LEDstuff.cpp:72:17: error: Uninitialized variable: g [uninitvar]
+  return CRGB(r,g,b);
+                ^
+../source/LEDstuff.cpp:36:7: error: Uninitialized variable: R [uninitvar]
+  r = R;
+      ^
+../source/LEDstuff.cpp:62:9: note: Assuming condition is false
+  if (c1!=string::npos)
+        ^
+../source/LEDstuff.cpp:72:15: note: Calling function 'CRGB', 1st argument 'r' value is <Uninit>
+  return CRGB(r,g,b);
+              ^
+../source/LEDstuff.cpp:36:7: note: Uninitialized variable: R
+  r = R;
+      ^
+../source/LEDstuff.cpp:37:7: error: Uninitialized variable: G [uninitvar]
+  g = G;
+      ^
+../source/LEDstuff.cpp:62:9: note: Assuming condition is false
+  if (c1!=string::npos)
+        ^
+../source/LEDstuff.cpp:72:17: note: Calling function 'CRGB', 2nd argument 'g' value is <Uninit>
+  return CRGB(r,g,b);
+                ^
+../source/LEDstuff.cpp:37:7: note: Uninitialized variable: G
+  g = G;
+      ^
+../source/LEDstuff.cpp:72:15: error: Uninitialized variable: r [uninitvar]
+  return CRGB(r,g,b);
+              ^
+../source/LEDstuff.cpp:62:9: note: Assuming condition is false
+  if (c1!=string::npos)
+        ^
+../source/LEDstuff.cpp:72:15: note: Uninitialized variable: r
+  return CRGB(r,g,b);
+              ^
+../source/LEDstuff.cpp:72:17: error: Uninitialized variable: g [uninitvar]
+  return CRGB(r,g,b);
+                ^
+../source/LEDstuff.cpp:62:9: note: Assuming condition is false
+  if (c1!=string::npos)
+        ^
+../source/LEDstuff.cpp:72:17: note: Uninitialized variable: g
+  return CRGB(r,g,b);
+                ^
+../source/LEDstuff.cpp:28:10: style: Variable 'r' is assigned a value that is never used. [unreadVariable]
+  char r = 0;
+         ^
+../source/LEDstuff.cpp:29:10: style: Variable 'g' is assigned a value that is never used. [unreadVariable]
+  char g = 0;
+         ^
+../source/LEDstuff.cpp:30:10: style: Variable 'b' is assigned a value that is never used. [unreadVariable]
+  char b = 0;
+         ^
+../source/LEDstuff.cpp:89:27: style: Variable 'intGROUP_START_POS' is assigned a value that is never used. [unreadVariable]
+  int intGROUP_START_POS  = intStart_Pos;
+                          ^
+../source/LEDstuff.cpp:193:27: style: Variable 'intGROUP_START_POS' is assigned a value that is never used. [unreadVariable]
+  int intGROUP_START_POS  = intStart_Pos;
+                          ^
+../source/fled_time.h:30:1: style: The class 'FLED_TIME_VAR' does not have a constructor although it has private member variables. [noConstructor]
+class FLED_TIME_VAR
+^
+../source/rasapi.h:52:1: style: The class 'FILE_WATCH' does not have a constructor although it has private member variables. [noConstructor]
+class FILE_WATCH
+^
+../source/gadgets.h:149:1: style: The class 'CYBR' does not have a constructor although it has private member variables. [noConstructor]
+class CYBR
+^
+../source/gadgets.h:478:1: style: The class 'Title_Bar' does not have a constructor although it has private member variables. [noConstructor]
+class Title_Bar
+^
+../source/gadgets.h:575:1: style: The class 'Text_Box' does not have a constructor although it has private member variables. [noConstructor]
+class Text_Box
+^
+../source/gadgets.h:643:1: style: The class 'Button' does not have a constructor although it has private member variables. [noConstructor]
+class Button
+^
+../source/gadgets_radio.h:120:1: style: The class 'ADSB_Channel' does not have a constructor although it has private member variables. [noConstructor]
+class ADSB_Channel
+^
+../source/gadgets_radio.h:230:1: style: The class 'ADSB_Channel_Grid' does not have a constructor although it has private member variables. [noConstructor]
+class ADSB_Channel_Grid
+^
+../source/gadgets_radio.h:332:1: style: The class 'Radio_Channel' does not have a constructor although it has private member variables. [noConstructor]
+class Radio_Channel
+^
+../source/screen3.h:33:1: style: The class 'Screen3' does not have a constructor although it has private member variables. [noConstructor]
+class Screen3
+^
+../source/animations.cpp:459:37: style: Variable 'intCt' is reassigned a value before the old one has been used. [redundantAssignment]
+  intDur = 1500; intSp = 125; intCt = strip.led_count();
+                                    ^
+../source/animations.cpp:454:35: note: intCt is assigned
+  intDur = 800; intSp = 16; intCt = strip.led_count();
+                                  ^
+../source/animations.cpp:459:37: note: intCt is overwritten
+  intDur = 1500; intSp = 125; intCt = strip.led_count();
+                                    ^
+../source/animations.cpp:710:10: style: Variable 'intDur' is reassigned a value before the old one has been used. [redundantAssignment]
+  intDur = 4000; intSp = 0;
+         ^
+../source/animations.cpp:705:10: note: intDur is assigned
+  intDur = 500; intSp = 0;
+         ^
+../source/animations.cpp:710:10: note: intDur is overwritten
+  intDur = 4000; intSp = 0;
+         ^
+../source/animations.cpp:247:7: style: The scope of the variable 'stad' can be reduced. [variableScope]
+  int stad, endd = 0;
+      ^
+../source/animations.cpp:247:13: style: The scope of the variable 'endd' can be reduced. [variableScope]
+  int stad, endd = 0;
+            ^
+../source/animations.cpp:248:7: style: The scope of the variable 'stadf' can be reduced. [variableScope]
+  int stadf, enddf = 0;
+      ^
+../source/animations.cpp:248:14: style: The scope of the variable 'enddf' can be reduced. [variableScope]
+  int stadf, enddf = 0;
+             ^
+../source/animations.cpp:249:7: style: The scope of the variable 'stadb' can be reduced. [variableScope]
+  int stadb, enddb = 0;
+      ^
+../source/animations.cpp:249:14: style: The scope of the variable 'enddb' can be reduced. [variableScope]
+  int stadb, enddb = 0;
+             ^
+../source/animations.cpp:251:7: style: The scope of the variable 'switchdelaydoor' can be reduced. [variableScope]
+  int switchdelaydoor = 0;
+      ^
+../source/animations.cpp:262:7: style: The scope of the variable 'counter_symetry' can be reduced. [variableScope]
+  int counter_symetry = 0;
+      ^
+../source/animations.cpp:783:7: style: The scope of the variable 'sta' can be reduced. [variableScope]
+  int sta, end = 0;
+      ^
+../source/animations.cpp:783:12: style: The scope of the variable 'end' can be reduced. [variableScope]
+  int sta, end = 0;
+           ^
+../source/animations.cpp:785:7: style: The scope of the variable 'stas' can be reduced. [variableScope]
+  int stas, ends = 0;
+      ^
+../source/animations.cpp:785:13: style: The scope of the variable 'ends' can be reduced. [variableScope]
+  int stas, ends = 0;
+            ^
+../source/animations.cpp:786:7: style: The scope of the variable 'stae' can be reduced. [variableScope]
+  int stae, ende = 0;
+      ^
+../source/animations.cpp:786:13: style: The scope of the variable 'ende' can be reduced. [variableScope]
+  int stae, ende = 0;
+            ^
+../source/animations.cpp:48:51: performance: Function parameter 'Label' should be passed by const reference. [passedByValue]
+int ANIMATIONS_LIST::find_pos_of_animation(string Label)
+                                                  ^
+../source/animations.cpp:63:47: performance: Function parameter 'Label' should be passed by const reference. [passedByValue]
+void ANIMATIONS_LIST::create_animation(string Label)
+                                              ^
+../source/animations.cpp:72:53: performance: Function parameter 'Animation_Label' should be passed by const reference. [passedByValue]
+void ANIMATIONS_LIST::add_event_to_animation(string Animation_Label, ANIMATION_EVENT Event)
+                                                    ^
+../source/animations.cpp:82:46: performance: Function parameter 'Directory' should be passed by const reference. [passedByValue]
+void ANIMATIONS_LIST::load_animations(string Directory, string Filename)
+                                             ^
+../source/animations.cpp:82:64: performance: Function parameter 'Filename' should be passed by const reference. [passedByValue]
+void ANIMATIONS_LIST::load_animations(string Directory, string Filename)
+                                                               ^
+../source/animations.cpp:111:66: performance: Function parameter 'strDescription' should be passed by const reference. [passedByValue]
+void show_anim_info(Console &cons, v_profile_strip strip, string strDescription)
+                                                                 ^
+../source/animations.cpp:188:24: style: Variable 'intDurW' is assigned a value that is never used. [unreadVariable]
+  intTm = 250; intDurW = 2000; intDurG = 5000;
+                       ^
+../source/animations.cpp:188:40: style: Variable 'intDurG' is assigned a value that is never used. [unreadVariable]
+  intTm = 250; intDurW = 2000; intDurG = 5000;
+                                       ^
+../source/animations.cpp:190:17: style: Variable 'intSpBack' is assigned a value that is never used. [unreadVariable]
+  int intSpBack = 0;
+                ^
+../source/animations.cpp:191:21: style: Variable 'intSpAntiPuls' is assigned a value that is never used. [unreadVariable]
+  int intSpAntiPuls = 15;
+                    ^
+../source/animations.cpp:192:18: style: Variable 'intDurAnti' is assigned a value that is never used. [unreadVariable]
+  int intDurAnti = 150;
+                 ^
+../source/animations.cpp:194:9: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intCt = 36;
+        ^
+../source/animations.cpp:179:7: style: Unused variable: intDelay [unusedVariable]
+  int intDelay;
+      ^
+../source/animations.cpp:247:18: style: Variable 'endd' is assigned a value that is never used. [unreadVariable]
+  int stad, endd = 0;
+                 ^
+../source/animations.cpp:248:20: style: Variable 'enddf' is assigned a value that is never used. [unreadVariable]
+  int stadf, enddf = 0;
+                   ^
+../source/animations.cpp:249:20: style: Variable 'enddb' is assigned a value that is never used. [unreadVariable]
+  int stadb, enddb = 0;
+                   ^
+../source/animations.cpp:251:23: style: Variable 'switchdelaydoor' is assigned a value that is never used. [unreadVariable]
+  int switchdelaydoor = 0;
+                      ^
+../source/animations.cpp:262:23: style: Variable 'counter_symetry' is assigned a value that is never used. [unreadVariable]
+  int counter_symetry = 0;
+                      ^
+../source/animations.cpp:229:7: style: Unused variable: intDelay [unusedVariable]
+  int intDelay;
+      ^
+../source/animations.cpp:230:7: style: Unused variable: intDelayGlitchAnti [unusedVariable]
+  int intDelayGlitchAnti;
+      ^
+../source/animations.cpp:242:7: style: Unused variable: pos [unusedVariable]
+  int pos[amount];
+      ^
+../source/animations.cpp:459:37: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intDur = 1500; intSp = 125; intCt = strip.led_count();
+                                    ^
+../source/animations.cpp:491:49: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 600; intDur = 5000; intSp = 50; intCt = strip.led_count();
+                                                ^
+../source/animations.cpp:525:13: style: Variable 'lead' is assigned a value that is never used. [unreadVariable]
+  CRGB lead = CRGB(20, 20, 20);
+            ^
+../source/animations.cpp:670:16: style: Variable 'intDelay' is assigned a value that is never used. [unreadVariable]
+  int intDelay = 0;
+               ^
+../source/animations.cpp:686:46: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 50; intDur = 500; intSp = 0; intCt = strip.led_count();
+                                             ^
+../source/animations.cpp:688:17: style: Variable 'intTm2Off' is assigned a value that is never used. [unreadVariable]
+  int intTm2Off = (intMid * intSp + intDur) /2;
+                ^
+../source/animations.cpp:748:47: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 50; intDur = 4000; intSp = 0; intCt = strip.led_count();
+                                              ^
+../source/animations.cpp:750:17: style: Variable 'intTm2Off' is assigned a value that is never used. [unreadVariable]
+  int intTm2Off = (intMid * intSp + intDur) /2;
+                ^
+../source/animations.cpp:772:50: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 50; intDur = 4500; intSp = 1000; intCt = strip.led_count();
+                                                 ^
+../source/animations.cpp:783:16: style: Variable 'end' is assigned a value that is never used. [unreadVariable]
+  int sta, end = 0;
+               ^
+../source/animations.cpp:785:18: style: Variable 'ends' is assigned a value that is never used. [unreadVariable]
+  int stas, ends = 0;
+                 ^
+../source/animations.cpp:786:18: style: Variable 'ende' is assigned a value that is never used. [unreadVariable]
+  int stae, ende = 0;
+                 ^
+../source/animations.cpp:781:7: style: Unused variable: pos [unusedVariable]
+  int pos[amount];
+      ^
+../source/api_shared_memory.cpp:30:27: style: Array index 'pos' is used before limits check. [arrayIndexThenCheck]
+  for (int pos = 0; Source[pos] != 0 && pos < SIZE_TEXT_MAX; pos++)
+                          ^
+../source/api_shared_memory.h:48:8: style: Unused private function: 'API_CHANNEL_MEM::put' [unusedPrivateFunction]
+  void put(SILLY_STRING &Destination, char *Source);
+       ^
+../source/api_shared_memory.cpp:39:43: style: Parameter 'Source' can be declared with const [constParameter]
+string API_CHANNEL_MEM::get(SILLY_STRING &Source)
+                                          ^
+../source/commands.cpp:46:41: performance: Function parameter 'Command' should be passed by const reference. [passedByValue]
+void COMMAND_THREAD::run_command(string Command)
+                                        ^
+../source/configuration_storage.cpp:23:76: performance: Function parameter 'Directory' should be passed by const reference. [passedByValue]
+bool load_json_configuration(Console &cons, system_data &sdSysData, string Directory, string Filename)
+                                                                           ^
+../source/configuration_storage.cpp:23:94: performance: Function parameter 'Filename' should be passed by const reference. [passedByValue]
+bool load_json_configuration(Console &cons, system_data &sdSysData, string Directory, string Filename)
+                                                                                             ^
+../source/configuration_storage.cpp:121:76: performance: Function parameter 'Directory' should be passed by const reference. [passedByValue]
+bool save_json_configuration(Console &cons, system_data &sdSysData, string Directory, string Filename)
+                                                                           ^
+../source/configuration_storage.cpp:121:94: performance: Function parameter 'Filename' should be passed by const reference. [passedByValue]
+bool save_json_configuration(Console &cons, system_data &sdSysData, string Directory, string Filename)
+                                                                                             ^
+../source/configuration_storage.cpp:283:82: performance: Function parameter 'strFilename' should be passed by const reference. [passedByValue]
+bool load_saved_running_state_json(Console &cons, system_data &sdSysData, string strFilename)
+                                                                                 ^
+../source/configuration_storage.cpp:344:76: performance: Function parameter 'strFilename' should be passed by const reference. [passedByValue]
+bool save_running_state_json(Console &cons, system_data &sdSysData, string strFilename)
+                                                                           ^
+../source/configuration_storage.cpp:366:71: performance: Function parameter 'strFilename' should be passed by const reference. [passedByValue]
+bool load_playlist_json(Console &cons, system_data &sdSysData, string strFilename)
+                                                                      ^
+../source/configuration_storage.cpp:55:17: style: Variable 'mid' is assigned a value that is never used. [unreadVariable]
+        int mid = 0;
+                ^
+../source/configuration_storage.cpp:56:16: style: Unused variable: mname [unusedVariable]
+        string mname;
+               ^
+../source/configuration_storage.cpp:223:14: style: Unused variable: write [unusedVariable]
+      string write;
+             ^
+../source/configuration_storage.cpp:289:14: style: Variable 'red' is assigned a value that is never used. [unreadVariable]
+  string red = "";
+             ^
+../source/configuration_storage.cpp:290:16: style: Variable 'green' is assigned a value that is never used. [unreadVariable]
+  string green = "";
+               ^
+../source/configuration_storage.cpp:291:15: style: Variable 'blue' is assigned a value that is never used. [unreadVariable]
+  string blue = "";
+              ^
+../source/configuration_storage.cpp:293:23: style: Variable 'color_string' is assigned a value that is never used. [unreadVariable]
+  string color_string = "";
+                      ^
+../source/configuration_storage.cpp:295:21: style: Variable 'color_desc' is assigned a value that is never used. [unreadVariable]
+  string color_desc = "";
+                    ^
+../source/consoleanddata.cpp:241:10: style: Local variable 'buffer' shadows outer variable [shadowVariable]
+    char buffer[512];
+         ^
+../source/consoleanddata.cpp:213:10: note: Shadowed declaration
+    char buffer[512];
+         ^
+../source/consoleanddata.cpp:241:10: note: Shadow variable
+    char buffer[512];
+         ^
+../source/consoleanddata.cpp:242:12: style: Local variable 'max_size' shadows outer variable [shadowVariable]
+    size_t max_size = sizeof(buffer);
+           ^
+../source/consoleanddata.cpp:214:12: note: Shadowed declaration
+    size_t max_size = sizeof(buffer);
+           ^
+../source/consoleanddata.cpp:242:12: note: Shadow variable
+    size_t max_size = sizeof(buffer);
+           ^
+../source/consoleanddata.cpp:408:34: performance: Function parameter 'Button_Name' should be passed by const reference. [passedByValue]
+void Console::tab_handler(string Button_Name, system_data &sdSysData)
+                                 ^
+../source/consoleanddata.cpp:822:52: style: Parameter 'time' can be declared with const [constParameter]
+void Console::update_displayed_time(unsigned long &time)
+                                                   ^
+../source/consoleanddata.cpp:214:21: style: Variable 'max_size' is assigned a value that is never used. [unreadVariable]
+    size_t max_size = sizeof(buffer);
+                    ^
+../source/consoleanddata.cpp:472:13: style: Variable 'value' is assigned a value that is never used. [unreadVariable]
+      value = Screen.bzButtons.get_clicked_value(name);
+            ^
+../source/fled_time.cpp:69:18: style: Variable 'return_int' is assigned a value that is never used. [unreadVariable]
+  int return_int = 0;
+                 ^
+../source/fled_time.cpp:81:18: style: Variable 'return_int' is assigned a value that is never used. [unreadVariable]
+  int return_int = 0;
+                 ^
+../source/fledcore.cpp:158:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:168:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:204:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:214:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:227:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:246:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:263:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:290:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:303:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:396:11: style: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+          break;
+          ^
+../source/fledcore.cpp:316:25: style: The scope of the variable 'NewTimeStart' can be reduced. [variableScope]
+          unsigned long NewTimeStart = 0;
+                        ^
+../source/fledcore.cpp:479:8: style: The scope of the variable 'booEventComplete' can be reduced. [variableScope]
+  bool booEventComplete = true;
+       ^
+../source/fledcore.cpp:372:33: style: Unsigned expression 'NewElapsedTime' can't be negative so it is unnecessary to test it. [unsignedPositive]
+            if ((NewElapsedTime >= 0) && (NewElapsedTime <= NewElapsedTime + NewDuration))
+                                ^
+../source/fledcore.cpp:54:35: performance: Function parameter 'strIdentity' should be passed by const reference. [passedByValue]
+void timed_event::set(std::string strIdentity, unsigned long tmeCurrentTime,
+                                  ^
+../source/fledcore.cpp:406:42: style: Parameter 'led' can be declared with const [constParameter]
+void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_data &sdSysData, stupid_random &sRND, unsigned long &tmeCurrentTime,
+                                         ^
+../source/fledcore.cpp:406:112: style: Parameter 'sRND' can be declared with const [constParameter]
+void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_data &sdSysData, stupid_random &sRND, unsigned long &tmeCurrentTime,
+                                                                                                               ^
+../source/fledcore.cpp:406:133: style: Parameter 'tmeCurrentTime' can be declared with const [constParameter]
+void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_data &sdSysData, stupid_random &sRND, unsigned long &tmeCurrentTime,
+                                                                                                                                    ^
+../source/fledcore.cpp:94:14: style: Variable 'booCreated' is assigned a value that is never used. [unreadVariable]
+  booCreated = true;
+             ^
+../source/fledcore.cpp:316:38: style: Variable 'NewTimeStart' is assigned a value that is never used. [unreadVariable]
+          unsigned long NewTimeStart = 0;
+                                     ^
+../source/fledcore.cpp:479:25: style: Variable 'booEventComplete' is assigned a value that is never used. [unreadVariable]
+  bool booEventComplete = true;
+                        ^
+../source/gadgets.cpp:1460:33: style: Condition 'TIME_SLICES.size()<PROP.SLICES' is always true [knownConditionTrueFalse]
+    else if (TIME_SLICES.size() < PROP.SLICES)
+                                ^
+../source/gadgets.cpp:401:11: style: The scope of the variable 'p' can be reduced. [variableScope]
+      int p = 0;
+          ^
+../source/gadgets.cpp:771:9: style: The scope of the variable 'yCurPos' can be reduced. [variableScope]
+    int yCurPos = 0;
+        ^
+../source/gadgets.cpp:1528:9: style: The scope of the variable 'value_difference' can be reduced. [variableScope]
+  float value_difference = 0;
+        ^
+../source/gadgets.cpp:1647:7: style: The scope of the variable 'marker_pos' can be reduced. [variableScope]
+  int marker_pos = 0;
+      ^
+../source/gadgets.cpp:1648:7: style: The scope of the variable 'bar_min' can be reduced. [variableScope]
+  int bar_min = 0;
+      ^
+../source/gadgets.cpp:1649:7: style: The scope of the variable 'bar_max' can be reduced. [variableScope]
+  int bar_max = 0;
+      ^
+../source/gadgets.cpp:1652:7: style: The scope of the variable 'bar_color' can be reduced. [variableScope]
+  int bar_color = 0;
+      ^
+../source/gadgets.cpp:1653:7: style: The scope of the variable 'indicaor_background_color' can be reduced. [variableScope]
+  int indicaor_background_color = 0;
+      ^
+../source/gadgets.cpp:201:34: performance: Function parameter 'Text' should be passed by const reference. [passedByValue]
+void Text_Field::set_text(string Text, unsigned long tmeFrame_Time)
+                                 ^
+../source/gadgets.cpp:232:34: performance: Function parameter 'Text' should be passed by const reference. [passedByValue]
+void Text_Field::set_text(string Text)
+                                 ^
+../source/gadgets.cpp:388:45: performance: Function parameter 'Text' should be passed by const reference. [passedByValue]
+void Text_Field_Multi_Line::set_text(string Text, unsigned long tmeFrame_Time)
+                                            ^
+../source/gadgets.cpp:465:45: performance: Function parameter 'Text' should be passed by const reference. [passedByValue]
+void Text_Field_Multi_Line::set_text(string Text)
+                                            ^
+../source/gadgets.cpp:670:65: performance: Function parameter 'line' should be passed by const reference. [passedByValue]
+void Text_Line_List::add(unsigned long tmeCurrentMillis, string line)
+                                                                ^
+../source/gadgets.cpp:709:38: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+void Text_Box::modify(int id, string name, string label, int type, int color, int bcolor)
+                                     ^
+../source/gadgets.cpp:709:51: performance: Function parameter 'label' should be passed by const reference. [passedByValue]
+void Text_Box::modify(int id, string name, string label, int type, int color, int bcolor)
+                                                  ^
+../source/gadgets.cpp:722:38: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+void Text_Box::create(int id, string name, string label, int type, int color, int bcolor)
+                                     ^
+../source/gadgets.cpp:722:51: performance: Function parameter 'label' should be passed by const reference. [passedByValue]
+void Text_Box::create(int id, string name, string label, int type, int color, int bcolor)
+                                                  ^
+../source/gadgets.cpp:875:30: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button::set_name(string Name)
+                             ^
+../source/gadgets.cpp:885:31: performance: Function parameter 'Label' should be passed by const reference. [passedByValue]
+void Button::set_label(string Label)
+                              ^
+../source/gadgets.cpp:1055:41: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+int Button_Zone_Manager::get_pos(string Name)
+                                        ^
+../source/gadgets.cpp:1105:48: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::click_advance(string Name)
+                                               ^
+../source/gadgets.cpp:1150:43: performance: Function parameter 'Old_Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_name(string Old_Name, string Name)
+                                          ^
+../source/gadgets.cpp:1173:44: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_label(string Name, string Label)
+                                           ^
+../source/gadgets.cpp:1193:44: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_value(string Name, int Value)
+                                           ^
+../source/gadgets.cpp:1213:43: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_type(string Name, int Type)
+                                          ^
+../source/gadgets.cpp:1233:44: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_color(string Name, int Background_Color, int Color)
+                                           ^
+../source/gadgets.cpp:1254:46: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_enabled(string Name, bool Enabled)
+                                             ^
+../source/gadgets.cpp:1276:45: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_hidden(string Name, bool Hidden)
+                                            ^
+../source/gadgets.cpp:1298:50: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+void Button_Zone_Manager::set_do_not_draw(string Name, bool Do_Not_Draw)
+                                                 ^
+../source/gadgets.cpp:1326:51: performance: Function parameter 'Name' should be passed by const reference. [passedByValue]
+int Button_Zone_Manager::get_clicked_value(string Name)
+                                                  ^
+../source/gadgets.cpp:399:19: style: Variable 'line' is assigned a value that is never used. [unreadVariable]
+      string line = "";
+                  ^
+../source/gadgets.cpp:401:13: style: Variable 'p' is assigned a value that is never used. [unreadVariable]
+      int p = 0;
+            ^
+../source/gadgets.cpp:626:16: style: Variable 'CHANGED' is assigned a value that is never used. [unreadVariable]
+  bool CHANGED = true;
+               ^
+../source/gadgets.cpp:738:16: style: Variable 'CHANGED' is assigned a value that is never used. [unreadVariable]
+  bool CHANGED = true;
+               ^
+../source/gadgets.cpp:755:16: style: Variable 'CHANGED' is assigned a value that is never used. [unreadVariable]
+  bool CHANGED = true;
+               ^
+../source/gadgets.cpp:771:17: style: Variable 'yCurPos' is assigned a value that is never used. [unreadVariable]
+    int yCurPos = 0;
+                ^
+../source/gadgets.cpp:838:16: style: Variable 'CHANGED' is assigned a value that is never used. [unreadVariable]
+  bool CHANGED = true;
+               ^
+../source/gadgets.cpp:1646:15: style: Variable 'fill' is assigned a value that is never used. [unreadVariable]
+  string fill = "";
+              ^
+../source/gadgets.cpp:1647:18: style: Variable 'marker_pos' is assigned a value that is never used. [unreadVariable]
+  int marker_pos = 0;
+                 ^
+../source/gadgets.cpp:1709:16: style: Variable 'marker_pos' is assigned a value that is never used. [unreadVariable]
+    marker_pos = get_marker_pos(PROP.VALUE);
+               ^
+../source/gadgets.cpp:1802:14: style: Variable 'step' is assigned a value that is never used. [unreadVariable]
+        step ++;
+             ^
+../source/gadgets_radio.cpp:1526:18: style: Variable 'PROP.CHANGED' is reassigned a value before the old one has been used. [redundantAssignment]
+    PROP.CHANGED = true;
+                 ^
+../source/gadgets_radio.cpp:1460:20: note: PROP.CHANGED is assigned
+      PROP.CHANGED = true;
+                   ^
+../source/gadgets_radio.cpp:1526:18: note: PROP.CHANGED is overwritten
+    PROP.CHANGED = true;
+                 ^
+../source/gadgets_radio.cpp:1526:18: style: Variable 'PROP.CHANGED' is reassigned a value before the old one has been used. [redundantAssignment]
+    PROP.CHANGED = true;
+                 ^
+../source/gadgets_radio.cpp:1480:20: note: PROP.CHANGED is assigned
+      PROP.CHANGED = true;
+                   ^
+../source/gadgets_radio.cpp:1526:18: note: PROP.CHANGED is overwritten
+    PROP.CHANGED = true;
+                 ^
+../source/gadgets_radio.cpp:473:7: style: The scope of the variable 'tmp_bcolor' can be reduced. [variableScope]
+  int tmp_bcolor = 0;
+      ^
+../source/gadgets_radio.cpp:474:7: style: The scope of the variable 'tmp_color' can be reduced. [variableScope]
+  int tmp_color = 0;
+      ^
+../source/gadgets_radio.cpp:977:7: style: The scope of the variable 'pos_found' can be reduced. [variableScope]
+  int pos_found = 0;
+      ^
+../source/gadgets_radio.cpp:453:45: performance: Function parameter 'Aircraft' should be passed by const reference. [passedByValue]
+void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis)
+                                            ^
+../source/gadgets_radio.cpp:813:40: performance: Function parameter 'Hex' should be passed by const reference. [passedByValue]
+int ADSB_Channel_Grid::find_HEX(string Hex)
+                                       ^
+../source/gadgets_radio.cpp:1090:43: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+void Radio_Channel::modify(int id, string name, string label, int value, int type, int color, int bcolor)
+                                          ^
+../source/gadgets_radio.cpp:1090:56: performance: Function parameter 'label' should be passed by const reference. [passedByValue]
+void Radio_Channel::modify(int id, string name, string label, int value, int type, int color, int bcolor)
+                                                       ^
+../source/gadgets_radio.cpp:1103:43: performance: Function parameter 'name' should be passed by const reference. [passedByValue]
+void Radio_Channel::create(int id, string name, string label, int type, int color, int bcolor)
+                                          ^
+../source/gadgets_radio.cpp:1103:56: performance: Function parameter 'label' should be passed by const reference. [passedByValue]
+void Radio_Channel::create(int id, string name, string label, int type, int color, int bcolor)
+                                                       ^
+../source/gadgets_radio.cpp:453:70: style: Parameter 'tmeCurrentMillis' can be declared with const [constParameter]
+void ADSB_Channel::update_aircraft(AIRCRAFT Aircraft, unsigned long &tmeCurrentMillis)
+                                                                     ^
+../source/gadgets_radio.cpp:1283:59: style: Parameter 'New_Value' can be declared with const [constParameter]
+void Radio_Channel::update_value(API_SQUELCH_DESTINATION &New_Value, unsigned long tmeFrame_Time)
+                                                          ^
+../source/gadgets_radio.cpp:418:10: error: Uninitialized struct member: cleared_properties.ID [uninitStructMember]
+  PROP = cleared_properties;
+         ^
+../source/gadgets_radio.cpp:937:32: error: Uninitialized struct member: Default_ADS_B.ADSB_PANEL [uninitStructMember]
+      ADSB_Channel_q.push_back(Default_ADS_B);
+                               ^
+../source/gadgets_radio.cpp:418:10: error: Uninitialized variable: cleared_properties [uninitvar]
+  PROP = cleared_properties;
+         ^
+../source/gadgets_radio.cpp:925:44: error: Uninitialized variable: SIZEX [uninitvar]
+  int x = PROP.SIZEX / (Default_ADS_B.PROP.SIZEX + 1);
+                                           ^
+../source/gadgets_radio.cpp:48:25: style: Unused variable: cleared_properties [unusedVariable]
+  Text_Field_Properties cleared_properties;
+                        ^
+../source/gadgets_radio.cpp:89:23: style: Variable 'return_str' is assigned a value that is never used. [unreadVariable]
+    string return_str = "";
+                      ^
+../source/gadgets_radio.cpp:417:27: style: Variable 'cleared_properties' is not assigned a value. [unassignedVariable]
+  ADSB_Channel_Properties cleared_properties;
+                          ^
+../source/gadgets_radio.cpp:471:20: style: Variable 'ret_redrawn' is assigned a value that is never used. [unreadVariable]
+  bool ret_redrawn = false;
+                   ^
+../source/gadgets_radio.cpp:977:17: style: Variable 'pos_found' is assigned a value that is never used. [unreadVariable]
+  int pos_found = 0;
+                ^
+../source/gadgets_radio.cpp:978:17: style: Variable 'pos_avail' is assigned a value that is never used. [unreadVariable]
+  int pos_avail = 0;
+                ^
+../source/gadgets_radio.cpp:979:25: style: Variable 'pos_expired_avail' is assigned a value that is never used. [unreadVariable]
+  int pos_expired_avail = 0;
+                        ^
+../source/gadgets_radio.cpp:1034:22: style: Variable 'ret_refreshed' is assigned a value that is never used. [unreadVariable]
+  bool ret_refreshed = false;
+                     ^
+../source/gadgets_radio.cpp:1116:16: style: Variable 'CHANGED' is assigned a value that is never used. [unreadVariable]
+  bool CHANGED = true;
+               ^
+../source/gadgets_radio.cpp:1442:11: style: Variable 'value' is assigned a value that is never used. [unreadVariable]
+    value = bzGadget.get_clicked_value(Name);
+          ^
+../source/hardware_module_door.cpp:39:7: style: The scope of the variable 'opencount' can be reduced. [variableScope]
+  int opencount = 0;
+      ^
+../source/hardware_status.h:41:8: style: Unused private function: 'HARDWARE_STATUS::read_low_voltage' [unusedPrivateFunction]
+  void read_low_voltage();
+       ^
+../source/hardware_status.cpp:23:8: style: The scope of the variable 'data' can be reduced. [variableScope]
+  char data[buf_size];
+       ^
+../source/hardware_status.cpp:25:9: style: The scope of the variable 'fshardware' can be reduced. [variableScope]
+  FILE *fshardware;
+        ^
+../source/hardware_status.cpp:57:8: style: The scope of the variable 'data' can be reduced. [variableScope]
+  char data[buf_size];
+       ^
+../source/hardware_status.cpp:59:9: style: The scope of the variable 'fshardware' can be reduced. [variableScope]
+  FILE *fshardware;
+        ^
+../source/hardware_status.cpp:26:10: style: Unused variable: bytesread [unusedVariable]
+  size_t bytesread;
+         ^
+../source/hardware_status.cpp:60:10: style: Unused variable: bytesread [unusedVariable]
+  size_t bytesread;
+         ^
+../source/helper.h:122:8: style: Unused private function: 'VAR_CHANGE_MON::switched' [unusedPrivateFunction]
+  bool switched(int Value);
+       ^
+../source/helper.cpp:132:10: style: The scope of the variable 'number' can be reduced. [variableScope]
+    long number;
+         ^
+../source/helper.cpp:134:10: style: The scope of the variable 'found' can be reduced. [variableScope]
+    bool found = false;
+         ^
+../source/helper.cpp:114:18: style: Checking if unsigned expression 'DURATION' is less than zero. [unsignedLessThanZero]
+    if (DURATION <= 0)
+                 ^
+../source/helper.cpp:191:5: style: int result is returned as long value. If the return value is long to avoid loss of information, then you have loss of information. [truncLongCastReturn]
+    return (stupidnumbers[pos] % size) * (size / StuRNDsize);
+    ^
+../source/helper.cpp:134:16: style: Variable 'found' is assigned a value that is never used. [unreadVariable]
+    bool found = false;
+               ^
+../source/interface.cpp:371:7: style: The scope of the variable 'parameter' can be reduced. [variableScope]
+  int parameter = 0;
+      ^
+../source/interface.cpp:26:41: performance: Function parameter 'strDescription' should be passed by const reference. [passedByValue]
+void command_desc(Console &cons, string strDescription)
+                                        ^
+../source/interface.cpp:277:42: performance: Function parameter 'command' should be passed by const reference. [passedByValue]
+bool check_command(Console &cons, string command, string description)
+                                         ^
+../source/interface.cpp:277:58: performance: Function parameter 'description' should be passed by const reference. [passedByValue]
+bool check_command(Console &cons, string command, string description)
+                                                         ^
+../source/interface.cpp:308:73: performance: Function parameter 'description' should be passed by const reference. [passedByValue]
+bool check_command_with_num_param(Console &cons, string command, string description, int num_start, int num_len, int &Parameter)
+                                                                        ^
+../source/interface.cpp:80:53: style: Parameter 'sdSysData' can be declared with const [constParameter]
+void consoleprintevents(Console &cons, system_data &sdSysData, timed_event teEvent[])
+                                                    ^
+../source/interface.cpp:187:54: style: Parameter 'sdSysData' can be declared with const [constParameter]
+void processcommandflash(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBflashcolor)
+                                                     ^
+../source/json_interface.cpp:37:7: style: The scope of the variable 'last' can be reduced. [variableScope]
+  int last = 0;
+      ^
+../source/json_interface.cpp:201:7: style: The scope of the variable 'entry_size' can be reduced. [variableScope]
+  int entry_size = 0;
+      ^
+../source/json_interface.cpp:202:7: style: The scope of the variable 'label_size' can be reduced. [variableScope]
+  int label_size = 0;
+      ^
+../source/json_interface.cpp:203:7: style: The scope of the variable 'value_size' can be reduced. [variableScope]
+  int value_size = 0;
+      ^
+../source/json_interface.cpp:204:8: style: The scope of the variable 'is_value_set' can be reduced. [variableScope]
+  bool is_value_set = false;
+       ^
+../source/json_interface.cpp:205:8: style: The scope of the variable 'is_value_list' can be reduced. [variableScope]
+  bool is_value_list = false;
+       ^
+../source/json_interface.cpp:193:68: performance: Function parameter 'Set_Name' should be passed by const reference. [passedByValue]
+bool JSON_ENTRY::parse_item_list(string Entry, bool Is_Set, string Set_Name)
+                                                                   ^
+../source/json_interface.cpp:292:39: performance: Function parameter 'Label_In_List' should be passed by const reference. [passedByValue]
+int JSON_ENTRY::find_label_pos(string Label_In_List)
+                                      ^
+../source/json_interface.cpp:307:36: performance: Function parameter 'Set_Label' should be passed by const reference. [passedByValue]
+int JSON_ENTRY::size_of_set(string Set_Label)
+                                   ^
+../source/json_interface.cpp:312:34: performance: Function parameter 'Entry' should be passed by const reference. [passedByValue]
+bool JSON_ENTRY::set_list(string Entry)
+                                 ^
+../source/json_interface.cpp:324:33: performance: Function parameter 'Entry' should be passed by const reference. [passedByValue]
+bool JSON_ENTRY::set_set(string Entry, string Set_Name)
+                                ^
+../source/json_interface.cpp:324:47: performance: Function parameter 'Set_Name' should be passed by const reference. [passedByValue]
+bool JSON_ENTRY::set_set(string Entry, string Set_Name)
+                                              ^
+../source/json_interface.cpp:346:43: performance: Function parameter 'Label_In_List' should be passed by const reference. [passedByValue]
+string JSON_ENTRY::value_from_list(string Label_In_List)
+                                          ^
+../source/json_interface.cpp:360:44: performance: Function parameter 'Label' should be passed by const reference. [passedByValue]
+void JSON_ENTRY::create_label_value(string Label, string Value)
+                                           ^
+../source/json_interface.cpp:360:58: performance: Function parameter 'Value' should be passed by const reference. [passedByValue]
+void JSON_ENTRY::create_label_value(string Label, string Value)
+                                                         ^
+../source/json_interface.cpp:387:41: performance: Function parameter 'Set_Name' should be passed by const reference. [passedByValue]
+void JSON_ENTRY::put_json_in_set(string Set_Name, JSON_ENTRY Entry)
+                                        ^
+../source/json_interface.cpp:435:117: performance: Function parameter 'Trailing_Seperator' should be passed by const reference. [passedByValue]
+void JSON_INTERFACE::json_to_string_deque(deque<string> &JSON_Print_Build, JSON_ENTRY Json_entry, int Level, string Trailing_Seperator)
+                                                                                                                    ^
+../source/json_interface.cpp:37:12: style: Variable 'last' is assigned a value that is never used. [unreadVariable]
+  int last = 0;
+           ^
+../source/json_interface.cpp:100:20: style: Variable 'ret_success' is assigned a value that is never used. [unreadVariable]
+  bool ret_success = false;
+                   ^
+../source/json_interface.cpp:104:18: style: Variable 'entry_size' is assigned a value that is never used. [unreadVariable]
+  int entry_size = 0;
+                 ^
+../source/json_interface.cpp:197:20: style: Variable 'sub_entry' is assigned a value that is never used. [unreadVariable]
+  string sub_entry = "";
+                   ^
+../source/json_interface.cpp:198:20: style: Variable 'sub_label' is assigned a value that is never used. [unreadVariable]
+  string sub_label = "";
+                   ^
+../source/json_interface.cpp:199:20: style: Variable 'sub_value' is assigned a value that is never used. [unreadVariable]
+  string sub_value = "";
+                   ^
+../source/json_interface.cpp:207:16: style: Variable 'label' is assigned a value that is never used. [unreadVariable]
+  string label = "";
+               ^
+../source/json_interface.cpp:208:16: style: Variable 'value' is assigned a value that is never used. [unreadVariable]
+  string value = "";
+               ^
+../source/json_interface.cpp:479:10: style: Variable 'Level' is assigned a value that is never used. [unreadVariable]
+    Level--;
+         ^
+../source/json_interface.cpp:498:16: style: Unused variable: new_json_entry [unusedVariable]
+    JSON_ENTRY new_json_entry;
+               ^
+../source/main.cpp:982:16: style: Condition 'ret==1' is always false [knownConditionTrueFalse]
+  else if (ret == 1)
+               ^
+../source/main.cpp:956:14: note: Assuming that condition 'ret==1' is not redundant
+  while (ret == 1)
+             ^
+../source/main.cpp:982:16: note: Condition 'ret==1' is always false
+  else if (ret == 1)
+               ^
+../source/main.cpp:250:19: style: The scope of the variable 'tmeSleep_Wake_time' can be reduced. [variableScope]
+  unsigned long   tmeSleep_Wake_time = 0; // Will contain time the cycle sleeper wakes.
+                  ^
+../source/main.cpp:609:12: style: The scope of the variable 'booUpdate' can be reduced. [variableScope]
+      bool booUpdate = false;
+           ^
+../source/main.cpp:618:15: style: Local variable 'channel' shadows outer variable [shadowVariable]
+          int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+              ^
+../source/main.cpp:504:7: note: Shadowed declaration
+  int channel = 0;
+      ^
+../source/main.cpp:618:15: note: Shadow variable
+          int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+              ^
+../source/main.cpp:217:7: style: Variable 'ret' is assigned a value that is never used. [unreadVariable]
+  ret = ws2811_render(&ledstring);  // Send values of ledstring to hardware.
+      ^
+../source/main.cpp:250:38: style: Variable 'tmeSleep_Wake_time' is assigned a value that is never used. [unreadVariable]
+  unsigned long   tmeSleep_Wake_time = 0; // Will contain time the cycle sleeper wakes.
+                                     ^
+../source/main.cpp:267:28: style: Variable 'raw_string_buffer' is assigned a value that is never used. [unreadVariable]
+  string raw_string_buffer = "";      // A string buffer to contain the Screen buffer.
+                           ^
+../source/main.cpp:279:14: style: Variable 'intRet' is assigned a value that is never used. [unreadVariable]
+  int intRet = wiringPiSetup();
+             ^
+../source/main.cpp:344:23: style: Variable 'tmeStartTime' is assigned a value that is never used. [unreadVariable]
+  double tmeStartTime = tmeFled.tmeFrameMillis;
+                      ^
+../source/main.cpp:458:15: style: Variable 'sucess' is assigned a value that is never used. [unreadVariable]
+  bool sucess = false;
+              ^
+../source/main.cpp:890:27: style: Variable 'thread_render_running' is assigned a value that is never used. [unreadVariable]
+    thread_render_running = false;
+                          ^
+../source/main.cpp:900:27: style: Variable 'thread_output_running' is assigned a value that is never used. [unreadVariable]
+    thread_output_running = false;
+                          ^
+../source/old_files/animations_bright.cpp:393:37: style: Variable 'intCt' is reassigned a value before the old one has been used. [redundantAssignment]
+  intDur = 1500; intSp = 125; intCt = strip.led_count();
+                                    ^
+../source/old_files/animations_bright.cpp:388:35: note: intCt is assigned
+  intDur = 800; intSp = 16; intCt = strip.led_count();
+                                  ^
+../source/old_files/animations_bright.cpp:393:37: note: intCt is overwritten
+  intDur = 1500; intSp = 125; intCt = strip.led_count();
+                                    ^
+../source/old_files/animations_bright.cpp:587:10: style: Variable 'intDur' is reassigned a value before the old one has been used. [redundantAssignment]
+  intDur = 4000; intSp = 0;
+         ^
+../source/old_files/animations_bright.cpp:582:10: note: intDur is assigned
+  intDur = 500; intSp = 0;
+         ^
+../source/old_files/animations_bright.cpp:587:10: note: intDur is overwritten
+  intDur = 4000; intSp = 0;
+         ^
+../source/old_files/animations_bright.cpp:181:7: style: The scope of the variable 'stad' can be reduced. [variableScope]
+  int stad, endd = 0;
+      ^
+../source/old_files/animations_bright.cpp:181:13: style: The scope of the variable 'endd' can be reduced. [variableScope]
+  int stad, endd = 0;
+            ^
+../source/old_files/animations_bright.cpp:182:7: style: The scope of the variable 'stadf' can be reduced. [variableScope]
+  int stadf, enddf = 0;
+      ^
+../source/old_files/animations_bright.cpp:182:14: style: The scope of the variable 'enddf' can be reduced. [variableScope]
+  int stadf, enddf = 0;
+             ^
+../source/old_files/animations_bright.cpp:183:7: style: The scope of the variable 'stadb' can be reduced. [variableScope]
+  int stadb, enddb = 0;
+      ^
+../source/old_files/animations_bright.cpp:183:14: style: The scope of the variable 'enddb' can be reduced. [variableScope]
+  int stadb, enddb = 0;
+             ^
+../source/old_files/animations_bright.cpp:185:7: style: The scope of the variable 'switchdelaydoor' can be reduced. [variableScope]
+  int switchdelaydoor = 0;
+      ^
+../source/old_files/animations_bright.cpp:196:7: style: The scope of the variable 'counter_symetry' can be reduced. [variableScope]
+  int counter_symetry = 0;
+      ^
+../source/old_files/animations_bright.cpp:650:7: style: The scope of the variable 'sta' can be reduced. [variableScope]
+  int sta, end = 0;
+      ^
+../source/old_files/animations_bright.cpp:650:12: style: The scope of the variable 'end' can be reduced. [variableScope]
+  int sta, end = 0;
+           ^
+../source/old_files/animations_bright.cpp:652:7: style: The scope of the variable 'stas' can be reduced. [variableScope]
+  int stas, ends = 0;
+      ^
+../source/old_files/animations_bright.cpp:652:13: style: The scope of the variable 'ends' can be reduced. [variableScope]
+  int stas, ends = 0;
+            ^
+../source/old_files/animations_bright.cpp:653:7: style: The scope of the variable 'stae' can be reduced. [variableScope]
+  int stae, ende = 0;
+      ^
+../source/old_files/animations_bright.cpp:653:13: style: The scope of the variable 'ende' can be reduced. [variableScope]
+  int stae, ende = 0;
+            ^
+../source/old_files/animations_bright.cpp:108:40: style: Variable 'intDurG' is assigned a value that is never used. [unreadVariable]
+  intTm = 250; intDurW = 2000; intDurG = 5000;
+                                       ^
+../source/old_files/animations_bright.cpp:114:9: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intCt = 36;
+        ^
+../source/old_files/animations_bright.cpp:99:7: style: Unused variable: intDelay [unusedVariable]
+  int intDelay;
+      ^
+../source/old_files/animations_bright.cpp:181:18: style: Variable 'endd' is assigned a value that is never used. [unreadVariable]
+  int stad, endd = 0;
+                 ^
+../source/old_files/animations_bright.cpp:182:20: style: Variable 'enddf' is assigned a value that is never used. [unreadVariable]
+  int stadf, enddf = 0;
+                   ^
+../source/old_files/animations_bright.cpp:183:20: style: Variable 'enddb' is assigned a value that is never used. [unreadVariable]
+  int stadb, enddb = 0;
+                   ^
+../source/old_files/animations_bright.cpp:185:23: style: Variable 'switchdelaydoor' is assigned a value that is never used. [unreadVariable]
+  int switchdelaydoor = 0;
+                      ^
+../source/old_files/animations_bright.cpp:196:23: style: Variable 'counter_symetry' is assigned a value that is never used. [unreadVariable]
+  int counter_symetry = 0;
+                      ^
+../source/old_files/animations_bright.cpp:163:7: style: Unused variable: intDelay [unusedVariable]
+  int intDelay;
+      ^
+../source/old_files/animations_bright.cpp:164:7: style: Unused variable: intDelayGlitchAnti [unusedVariable]
+  int intDelayGlitchAnti;
+      ^
+../source/old_files/animations_bright.cpp:176:7: style: Unused variable: pos [unusedVariable]
+  int pos[amount];
+      ^
+../source/old_files/animations_bright.cpp:393:37: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intDur = 1500; intSp = 125; intCt = strip.led_count();
+                                    ^
+../source/old_files/animations_bright.cpp:425:49: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 600; intDur = 5000; intSp = 50; intCt = strip.led_count();
+                                                ^
+../source/old_files/animations_bright.cpp:459:13: style: Variable 'lead' is assigned a value that is never used. [unreadVariable]
+  CRGB lead = CRGB(20, 20, 20);
+            ^
+../source/old_files/animations_bright.cpp:547:16: style: Variable 'intDelay' is assigned a value that is never used. [unreadVariable]
+  int intDelay = 0;
+               ^
+../source/old_files/animations_bright.cpp:563:46: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 50; intDur = 500; intSp = 0; intCt = strip.led_count();
+                                             ^
+../source/old_files/animations_bright.cpp:565:17: style: Variable 'intTm2Off' is assigned a value that is never used. [unreadVariable]
+  int intTm2Off = (intMid * intSp + intDur) /2;
+                ^
+../source/old_files/animations_bright.cpp:615:47: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 50; intDur = 4000; intSp = 0; intCt = strip.led_count();
+                                              ^
+../source/old_files/animations_bright.cpp:617:17: style: Variable 'intTm2Off' is assigned a value that is never used. [unreadVariable]
+  int intTm2Off = (intMid * intSp + intDur) /2;
+                ^
+../source/old_files/animations_bright.cpp:639:50: style: Variable 'intCt' is assigned a value that is never used. [unreadVariable]
+  intTm = 50; intDur = 4500; intSp = 1000; intCt = strip.led_count();
+                                                 ^
+../source/old_files/animations_bright.cpp:650:16: style: Variable 'end' is assigned a value that is never used. [unreadVariable]
+  int sta, end = 0;
+               ^
+../source/old_files/animations_bright.cpp:652:18: style: Variable 'ends' is assigned a value that is never used. [unreadVariable]
+  int stas, ends = 0;
+                 ^
+../source/old_files/animations_bright.cpp:653:18: style: Variable 'ende' is assigned a value that is never used. [unreadVariable]
+  int stae, ende = 0;
+                 ^
+../source/old_files/animations_bright.cpp:648:7: style: Unused variable: pos [unusedVariable]
+  int pos[amount];
+      ^
+../source/player.cpp:199:13: style: Local variable 'Frame_Type' shadows outer variable [shadowVariable]
+        int Frame_Type = string_to_int(strFrameInfo.substr(0, pos1));
+            ^
+../source/player.cpp:155:7: note: Shadowed declaration
+  int Frame_Type = 0;
+      ^
+../source/player.cpp:199:13: note: Shadow variable
+        int Frame_Type = string_to_int(strFrameInfo.substr(0, pos1));
+            ^
+../source/rasapi.cpp:125:10: style: The scope of the variable 'write_time' can be reduced. [variableScope]
+  time_t write_time;
+         ^
+../source/rasapi.cpp:205:31: performance: Function parameter 'Filename' should be passed by const reference. [passedByValue]
+void FILE_WATCH::start(string Filename)
+                              ^
+../source/rasapi.cpp:315:38: performance: Function parameter 'Directory' should be passed by const reference. [passedByValue]
+bool check_create_working_dir(string Directory)
+                                     ^
+../source/rasapi.cpp:363:30: performance: Function parameter 'Dir_Filename' should be passed by const reference. [passedByValue]
+string file_to_string(string Dir_Filename)
+                             ^
+../source/rpi_ws281x-master/main.c:212:6: style: The scope of the variable 'c' can be reduced. [variableScope]
+ int c;
+     ^
+../source/rpi_ws281x-master/ws2811.c:714:20: style: Condition 'hwver>=0x0004' is always true [knownConditionTrueFalse]
+    else if (hwver >= 0x0004 && hwver <= 0x000f)  // Models B Rev2, A
+                   ^
+../source/rpi_ws281x-master/ws2811.c:704:15: note: Assuming that condition 'hwver<0x0004' is not redundant
+    if (hwver < 0x0004)  // Model B Rev 1
+              ^
+../source/rpi_ws281x-master/ws2811.c:714:20: note: Condition 'hwver>=0x0004' is always true
+    else if (hwver >= 0x0004 && hwver <= 0x000f)  // Models B Rev2, A
+                   ^
+../source/rpi_ws281x-master/ws2811.c:500:21: style: The scope of the variable 'pcm' can be reduced. [variableScope]
+    volatile pcm_t *pcm = device->pcm;
+                    ^
+../source/rpi_ws281x-master/ws2811.c:666:9: style: The scope of the variable 'gpionum2' can be reduced. [variableScope]
+    int gpionum2;
+        ^
+../source/rpi_ws281x-master/ws2811.c:696:9: style: The scope of the variable 'gpionums_B1' can be reduced. [variableScope]
+    int gpionums_B1[] = { 10, 18, 21 };
+        ^
+../source/rpi_ws281x-master/ws2811.c:379:17: portability: Shifting signed 32-bit value by 31 bits is implementation-defined behaviour [shiftTooManyBitsSigned]
+    pwm->dmac = RPI_PWM_DMAC_ENAB | RPI_PWM_DMAC_PANIC(7) | RPI_PWM_DMAC_DREQ(3);
+                ^
+../source/rpi_ws281x-master/ws2811.c:461:16: portability: Shifting signed 32-bit value by 31 bits is implementation-defined behaviour [shiftTooManyBitsSigned]
+    pcm->txc = RPI_PCM_TXC_CH1WEX | RPI_PCM_TXC_CH1EN | RPI_PCM_TXC_CH1POS(0) | RPI_PCM_TXC_CH1WID(8);
+               ^
+../source/rpi_ws281x-master/ws2811.c:503:15: portability: Shifting signed 32-bit value by 31 bits is implementation-defined behaviour [shiftTooManyBitsSigned]
+    dma->cs = RPI_DMA_CS_RESET;
+              ^
+../source/screen3.cpp:446:15: warning: Redundant assignment of 'XCYBRSize' to itself. [selfAssignment]
+    XCYBRSize = XCYBRSize;
+              ^
+../source/screen3.cpp:465:16: warning: Redundant assignment of 'YStatusPos' to itself. [selfAssignment]
+    YStatusPos = YStatusPos;
+               ^
+../source/screen3.cpp:466:16: warning: Redundant assignment of 'XStatusPos' to itself. [selfAssignment]
+    XStatusPos = XStatusPos;
+               ^
+../source/screen3.cpp:467:17: warning: Redundant assignment of 'YStatusSize' to itself. [selfAssignment]
+    YStatusSize = YStatusSize;
+                ^
+../source/screen3.cpp:603:15: warning: Redundant assignment of 'XDebugPos' to itself. [selfAssignment]
+    XDebugPos = XDebugPos;
+              ^
+../source/screen3.cpp:604:16: warning: Redundant assignment of 'YDebugSize' to itself. [selfAssignment]
+    YDebugSize = YDebugSize;
+               ^
+../source/screen3.cpp:725:15: warning: Redundant assignment of 'XTimerPos' to itself. [selfAssignment]
+    XTimerPos = XTimerPos;
+              ^
+../source/screen3.cpp:726:16: warning: Redundant assignment of 'YTimerSize' to itself. [selfAssignment]
+    YTimerSize = YTimerSize;
+               ^
+../source/screen3.cpp:762:17: warning: Redundant assignment of 'XConsolePos' to itself. [selfAssignment]
+    XConsolePos = XConsolePos;
+                ^
+../source/screen3.cpp:797:16: warning: Redundant assignment of 'XPlayerPos' to itself. [selfAssignment]
+    XPlayerPos = XPlayerPos;
+               ^
+../source/screen3.cpp:903:21: warning: Redundant assignment of 'XRadioStatusPos' to itself. [selfAssignment]
+    XRadioStatusPos = XRadioStatusPos;
+                    ^
+../source/screen3.cpp:904:22: warning: Redundant assignment of 'YRadioStatusSize' to itself. [selfAssignment]
+    YRadioStatusSize = YRadioStatusSize;
+                     ^
+../source/screen3.cpp:937:15: warning: Redundant assignment of 'XRadioPos' to itself. [selfAssignment]
+    XRadioPos = XRadioPos;
+              ^
+../source/screen3.cpp:999:19: warning: Redundant assignment of 'XManyRadioPos' to itself. [selfAssignment]
+    XManyRadioPos = XManyRadioPos;
+                  ^
+../source/screen3.cpp:1149:22: warning: Redundant assignment of 'XADS_B_ScreenPos' to itself. [selfAssignment]
+    XADS_B_ScreenPos = XADS_B_ScreenPos;  // + XBADS_BSize;
+                     ^
+../source/screen3.cpp:1201:23: warning: Redundant assignment of 'XALERTS_ScreenPos' to itself. [selfAssignment]
+    XALERTS_ScreenPos = XALERTS_ScreenPos;
+                      ^
+../source/screen3.cpp:1247:13: warning: Redundant assignment of 'XTabPos' to itself. [selfAssignment]
+    XTabPos = XTabPos;
+            ^
+../source/screen3.cpp:1511:83: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::output_debug2(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
+                                                                                  ^
+../source/screen3.cpp:1571:82: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::output_timer(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrStat, TheMouse &mouse)
+                                                                                 ^
+../source/screen3.cpp:1599:38: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::printout(ScreenStatus &ScrStat)
+                                     ^
+../source/screen3.cpp:1806:66: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::radio_status(system_data &sdSysData, ScreenStatus &ScrStat)
+                                                                 ^
+../source/screen3.cpp:1869:41: style: Parameter 'sdSysData' can be declared with const [constParameter]
+void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+                                        ^
+../source/screen3.cpp:1869:66: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+                                                                 ^
+../source/screen3.cpp:1885:64: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+                                                               ^
+../source/screen3.cpp:1896:42: style: Parameter 'sdSysData' can be declared with const [constParameter]
+void Screen3::alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+                                         ^
+../source/screen3.cpp:1896:67: style: Parameter 'ScrStat' can be declared with const [constParameter]
+void Screen3::alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat)
+                                                                  ^
+../source/screen3.cpp:382:30: error: Uninitialized struct member: tmp_radio_channel.FREQUENCY_PANEL [uninitStructMember]
+    Radio_Channels.push_back(tmp_radio_channel);
+                             ^
+../source/screen3.cpp:382:30: error: Uninitialized struct member: tmp_radio_channel.bzGadget [uninitStructMember]
+    Radio_Channels.push_back(tmp_radio_channel);
+                             ^
+../source/screen3.cpp:382:30: error: Uninitialized struct member: tmp_radio_channel.PROP [uninitStructMember]
+    Radio_Channels.push_back(tmp_radio_channel);
+                             ^
+../source/screen3.cpp:402:35: error: Uninitialized struct member: tmp_many_radio_channel.FREQUENCY_PANEL [uninitStructMember]
+    Many_Radio_Channels.push_back(tmp_many_radio_channel);
+                                  ^
+../source/screen3.cpp:402:35: error: Uninitialized struct member: tmp_many_radio_channel.bzGadget [uninitStructMember]
+    Many_Radio_Channels.push_back(tmp_many_radio_channel);
+                                  ^
+../source/screen3.cpp:397:33: error: Uninitialized struct member: tmp_many_radio_channel_props.ID [uninitStructMember]
+  tmp_many_radio_channel.PROP = tmp_many_radio_channel_props;
+                                ^
+../source/screen3.cpp:1228:12: style: Variable 'YSplit' is assigned a value that is never used. [unreadVariable]
+    YSplit = YSplit + YLog_ScreenSize;
+           ^
+../source/screen3.cpp:1326:12: style: Variable 'YSplit' is assigned a value that is never used. [unreadVariable]
+    YSplit = YSplit + YTabSize;
+           ^
+../source/screen3.cpp:1617:15: style: Variable 'yCurPos' is assigned a value that is never used. [unreadVariable]
+  int yCurPos = 0;
+              ^
+../source/stringthings.cpp:61:38: performance: Function parameter 'line' should be passed by const reference. [passedByValue]
+string linemerge_left_justify(string line, string text)
+                                     ^
+../source/stringthings.cpp:61:51: performance: Function parameter 'text' should be passed by const reference. [passedByValue]
+string linemerge_left_justify(string line, string text)
+                                                  ^
+../source/stringthings.cpp:179:23: performance: Function parameter 'Text' should be passed by const reference. [passedByValue]
+string quotify(string Text)
+                      ^
+../source/stringthings.cpp:214:26: performance: Function parameter 'String_Value' should be passed by const reference. [passedByValue]
+int string_to_int(string String_Value)
+                         ^
+../source/stringthings.cpp:236:38: performance: Function parameter 'String_Value' should be passed by const reference. [passedByValue]
+unsigned long string_to_ulong(string String_Value)
+                                     ^
+../source/stringthings.cpp:257:47: performance: Function parameter 'String_Value' should be passed by const reference. [passedByValue]
+unsigned long long string_to_ulonglong(string String_Value)
+                                              ^
+../source/stringthings.cpp:278:30: performance: Function parameter 'String_Value' should be passed by const reference. [passedByValue]
+float string_to_float(string String_Value)
+                             ^
+../source/stringthings.cpp:299:34: performance: Function parameter 'str_value' should be passed by const reference. [passedByValue]
+void STRING_STRING::store(string str_value)
+                                 ^
+../source/stringthings.cpp:392:31: performance: Function parameter 'str_value' should be passed by const reference. [passedByValue]
+void STRING_INT::store(string str_value)
+                              ^
+../source/stringthings.cpp:416:33: performance: Function parameter 'str_value' should be passed by const reference. [passedByValue]
+void STRING_FLOAT::store(string str_value)
+                                ^
+../source/system.cpp:160:64: performance: Function parameter 'strColor' should be passed by const reference. [passedByValue]
+void system_data::set_running_color(CRGB Running_Color, string strColor)
+                                                               ^
+../source/system.cpp:272:31: performance: Function parameter 'cmd' should be passed by const reference. [passedByValue]
+void Keys::cmdInString(string cmd)
+                              ^
+../source/timedeventsystem.cpp:47:15: style: Variable 'channel' is assigned a value that is never used. [unreadVariable]
+  int channel = 0;
+              ^
+../source/LEDstuff.cpp:50:0: style: The function 'CRGBtoString' is never used. [unusedFunction]
+
+^
+../source/animations.cpp:72:0: style: The function 'add_event_to_animation' is never used. [unusedFunction]
+
+^
+../source/aircraft_coordinator.cpp:193:0: style: The function 'alert' is never used. [unusedFunction]
+
+^
+../source/rasapi.cpp:315:0: style: The function 'check_create_working_dir' is never used. [unusedFunction]
+
+^
+../source/gadgets.cpp:810:0: style: The function 'clear_text' is never used. [unusedFunction]
+
+^
+../source/animations.cpp:63:0: style: The function 'create_animation' is never used. [unusedFunction]
+
+^
+../source/rpi_ws281x-master/mailbox.c:193:0: style: The function 'execute_code' is never used. [unusedFunction]
+
+^
+../source/rpi_ws281x-master/mailbox.c:240:0: style: The function 'execute_qpu' is never used. [unusedFunction]
+
+^
+../source/api_shared_memory.cpp:239:0: style: The function 'get_binds' is never used. [unusedFunction]
+
+^
+../source/hardware_status.cpp:105:0: style: The function 'get_low_voltage' is never used. [unusedFunction]
+
+^
+../source/helper.cpp:313:0: style: The function 'get_max' is never used. [unusedFunction]
+
+^
+../source/fled_time.cpp:62:0: style: The function 'get_miliseconds' is never used. [unusedFunction]
+
+^
+../source/helper.cpp:308:0: style: The function 'get_min' is never used. [unusedFunction]
+
+^
+../source/fled_time.cpp:52:0: style: The function 'get_seconds' is never used. [unusedFunction]
+
+^
+../source/gadgets.cpp:181:0: style: The function 'has_blank' is never used. [unusedFunction]
+
+^
+../source/radio_channel_coordinator.cpp:140:0: style: The function 'is_paused' is never used. [unusedFunction]
+
+^
+../source/fled_time.cpp:244:0: style: The function 'is_ready_no_reset' is never used. [unusedFunction]
+
+^
+../source/fled_time.cpp:189:0: style: The function 'is_set' is never used. [unusedFunction]
+
+^
+../source/gadgets.cpp:357:0: style: The function 'line_count' is never used. [unusedFunction]
+
+^
+../source/stringthings.cpp:26:0: style: The function 'linefill' is never used. [unusedFunction]
+
+^
+../source/animations.cpp:82:0: style: The function 'load_animations' is never used. [unusedFunction]
+
+^
+../source/gadgets.cpp:709:0: style: The function 'modify' is never used. [unusedFunction]
+
+^
+../source/interface.cpp:231:0: style: The function 'processcommandoverheadillum' is never used. [unusedFunction]
+
+^
+../source/interface.cpp:155:0: style: The function 'processtestanimation' is never used. [unusedFunction]
+
+^
+../source/api_shared_memory.cpp:25:0: style: The function 'put' is never used. [unusedFunction]
+
+^
+../source/fled_time.cpp:46:0: style: The function 'put_miliseconds' is never used. [unusedFunction]
+
+^
+../source/rpi_ws281x-master/mailbox.c:220:0: style: The function 'qpu_enable' is never used. [unusedFunction]
+
+^
+../source/helper.cpp:273:0: style: The function 'read' is never used. [unusedFunction]
+
+^
+../source/hardware_status.cpp:51:0: style: The function 'read_low_voltage' is never used. [unusedFunction]
+
+^
+../source/gadgets.cpp:1829:0: style: The function 'simple_progress_bar' is never used. [unusedFunction]
+
+^
+../source/json_interface.cpp:307:0: style: The function 'size_of_set' is never used. [unusedFunction]
+
+^
+../source/helper.cpp:195:0: style: The function 'switched' is never used. [unusedFunction]
+
+^
+../source/fled_time.cpp:174:0: style: The function 'tmeFrameElapse' is never used. [unusedFunction]
+
+^
+../source/animations.cpp:735:0: style: The function 'vdAdditionalOpenADV01' is never used. [unusedFunction]
+
+^
+../source/timedeventsystem.cpp:25:0: style: The function 'vdClearAllTimedEvent' is never used. [unusedFunction]
+
+^
+../source/animations.cpp:539:0: style: The function 'vdPacificaishAnimationADV' is never used. [unusedFunction]
+
+^
+../source/animations.cpp:140:0: style: The function 'vdTestPattern_backup_01' is never used. [unusedFunction]
+
+^
+../source/gadgets_radio.cpp:1428:0: style: The function 'was_redrawn' is never used. [unusedFunction]
+
+^
+../source/rpi_ws281x-master/ws2811.c:1287:0: style: The function 'ws2811_set_custom_gamma_factor' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]
+

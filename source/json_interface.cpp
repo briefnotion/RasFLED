@@ -62,6 +62,15 @@ string parse_value(string Text, int Label_Size)
   return Text.erase(0, Label_Size +1);
 }
 
+int pos_of_first_non_space(int Start, string Text)
+{
+  for (int pos = Start; pos < Text.size() && Text[pos] == ' '; pos++)
+  {
+      Start = pos +1;
+  }
+  return Start;
+}
+
 // -------------------------------------------------------------------------------------
 //  JSON Class
 
@@ -104,96 +113,70 @@ bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Lab
   int pos_of_bracket_open = -1;
   int pos_of_curly_open = -1;
 
-  bool complete = false;
+  int working_pos = 0;
 
   // Remove leading "," if exist
-  int entry_start = 0;
-  complete = false;
-  for (int pos = 0; pos < Entry.size() && complete == false; pos++)
-  {
-    entry_start = pos;
+  working_pos = pos_of_first_non_space(0, Entry);
 
-    if (Entry[pos] != ' ')
-    {
-      if (Entry[pos] == ',')
-      {
-        Entry[pos] = ' ';
-      }
-      else
-      {
-        complete = true;
-      }
-    }
+  if (Entry[working_pos] == ',')
+  {
+    Entry[working_pos] = ' ';
   }
 
-  pos_of_colon = Entry.find(':');
+  // Advance working position
+  working_pos = pos_of_first_non_space(working_pos +1, Entry);
+
+  // Check to see if first value is in quotes
+  if (Entry[working_pos] == '"')
+  {
+    working_pos = Entry.find('"', working_pos +1);
+  }
+
+  // Find seperator to locate value start position
+  pos_of_colon = Entry.find(':', working_pos);
   if (pos_of_colon != std::string::npos)
   {
     label_size = pos_of_colon;
     value_start_pos = pos_of_colon +1;
   }
 
-  // Determine if value is a value or set
-  complete = false;
-  for (int pos = value_start_pos; pos < Entry.size() && complete == false; pos++)
+  // Determine if value is a set
+  value_start_pos = pos_of_first_non_space(value_start_pos, Entry);
+
+  if (Entry[value_start_pos] == '[')
   {
-    if (Entry[pos] != ' ')
-    {
-      if (Entry[pos] == '[')
-      {
-        a_set = true;
-        pos_of_bracket_open = pos;
-        complete = true;
-      }
-      else
-      {
-        complete = true;
-      }
-    }
+    a_set = true;
+    pos_of_bracket_open = value_start_pos;
   }
 
-  // Determine if value is a list
-  complete = false;
-  for (int pos = 0; pos < Entry.size() && complete == false; pos++)
+  // Determine if entry starts as a list
+  working_pos = pos_of_first_non_space(0, Entry);
+  if (Entry[working_pos] == '{')
   {
-    if (Entry[pos] != ' ')
-    {
-      if (Entry[pos] == '{')
-      {
-        a_list = true;
-        pos_of_curly_open = pos;
-        complete = true;
-      }
-      else
-      {
-        complete = true;
-      }
-    }
+    a_list = true;
+    pos_of_curly_open = working_pos;
   }
 
-  // If not a list && not a set
   if (a_set == false && a_list == false)
+  // If entry is not a list and not a set.
   {
-    // Look for End comma pos
-    complete = false;
-    for (int pos = value_start_pos; pos < Entry.size() && complete == false; pos++)
+    if (Entry[value_start_pos] == '"')
     {
-      value_end_pos = pos;
-
-      // Check to make sure , is not in quotes.
-
-      if (Entry[pos] == ',')
-      {
-        value_end_pos--;
-        complete = true;
-      }
+      value_end_pos = Entry.find('"', value_start_pos +1);
+      value_end_pos = Entry.find(',', value_end_pos) -1;
+    }
+    else
+    {
+      value_end_pos = Entry.find(',', value_start_pos) -1;
     }
   }
-  else if (a_list == true) // if a_list == true
+  else if (a_list == true)
+  // if a_list == true
   {
     value_end_pos = find_closing(Entry, pos_of_curly_open, '{', '}');
   }
-  else // if (a_set == true)
+  else
+  // if (a_set == true)
   {
     value_end_pos = find_closing(Entry, pos_of_bracket_open, '[', ']');
   }

@@ -684,33 +684,6 @@ void Text_Line_List::add(unsigned long tmeCurrentMillis, string line)
   clear_outside_max();        // remove any old lines.
 }
 
-bool Text_Line_List::avail()
-// Returns true if there is something to be printed.  
-//  More specificly, will return the value of the printed status
-//  of the most recent line added to the line list. 
-{
-  if (Refresh_Text_Line_List == true)
-  {
-    Refresh_Text_Line_List = false;
-    return true;
-  }
-  else if (LINES.empty() == false)
-  {
-    if (LINES[0].printed == false)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-  else
-  {
-    return false;
-  }
-}
-
 Text_Line Text_Line_List::get_line_to_print(int pos)
 // Will return the line requested from the pos. 
 //  pos 0 is the most recent line added to the console line list.
@@ -896,11 +869,6 @@ void Button::advance()
     // Let the zone manager handle its value.
   }
 
-  PROP.CHANGED = true;
-}
-
-void Button::change_on()
-{
   PROP.CHANGED = true;
 }
 
@@ -1348,6 +1316,7 @@ string Button_Zone_Manager::get_clicked_name()
     if (BUTTONS[pos].PROP.CLICKED == true)
     {
       name = BUTTONS[pos].PROP.NAME;
+      BUTTONS[pos].PROP.CLICKED = false;
       return name;
     }
   }

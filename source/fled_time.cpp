@@ -221,12 +221,6 @@ unsigned long TIMED_IS_READY::get_ready_time()
   return READY_TIME;
 }
 
-int TIMED_IS_READY::get_interval()
-// Return the time value of how long the interval was set for.  
-{
-  return INTREVAL;
-}
-
 bool TIMED_IS_READY::is_ready(unsigned long current_time)
 {
   // Check to see if enough time has passed.

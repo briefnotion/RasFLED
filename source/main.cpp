@@ -474,22 +474,6 @@ int loop()
   }
 
   // ---------------------------------------------------------------------------------------
-  // TEST AREA
-
-  /*  
-  WORDLINE testline;
-  std::string strtestline = "1 this is a  Test    to see what happens.";
-  testline.storeline(strtestline);
-  cons.printi("'" + strtestline + "'");
-  while(testline.empty() == false)
-  {
-    //cons.printi(std::to_string( testline.size()) );
-    cons.printi("'" + testline.pop() + "'");
-    //cons.printi(" : ");
-  }
-  */
-
-  // ---------------------------------------------------------------------------------------
   // Define the Supid Random Numbers
   cons.printi("Initializing Random Number Generator ...");
   stupid_random sRND;

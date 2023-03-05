@@ -109,8 +109,6 @@ class TIMED_IS_READY
   void set(int delay);
 
   unsigned long get_ready_time();
-  
-  int get_interval();
 
   bool is_ready(unsigned long current_time);
   

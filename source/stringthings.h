@@ -21,28 +21,12 @@
 
 using namespace std;
 
-class WORDLINE
-{
-  private:
-  deque<string> words;
-
-  public:
-  bool empty();
-  int size();
-  string pop();
-  void storeline(string strLine);
-};
-
 string line_create(int Size, char Character);
 // Returns an character filled line of Size.
 
 string linefill(int size, string text);
 // is broken
 // Returns a space filled line of size with text in center.
-
-string linemerge(int size, string line, string text);
-// Overlaps and centers text onto line.
-// Returns value at size. 
 
 string linemerge_left_justify(int size, string line, string text);
 // Overlaps and right justifies text onto line.
