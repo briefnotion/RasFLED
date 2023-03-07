@@ -13,7 +13,7 @@
 #define ANIMATIONS_BRIGHT_H
 
 // Standard Header Files
-#include <string.h>
+#include <string>
 
 // RASFled related header files
 #include "definitions.h"

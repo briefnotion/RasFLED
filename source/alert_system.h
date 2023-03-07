@@ -14,8 +14,7 @@
 
 // Standard Header Files
 #include <stdio.h>
-//#include <ncurses.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 using namespace std;
@@ -28,6 +27,8 @@ class ALERT_TYPE_GENERIC
   private:
 
   public:
+
+  string TEXT = "";
 };
 
 class ALERT_SYSTEM_PROPERTIES
@@ -48,24 +49,38 @@ class ALERT_SYSTEM
 
   bool check_exist();
 
+  void trigger();
+  // Sets the trigger status to alert active state.
+
   bool CHANGED = false;
   
   public:
+  
+  deque<ALERT_TYPE_GENERIC> GENERIC_ALERTS;
 
   ALERT_SYSTEM_PROPERTIES PROP;
 
   void create();
+  // Preps the alert system on first run or setup.
+  // Preps the switchs.
 
   bool changed();
   // Change value will be reset to false after being read.
 
   bool switch_value(int Switch);
+  // Returns value of switch value in alert system.
 
   void update_switch(int Switch, bool Value);
+  // Update value of switches to alert system
+  // Triggers alerts if switch value changed.
 
   bool triggered();
+  // Returns True if a new alert is triggered.
 
   bool alert_cleared();
+  // Returns True if all alerts are cleared.
+
+  void add_generic_alert(string Text);
 };
 
 

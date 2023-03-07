@@ -15,7 +15,7 @@
 // Standard Header Files
 #include <stdio.h>
 #include <ncurses.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "fled_time.h"
@@ -554,13 +554,10 @@ class Text_Box_Properties
 {
   public: 
 
-  int ID;
-  string NAME = "";
   string LABEL = "";
   
   Text_Line_List LINES;
 
-  int TYPE = 0;
   int COLOR = 0;
   int BCOLOR = 0;
   
@@ -569,7 +566,6 @@ class Text_Box_Properties
   int SIZEY = 0;
   int SIZEX = 0;
 
-  bool CHANGED = false;
 };
 
 class Text_Box
@@ -577,24 +573,18 @@ class Text_Box
 {
   private:
 
-  WINDOW * winText_Box;
+  PANEL TEXT_BOX_PANEL;
 
   // DEBUG_COUNTER
   int Counter = 0;
-
-  // Types:
-  // -1 - Hidden
-  //  0 - Read Only
+  
+  bool CHANGED = false;
 
   public:
 
   Text_Box_Properties PROP;  
 
-  void modify(int id, string name, string label, int type, int color, int bcolor);
-
-  void create(int id, string name, string label, int type, int color, int bcolor);
-
-  void move_resize(int posY, int posX, int sizeY, int sizeX);
+  void create();
 
   bool changed();
 

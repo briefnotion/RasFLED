@@ -268,8 +268,10 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // Prep Status Screen Text Box.
 
-  // Prep Console Screen Text Box.
-  tbConsole.create(1, "CONSOLE", "Console", 0, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
+
+
+
+
 
   // Countdown Screen
   
@@ -403,9 +405,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
     Many_Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
   }
 
-  //tbads_b_Data.create(1, "ADS_B", "ADS_B", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
-
-  tbRadio_Log.create(1, "RADIO", "RADIO", TitleSize, CRT_get_color_pair(COLOR_BLACK, COLOR_WHITE), 0);
   // Draw screen the entire screen.  reset is also 
   //  called when the screen is resized.  
   reset(sdSysData, ScrStat);
@@ -764,7 +763,16 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     XConsoleSize =  XSplit;
 
     // Build Text Box
-    tbConsole.move_resize(YConsolePos, XConsolePos, YConsoleSize, XConsoleSize);
+    tbConsole.PROP.LABEL = "Console";
+    tbConsole.PROP.COLOR = COLOR_WHITE;
+    tbConsole.PROP.BCOLOR = COLOR_BLACK;
+    
+    tbConsole.PROP.POSY = YConsolePos;
+    tbConsole.PROP.POSX = XConsolePos;
+    tbConsole.PROP.SIZEY = YConsoleSize;
+    tbConsole.PROP.SIZEX = XConsoleSize;
+
+    tbConsole.create();
 
     // Console Title Bar
     tiConsole.PROP.POSY = YConsolePos;
@@ -1062,7 +1070,15 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     XLog_ScreenSize =  XSplit;
 
     // Build Window
-    winLog_Screen = newwin(YLog_ScreenSize, XLog_ScreenSize, YLog_ScreenPos, XLog_ScreenPos);
+    Log_Screen_TEXT_BOX.PROP.LABEL = "Logs";
+    Log_Screen_TEXT_BOX.PROP.POSY = YLog_ScreenPos;
+    Log_Screen_TEXT_BOX.PROP.POSX = XLog_ScreenPos;
+    Log_Screen_TEXT_BOX.PROP.SIZEY = YLog_ScreenSize;
+    Log_Screen_TEXT_BOX.PROP.SIZEX = XLog_ScreenSize;
+    Log_Screen_TEXT_BOX.PROP.BCOLOR = COLOR_BLACK;
+    Log_Screen_TEXT_BOX.PROP.COLOR = COLOR_WHITE;
+
+    Log_Screen_TEXT_BOX.create();
 
     // Log Screen Title Bar
     tiLog_Screen.PROP.POSY = YLog_ScreenPos;
@@ -1079,22 +1095,6 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
     // Set Y Split      
     YSplit = YSplit + YLog_ScreenSize;
-
-    // Radio Window Border
-    wborder(winLog_Screen,' ',' ',' ',' ',' ',' ',' ',' ') ;
-
-    // Create Screen
-    wrefresh(winLog_Screen);
-
-    // Set window color
-    wbkgd(winLog_Screen, COLOR_PAIR(0));
-
-    // the bottom line of the Radio.
-    strBotLine = "";
-    strBotLine = strBotLine.append(XLog_ScreenSize-1, '_');
-  
-    // Display OS Log
-    tbRadio_Log.move_resize(YLog_ScreenPos, XLog_ScreenPos, YLog_ScreenSize, XLog_ScreenSize);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -1203,14 +1203,12 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     XALERTS_ScreenSize =  XSplit;
 
     // Build Window
-    ALERTS_PANEL.PROP.SIZEY = YALERTS_ScreenSize;
-    ALERTS_PANEL.PROP.SIZEX = XALERTS_ScreenSize;
-    ALERTS_PANEL.PROP.POSY = YALERTS_ScreenPos;
-    ALERTS_PANEL.PROP.POSX = XALERTS_ScreenPos;
-    ALERTS_PANEL.PROP.COLOR = COLOR_WHITE;
-    ALERTS_PANEL.PROP.BCOLOR = COLOR_RED;
+    ALERTS_GRID.PROP.SIZEY = YALERTS_ScreenSize;
+    ALERTS_GRID.PROP.SIZEX = XALERTS_ScreenSize;
+    ALERTS_GRID.PROP.POSY = YALERTS_ScreenPos;
+    ALERTS_GRID.PROP.POSX = XALERTS_ScreenPos;
 
-    ALERTS_PANEL.create();
+    ALERTS_GRID.create();
 
     // Alerts Title Bar
     tiALERTS_Screen.PROP.POSY = YALERTS_ScreenPos;
@@ -1602,12 +1600,8 @@ void Screen3::printout(ScreenStatus &ScrStat)
 //    bandwith version will need to created.  Or, I put the console into its own 
 //    thread.  Whichever is necessary to develop or learn first.
 {
-  if (tbConsole.PROP.CHANGED == true || ScrStat.Needs_Refresh == true)
-  {
-    tbConsole.draw(ScrStat.Needs_Refresh);
-    tiConsole.draw(true);
-  }
-
+  tbConsole.draw(ScrStat.Needs_Refresh);
+  tiConsole.draw(ScrStat.Needs_Refresh);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1873,12 +1867,7 @@ void Screen3::ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   bzADS_B.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
 
   ADSB_Grid.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, ADSB_GRID_PANEL);
-
-  if(ScrStat.Needs_Refresh == true)
-  {
-    // Print Title
-    tiADS_B_Screen.draw(true);
-  }
+  tiADS_B_Screen.draw(ScrStat.Needs_Refresh);
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1886,7 +1875,7 @@ void Screen3::log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
 {
   // Print Log File
-  tbRadio_Log.draw(ScrStat.Needs_Refresh);
+  Log_Screen_TEXT_BOX.draw(ScrStat.Needs_Refresh);
 
   // Print Title
   tiLog_Screen.draw(ScrStat.Needs_Refresh);
@@ -1896,13 +1885,8 @@ void Screen3::log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 void Screen3::alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
 {
-  ALERTS_GRID.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, sdSysData.ALERTS, ALERTS_PANEL);
-
-  if(ScrStat.Needs_Refresh == true)
-  {
-    // Print Title
-    tiALERTS_Screen.draw(true);
-  }
+  ALERTS_GRID.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, sdSysData.ALERTS);
+  tiALERTS_Screen.draw(ScrStat.Needs_Refresh == true);
 }
 
 // ---------------------------------------------------------------------------------------

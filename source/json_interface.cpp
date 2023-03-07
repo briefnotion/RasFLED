@@ -357,6 +357,117 @@ string JSON_ENTRY::value_from_list(string Label_In_List)
   return ret_value;
 }
 
+bool JSON_ENTRY::get_if_is(string Label, int &Value)
+{
+  if (LABEL == Label)
+  {
+    Value = string_to_int(VALUE);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, char &Value)
+{
+  if (LABEL == Label)
+  {
+    Value = VALUE[0];
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, bool &Value)
+{
+  if (LABEL == Label)
+  {
+    if (VALUE == "true")
+    {
+      Value = true;
+    }
+    else
+    {
+      Value = false;
+    }
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, CRGB &Value)
+{
+  if (LABEL == Label)
+  {
+    Value = Value.StringtoCRGB(VALUE);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, string &Value)
+{
+  if (LABEL == Label)
+  {
+    Value = VALUE;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, STRING_STRING &Value)
+{
+  if (LABEL == Label)
+  {
+    Value.store(VALUE);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, STRING_INT &Value)
+{
+  if (LABEL == Label)
+  {
+    Value.store(VALUE);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool JSON_ENTRY::get_if_is(string Label, STRING_FLOAT &Value)
+{
+  if (LABEL == Label)
+  {
+    Value.store(VALUE);
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
 void JSON_ENTRY::create_label_value(string Label, string Value)
 {
   JSON_ENTRY new_entry;

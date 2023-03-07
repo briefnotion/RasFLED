@@ -20,7 +20,7 @@
 // Standard Header Files
 #include <fstream>
 #include <iostream>
-#include <string.h>
+#include <string>
 
 // vvvv --- Change these things to customize the API --- vvvv
 // rtl_airband Classes

@@ -75,7 +75,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -109,6 +109,7 @@
 #include "fledcore.h"
 #include "timedeventsystem.h"
 #include "animations.h"
+#include "animations_storage.h"
 #include "hardware_module_door.h"
 #include "interface.h"
 

@@ -15,7 +15,7 @@
 // Standard Header Files
 #include <stdio.h>
 #include <ncurses.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "helper_ncurses.h"
@@ -127,7 +127,6 @@ class Screen3
   int YDebugSize = 3;
   int XDebugSize = -1;
 
-  //WINDOW * winDebug;
   PANEL DEBUG_PANEL;
 
   Title_Bar tiDebug;
@@ -156,8 +155,6 @@ class Screen3
   int XCPickerPos = -1;
   int YCPickerSize = 3;
   int XCPickerSize = 6;
-
-  WINDOW * winCPicker;
 
   public:
   Button_Zone_Manager bzCPicker;
@@ -275,7 +272,6 @@ class Screen3
   int YALERTS_ScreenSize = -1;
   int XALERTS_ScreenSize = -1;
 
-  PANEL ALERTS_PANEL;
   Title_Bar tiALERTS_Screen;
 
   public:
@@ -288,13 +284,10 @@ class Screen3
   int YLog_ScreenSize = -1;
   int XLog_ScreenSize = -1;
 
-  int YTRadio_LogSize = 5;
-
-  WINDOW * winLog_Screen;
   Title_Bar tiLog_Screen;
 
   public:
-  Text_Box  tbRadio_Log;
+  Text_Box  Log_Screen_TEXT_BOX;
 
   private:
   // --------------------

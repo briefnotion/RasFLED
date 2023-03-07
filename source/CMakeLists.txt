@@ -43,6 +43,7 @@ add_executable(
   rasapi.cpp
   hardware_module_door.cpp
   hardware_status.cpp
+  animations_storage.cpp
   animations.cpp
   gadgets.cpp
   gadgets_radio.cpp

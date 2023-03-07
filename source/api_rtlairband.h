@@ -18,7 +18,7 @@
 #define API_RTLAIRBAND_H
 
 // Standard Header Files
-#include <string.h>
+#include <string>
 
 using namespace std;
 //using namespace boost::filesystem;

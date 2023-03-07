@@ -15,7 +15,7 @@
 // Standard Header Files
 #include <stdio.h>
 #include <ncurses.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "fled_time.h"

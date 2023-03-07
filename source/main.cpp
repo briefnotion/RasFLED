@@ -272,6 +272,9 @@ int loop()
   Console cons;
   system_data sdSystem;
 
+  // Retains all animations to be called by LED portion of RasFLED.
+  ANIMATIONS_LIST animations_library;
+
   // Open Shared memory regions to manager
   sdSystem.API_CHANNEL.open(region_scan);
 
@@ -335,6 +338,14 @@ int loop()
   // ---------------------------------------------------------------------------------------
   // System Init
 
+  // ---------------------------------------------------------------------------------------
+
+  // Initialize Alert System
+  cons.printi("Initializing Alert System ...");
+
+  // Prepare Alerts
+  sdSystem.ALERTS.PROP.SWITCH_COUNT = sdSystem.CONFIG.iNUM_SWITCHES;
+  sdSystem.ALERTS.create();
   cons.printi("Initializing Timer ...");
   FledTime tmeFled;
 
@@ -357,6 +368,7 @@ int loop()
   // File System
   string Working_Directory = FILES_DIRECTORY;
   string Configuration_Files_JSON = FILES_CONFIGURATION;
+  string Animations_Library_JSON = FILES_ANIMATIONS;
   //check_create_working_dir(FILES_DIRECTORY);
 
   //  -----
@@ -373,14 +385,17 @@ int loop()
   else
   {
     cons.printi("  Configuration file not loaded.  Generating Working Configuration File.");
+    sdSystem.ALERTS.add_generic_alert("Configuration file not loaded.  Generating Working Configuration File.");
 
     if (save_json_configuration(cons, sdSystem, Working_Directory, Configuration_Files_JSON) == true)
     {
       cons.printi("    Configuration file created.");
+      sdSystem.ALERTS.add_generic_alert("Configuration file created.");
     }
     else
     {
       cons.printi("    Configuration file not created.");
+      sdSystem.ALERTS.add_generic_alert("Configuration file not created.");
     }
   }
   
@@ -390,6 +405,18 @@ int loop()
   if (load_saved_running_state_json(cons, sdSystem, Running_State_Filename) != true)
   {
     cons.printi("    Running state file not loaded.");
+    sdSystem.ALERTS.add_generic_alert("Running state file not loaded.");
+  }
+
+  // Loading Animations Library.
+  if (animations_library.load_animations(Working_Directory, Animations_Library_JSON) == true)
+  {
+    cons.printi("  Animations file loaded.");
+  }
+  else
+  {
+    cons.printi("    Animations file not loaded.");
+    sdSystem.ALERTS.add_generic_alert("Animations file not loaded.");
   }
 
   // ---------------------------------------------------------------------------------------
@@ -421,14 +448,6 @@ int loop()
   {
     cons.printi("  LED count: " + to_string(led_count));
   }
-
-  // ---------------------------------------------------------------------------------------
-
-  cons.printi("Initializing Alert System ...");
-
-  // Prepare Alerts
-  sdSystem.ALERTS.PROP.SWITCH_COUNT = sdSystem.CONFIG.iNUM_SWITCHES;
-  sdSystem.ALERTS.create();
 
   // ---------------------------------------------------------------------------------------
 
@@ -470,6 +489,7 @@ int loop()
     { 
       cons.the_player.booDisable = true;
       cons.printi("FAILED - (Initializing Player)");
+      sdSystem.ALERTS.add_generic_alert("FAILED - (Initializing Player)");
     }
   }
 
@@ -750,7 +770,7 @@ int loop()
       // Read System log files
       while (watcher_daemon_log.line_avail() == true)
       {
-        cons.Screen.tbRadio_Log.add_line(tmeCurrentMillis, watcher_daemon_log.get_next_line());
+        cons.Screen.Log_Screen_TEXT_BOX.add_line(tmeCurrentMillis, watcher_daemon_log.get_next_line());
       }
 
       // Read ADS-B Aircraft JSON
@@ -793,12 +813,12 @@ int loop()
         // ADS-B - Update all ADS-B gadgets with new data.
         cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
 
-        // Update Alerts to Screen
+        // Update Switches to Alert system.
         for (int door=0; door < sdSystem.CONFIG.vhwDOORS.size(); door++)
         {
           sdSystem.ALERTS.update_switch(door, sdSystem.CONFIG.vhwDOORS.at(door).booVALUE);
         }
-
+        
         // Redraw the console screen with what the screen determines needs to be displayed.
         cons.display(fsPlayer, sdSystem, tmeCurrentMillis);
 

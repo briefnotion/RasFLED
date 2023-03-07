@@ -34,6 +34,19 @@ bool ALERT_SYSTEM::check_exist()
   return alert_exist;
 }
 
+void ALERT_SYSTEM::trigger()
+{
+  ALERT = true;
+
+  if (ALERTED == false)
+  {
+    if (TRIGGERED == false)
+    {
+      TRIGGERED = true;
+    }
+  }
+}
+
 void ALERT_SYSTEM::create()
 {
   bool tmp_switch = false;
@@ -72,15 +85,7 @@ void ALERT_SYSTEM::update_switch(int Switch, bool Value)
 
     if (Value == true)
     {
-      ALERT = true;
-
-      if (ALERTED == false)
-      {
-        if (TRIGGERED == false)
-        {
-          TRIGGERED = true;
-        }
-      }
+      trigger();
     }
 
     CHANGED = true;
@@ -119,6 +124,17 @@ bool ALERT_SYSTEM::alert_cleared()
   {
     return false;
   }
+}
+
+void ALERT_SYSTEM::add_generic_alert(string Text)
+{
+  ALERT_TYPE_GENERIC tmp_alert;
+
+  tmp_alert.TEXT = Text;
+
+  GENERIC_ALERTS.push_back(tmp_alert);
+  
+  trigger();
 }
 
 

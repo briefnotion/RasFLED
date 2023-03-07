@@ -87,19 +87,51 @@ void ALERTS_PANEL_GRID::create()
   CAR_LABEL.set_text("Car Status");
 
   CAR_BODY.set_text(CAR);
+
+  // Build Display Window
+  ALERTS_PANEL.PROP.SIZEY = PROP.SIZEY;
+  ALERTS_PANEL.PROP.SIZEX = 30;
+  ALERTS_PANEL.PROP.POSY = PROP.POSY;
+  ALERTS_PANEL.PROP.POSX = PROP.POSX;
+  ALERTS_PANEL.PROP.COLOR = COLOR_WHITE;
+  ALERTS_PANEL.PROP.BCOLOR = COLOR_RED;
+
+  ALERTS_PANEL.create();
+
+  // Alerts side panel
+  ALERTS_TEXT_BOX.PROP.SIZEY = PROP.SIZEY;
+  ALERTS_TEXT_BOX.PROP.SIZEX = PROP.SIZEX - 30;
+  ALERTS_TEXT_BOX.PROP.POSY = PROP.POSY;
+  ALERTS_TEXT_BOX.PROP.POSX = PROP.POSX + 30;
+  ALERTS_TEXT_BOX.PROP.COLOR = COLOR_WHITE;
+  ALERTS_TEXT_BOX.PROP.BCOLOR = COLOR_BLACK;
+
+  ALERTS_TEXT_BOX.create();
 }
 
-void ALERTS_PANEL_GRID::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
+void ALERTS_PANEL_GRID::update(ALERT_SYSTEM &Alerts)
 {
-
+  // Process any changes to alerts, into the gadget, independant to draw system.
+  if (Alerts.GENERIC_ALERTS.size() > 0)
+  {
+    for (int pos = 0; pos < Alerts.GENERIC_ALERTS.size(); pos++)
+    {
+      ALERTS_TEXT_BOX.add_line(0, "");
+      ALERTS_TEXT_BOX.add_line(0, Alerts.GENERIC_ALERTS[pos].TEXT);
+    }
+    Alerts.GENERIC_ALERTS.clear();
+    CHANGED = true;
+  }
 }
 
-bool ALERTS_PANEL_GRID::draw(bool Refresh, unsigned long tmeFrame_Time, ALERT_SYSTEM Alerts, PANEL Alerts_Panel)
+bool ALERTS_PANEL_GRID::draw(bool Refresh, unsigned long tmeFrame_Time, ALERT_SYSTEM &Alerts)
 {
-  CAR_LABEL.draw(Alerts_Panel, Refresh);
-  CAR_BODY.draw(Alerts_Panel, Refresh);
-
   if (Alerts.changed() == true)
+  {
+    update(Alerts);
+  }
+
+  if (CHANGED == false)
   {
     if (Alerts.switch_value(0) == true)
     {
@@ -138,13 +170,18 @@ bool ALERTS_PANEL_GRID::draw(bool Refresh, unsigned long tmeFrame_Time, ALERT_SY
     }
   }
 
-  CAR_LD_F.draw(Alerts_Panel, Refresh, tmeFrame_Time);
-  CAR_LD_B.draw(Alerts_Panel, Refresh, tmeFrame_Time);
-  CAR_RD_F.draw(Alerts_Panel, Refresh, tmeFrame_Time);
-  CAR_RD_B.draw(Alerts_Panel, Refresh, tmeFrame_Time);
+  CAR_LABEL.draw(ALERTS_PANEL, Refresh);
+  CAR_BODY.draw(ALERTS_PANEL, Refresh);
+  CAR_LD_F.draw(ALERTS_PANEL, Refresh, tmeFrame_Time);
+  CAR_LD_B.draw(ALERTS_PANEL, Refresh, tmeFrame_Time);
+  CAR_RD_F.draw(ALERTS_PANEL, Refresh, tmeFrame_Time);
+  CAR_RD_B.draw(ALERTS_PANEL, Refresh, tmeFrame_Time);
 
-  Alerts_Panel.draw(Refresh);
+  ALERTS_TEXT_BOX.draw(Refresh);
 
+  ALERTS_PANEL.draw(Refresh);
+
+  CHANGED = false;
   return false;
 }
 

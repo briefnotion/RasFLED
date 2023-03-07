@@ -11,7 +11,7 @@ LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 
 /home/pi/source/RasFLED/source/LEDstuff.h
-string.h
+string
 -
 deque
 -
@@ -19,6 +19,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
+
+/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
+aircraft_coordinator.h
+/home/pi/source/RasFLED/source/aircraft_coordinator.h
 
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
@@ -37,7 +41,7 @@ json_interface.h
 /home/pi/source/RasFLED/source/alert_system.h
 stdio.h
 -
-string.h
+string
 -
 deque
 -
@@ -47,7 +51,23 @@ animations.h
 /home/pi/source/RasFLED/source/animations.h
 
 /home/pi/source/RasFLED/source/animations.h
-string.h
+string
+-
+definitions.h
+/home/pi/source/RasFLED/source/definitions.h
+helper.h
+/home/pi/source/RasFLED/source/helper.h
+consoleanddata.h
+/home/pi/source/RasFLED/source/consoleanddata.h
+fledcore.h
+/home/pi/source/RasFLED/source/fledcore.h
+
+/home/pi/source/RasFLED/source/animations_storage.cpp
+animations_storage.h
+/home/pi/source/RasFLED/source/animations_storage.h
+
+/home/pi/source/RasFLED/source/animations_storage.h
+string
 -
 deque
 -
@@ -61,9 +81,11 @@ fledcore.h
 /home/pi/source/RasFLED/source/fledcore.h
 json_interface.h
 /home/pi/source/RasFLED/source/json_interface.h
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
 
 /home/pi/source/RasFLED/source/api_rtlairband.h
-string.h
+string
 -
 
 /home/pi/source/RasFLED/source/api_shared_memory.cpp
@@ -75,7 +97,7 @@ fstream
 -
 iostream
 -
-string.h
+string
 -
 boost/interprocess/shared_memory_object.hpp
 -
@@ -89,7 +111,7 @@ api_rtlairband.h
 /home/pi/source/RasFLED/source/commands.h
 stdio.h
 -
-string.h
+string
 -
 future
 -
@@ -117,7 +139,7 @@ stdio.h
 -
 ncurses.h
 -
-string.h
+string
 -
 deque
 -
@@ -173,7 +195,7 @@ stdio.h
 -
 ncurses.h
 -
-string.h
+string
 -
 deque
 -
@@ -195,7 +217,7 @@ stdio.h
 -
 ncurses.h
 -
-string.h
+string
 -
 deque
 -
@@ -221,7 +243,7 @@ stdio.h
 -
 ncurses.h
 -
-string.h
+string
 -
 deque
 -
@@ -310,10 +332,14 @@ commands.h
 json_interface.h
 /home/pi/source/RasFLED/source/json_interface.h
 
+/home/pi/source/RasFLED/source/json_interface.cpp
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
+
 /home/pi/source/RasFLED/source/json_interface.h
 stdio.h
 -
-string.h
+string
 -
 deque
 -
@@ -321,6 +347,8 @@ stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 rasapi.h
 /home/pi/source/RasFLED/source/rasapi.h
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
 
 /home/pi/source/RasFLED/source/main.cpp
 main.h
@@ -351,7 +379,7 @@ stdio.h
 -
 stdlib.h
 -
-string.h
+string
 -
 unistd.h
 -
@@ -403,6 +431,8 @@ timedeventsystem.h
 /home/pi/source/RasFLED/source/timedeventsystem.h
 animations.h
 /home/pi/source/RasFLED/source/animations.h
+animations_storage.h
+/home/pi/source/RasFLED/source/animations_storage.h
 hardware_module_door.h
 /home/pi/source/RasFLED/source/hardware_module_door.h
 interface.h
@@ -439,7 +469,7 @@ iostream
 -
 sys/stat.h
 -
-string.h
+string
 -
 time.h
 -
@@ -485,7 +515,7 @@ stdio.h
 -
 ncurses.h
 -
-string.h
+string
 -
 deque
 -
@@ -521,7 +551,7 @@ system.h
 /home/pi/source/RasFLED/source/system.h
 stdio.h
 -
-string.h
+string
 -
 deque
 -

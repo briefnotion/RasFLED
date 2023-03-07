@@ -14,11 +14,12 @@
 
 // Standard Header Files
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "stringthings.h"
 #include "rasapi.h"
+#include "LEDstuff.h"
 
 using namespace std;
 
@@ -80,6 +81,22 @@ class JSON_ENTRY
   string value();
 
   string value_from_list(string Label_In_List);
+
+  bool get_if_is(string Label, int &Value);
+
+  bool get_if_is(string Label, char &Value);
+
+  bool get_if_is(string Label, bool &Value);
+
+  bool get_if_is(string Label, CRGB &Value);
+
+  bool get_if_is(string Label, string &Value);
+
+  bool get_if_is(string Label, STRING_STRING &Value);
+
+  bool get_if_is(string Label, STRING_INT &Value);
+
+  bool get_if_is(string Label, STRING_FLOAT &Value);
 
   void create_label_value(string Label, string Value);
 

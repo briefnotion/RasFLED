@@ -13,7 +13,7 @@
 #define LEDSTUFF_H
 
 // Standard Header Files
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "helper.h"

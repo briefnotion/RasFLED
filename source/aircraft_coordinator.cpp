@@ -264,79 +264,27 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Text)
             // For Each Data Element
 
             // Idents
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "hex")
-            {
-              tmpAircraft.HEX.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "squawk")
-            {
-              tmpAircraft.SQUAWK.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "flight")
-            {
-              tmpAircraft.FLIGHT.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "version")
-            {
-              tmpAircraft.VERSION.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("hex", tmpAircraft.HEX);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("squawk", tmpAircraft.SQUAWK);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("flight", tmpAircraft.FLIGHT);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("version", tmpAircraft.VERSION);
             
             // Speed Rate Positions
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "gs")
-            {
-              tmpAircraft.SPEED.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "seen_pos")
-            {
-              tmpAircraft.SEEN_POS.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "alt_baro")
-            {
-              tmpAircraft.ALTITUDE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "alt_geom")
-            {
-              tmpAircraft.ALTITUDE_GEOM.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "nav_altitude_mcp")
-            {
-              tmpAircraft.NAV_ALTITUDE_MCP.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "baro_rate")
-            {
-              tmpAircraft.VERT_RATE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "geom_rate")
-            {
-              tmpAircraft.GEOM_RATE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "track")
-            {
-              tmpAircraft.TRACK.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "nav_heading")
-            {
-              tmpAircraft.NAV_HEADING.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "lat")
-            {
-              tmpAircraft.POSITION.LATITUDE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "lon")
-            {
-              tmpAircraft.POSITION.LONGITUDE.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "nav_modes")
-            {
-              tmpAircraft.NAV_MODES.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("gs", tmpAircraft.SPEED);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("seen_pos", tmpAircraft.SEEN_POS);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("alt_baro", tmpAircraft.ALTITUDE);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("alt_geom", tmpAircraft.ALTITUDE_GEOM);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("nav_altitude_mcp", tmpAircraft.NAV_ALTITUDE_MCP);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("baro_rate", tmpAircraft.VERT_RATE);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("geom_rate", tmpAircraft.GEOM_RATE);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("track", tmpAircraft.TRACK);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("nav_heading", tmpAircraft.NAV_HEADING);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("lat", tmpAircraft.POSITION.LATITUDE);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("lon", tmpAircraft.POSITION.LONGITUDE);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("nav_modes", tmpAircraft.NAV_MODES);
+
             // Aircraft Configuration
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "emergency")
-            {
-              tmpAircraft.EMERGENCY.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("emergency", tmpAircraft.EMERGENCY);
             
             //  Not yet grabbing all data.
             //      .
@@ -344,18 +292,9 @@ bool AIRCRAFT_COORDINATOR::process(string JSON_Text)
             //      .
 
             // Radio Information
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "messages")
-            {
-              tmpAircraft.MESSAGES.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "seen")
-            {
-              tmpAircraft.SEEN.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
-            if (AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].label() == "rssi")
-            {
-              tmpAircraft.RSSI.store(AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].value());
-            }
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("messages", tmpAircraft.MESSAGES);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("seen", tmpAircraft.SEEN);
+            AIRCRAFT_JSON.ROOT.DATA[root].DATA[aircraft_list].DATA[data_element].get_if_is("rssi", tmpAircraft.RSSI);
           }
 
           if(tmpAircraft.POSITION.LATITUDE.conversion_success() == true &&  tmpAircraft.POSITION.LONGITUDE.conversion_success() == true)

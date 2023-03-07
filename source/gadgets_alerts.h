@@ -15,7 +15,7 @@
 // Standard Header Files
 #include <stdio.h>
 #include <ncurses.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "fled_time.h"
@@ -72,8 +72,6 @@ class ALERTS_PANEL_GRID
   Text_Field_Multi_Line CAR_LD_B;
   Text_Field_Multi_Line CAR_RD_F;
   Text_Field_Multi_Line CAR_RD_B;
-
-  
 
   // Images
 
@@ -187,7 +185,10 @@ class ALERTS_PANEL_GRID
   string CAR_RD03_BACK_CLOSED = "|\n";  //  3
   string CAR_RD04_BACK_CLOSED = "|"  ;  //  4
 
-  //bool CHANGED = false;
+  PANEL ALERTS_PANEL;
+  Text_Box  ALERTS_TEXT_BOX;
+
+  bool CHANGED = false;
 
   public:
 
@@ -198,11 +199,11 @@ class ALERTS_PANEL_GRID
   //  Define PROP (properties) before calling this routine.
   //    Property Size and Position is necessary before calling create.
 
-  void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
+  void update(ALERT_SYSTEM &Alerts);
   // Update values of panel
   //  Gadget will be redrawn if values did changed or animations scheduled. 
 
-  bool draw(bool Refresh, unsigned long tmeFrame_Time, ALERT_SYSTEM Alerts, PANEL Alerts_Panel);
+  bool draw(bool Refresh, unsigned long tmeFrame_Time, ALERT_SYSTEM &Alerts);
   // Draw all changes to Panel.
   //  Set Refresh to true to force redraw.
   //  Animations require time reference.

@@ -296,18 +296,6 @@ string to_string_round_to_nth(float Value, int nth)
 }
 */
 
-void STRING_STRING::store(string str_value)
-{
-  STR_VALUE = str_value;
-  if(str_value == "")
-  {
-    CONVERSION_SUCCESS = false;
-  }
-  else
-  {
-    CONVERSION_SUCCESS = true;
-  }
-}
 
 int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
 // Returns color in ranges of 1st to 5th of values
@@ -374,6 +362,19 @@ int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Bl
   else
   {
     return COLOR_CYAN;
+  }
+}
+
+void STRING_STRING::store(string str_value)
+{
+  STR_VALUE = str_value;
+  if(str_value == "")
+  {
+    CONVERSION_SUCCESS = false;
+  }
+  else
+  {
+    CONVERSION_SUCCESS = true;
   }
 }
 

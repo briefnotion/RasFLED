@@ -38,65 +38,6 @@
 //bool booDAYNIGHT;
 
 // -------------------------------------------------------------------------------------
-// Animations
-
-void ANIMATION::add_event(ANIMATION_EVENT Event)
-{
-  EVENTS.push_back(Event);
-}
-
-int ANIMATIONS_LIST::find_pos_of_animation(string Label)
-{
-  int ret_pos = -1;
-
-  for (int pos = 0; pos < LIST.size(); pos++)
-  {
-    if (LIST[pos].LABEL == Label)
-    {
-      ret_pos = pos;
-    }
-  }
-
-  return ret_pos;
-}
-
-void ANIMATIONS_LIST::create_animation(string Label)
-{
-  ANIMATION tmp_animation;
-
-  tmp_animation.LABEL = Label;
-
-  LIST.push_back(tmp_animation);
-}
-
-void ANIMATIONS_LIST::add_event_to_animation(string Animation_Label, ANIMATION_EVENT Event)
-{
-  int pos = find_pos_of_animation(Animation_Label);
-
-  if (pos > -1)
-  {
-    LIST[pos].add_event(Event);
-  }
-}
-
-void ANIMATIONS_LIST::load_animations(string Directory, string Filename)
-{
-  JSON_INTERFACE animations_json;
-
-  bool ret_success = false;
-
-  string str_animations_json = file_to_string(Directory + Filename, ret_success);
-  
-  if (ret_success == true)
-  {
-    ret_success = animations_json.load_json_from_string(str_animations_json);
-
-
-
-  }
-}
-
-// -------------------------------------------------------------------------------------
 // Calculate time it takes for an animation event to run.
 
 int intAnTmDly(int intTm, int intDur, int intCt, int intSp)

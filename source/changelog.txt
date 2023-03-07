@@ -1,3 +1,9 @@
+V 1.70A_230305
+  - Changes made to alert system.
+  - Continued build animations load system.
+  - Changed #include <string.h> to #include <string>
+  - Other changes made.
+
 V 1.69A_230303
   - Changes made to some gadgets.
   - Corrections made to aircraft coordinator.

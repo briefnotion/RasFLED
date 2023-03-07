@@ -705,52 +705,20 @@ void Text_Line_List::clear()
   LINES.clear();
 }
 
-
-void Text_Box::modify(int id, string name, string label, int type, int color, int bcolor)
-// Changes all properties
-{
-  PROP.ID = id;
-  PROP.NAME = name;
-  PROP.LABEL = label;
-
-  PROP.TYPE = type;
-  PROP.COLOR = color;
-
-  PROP.CHANGED = true;
-}
-
-void Text_Box::create(int id, string name, string label, int type, int color, int bcolor)
+void Text_Box::create()
 // Define and behavior.  
 // Like set but leaves off position and size details.
 // Does not create window.
 
 {
-  PROP.ID = id;
-  PROP.NAME = name;
-  PROP.LABEL = label;
+  TEXT_BOX_PANEL.PROP.SIZEY = PROP.SIZEY;
+  TEXT_BOX_PANEL.PROP.SIZEX = PROP.SIZEX; 
+  TEXT_BOX_PANEL.PROP.POSY = PROP.POSY;
+  TEXT_BOX_PANEL.PROP.POSX = PROP.POSX;
 
-  PROP.TYPE = type;
-  PROP.COLOR = color;
-  PROP.BCOLOR = bcolor;
-
-  winText_Box = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
-
-  bool CHANGED = true;
-}
-
-void Text_Box::move_resize(int posY, int posX, int sizeY, int sizeX)
-// Redefine position and size.
-{
-  PROP.POSX = posX;
-  PROP.POSY = posY;
-  PROP.SIZEX = sizeX;
-  PROP.SIZEY = sizeY;
-
-  winText_Box = newwin(PROP.SIZEY, PROP.SIZEX, PROP.POSY, PROP.POSX);
-
-  refresh();
-
-  wborder(winText_Box,'|','|','-','-','+','+','+','+') ;
+  TEXT_BOX_PANEL.set_color(PROP.BCOLOR, PROP.COLOR);
+  
+  TEXT_BOX_PANEL.create();
 
   bool CHANGED = true;
 }
@@ -758,14 +726,14 @@ void Text_Box::move_resize(int posY, int posX, int sizeY, int sizeX)
 bool Text_Box::changed()
 // Returns true if any of the properties have changed.
 {
-  return PROP.CHANGED;
+  return CHANGED;
 }
 
 void Text_Box::draw(bool Refresh)
 // Draw the text_box on the screen if the value has changed or if  
 //  the Refresh parameter is true.
 {
-  if (PROP.CHANGED == true || Refresh == true)
+  if (CHANGED == true || Refresh == true)
   {
     Text_Line line;
     int yCurPos = 0;
@@ -779,24 +747,24 @@ void Text_Box::draw(bool Refresh)
       line = PROP.LINES.get_line_to_print(y);
 
       // print the line to the screen
-      wmove(winText_Box, yCurPos, 0);  //move cursor to next line to print or clear.
-      wclrtoeol(winText_Box);            // clear line befor printing to it.
+      wmove(TEXT_BOX_PANEL.winPANEL, yCurPos, 0);  //move cursor to next line to print or clear.
+      wclrtoeol(TEXT_BOX_PANEL.winPANEL);            // clear line befor printing to it.
 
       // If line doesnt fit, put ">>" on the end of whats visible.
       if (line.strLine.size() > PROP.SIZEX)
       {
         string truncated_line = line.strLine.substr(0, PROP.SIZEX -2) + ">>";
-        mvwprintw(winText_Box, yCurPos, 0, "%s", truncated_line.c_str());  //print line.
+        mvwprintw(TEXT_BOX_PANEL.winPANEL, yCurPos, 0, "%s", truncated_line.c_str());  //print line.
       }
       else
       {
-        mvwprintw(winText_Box, yCurPos, 0, "%s", line.strLine.c_str());  //print line.
+        mvwprintw(TEXT_BOX_PANEL.winPANEL, yCurPos, 0, "%s", line.strLine.c_str());  //print line.
       }
     }
 
-    PROP.CHANGED = false;
+    CHANGED = false;
     
-    wrefresh(winText_Box);
+    wrefresh(TEXT_BOX_PANEL.winPANEL);
   }
 }
 
@@ -804,7 +772,7 @@ void Text_Box::add_line(unsigned long Time_Milli, string Text)
 // Add a line of text to Text_Box.
 {
   PROP.LINES.add(Time_Milli, Text);
-  PROP.CHANGED = true;
+  CHANGED = true;
 }
 
 void Text_Box::clear_text()
