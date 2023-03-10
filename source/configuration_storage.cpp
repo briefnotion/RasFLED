@@ -66,7 +66,7 @@ bool load_json_configuration(Console &cons, system_data &sdSysData, string Direc
         // LED Groups
         int led_group_pos = configuration_json.ROOT.DATA[leds_pos].find_label_pos("LED Groups");
 
-        for(int led_group=0; led_group < configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA[led_group].DATA.size(); led_group++)  // why -1
+        for(int led_group=0; led_group < configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA.size(); led_group++)
         {
           sdSysData.CONFIG.LED_MAIN.at(0).add_group(
             string_to_int(configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA[led_group].value_from_list("LED_Group_ID")), 
@@ -75,7 +75,7 @@ bool load_json_configuration(Console &cons, system_data &sdSysData, string Direc
           // Strip List
           int led_strip_group_pos = configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA[led_group].find_label_pos("Strip Group");
 
-          for (int led_strip_pos = 0; led_strip_pos < configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA[led_group].DATA[led_strip_group_pos].DATA[led_strip_pos].DATA.size(); led_strip_pos++)  // why -1
+          for (int led_strip_pos = 0; led_strip_pos < configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA[led_group].DATA[led_strip_group_pos].DATA.size(); led_strip_pos++)
           {
             int sid = led_strip_pos;
             string sname = configuration_json.ROOT.DATA[leds_pos].DATA[led_group_pos].DATA[led_group].DATA[led_strip_group_pos].DATA[led_strip_pos].value_from_list("LED_Strip_Name");
@@ -112,7 +112,6 @@ bool load_json_configuration(Console &cons, system_data &sdSysData, string Direc
       }
     }
   }
-
   return ret_success;
 }
 

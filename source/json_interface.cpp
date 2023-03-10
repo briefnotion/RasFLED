@@ -44,7 +44,6 @@ bool remove_opens_and_closes(string &Entry, char Open, char Close)
     if (last != std::string::npos)
     {
       Entry = Entry.substr(start +1, last -1);
-
       ret_success = true;
     }
   }
@@ -94,25 +93,12 @@ int JSON_ENTRY::find_closing(string Text, int Start_Pos, char Opening, char Clos
   return ret_position;
 }
 
-bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Label, int &Size_Of_Value, 
-                              bool &Is_A_Set, bool &Is_A_List)
+bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Label, 
+                              bool &Is_A_Set, bool &Is_A_List, bool &Is_A_Value)
 {
   bool ret_success = false;
 
-  int label_size = 0;
-  int value_size = 0;
-  int entry_size = 0;
-
-  bool a_set = false;
-  bool a_list = false;
-
-  int value_start_pos = 0;
-  int value_end_pos = 0;
-
   int pos_of_colon = -1;
-  int pos_of_bracket_open = -1;
-  int pos_of_curly_open = -1;
-
   int working_pos = 0;
 
   // Remove leading "," if exist
@@ -124,68 +110,62 @@ bool JSON_ENTRY::check_entry(string &Entry, int &Size_Of_Entry, int &Size_Of_Lab
   }
 
   // Advance working position
-  working_pos = pos_of_first_non_space(working_pos +1, Entry);
+  working_pos = pos_of_first_non_space(working_pos, Entry);
 
-  // Check to see if first value is in quotes
-  if (Entry[working_pos] == '"')
-  {
-    working_pos = Entry.find('"', working_pos +1);
-  }
-
-  // Find seperator to locate value start position
-  pos_of_colon = Entry.find(':', working_pos);
-  if (pos_of_colon != std::string::npos)
-  {
-    label_size = pos_of_colon;
-    value_start_pos = pos_of_colon +1;
-  }
-
-  // Determine if value is a set
-  value_start_pos = pos_of_first_non_space(value_start_pos, Entry);
-
-  if (Entry[value_start_pos] == '[')
-  {
-    a_set = true;
-    pos_of_bracket_open = value_start_pos;
-  }
-
-  // Determine if entry starts as a list
-  working_pos = pos_of_first_non_space(0, Entry);
   if (Entry[working_pos] == '{')
+  // Entry is a list.
   {
-    a_list = true;
-    pos_of_curly_open = working_pos;
-  }
-
-  if (a_set == false && a_list == false)
-  // If entry is not a list and not a set.
-  {
-    if (Entry[value_start_pos] == '"')
-    {
-      value_end_pos = Entry.find('"', value_start_pos +1);
-      value_end_pos = Entry.find(',', value_end_pos) -1;
-    }
-    else
-    {
-      value_end_pos = Entry.find(',', value_start_pos) -1;
-    }
-  }
-  else if (a_list == true)
-  // if a_list == true
-  {
-    value_end_pos = find_closing(Entry, pos_of_curly_open, '{', '}');
+    Size_Of_Entry = 1 + find_closing(Entry, working_pos, '{', '}');
+    Is_A_List = true;
   }
   else
-  // if (a_set == true)
   {
-    value_end_pos = find_closing(Entry, pos_of_bracket_open, '[', ']');
-  }
+    // Entry is a set or value.
 
-  Size_Of_Entry = value_end_pos +1;
-  Size_Of_Label = label_size;
-  Size_Of_Value = value_size;
-  Is_A_Set = a_set;
-  Is_A_List = a_list;
+    // Remove quotes from first word before ':', if exist.
+    if (Entry[working_pos] == '"')
+    {
+      working_pos = Entry.find('"', working_pos +1);
+    }
+
+    // Determine middle seperator positon.
+    pos_of_colon = Entry.find(':', working_pos);
+    
+    if (pos_of_colon != std::string::npos)
+    {
+      // Move to first word after seperator.
+      working_pos = pos_of_first_non_space(pos_of_colon +1, Entry);
+
+      if (Entry[working_pos] == '[')
+      // Value is a set.
+      {
+        Size_Of_Entry = 1 + find_closing(Entry, working_pos, '[', ']');
+        Size_Of_Label = pos_of_colon;
+        Is_A_Set = true;
+      }
+      else
+      {
+        // Value is of value lable type
+
+        if (Entry[working_pos] == '"')
+        // Remove quotes from first word after ':', if exist.
+        // Get size as pos of first ','.
+        {
+          Size_Of_Entry = Entry.find('"', working_pos +1);
+          Size_Of_Entry = Entry.find(',', Size_Of_Entry);
+        }
+        else
+        {
+          // No quotes
+          // Get size as pos of first ','.
+          Size_Of_Entry = Entry.find(',', working_pos);
+        }
+
+        Size_Of_Label = pos_of_colon;
+        Is_A_Value = true;
+      }
+    }
+  }
 
   return true;
 }
@@ -203,6 +183,7 @@ bool JSON_ENTRY::parse_item_list(string Entry, bool Is_Set, string Set_Name)
   int value_size = 0;
   bool is_value_set = false;
   bool is_value_list = false;
+  bool is_value_value = false;
 
   string label = "";
   string value = "";
@@ -211,14 +192,17 @@ bool JSON_ENTRY::parse_item_list(string Entry, bool Is_Set, string Set_Name)
 
   if (Is_Set == true)
   {
+    // If Entry is a list, remove closing brackets.
     ret_success = remove_opens_and_closes(Entry, '[', ']');
     if (ret_success == true)
     {
+      // remove quotes from set name.
       LABEL = remove_first_and_last_characters('"', Set_Name);
     }
   }
   else
   {
+    // If Entry is a list, remove closing braces.
     ret_success = remove_opens_and_closes(Entry, '{', '}');
   }
 
@@ -227,56 +211,76 @@ bool JSON_ENTRY::parse_item_list(string Entry, bool Is_Set, string Set_Name)
 
     int errcount = 0;
 
+    // Continue to process Entry as long as info is within
     while (Entry.size() > 0 && errcount < errcountcap)
-    {if (check_entry(Entry, entry_size, label_size, value_size, is_value_set, is_value_list))
+    {
+      entry_size =0;
+      label_size =0;
+      is_value_set = false;
+      is_value_list = false;
+      is_value_value = false;
+
+      if (check_entry(Entry, entry_size, label_size, is_value_set, is_value_list, is_value_value))
       {
         JSON_ENTRY new_json_entry;
 
-        // Remove processing portion
+        // Remove sub portion from Entry to process.
         sub_entry = Entry.substr(0, entry_size);
         Entry = Entry.erase(0, entry_size);
 
-        // Get Label and Value
+        // Get Label and Value portions
         sub_label = parse_label(sub_entry, label_size);
         sub_value = parse_value(sub_entry, label_size);
 
         // Store value or data
-        if (is_value_set == false && is_value_list == false)
+        if (is_value_value == true)
         {
+          // Value is a label and value
           new_json_entry.IS_VALUE = true;
           new_json_entry.IS_LIST = false;
           new_json_entry.IS_SET = false;
 
           new_json_entry.LABEL = remove_first_and_last_characters('"', sub_label);
           new_json_entry.VALUE = remove_first_and_last_characters('"', sub_value);
+
+          DATA.push_back(new_json_entry);
         }
         else if (is_value_set == true)
         {
+          // Value is a set.
           new_json_entry.IS_VALUE = false;
           new_json_entry.IS_LIST = false;
           new_json_entry.IS_SET = true;
 
           new_json_entry.set_set(sub_value, sub_label);
+
+          DATA.push_back(new_json_entry);
         }
-        else
-        // if (is_value_list == true)
+        else if (is_value_list == true)
         {
+          // Value is a list.
           new_json_entry.IS_VALUE = false;
           new_json_entry.IS_LIST = true;
           new_json_entry.IS_SET = false;
 
           new_json_entry.set_list(sub_entry);
-        }
 
-        DATA.push_back(new_json_entry);
+          DATA.push_back(new_json_entry);
+        }
+      }
+
+      // Clear the Entry if unable to determine remaining information type.
+      if (is_value_set == false && is_value_list == false && is_value_value == false)
+      {
+        Entry = "";
       }
 
       // Curb Runaway
       errcount++;
       trim(Entry);
-      
     }
   }
+
   return true;
 }
 

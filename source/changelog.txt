@@ -1,3 +1,7 @@
+V 1.71A_230306
+  - Continued build animations load system.
+  - Changes made to JSON interface.
+
 V 1.70A_230305
   - Changes made to alert system.
   - Continued build animations load system.

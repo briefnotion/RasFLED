@@ -109,9 +109,10 @@
 #include "fledcore.h"
 #include "timedeventsystem.h"
 #include "animations.h"
-#include "animations_storage.h"
 #include "hardware_module_door.h"
 #include "interface.h"
+#include "animations_storage.h"
+#include "animations_handler.h"
 
 
 

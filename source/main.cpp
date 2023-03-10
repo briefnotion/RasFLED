@@ -271,11 +271,8 @@ int loop()
   int return_code = 0;
   Console cons;
   system_data sdSystem;
-
-  // Retains all animations to be called by LED portion of RasFLED.
-  ANIMATIONS_LIST animations_library;
-
-  // Open Shared memory regions to manager
+  
+    // Open Shared memory regions to manager
   sdSystem.API_CHANNEL.open(region_scan);
 
   // Initialize wiring pi
@@ -359,7 +356,7 @@ int loop()
   // ---------------------------------------------------------------------------------------
   // Load system configuration and set data
   
-  cons.printi("Loading Configuration and Initializing LED Arrays ...");
+  cons.printi("Loading Configuration ...");
 
   // Set Running Color to white.
   sdSystem.init_running_color_list();
@@ -409,7 +406,8 @@ int loop()
   }
 
   // Loading Animations Library.
-  if (animations_library.load_animations(Working_Directory, Animations_Library_JSON) == true)
+  ANIMATION_HANDLER animations;
+  if (animations.load_collections(Working_Directory, Animations_Library_JSON) == true)
   {
     cons.printi("  Animations file loaded.");
   }
@@ -447,28 +445,6 @@ int loop()
   else
   {
     cons.printi("  LED count: " + to_string(led_count));
-  }
-
-  // ---------------------------------------------------------------------------------------
-
-  // Define Door Sensors.
-  cons.printi("Initializing Hardware Sensors ...");
-  for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
-  {
-    pinMode(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin, INPUT);
-    pullUpDnControl(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin, PUD_UP);
-  }
-
-  // -------------------------------------------------------------------------------------
-  // Door Sensor
-  cons.printi("Initializing Hardware Sensor Interface ...");
-
-  // Initialize Switches
-  hardware_monitor tmpSwitch;
-  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, DOOR_SWITCH_LEEWAY_TIME, true);
-  for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
-  {
-    sdSystem.CONFIG.vhwDOORS.push_back(tmpSwitch);
   }
 
   // ---------------------------------------------------------------------------------------
@@ -540,6 +516,28 @@ int loop()
 
   cons.keywatch.set((int)KEYLEDDRCYCL,sdSystem.CONFIG.iNUM_CHANNELS + 1);  // Test Doors
 
+  // ---------------------------------------------------------------------------------------
+
+  // Define Door Sensors.
+  cons.printi("Initializing Hardware Sensors ...");
+  for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+  {
+    pinMode(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin, INPUT);
+    pullUpDnControl(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin, PUD_UP);
+  }
+
+  // -------------------------------------------------------------------------------------
+  // Door Sensor
+  cons.printi("Initializing Hardware Sensor Interface ...");
+
+  // Initialize Switches
+  hardware_monitor tmpSwitch;
+  tmpSwitch.set(true, sdSystem.tmeCURRENT_FRAME_TIME, DOOR_SWITCH_LEEWAY_TIME, true);
+  for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+  {
+    sdSystem.CONFIG.vhwDOORS.push_back(tmpSwitch);
+  }
+
   // -------------------------------------------------------------------------------------
 
   // Start Power On Animation
@@ -554,6 +552,7 @@ int loop()
   // Start the the compute timer (stopwatch) for first iteration. 
   effi_timer.start_timer((unsigned long)tmeFled.tmeFrameMillis);
   
+  // **************************************************************************************
   // **************************************************************************************
   // MAIN LOOP START
   while( cons.keywatch.get(KEYEXIT) == 0 )

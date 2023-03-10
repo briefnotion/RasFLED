@@ -176,8 +176,6 @@ class system_data
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
 
-  // Console Display Variables from other
-
   // Test Mode
   int t_group = 0;
   int t_strip = 0;

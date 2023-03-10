@@ -17,17 +17,14 @@
 #include <deque>
 
 // RASFled related header files
-#include "definitions.h"
 #include "helper.h"
-#include "consoleanddata.h"
-#include "fledcore.h"
 #include "json_interface.h"
 #include "LEDstuff.h"
 
 // -------------------------------------------------------------------------------------
 // Animations
 
-class ANIMATION_EVENT
+class ANIMATIONS_EVENT
 {
   public:
 
@@ -50,31 +47,31 @@ class ANIMATION_EVENT
   bool Off_During_Day = false;
 };
 
-class ANIMATION
+class ANIMATIONS_ANIMATION
 {
   public:
 
   string LABEL = "";
-  deque<ANIMATION_EVENT> EVENTS;
-
-  void add_event(ANIMATION_EVENT Event);
+  deque<ANIMATIONS_EVENT> EVENTS;
 };
 
-class ANIMATIONS_LIST
+class ANIMATIONS_COLLECTION
+{
+  public:
+
+  string LABEL = "";
+  deque<ANIMATIONS_ANIMATION> ANIMATIONS;
+};
+
+class ANIMATIONS_STORAGE
 {
   private:
 
-  deque<ANIMATION> LIST;
-
-  int find_pos_of_animation(string Label);
+  deque<ANIMATIONS_COLLECTION> COLLECTION;
 
   public:
 
-  void create_animation(string Label);
-
-  void add_event_to_animation(string Animation_Label, ANIMATION_EVENT Event);
-
-  bool load_animations(string Directory, string Filename);
+  bool load_collections(string Directory, string Filename);
 };
 
 

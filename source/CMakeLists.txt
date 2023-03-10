@@ -56,6 +56,7 @@ add_executable(
   system.cpp
   consoleanddata.cpp
   timedeventsystem.cpp
+  animations_handler.cpp
   fledcore.cpp
   
   main.cpp
