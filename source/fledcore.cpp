@@ -113,7 +113,6 @@ void timed_event::ClearAll(int intStartPos, int intEndPos)
     
     {
       teDATA[x].booCOMPLETE = true;
-      //printf("Cleared Event: E%d S%d E%d\n", x, intStartPos, intEndPos);
     }
   }
 }

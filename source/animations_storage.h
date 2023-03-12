@@ -67,11 +67,15 @@ class ANIMATIONS_STORAGE
 {
   private:
 
-  deque<ANIMATIONS_COLLECTION> COLLECTION;
-
   public:
 
+  deque<ANIMATIONS_COLLECTION> COLLECTION;
+
   bool load_collections(string Directory, string Filename);
+
+  int get_collection_pos(string Name);
+
+  int get_animation_pos(int Collection_Pos ,string Name);
 };
 
 

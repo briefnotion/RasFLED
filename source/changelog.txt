@@ -1,3 +1,9 @@
+V 1.72A_230311
+  - FOR TESTING REASONS ONLY.
+  - Continued build animations load system.
+  - Changes made to JSON interface.
+  - Event System Duplicated and Changed.
+
 V 1.71A_230306
   - Continued build animations load system.
   - Changes made to JSON interface.

@@ -331,37 +331,9 @@ void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTim
 {
   cons.printwait("Test ...");
 
-  JSON_INTERFACE json;
-  deque<string> json_print_build;
-
   cons.printwait("------------------");
-
-  if (json.load_json_from_string(file_to_string("/home/pi/flightaware/test.json")) == true)
-  {
-    cons.printwait("  Read Sucess");
-  }
-  else
-  {
-    cons.printwait("  Read Failed");
-  }
-  
-  json.json_debug_build_to_string_deque(json_print_build);
-  for (int x=0; x < json_print_build.size(); x++)
-  {
-    cons.printwait(json_print_build[x]);
-  }
-
-  cons.printwait("");
-
-  json_print_build.clear();
-  json.json_print_build_to_string_deque(json_print_build);
-  for (int x=0; x < json_print_build.size(); x++)
-  {
-    cons.printwait(json_print_build[x]);
-  }
-  
-  cons.printwait("");
-  cons.printwait("Test OK");
+  cons.printwait("no test code prepared.");
+  cons.printwait("------------------");
 }
 
 // Process and call routines as entered on the command line.
@@ -393,6 +365,18 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // Keep values below 128
       cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
       run_test(cons, sdSysData, tmeCurrentTime, teEvent);
+      cons.keywatch.cmdClear();
+    }
+
+    if (check_command(cons," sevent1", "Event System 1"))
+    {
+      sdSysData.ACTIVE_EVENT_SYSTEM = 0;
+      cons.keywatch.cmdClear();
+    }
+
+    if (check_command(cons," sevent2", "Event System 2"))
+    {
+      sdSysData.ACTIVE_EVENT_SYSTEM = 1;
       cons.keywatch.cmdClear();
     }
     

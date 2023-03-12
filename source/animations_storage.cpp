@@ -112,6 +112,20 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
   return ret_success;
 }
 
+int ANIMATIONS_STORAGE::get_collection_pos(string Name)
+{
+  int ret_pos = -1;
+
+  return ret_pos;
+}
+
+int ANIMATIONS_STORAGE::get_animation_pos(int Collection_Pos ,string Name)
+{
+  int ret_pos = -1;
+
+  return ret_pos;
+}
+
 
 
 #endif

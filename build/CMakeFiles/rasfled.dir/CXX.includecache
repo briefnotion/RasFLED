@@ -130,6 +130,14 @@ string
 future
 -
 
+/home/pi/source/RasFLED/source/configuration.h
+definitions.h
+/home/pi/source/RasFLED/source/definitions.h
+hardware_status.h
+/home/pi/source/RasFLED/source/hardware_status.h
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
+
 /home/pi/source/RasFLED/source/configuration_storage.cpp
 configuration_storage.h
 /home/pi/source/RasFLED/source/configuration_storage.h
@@ -343,8 +351,6 @@ timedeventsystem.h
 /home/pi/source/RasFLED/source/timedeventsystem.h
 commands.h
 /home/pi/source/RasFLED/source/commands.h
-json_interface.h
-/home/pi/source/RasFLED/source/json_interface.h
 
 /home/pi/source/RasFLED/source/json_interface.cpp
 json_interface.h
@@ -449,8 +455,6 @@ hardware_module_door.h
 /home/pi/source/RasFLED/source/hardware_module_door.h
 interface.h
 /home/pi/source/RasFLED/source/interface.h
-animations_storage.h
-/home/pi/source/RasFLED/source/animations_storage.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
 
@@ -571,16 +575,14 @@ string
 -
 deque
 -
-definitions.h
-/home/pi/source/RasFLED/source/definitions.h
+configuration.h
+/home/pi/source/RasFLED/source/configuration.h
 helper.h
 /home/pi/source/RasFLED/source/helper.h
 commands.h
 /home/pi/source/RasFLED/source/commands.h
 hardware_status.h
 /home/pi/source/RasFLED/source/hardware_status.h
-LEDstuff.h
-/home/pi/source/RasFLED/source/LEDstuff.h
 api_shared_memory.h
 /home/pi/source/RasFLED/source/api_shared_memory.h
 api_rtlairband.h

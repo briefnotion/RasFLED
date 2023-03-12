@@ -407,6 +407,9 @@ int loop()
 
   // Loading Animations Library.
   ANIMATION_HANDLER animations;
+
+  animations.create_events(sdSystem);
+  
   if (animations.load_collections(Working_Directory, Animations_Library_JSON) == true)
   {
     cons.printi("  Animations file loaded.");
@@ -541,7 +544,14 @@ int loop()
   // -------------------------------------------------------------------------------------
 
   // Start Power On Animation
-  process_power_animation(cons, sdSystem, tmeCurrentMillis, teEvents, CRGB(0, 0, 25));
+  if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+  {
+    process_power_animation(cons, sdSystem, tmeCurrentMillis, teEvents, CRGB(0, 0, 25));
+  }
+  else
+  {
+    //process_power_animation(cons, sdSystem, tmeCurrentMillis, animations.EVENTS, CRGB(0, 0, 25));
+  }
 
   // ---------------------------------------------------------------------------------------
   //  Repeating Sleeping Loop until eXit is triggered.
@@ -615,7 +625,14 @@ int loop()
       }
 
       // Check the doors and start or end all animations
-      v_DoorMonitorAndAnimationControlModule(cons, sdSystem, teEvents, tmeCurrentMillis);
+      if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+      {
+        v_DoorMonitorAndAnimationControlModule(cons, sdSystem, teEvents, tmeCurrentMillis);
+      }
+      else
+      {
+        //v_DoorMonitorAndAnimationControlModule(cons, sdSystem, animations.EVENTS, tmeCurrentMillis);
+      }
     } // Are switches ready -----------------
 
     // ---------------------------------------------------------------------------------------
@@ -628,17 +645,35 @@ int loop()
       bool booUpdate = false;
 
     //  Run ALL GLOBAL Timed Events
-    teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
+    if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+    {
+      teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
+    }
+    else
+    {
+      //teSystem(cons, sdSystem, animations.EVENTS, tmeCurrentMillis);
+    }
 
       for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
       {
         for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
         {
-          int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
-          sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
-            = teEvents[channel].execute2(cons, sdSystem, sRND, 
-                sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-                tmeCurrentMillis);
+          if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+          {
+            int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
+              = teEvents[channel].execute2(cons, sdSystem, sRND, 
+                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                  tmeCurrentMillis);
+          }
+          else
+          {
+            int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
+              = animations.EVENTS[channel].execute2(cons, sdSystem, sRND, 
+                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                  tmeCurrentMillis);
+          }
         }
       }
       
@@ -785,8 +820,17 @@ int loop()
       // This will handle special redraw events such as screen resize.
       cons.processkeyboadinput(sdSystem);
       cons.processmouseinput(sdSystem);
-      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
-      extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
+
+      if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+      {
+        processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
+        extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
+      }
+      else
+      {
+        //processcommandlineinput(cons, sdSystem, tmeCurrentMillis, animations.EVENTS);
+        //extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, animations.EVENTS); 
+      }
     } // Is Keyboard or Mouse read ready -----------------
 
 
@@ -804,7 +848,15 @@ int loop()
         // Refresh console data storeage from main program. This will be a pass through buffer. 
         // so the console will not have to access any real data. 
         sdSystem.store_door_switch_states();
-        store_event_counts(sdSystem, teEvents);
+
+        if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+        {
+          store_event_counts(sdSystem, teEvents);
+        }
+        else
+        {
+          //store_event_counts(sdSystem, animations.EVENTS);
+        }
 
         // Radio - Update all radio gadgets with new data.
         cons.update_freqency_gadgets(sdSystem);

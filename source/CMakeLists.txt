@@ -29,7 +29,6 @@ add_executable(
 
   definitions.h
   api_rtlairband.h
-
   alert_system.cpp
   LEDstuff.cpp
   api_shared_memory.cpp
@@ -44,6 +43,7 @@ add_executable(
   hardware_module_door.cpp
   hardware_status.cpp
   animations_storage.cpp
+  animations_handler.cpp
   animations.cpp
   gadgets.cpp
   gadgets_radio.cpp
@@ -56,7 +56,6 @@ add_executable(
   system.cpp
   consoleanddata.cpp
   timedeventsystem.cpp
-  animations_handler.cpp
   fledcore.cpp
   
   main.cpp

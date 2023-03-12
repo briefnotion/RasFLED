@@ -17,12 +17,11 @@
 #include <deque>
 
 // RASFled related header files
-#include "definitions.h"
+#include "configuration.h"
 #include "helper.h"
 #include "commands.h"
 #include "hardware_status.h"
 
-#include "LEDstuff.h"
 #include "api_shared_memory.h"
 #include "api_rtlairband.h"
 #include "radio_channel_coordinator.h"
@@ -50,47 +49,6 @@ class SECTION_STATUS
 
   bool value();
 };
-// -------------------------------------------------------------------------------------
-
-
-class configuration
-{
-  public:
-
-  // -------------------------------------------------------------------------------------
-  // Hardware to Software definitions
-  // -------------------------------------------------------------------------------------
-  
-  // -------------------------------------------------------------------------------------
-  // Raspberry Pi switch pin for doors and switches. Defined as WiringPi id.
-  // console: gpio -v       (check installation)
-  // console: gpio readall  (check wiring pin numbers)
-
-  int iAUXDRLINGERFRT     = 15000;    // How long the Front Door lights stay on after close
-  int iAUXDRLINGERBCK     = 25000;    // How long the Back Door lights stay on after close
-
-  // -------------------------------------------------------------------------------------
-  // LED rpi_ws281x Variables
-  int iBRIGHTNESS         = 96;  //96  Using Example Code.  Max unknown
-  int iFRAMES_PER_SECOND  = LED_FPS; // Will not be necessary, but keeping, for now, just in 
-                                //  case.
-
-  // -------------------------------------------------------------------------------------
-  // Events
-  int iNUM_CHANNELS       = 0;   // Amount of Event Channels we will be controlling.
-
-  // -------------------------------------------------------------------------------------
-  // LED Group List
-  deque<v_profile_strip_main> LED_MAIN; // Main LED Profile of Groups
-
-  // -------------------------------------------------------------------------------------
-  // New Door Switch Reference
-  int iNUM_SWITCHES       = 4;              // Amount of HW switches
-  deque<hardware_monitor> vhwDOORS;         // List of HW Monitors
-  deque<switch_map>       vSWITCH_PIN_MAP;  // Map of Hardware Circuit Pin ID to 
-                                            //  software Pin ID
-};
-// -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 class system_data
@@ -176,12 +134,13 @@ class system_data
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
 
+  int ACTIVE_EVENT_SYSTEM = 0;
+
   // Test Mode
   int t_group = 0;
   int t_strip = 0;
 
   // -------------------------------------------------------------------------------------
-
 
   int get_API_info(boost::interprocess::mapped_region &region_scan);
 

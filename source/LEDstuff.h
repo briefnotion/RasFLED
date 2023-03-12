@@ -154,9 +154,9 @@ class v_profile_strip_main
   int int_START_POS = 0;
   deque<v_profile_strip_group> vLED_GROUPS;
 
-  int g_size();
+  int g_size();           // not needed
 
-  int s_size(int group);
+  int s_size(int group);  // not needed
 
   int led_count();
 

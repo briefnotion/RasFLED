@@ -25,33 +25,28 @@
 
 // RASFled related header files
 
-
-using namespace std;
-
 // -------------------------------------------------------------------------------------
-// Functions
-
-/*
-void call_animation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, 
-                      timed_event teEvent[],                   
-                      string Collection_Name, string Animation_Name);
-*/
+// 
 
 class ANIMATION_HANDLER
 {
-
   private:
 
-  ANIMATIONS_STORAGE COLLECTION;
+  ANIMATIONS_STORAGE LIBRARY;
 
   public:
+
+  deque<timed_event> EVENTS;
+
+  void create_events(system_data &sdSysData);
 
   bool load_collections(string Directory, string Filename);
 
   void call_animation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, 
                       timed_event teEvent[],                   
                       string Collection_Name, string Animation_Name);
-
+  
 };
+
 
 #endif
