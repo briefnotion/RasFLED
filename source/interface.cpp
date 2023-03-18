@@ -337,7 +337,8 @@ void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTim
 }
 
 // Process and call routines as entered on the command line.
-void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, 
+                              timed_event teEvent[], ANIMATION_HANDLER &Animations)
 {
   COMMANDS command;
   int parameter = 0;
@@ -368,15 +369,21 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
-    if (check_command(cons," sevent1", "Event System 1"))
+    if (check_command(cons," sev1", "Event System 1"))
     {
-      sdSysData.ACTIVE_EVENT_SYSTEM = 0;
+      sdSysData.ACTIVE_EVENT_SYSTEM = 1;
       cons.keywatch.cmdClear();
     }
 
-    if (check_command(cons," sevent2", "Event System 2"))
+    if (check_command(cons," sev2", "Event System 2"))
     {
-      sdSysData.ACTIVE_EVENT_SYSTEM = 1;
+      sdSysData.ACTIVE_EVENT_SYSTEM = 2;
+      cons.keywatch.cmdClear();
+    }
+
+    if (check_command(cons," seva", "Event System 2 Test Animation"))
+    {
+      Animations.call_animation(cons, sdSysData, tmeCurrentTime, "Car", "test");
       cons.keywatch.cmdClear();
     }
     

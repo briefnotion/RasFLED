@@ -42,8 +42,7 @@ class ANIMATION_HANDLER
 
   bool load_collections(string Directory, string Filename);
 
-  void call_animation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, 
-                      timed_event teEvent[],                   
+  void call_animation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime,               
                       string Collection_Name, string Animation_Name);
   
 };

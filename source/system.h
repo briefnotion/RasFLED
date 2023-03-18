@@ -134,7 +134,7 @@ class system_data
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
 
-  int ACTIVE_EVENT_SYSTEM = 0;
+  int ACTIVE_EVENT_SYSTEM = 1;
 
   // Test Mode
   int t_group = 0;

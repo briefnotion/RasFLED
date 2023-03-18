@@ -316,11 +316,8 @@ bool load_saved_running_state_json(Console &cons, system_data &sdSysData, string
 
       color_desc = state_json.ROOT.value_from_list("description");
 
-      cons.printi("  Setting running color to CRGB(" + to_string(color.r) + 
-                                                  "," + to_string(color.g) + 
-                                                  "," + to_string(color.b) + 
-                                                  "), " + 
-                                                  color_desc);
+      cons.printi("  Setting running color to CRGB(" + color.CRGBtoString() + 
+                                                  "), " + color_desc);                                          
 
       sdSysData.set_running_color(color , color_desc);
     }

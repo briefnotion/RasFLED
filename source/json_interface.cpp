@@ -629,7 +629,9 @@ void JSON_INTERFACE::json_debug_build_to_string_deque(deque<string> &JSON_Print_
 
 void JSON_INTERFACE::json_print_build_to_string_deque(deque<string> &JSON_Print_Build)
 {
+  JSON_Print_Build.push_back("{");
   json_to_string_deque(JSON_Print_Build, ROOT, -1, "");
+  JSON_Print_Build.push_back("}");
 }
 
 

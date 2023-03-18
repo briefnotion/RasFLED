@@ -20,6 +20,7 @@
 #include "consoleanddata.h"
 #include "timedeventsystem.h"
 #include "commands.h"
+#include "animations_handler.h"
 
 // ***************************************************************************************
 // STRUCTURES AND CLASSES
@@ -101,7 +102,8 @@ bool check_command_with_num_param(Console &cons, string command, string descript
 void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
 
 // Process and call routines as entered on the command line.
-void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
+void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, 
+                              timed_event teEvent[], ANIMATION_HANDLER &Animation);
 
 // If a door is opened and DOORAWARE is on, we want to end these animations when the door
 //  has been opened.

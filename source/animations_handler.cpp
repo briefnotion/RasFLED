@@ -49,8 +49,8 @@ bool ANIMATION_HANDLER::load_collections(string Directory, string Filename)
 }
 
 void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData, 
-                    unsigned long tmeCurrentTime, timed_event teEvent[],                   
-                      string Collection_Name, string Animation_Name)
+                    unsigned long tmeCurrentTime,                   
+                    string Collection_Name, string Animation_Name)
 
 {
   int collection_pos = 0;
@@ -62,36 +62,72 @@ void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData,
 
   // Determine which groups and strips to run on.
 
+  sdSysData.ALERTS.add_generic_alert("Animation started");
+
   // For Every Event in storage Collection/Animation
-  for (int event = 0; 
-      event < LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS.size(); 
-      event++)
+  if (collection_pos > -1 && animation_pos > -1)
   {
-    // For Every System
-    for(int system = 0; system < sdSysData.CONFIG.LED_MAIN.size(); system++)
+
+    sdSysData.ALERTS.add_generic_alert("Animation found");
+
+    for (int event = 0; 
+        event < LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS.size(); 
+        event++)
     {
-      // For Every Strip in Group in System
-      for(int group = 0; group < sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS.size(); group++)
+      sdSysData.ALERTS.add_generic_alert("Stepping trough events");
+
+      // For Every System
+      for(int system = 0; system < sdSysData.CONFIG.LED_MAIN.size(); system++)
       {
-        // For Every Strip in Strip in Group
-        for(int strip = 0; strip < sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS.size(); strip++)
+
+        sdSysData.ALERTS.add_generic_alert("Stepping trough Systems");
+
+        // For Every Strip in Group in System
+        for(int group = 0; group < sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS.size(); group++)
         {
-          // Determine the event channel to receive the event.
-          channel = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL;
 
-          int from_start = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].fs(0);
-          int from_end = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].fe(0);
+          sdSysData.ALERTS.add_generic_alert("Stepping trough Groups");
 
-          //teEvent[channel].set("Hazard", tmeCurrentTime, 1000, 500, 10, AnEvSweep, AnPiFadeDith, false, 
-          //                      CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), 
-          //                      from_start, from_end, false, false, false);
+          // For Every Strip in Strip in Group
+          for(int strip = 0; strip < sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS.size(); strip++)
+          {
+            // Determine the event channel to receive the event.
+            channel = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL;
+
+            int from_start = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].fs(0);
+            int from_end = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].fe(0);
+
+            EVENTS[channel].set("Hazard", tmeCurrentTime, 1000, 500, 10, AnEvSweep, AnPiFadeDith, false, 
+                                  CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), 
+                                  from_start, from_end, true, false, false);
+
+            EVENTS[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 0, 0, 
+                                AnEvSchedule, AnTavdPowerAnimation, false, CRGB(35, 35, 35), 
+                                CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+
+            sdSysData.ALERTS.add_generic_alert( to_string(EVENTS[channel].teDATA.size()) );
+            
+          }
         }
       }
     }
   }
-}
+  else
+  {
+    if (collection_pos == -1)
+    {
+      sdSysData.ALERTS.add_generic_alert("Colection not found (" + Collection_Name + ") Collection Size: " + 
+                                          to_string(LIBRARY.COLLECTION.size()));
+    }
+    if (collection_pos > -1 && animation_pos == -1)
+    {
+      sdSysData.ALERTS.add_generic_alert("Animation not found (" + Collection_Name + ":" + Animation_Name + ") Animations Size: " + 
+                                          to_string(LIBRARY.COLLECTION[collection_pos].ANIMATIONS.size()));
 
-//call_animation(cons, sdSystem, tmeCurrentMillis, teEvents, "data" , "data");
- 
+      sdSysData.ALERTS.add_generic_alert(" (" + LIBRARY.COLLECTION[collection_pos].ANIMATIONS[0].LABEL + ")");
+    }
+    
+  }
+}
 
 #endif

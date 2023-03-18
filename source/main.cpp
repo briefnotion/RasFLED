@@ -127,7 +127,7 @@ void MatxixFill(CRGB crgbPreparedMatix[], int intLEDCOUNT, CRGB crgbColor)
 // Console Update
 
 // Reference for the amount for events running.
-void store_event_counts(system_data &sdSysData, timed_event teEvent[])
+void store_event_counts(system_data &sdSysData, timed_event teEvent[], ANIMATION_HANDLER Animations)
 {
   for(int channel=0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
@@ -140,9 +140,18 @@ void store_event_counts(system_data &sdSysData, timed_event teEvent[])
     {
       int channel = sdSysData.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
 
-      sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) 
-        = sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) 
-        + (teEvent[channel].teDATA.size());
+      if (sdSysData.ACTIVE_EVENT_SYSTEM == 1)
+      {
+        sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) =
+          sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) +
+          (teEvent[channel].teDATA.size());
+      }
+      else if (sdSysData.ACTIVE_EVENT_SYSTEM == 2)
+      {
+        sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) =
+          sdSysData.intCHANNEL_GROUP_EVENTS_COUNTS.at(group) +
+          (Animations.EVENTS[channel].teDATA.size());
+      }
     }
   }
 }
@@ -544,11 +553,11 @@ int loop()
   // -------------------------------------------------------------------------------------
 
   // Start Power On Animation
-  if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+  if (sdSystem.ACTIVE_EVENT_SYSTEM == 1)
   {
     process_power_animation(cons, sdSystem, tmeCurrentMillis, teEvents, CRGB(0, 0, 25));
   }
-  else
+  else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
   {
     //process_power_animation(cons, sdSystem, tmeCurrentMillis, animations.EVENTS, CRGB(0, 0, 25));
   }
@@ -564,6 +573,8 @@ int loop()
   
   // **************************************************************************************
   // **************************************************************************************
+  // **************************************************************************************
+
   // MAIN LOOP START
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
@@ -625,11 +636,11 @@ int loop()
       }
 
       // Check the doors and start or end all animations
-      if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+      if (sdSystem.ACTIVE_EVENT_SYSTEM == 1)
       {
         v_DoorMonitorAndAnimationControlModule(cons, sdSystem, teEvents, tmeCurrentMillis);
       }
-      else
+      else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
       {
         //v_DoorMonitorAndAnimationControlModule(cons, sdSystem, animations.EVENTS, tmeCurrentMillis);
       }
@@ -645,11 +656,11 @@ int loop()
       bool booUpdate = false;
 
     //  Run ALL GLOBAL Timed Events
-    if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+    if (sdSystem.ACTIVE_EVENT_SYSTEM == 1)
     {
       teSystem(cons, sdSystem, teEvents, tmeCurrentMillis);
     }
-    else
+    else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
     {
       //teSystem(cons, sdSystem, animations.EVENTS, tmeCurrentMillis);
     }
@@ -658,7 +669,7 @@ int loop()
       {
         for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
         {
-          if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+          if (sdSystem.ACTIVE_EVENT_SYSTEM == 1)
           {
             int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
             sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
@@ -666,13 +677,17 @@ int loop()
                   sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
                   tmeCurrentMillis);
           }
-          else
+          else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
           {
             int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+
             sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
               = animations.EVENTS[channel].execute2(cons, sdSystem, sRND, 
                   sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
                   tmeCurrentMillis);
+
+            cons.printi(to_string(animations.EVENTS[channel].teDATA.size()));
+
           }
         }
       }
@@ -821,16 +836,16 @@ int loop()
       cons.processkeyboadinput(sdSystem);
       cons.processmouseinput(sdSystem);
 
-      if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
+      processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents, animations);
+      if (sdSystem.ACTIVE_EVENT_SYSTEM == 1)
       {
-        processcommandlineinput(cons, sdSystem, tmeCurrentMillis, teEvents);
         extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, teEvents);
       }
-      else
+      else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
       {
-        //processcommandlineinput(cons, sdSystem, tmeCurrentMillis, animations.EVENTS);
-        //extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, animations.EVENTS); 
+        //extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, animations.EVENTS);
       }
+      
     } // Is Keyboard or Mouse read ready -----------------
 
 
@@ -849,14 +864,7 @@ int loop()
         // so the console will not have to access any real data. 
         sdSystem.store_door_switch_states();
 
-        if (sdSystem.ACTIVE_EVENT_SYSTEM == 0)
-        {
-          store_event_counts(sdSystem, teEvents);
-        }
-        else
-        {
-          //store_event_counts(sdSystem, animations.EVENTS);
-        }
+        store_event_counts(sdSystem, teEvents, animations);
 
         // Radio - Update all radio gadgets with new data.
         cons.update_freqency_gadgets(sdSystem);
