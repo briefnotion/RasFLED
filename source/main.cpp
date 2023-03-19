@@ -672,6 +672,7 @@ int loop()
           if (sdSystem.ACTIVE_EVENT_SYSTEM == 1)
           {
             int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+            
             sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
               = teEvents[channel].execute2(cons, sdSystem, sRND, 
                   sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
@@ -679,15 +680,12 @@ int loop()
           }
           else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
           {
-            int channel = sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).intCHANNEL;
+            int channel = sdSystem.CONFIG.LED_MAIN[0].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL;
 
-            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).booARRAY_UPDATED 
+            sdSystem.CONFIG.LED_MAIN[0].vLED_GROUPS[group].vLED_STRIPS[strip].booARRAY_UPDATED 
               = animations.EVENTS[channel].execute2(cons, sdSystem, sRND, 
-                  sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                  sdSystem.CONFIG.LED_MAIN[0].vLED_GROUPS[group].vLED_STRIPS[strip].crgbARRAY, 
                   tmeCurrentMillis);
-
-            cons.printi(to_string(animations.EVENTS[channel].teDATA.size()));
-
           }
         }
       }

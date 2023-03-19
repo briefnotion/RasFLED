@@ -509,7 +509,6 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
                 process_led_light(led, teDATA[event], sdSysData, sRND, tmeCurrentTime, 
                                   bigcrgbNewColor, booEventComplete, booPixelColorChanged);
               }
-
             }
           }
           else

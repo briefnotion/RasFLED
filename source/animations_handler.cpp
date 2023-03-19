@@ -33,7 +33,7 @@ void ANIMATION_HANDLER::create_events(system_data &sdSysData)
         EVENTS.push_back(tmp_event);
 
         EVENTS[count].create(sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].led_count());
-        EVENTS[count].create(sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL = count);
+        sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL = count;
         count++;
       }
     }
@@ -97,13 +97,11 @@ void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData,
             int from_start = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].fs(0);
             int from_end = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].fe(0);
 
-            EVENTS[channel].set("Hazard", tmeCurrentTime, 1000, 500, 10, AnEvSweep, AnPiFadeDith, false, 
-                                  CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), 
-                                  from_start, from_end, true, false, false);
+            EVENTS[channel].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), from_start, from_end, false, true, false);
 
-            EVENTS[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 0, 0, 
-                                AnEvSchedule, AnTavdPowerAnimation, false, CRGB(35, 35, 35), 
-                                CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+
+            //EVENTS[channel].set("Hazard", tmeCurrentTime, 100, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 
+            //                      from_start, from_end, false, true, false);
 
             sdSysData.ALERTS.add_generic_alert( to_string(EVENTS[channel].teDATA.size()) );
             

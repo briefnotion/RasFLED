@@ -52,6 +52,10 @@ fledcore.h
 
 /home/pi/source/RasFLED/source/animations_definitions.h
 
+/home/pi/source/RasFLED/source/animations_handler.cpp
+animations_handler.h
+/home/pi/source/RasFLED/source/animations_handler.h
+
 /home/pi/source/RasFLED/source/animations_handler.h
 string
 -
@@ -163,6 +167,10 @@ chrono
 -
 ctime
 -
+
+/home/pi/source/RasFLED/source/fledcore.cpp
+fledcore.h
+/home/pi/source/RasFLED/source/fledcore.h
 
 /home/pi/source/RasFLED/source/fledcore.h
 deque

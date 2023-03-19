@@ -1,3 +1,8 @@
+V 1.74A_230318
+  - NOT FIELD TESTED.
+  - FOR TESTING ONLY.
+  - Continued build animations load system.
+
 V 1.73A_230317
   - FOR TESTING REASONS ONLY.
   - Changes made to JSON interface.
