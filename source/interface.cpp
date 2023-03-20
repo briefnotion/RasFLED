@@ -381,7 +381,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       cons.keywatch.cmdClear();
     }
 
-    if (check_command(cons," seva", "Event System 2 Test Animation"))
+    if (check_command(cons," animt", "Event System 2 Test Animation"))
     {
       Animations.call_animation(cons, sdSysData, tmeCurrentTime, "Car", "test");
       cons.keywatch.cmdClear();
@@ -427,6 +427,25 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
       processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
+    }
+
+    // -------------------------------------------------------------------------------------
+    // Animations Load or Reload
+
+    if (check_command(cons, " animld", "Reload Animations"))
+    {
+      string Working_Directory = FILES_DIRECTORY;
+      string Animations_Library_JSON = FILES_ANIMATIONS;
+      string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
+
+      if (Animations.load_collections(Working_Directory, Animations_Library_JSON) == true)
+      {
+        cons.printi("  Animations file loaded.");
+      }
+      else
+      {
+        cons.printi("    Animations file not loaded.");
+      }
     }
 
     // -------------------------------------------------------------------------------------

@@ -181,6 +181,42 @@ string quotify(string Text)
   return "\"" + Text + "\"";
 }
 
+bool left_of_char(string Text, char Break_Char, string &Left)
+{
+  bool ret_success = true;
+
+  int pos = Text.find(Break_Char);
+
+  if (pos == string::npos)
+  {
+    ret_success = false;
+  }
+  else
+  {
+    Left = Text.substr(0, pos);
+  }
+
+  return ret_success;
+}
+
+bool right_of_char(string Text, char Break_Char, string &Right)
+{
+  bool ret_success = true;
+
+  int pos = Text.find(Break_Char);
+
+  if (pos == string::npos)
+  {
+    ret_success = false;
+  }
+  else
+  {
+    Right = Text.substr(pos +1, Text.size() - pos -1);
+  }
+
+  return ret_success;
+}
+
 string remove_first_and_last_characters(char Character, string Text)
 {
   Text = trim(Text);

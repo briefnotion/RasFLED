@@ -662,7 +662,7 @@ int loop()
     }
     else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
     {
-      //teSystem(cons, sdSystem, animations.EVENTS, tmeCurrentMillis);
+      animations.process_events(tmeCurrentMillis);
     }
 
       for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)

@@ -24,6 +24,9 @@
 // -------------------------------------------------------------------------------------
 // Animations
 
+// Guide: (tmeCurrentTime, tmeStartInTime, intDuration, intSpeed, bytAnimation, bytLEDAnimation, 
+//          crgbStart1, crgbDest1, crgbStart2, crgbDest2, intStartPos, intEndPos, booRepeat, booClearOnEnd, )
+
 class ANIMATIONS_EVENT
 {
   public:
@@ -32,18 +35,18 @@ class ANIMATIONS_EVENT
   unsigned long Current_Time = 0;
   int Start_Delay_Time = 0;
   int Duration_Of_Brighness = 0;
-  int Speed_Of_LED_Walk = 0;
-  char Animation_Walk_Type;
-  char Animation_Of_LED;
+  int Speed_Of_LED_Walk = 100;
+  string Animation_Walk_Type = "AnEvSweep ";
+  string Animation_Of_LED = "AnPiFade";
   bool Invert_Color = false;
-  CRGB Start_Pos_Start_Color;
-  CRGB End_Pos_Start_Color;
-  CRGB Start_Pos_End_Color;
-  CRGB End_Pos_End_Color;
-  int LED_Start_Pos = 0;
-  int LED_End_Pos = 0;
+  CRGB Start_1;
+  CRGB Dest_1;
+  CRGB Start_2;
+  CRGB Dest_2;
+  string LED_Start_Pos = "from_start|0";
+  string LED_End_Pos = "from_end|0";
   bool Repeat = false;
-  bool Clear_On_End = false;
+  bool Clear_On_End = true;
   bool Off_During_Day = false;
 };
 

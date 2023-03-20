@@ -1,0 +1,82 @@
+{
+"Car" :
+  [
+    {
+      "templates" :
+      [
+        {
+          "Start_Delay_Time" : 5000, 
+          "Animation_Walk_Type" : "AnEvClear"
+        },
+        {
+          "Start_Delay_Time" : 5000, 
+          "Animation_Walk_Type" : "AnEvClearRunning",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0"
+        },
+
+
+        {
+          "Start_Delay_Time" : 4500, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "128,128,0",
+          "LED_Start_Pos" : "from_start|25", "LED_End_Pos" : "from_end|0"
+        },
+        {
+          "Start_Delay_Time" : 6500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,64,0", "Dest_1" : "64,0,0", 
+          "Start_2" : "0,64,0", "Dest_2" : "64,64,64",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0"
+        },
+        {
+          "Start_Delay_Time" : 9500, "Duration_Of_Brighness" : 1500, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulseTo", 
+          "Dest_1" : "0,64,0", "Dest_2" : "64,0,0",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0"
+        }
+
+      ],
+
+      "test" :
+      [
+        {
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Invert_Color" : false,
+          "Start_1" : "0,0,0", "Dest_1" : "128,0,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_start|15", "LED_End_Pos" : "from_end|15", 
+          "Repeat" : false, "Clear_On_End" : true, "Off_During_Day" : false
+        },
+        {
+          "Start_Delay_Time" : 1100, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "0,128,0"
+        },
+        {
+          "Start_Delay_Time" : 2100, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "0,0,128"
+        },
+        {
+          "Start_Delay_Time" : 3100, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "128,128,128"
+        },
+        {
+          "Start_Delay_Time" : 4500, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "128,128,0",
+          "LED_Start_Pos" : "from_start|25", "LED_End_Pos" : "from_end|0"
+        },
+        {
+          "Start_Delay_Time" : 6500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,64,0", "Dest_1" : "64,0,0", 
+          "Start_2" : "0,64,0", "Dest_2" : "64,64,64",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0"
+        },
+        {
+          "Start_Delay_Time" : 9500, "Duration_Of_Brighness" : 1500, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulseTo", 
+          "Dest_1" : "0,64,0", "Dest_2" : "64,0,0",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0"
+        }
+      ]
+    }
+  ]
+}

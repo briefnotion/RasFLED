@@ -1,3 +1,7 @@
+V 1.75A_230319
+  - FOR TESTING ONLY.
+  - Continued build animations load system.
+
 V 1.74A_230318
   - NOT FIELD TESTED.
   - FOR TESTING ONLY.

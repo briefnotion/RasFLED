@@ -32,6 +32,9 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
   {
     ret_success = animations_json.load_json_from_string(str_animations_json);
 
+    // Clear current animations
+    COLLECTION.clear();
+
     // Parse Animations and store into memory
 
     // Collections
@@ -60,10 +63,10 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Animation_Walk_Type", tmp_event.Animation_Walk_Type);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Animation_Of_LED", tmp_event.Animation_Of_LED);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Invert_Color", tmp_event.Invert_Color);
-            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Start_Pos_Start_Color", tmp_event.Start_Pos_Start_Color);
-            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("End_Pos_Start_Color", tmp_event.End_Pos_Start_Color);
-            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Start_Pos_End_Color", tmp_event.Start_Pos_End_Color);
-            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("End_Pos_End_Color", tmp_event.End_Pos_End_Color);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Start_1", tmp_event.Start_1);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Dest_1", tmp_event.Dest_1);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Start_2", tmp_event.Start_2);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Dest_2", tmp_event.Dest_2);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("LED_Start_Pos", tmp_event.LED_Start_Pos);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("LED_End_Pos", tmp_event.LED_End_Pos);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Repeat", tmp_event.Repeat);
@@ -96,11 +99,11 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
     str_animations_json_debug.push_back("events.size() : " + to_string(LIST[0].EVENTS.size()));
     str_animations_json_debug.push_back(to_string(LIST[0].EVENTS[0].Start_Delay_Time));
     str_animations_json_debug.push_back(to_string(LIST[0].EVENTS[0].LED_End_Pos));
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Start_Pos_Start_Color.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Start_Pos_End_Color.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].End_Pos_Start_Color.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].End_Pos_End_Color.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[1].End_Pos_End_Color.CRGBtoString());
+    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Start_1.CRGBtoString());
+    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Start_2.CRGBtoString());
+    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Dest_1.CRGBtoString());
+    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Dest_2.CRGBtoString());
+    str_animations_json_debug.push_back(LIST[0].EVENTS[1].Dest_2.CRGBtoString());
     */
 
     deque_string_to_file(Directory + "animations.json.debug", str_animations_json_debug);

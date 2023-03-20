@@ -1,0 +1,11 @@
+{
+  "Channel Light Pulse Color" : 
+  [
+    {
+      "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 0, "Speed_Of_LED_Walk" : 0, "Animation_Walk_Type" : 0, 
+      "Animation_Of_LED" : 0, "Invert_Color" : false, 
+      "Start_Pos_Start_Color" : "0,0,0", "End_Pos_Start_Color" : "0,0,0", "Start_Pos_End_Color" : "0,0,0", "End_Pos_End_Color" : "0,0,0", 
+      "LED_Start_Pos" : 0, "LED_End_Pos" : 0, "Repeat" : false, "Clear_On_End" : false, "Off_During_Day" : false 
+    }
+  ]
+}

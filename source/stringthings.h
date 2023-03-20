@@ -66,6 +66,14 @@ string trim(const string &Text);
 string quotify(string Text);
 // Put quotes around string;
 
+bool left_of_char(string Text, char Break_Char, string &Left);
+// Returns left of Break_Char as Left;
+// Ruccess returns true if Break_Char exist.
+
+bool right_of_char(string Text, char Break_Char, string &Right);
+// Returns right of Break_Char as Right;
+// Returns true if Break_Char exist.
+
 string remove_first_and_last_characters(char Character, string Text);
 // For removing things like start and ending quotes.
 // Value will be trimmed.

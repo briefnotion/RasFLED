@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.74"
+#define Revision "00000001.75"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -32,7 +32,8 @@
 
 // Files
 #define FILES_DIRECTORY           "/etc/RasFLED/"
-//#define FILES_DIRECTORY           "./"
+//#define FILES_DIRECTORY           "/home/pi/source/RasFLED/configuration/"                   // For Testing:  Configuration Files Directory
+
 #define FILES_CONFIGURATION       "configuration.json"
 #define FILES_RUNNING_STATE_SAVE  "runningstate.json"
 #define FILES_PLAYLIST            "playlist.json"
@@ -40,7 +41,7 @@
 
 #define FILES_DEAMON_LOG          "/var/log/daemon.log"             // Raspi System Log
 #define FILES_AIRCRAFT_JSON       "/run/dump1090-fa/aircraft.json"  // FlightAware Aircraft JSON File
-//#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // FlightAware Aircraft JSON File for testing.
+//#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // For testing:  FlightAware Aircraft JSON File 
 
 // Key Mapping
 #define KEYEXIT           'X'
