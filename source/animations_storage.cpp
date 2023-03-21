@@ -57,6 +57,7 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
           // Event items
           for (int item = 0; item < animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA.size(); item++)
           {
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Label", tmp_event.Label);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Start_Delay_Time", tmp_event.Start_Delay_Time);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Duration_Of_Brighness", tmp_event.Duration_Of_Brighness);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Speed_Of_LED_Walk", tmp_event.Speed_Of_LED_Walk);
@@ -72,6 +73,8 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Repeat", tmp_event.Repeat);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Clear_On_End", tmp_event.Clear_On_End);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Off_During_Day", tmp_event.Off_During_Day);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("String_Var_1", tmp_event.String_Var_1);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("String_Var_2", tmp_event.String_Var_2);
           }
         
           tmp_animation.EVENTS.push_back(tmp_event);

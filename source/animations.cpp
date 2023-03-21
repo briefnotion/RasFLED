@@ -66,7 +66,7 @@ void vdPower_Animation(Console &cons, v_profile_strip strip, timed_event teEvent
 {
   show_anim_info(cons, strip, "Power");
 
-  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 20, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 20, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
 }
 
 void vdTestPattern(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
@@ -75,7 +75,7 @@ void vdTestPattern(Console &cons, v_profile_strip strip, timed_event teEvent[], 
 {
   show_anim_info(cons, strip, "Test Pattern");
 
-  teEvent[strip.intCHANNEL].set("Overhead", tmeCurrentTime, 20, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead", tmeCurrentTime, 20, 80, 10, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
 }
 
 void vdTestPattern_backup_01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime)
@@ -84,7 +84,7 @@ void vdTestPattern_backup_01(Console &cons, v_profile_strip strip, timed_event t
 {
   show_anim_info(cons, strip, "Test Pattern");
 
-  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1000, 500, 10, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), strip.fs(0), strip.fe(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1000, 500, 10, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(64, 0, 0), CRGB(0, 0, 0), CRGB(0, 64, 0), strip.fs(0), strip.fe(0), false, false, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ void vdFront_Overhead_Mask(Console &cons, v_profile_strip strip, timed_event teE
 
     CRGB Color_M = CRGB(128,128,128); 
 
-    teEvent[strip.intCHANNEL].set(strIdentity, tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fe(20), false, false, false);
+    teEvent[strip.intCHANNEL].set(strIdentity, tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fe(20), false, false, false, "", "");
   }
 }
 
@@ -135,23 +135,23 @@ void vdChannelLightFlashColor00(Console &cons, v_profile_strip strip, timed_even
   intCt = 36;
 
   // Prefade out the entire strip to prepair for initial flash.
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 000, 200, 0, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 000, 200, 0, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   // Flash 1 - Bring strip to color
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 200, 100, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(crgbColor4), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 200, 100, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(crgbColor4), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   // Flash 2 - Black out the strip then Bring strip to color
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 300, 100, 0, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 400, 100, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(crgbColor4), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 300, 100, 0, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 400, 100, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(crgbColor4), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   // Flash 3 - Black out the strip then Bring strip to color
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 500, 100, 0, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 600, 100, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(crgbColor4), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 500, 100, 0, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 600, 100, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(crgbColor4), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   // Fade away - Black out the entire strip then slowly, over 10 seconds, allow colors to return, simulating a pseudo blinding effect, or a pseudo burnt out or recovery effect on the led strip
   //  to signify the flash alert has been made.
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 700, 100, 0, AnEvSweep, AnPiFade, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 800, 10000, 0, AnEvSweep, AnPiFade, true, CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 700, 100, 0, AnEvSweep, AnPiFade, true, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + 800, 10000, 0, AnEvSweep, AnPiFade, true, CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -220,11 +220,11 @@ void vdChannelLightPulseSimple01(Console &cons, v_profile_strip strip, timed_eve
     counter_symetry = intDurG * (amount - x - 1); 
 
     // Door Animations
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, true);
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurG /3, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, false);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, true, "", "");
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, intTm + (counter_symetry), intDurG /3, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadf, enddf, false, true, false, "", "");
 
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, true);
-    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurG /3, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, false);
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurW, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor4, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, true, "", "");
+    teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, switchdelaydoor + (counter_symetry), intDurG /3, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stadb, enddb, false, true, false, "", "");
   }
 }
 
@@ -235,7 +235,7 @@ void vdChannelLightPulseColor01(Console &cons, v_profile_strip strip, timed_even
   show_anim_info(cons, strip, "Pulse Color Repeat 01");
 
   // Set the pulse to timed repeat
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 6000, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 6000, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, true, true, false, "", "");
 }
 
 void vdChannelLightPulseColorCountdown01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsigned long tmeCurrentTime, CRGB crgbColor)
@@ -243,8 +243,8 @@ void vdChannelLightPulseColorCountdown01(Console &cons, v_profile_strip strip, t
 // AnTaChannelPulseColor
 {
   cons.printwait("Pulse Countdown Timer Color Repeat 01 (CL: "); // + std::to_string(strip_group.pstrDOOR.intCHANNEL));
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);
-  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 6000, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseSimple, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Channel Light Pulse Color", tmeCurrentTime, 6000, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -255,7 +255,7 @@ void vdOverheadIllum(Console &cons, v_profile_strip strip, timed_event teEvent[]
   show_anim_info(cons, strip, "Overhead Illumination Color");
 
   // Set the background color.
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), crgbColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, false, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -267,10 +267,10 @@ void vdHazard(Console &cons, v_profile_strip strip, timed_event teEvent[], unsig
   show_anim_info(cons, strip, "Hazard");
 
   // Pulse Red.
-  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 100, 900, 0, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(128, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
 
   // Set the hazard to timed repeat
-  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaHazard, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+  teEvent[strip.intCHANNEL].set("Hazard", tmeCurrentTime, 1500, 0, 0, AnEvSchedule, AnTaHazard, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
 }
 
 // -------------------------------------------------------------------------------------
@@ -306,28 +306,28 @@ void vdPacificaishAnimationADVColor(Console &cons, v_profile_strip strip, timed_
   {
     // Mask
     CRGB Color_M = CRGB(128,128,128); 
-    teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, false);
+    teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, false, "", "");
   }
 
   // Set the background color.
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), Color_B, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), Color_B, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, false, "", "");
 
   // The waves.
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 
   // Counter waves.
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Illumination", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -344,8 +344,8 @@ void vdDoorOpenAnimationADV00(Console &cons, v_profile_strip strip, timed_event 
 
   // Give strip a fresh start.
   // Puddle Lights.  Off During Day.
-  teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 
   CRGB lead = CRGB(20, 20, 20);
   CRGB shadow = CRGB(50 ,50, 50);
@@ -354,47 +354,47 @@ void vdDoorOpenAnimationADV00(Console &cons, v_profile_strip strip, timed_event 
   intTm = 100; intDur = 500; intSp = 10; intCt = strip.led_count();
 
   // Clear set background to door open colors.
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(255, 64, 64), strip.fs(0), strip.fs(4), false, false, true);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 64, 64), CRGB(0, 0, 0), CRGB(25, 0, 0), strip.fs(5), strip.fs(10), false, false, true);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + 500, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(11), strip.fe(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 255, 255), CRGB(0, 0, 0), CRGB(255, 64, 64), strip.fs(0), strip.fs(4), false, false, true, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(255, 64, 64), CRGB(0, 0, 0), CRGB(25, 0, 0), strip.fs(5), strip.fs(10), false, false, true, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + 500, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(25, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(11), strip.fe(0), false, false, false, "", "");
 
   // Shimmer
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 10000, 500, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(15, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 6000, 280, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(15, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 10000, 500, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(15, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 6000, 280, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(15, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, false, "", "");
 
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
   
   // Reverse Shadow Blink
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intDur, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), shadow, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intDur, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), shadow, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 
   // Caution Door Open Flash
   intDur = 50; intSp = 1; intCt = strip.led_count();
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
   
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 100; intSp = 2; intCt = strip.led_count();
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
   
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 200; intSp = 4; intCt = strip.led_count();
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
   
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 400; intSp = 8; intCt = strip.led_count();
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 50, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(80, 80, 0), CRGB(80, 80, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
   
   intTm = intAnTmDly(intTm, intDur, intCt, intSp);
 
   intDur = 800; intSp = 16; intCt = strip.led_count();
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 100, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, 100, intSp, AnEvSweep, AnPiPulse, false, lead, lead, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), false, true, false, "", "");
   
   // Repeat Red Pulse
   intDur = 1500; intSp = 125; intCt = strip.led_count();
@@ -402,12 +402,12 @@ void vdDoorOpenAnimationADV00(Console &cons, v_profile_strip strip, timed_event 
   int intTm2Off = (intMid * intSp + intDur) /2;
   
   // Pulse Yellow up to mid
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(intMid), true, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(intMid), true, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(intMid), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(intMid), true, true, false, "", "");
 
   // Pulse Yellow down to mid
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(intMid), true, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(intMid), true, true, false);
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(intMid), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, intTm + intTm2Off, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(128, 128, 0), CRGB(128, 128, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(intMid), true, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -419,8 +419,8 @@ void vdDoorCloseRunningADV(Console &cons, v_profile_strip strip, timed_event teE
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
-  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 
   int intTm;
   int intDur;
@@ -436,15 +436,15 @@ void vdDoorCloseRunningADV(Console &cons, v_profile_strip strip, timed_event teE
   //teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(0, 0, 32), CRGB(0, 0, 0), CRGB(0, 0, 0), lsStrips[intStripID].St, strip.fe(0), false, false);
   
   // Side lights like big trucks should be ok.  Off During Day.
-  teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(8), false, false, true);
+  teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(8), false, false, true, "", "");
 
   // Tell this animation to stop running on itsself after all prev animations should be done.
   // Basicly, put itself to sleep.
-  teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, 29000, 5000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, 29000, 5000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, 29000, 5000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Door Close Running Lights", tmeCurrentTime, 29000, 5000, 0, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
   
   // Same as above.  Off During Day.
-  teEvent[strip.intCHANNEL].set("Door Close Running Lights (non continue)", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(8), false, true, true);
+  teEvent[strip.intCHANNEL].set("Door Close Running Lights (non continue)", tmeCurrentTime, 30000, 15000, 0, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), running_light, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fs(8), false, true, true, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -456,8 +456,8 @@ void vdDoorCloseActiveADV00(Console &cons, v_profile_strip strip, timed_event te
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
-  teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0),strip.fs(0), strip.fe(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Door Close Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0),strip.fs(0), strip.fe(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("vdOpenDoor", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 
   int intTm;
   int intDur;
@@ -469,10 +469,10 @@ void vdDoorCloseActiveADV00(Console &cons, v_profile_strip strip, timed_event te
   intTm = 100; intDur = 5000; intSp = 5;
 
   // Clear set background to door open colors.
-  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(10, 2, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiFadeDith, false, CRGB(0, 0, 0), CRGB(10, 2, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, false, "", "");
 
   // Pulse to white (accumulation of prev color and this color = CRGP(70, 70, 70) then back to original color.
-  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(8, 16, 18) , CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, true);
+  teEvent[strip.intCHANNEL].set("Door Close Active Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false,  CRGB(0, 0, 0), CRGB(8, 16, 18) , CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, false, true, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -484,35 +484,35 @@ void vdPacificaishAnimationADV(Console &cons, v_profile_strip strip, timed_event
 
   // Give strip a fresh start.
   // Clear any animations that may be running and this should replace.
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
   
   // Position Mask
   if (strip.position("Front"))
   {
     // Mask
     CRGB Color_M = CRGB(128,128,128); 
-    teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, true);
+    teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, true, "", "");
   }
 
   // Set the background color.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), CRGB(0, 0, 60), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, true);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), CRGB(0, 0, 60), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, true, "", "");
 
   // The waves.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(40, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(10, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(30, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(40, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(10, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(30, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
 
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(40, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(10, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(30, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(40, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(10, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(30, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
 
   // Counter waves.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(50, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(20, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 100, 80), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(50, 50, 40), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(20, 30, 90), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), CRGB(40, 40, 70), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, true, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -548,28 +548,28 @@ void vdPacificaishAnimationADVColor_Door(Console &cons, v_profile_strip strip, t
   {
     // Mask
     CRGB Color_M = CRGB(128,128,128); 
-    teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, false);
+    teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, false, "", "");
   }
 
   // Set the background color.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), Color_B, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, false);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFade, false, CRGB(0, 0, 0), Color_B, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, false, false, "", "");
 
   // The waves.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), Color_4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 
   // Counter waves.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3500), intRandomHD(125), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S1, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(1500), intRandomHD(75), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S2, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3600), intRandomHD(135), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S3, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, intRandomHD(2000), intRandomHD(3200), intRandomHD(100), AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), Color_S4, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fe(0), strip.fs(0), true, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -580,7 +580,7 @@ void vdCloseOverADV(Console &cons, v_profile_strip strip, timed_event teEvent[],
   show_anim_info(cons, strip, "Overhead Lights Off");
 
   // Just set all the current over head lights to fade away.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -591,20 +591,20 @@ void vdCoADV01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsi
   show_anim_info(cons, strip, "Conviencance Lights 01");
 
   // Clear any animations that may be running and this should replace.
-  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Open Anim", tmeCurrentTime, 200, 999, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 
   // Position Mask
   if (strip.position("Front"))
   {
     // Mask
     CRGB Color_M = CRGB(128,128,128); 
-    teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, false);
+    teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, 1000, 500, 30, AnEvSweep, AnPiFadeDith, true, CRGB(0, 0, 0), Color_M, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fb(0), strip.fb(20), false, false, false, "", "");
   }
 
   //-------------------------
   //Set All the animations to end after the code 4 lines down, is finished fading away  
   int bgonedly = 20000;
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, bgonedly, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, bgonedly, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 
   //-------------------------=
   int intTm, intDur, intSp, intCt;
@@ -633,42 +633,42 @@ void vdCoADV01(Console &cons, v_profile_strip strip, timed_event teEvent[], unsi
   intTm = intAnTmDly(intTm, intDur, strip.led_count(), intSp);
   intDur = 500; intSp = 0;
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbRed, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbRed, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   intTm = intAnTmDly(intTm, intDur, strip.led_count(), intSp);
   intDur = 500; intSp = 0;
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbGreen, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbGreen, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   intTm = intAnTmDly(intTm, intDur, strip.led_count(), intSp);
   intDur = 500; intSp = 0;
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbBlue, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDurAnti, intSpAntiPuls, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbBlue, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
 
   intDur = 4000; intSp = 0;
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), false, true, false, "", "");
   
   //intTm = intAnTmDly(intTm, intDur, strip.intSIZE, intSp);
   intDur = 17000; intSp = 0;
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp + 1, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbOrange, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, true);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, intDur, intSp + 1, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbOrange, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), false, true, true, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm, counterdur, countersp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
 
   // The Three Dots
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20 + 000, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40 + 000, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60 + 000, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20 + 000, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40 + 000, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60 + 000, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60 + 300, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20 + 300, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40 + 300, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60 + 300, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20 + 300, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40 + 300, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
 
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60 + 600, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40 + 600, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20 + 600, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 60 + 600, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 20, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 40 + 600, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(20, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Overhead Close Convenience Anim", tmeCurrentTime, intTm - 20 + 600, counterdur, countersp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), CRGB(0, 0, 20), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.ft(0), strip.fb(0), true, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -692,8 +692,8 @@ void vdAdditionalOpenADV01(Console &cons, v_profile_strip strip, timed_event teE
   //int IntTrlDly = intDur*2/3;
 
   // Yellow Pulse and Counter Pulse
-  teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
-  teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
+  teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 }
 
 // -------------------------------------------------------------------------------------
@@ -737,11 +737,11 @@ void vdAdditionalOpenADV02(Console &cons, v_profile_strip strip, timed_event teE
     ende = strip.fe(0) - end;
 
     // Yellow Pulse and Counter Pulse
-    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stas, ends, true, true, false);
-    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stas, ends, true, true, false);
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stas, ends, true, true, false, "", "");
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stas, ends, true, true, false, "", "");
 
-    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stae, ende, true, true, false);
-    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stae, ende, true, true, false);
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, false, CRGB(0, 0, 0), crgbPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stae, ende, true, true, false, "", "");
+    teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, intTm, intDur, intSp, AnEvSweep, AnPiPulse, true, CRGB(0, 0, 0), crgbCounterPulseColor, CRGB(0, 0, 0), CRGB(0, 0, 0), stae, ende, true, true, false, "", "");
   }
 }
 
@@ -753,7 +753,7 @@ void vdAdditionalCloseADV00(Console &cons, v_profile_strip strip, timed_event te
   show_anim_info(cons, strip, "Door Overhead Alert Off 00");
 
   // Seach the strip for light colors and set them to end after animation completes.  
-  teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false);
+  teEvent[strip.intCHANNEL].set("Open Additional Anim", tmeCurrentTime, 50, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), strip.fs(0), strip.fe(0), true, true, false, "", "");
 }
 
 

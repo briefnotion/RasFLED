@@ -48,6 +48,8 @@ class ANIMATIONS_EVENT
   bool Repeat = false;
   bool Clear_On_End = true;
   bool Off_During_Day = false;
+  string String_Var_1 = "";
+  string String_Var_2 = "";
 };
 
 class ANIMATIONS_ANIMATION

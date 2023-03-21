@@ -156,7 +156,7 @@ void processtestanimation(Console &cons, system_data &sdSysData, unsigned long t
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdTestAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdTestAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booPulsesRunning = true;
 }
@@ -165,7 +165,7 @@ void process_power_animation(Console &cons, system_data &sdSysData, unsigned lon
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 0, 0, AnEvSchedule, AnTavdPowerAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 0, 0, 0, AnEvSchedule, AnTavdPowerAnimation, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booPulsesRunning = true;
 }
@@ -178,7 +178,7 @@ void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 5, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false);
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 5, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false, "", "");
   }
   sdSysData.booPulsesRunning = false;
 }
@@ -188,7 +188,7 @@ void processcommandflash(Console &cons, system_data &sdSysData, unsigned long tm
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelFlashColor, false, cRGBflashcolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelFlashColor, false, cRGBflashcolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   //sdSysData.booPulsesRunning = true;
 }
@@ -198,7 +198,7 @@ void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tm
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booPulsesRunning = true;
 }
@@ -208,7 +208,7 @@ void processcommandpulsecountdown(Console &cons, system_data &sdSysData, unsigne
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booPulsesRunning = true;
 }
@@ -221,7 +221,7 @@ void processcommandoverheadillumend(Console &cons, system_data &sdSysData, unsig
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false);
+    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false, "", "");
   }
   sdSysData.booOverheadRunning = false;
 }
@@ -232,7 +232,7 @@ void processcommandoverheadillum(Console &cons, system_data &sdSysData, unsigned
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaOverheadIllumColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaOverheadIllumColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booOverheadRunning = true;
 }
@@ -242,7 +242,7 @@ void processcommandpacificaishcolor(Console &cons, system_data &sdSysData, unsig
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaPacificaishColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Overhead Illumination", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaPacificaishColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booOverheadRunning = true;
 }
@@ -255,7 +255,7 @@ void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned lon
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Hazard", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false);
+    teEvent[channel].set("Hazard", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false, "", "");
   }
   sdSysData.booHazardRunning = false;
 }
@@ -265,8 +265,8 @@ void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long t
 {
   for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
   {
-    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdOverhead_Mask, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
-    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaHazard, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false);  
+    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdOverhead_Mask, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
+    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaHazard, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "");  
   }
   sdSysData.booHazardRunning = true;
 }
@@ -383,7 +383,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
     if (check_command(cons," animt", "Event System 2 Test Animation"))
     {
-      Animations.call_animation(cons, sdSysData, tmeCurrentTime, "Car", "test");
+      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "test");
       cons.keywatch.cmdClear();
     }
     

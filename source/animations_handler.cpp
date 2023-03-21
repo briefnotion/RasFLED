@@ -17,6 +17,246 @@
 // -------------------------------------------------------------------------------------
 // 
 
+void ANIMATION_HANDLER::add_to_schedule_list(string Collection_Name, string Animation_Name)
+{
+  bool found = false;
+
+  for(int pos = 0; pos < SCHEDULE_LIST.size() && found == false; pos ++)
+  {
+    if (SCHEDULE_LIST[pos].Collection_Name == Collection_Name &&
+        SCHEDULE_LIST[pos].Animation_Name == Animation_Name)
+    {
+      found = true;
+    }
+  }
+
+  if (found == false)
+  {
+    SCHEDULED_THING_TO_MAKE_BETTER_WHEN_NEEDED new_thing;
+    new_thing.Collection_Name = Collection_Name;
+    new_thing.Animation_Name = Animation_Name;
+    SCHEDULE_LIST.push_back(new_thing);
+  }
+}
+
+void ANIMATION_HANDLER::EvClear(int Channel_Num, int Event_Num)
+{
+  EVENTS[Channel_Num].teDATA[Event_Num].booCOMPLETE = true;
+  EVENTS[Channel_Num].ClearAll(EVENTS[Channel_Num].teDATA[Event_Num].intSTARTPOS,
+                            EVENTS[Channel_Num].teDATA[Event_Num].intENDPOS);
+}
+
+void ANIMATION_HANDLER::EvClearRunning(int Channel_Num, int Event_Num, unsigned long tmeCurrentTime)
+{
+  EVENTS[Channel_Num].teDATA[Event_Num].booCOMPLETE = true;
+            
+  for (int eventscan = 0; eventscan < EVENTS[Channel_Num].teDATA.size(); eventscan++)
+  {
+    if(tmeCurrentTime >= EVENTS[Channel_Num].teDATA[eventscan].tmeSTARTTIME)
+    {
+      if( (is_within(  EVENTS[Channel_Num].teDATA[Event_Num].intSTARTPOS, 
+                        EVENTS[Channel_Num].teDATA[eventscan].intSTARTPOS, EVENTS[Channel_Num].teDATA[eventscan].intENDPOS))
+                          ||
+          (is_within(  EVENTS[Channel_Num].teDATA[Event_Num].intENDPOS, 
+                        EVENTS[Channel_Num].teDATA[eventscan].intSTARTPOS, EVENTS[Channel_Num].teDATA[eventscan].intENDPOS))  )
+      {
+        if (Event_Num != eventscan)
+        {
+          EVENTS[Channel_Num].teDATA[eventscan].booCOMPLETE = true;
+        }
+      }
+    }
+  }
+}
+
+void ANIMATION_HANDLER::EvSetToEnd(int Channel_Num, int Event_Num, unsigned long tmeCurrentTime)
+{
+  //cons.printwait("Event: AnEvSetToEnd");
+  // Clear the Event whether the event ran or not.
+  EVENTS[Channel_Num].teDATA[Event_Num].booCOMPLETE = true;   
+
+  // Step through each event in this channel. 
+  for (int eventscan = 0; eventscan < EVENTS[Channel_Num].teDATA.size(); eventscan++)
+  {
+    // Has the event started running yet, or do we plan on ending future scheduled events also?
+    //  Continue with event removal if (event is active) or (clear on end is true)
+    if((EVENTS[Channel_Num].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime) || (EVENTS[Channel_Num].teDATA[Event_Num].booCLEARONEND == true))
+    {
+      // is the event we are currently looking at within, or overlapping, the targeted event range.
+      if (  ((EVENTS[Channel_Num].teDATA[eventscan].intSTARTPOS >= EVENTS[Channel_Num].teDATA[Event_Num].intSTARTPOS)  
+            && (EVENTS[Channel_Num].teDATA[eventscan].intSTARTPOS <= EVENTS[Channel_Num].teDATA[Event_Num].intENDPOS))
+                  ||
+            ((EVENTS[Channel_Num].teDATA[eventscan].intENDPOS >= EVENTS[Channel_Num].teDATA[Event_Num].intSTARTPOS)  
+            && (EVENTS[Channel_Num].teDATA[eventscan].intENDPOS <= EVENTS[Channel_Num].teDATA[Event_Num].intENDPOS))  )
+      {
+        bool cont = false;  // Continue with the event removal process.
+
+        bool booCheckColor = true;
+        bool booCheckIdent = true;
+
+        // Are we targeting only specific events to end or all events.
+
+        // Check for specific Targeted Color or Targeted Identifier.  
+        // We are targeting events with any color by passing CRGB(0,0,0), and any Identifier by passing "" 
+        // continue on.
+
+        // Warning: This is not an AND condition, even though it probably should be. Not needed at this time 
+        //            so I didn't implement it.  There are just too many other things to do.
+
+        // Figure out what we are checking.
+        if (EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORSTART1 == CRGB(0,0,0))
+        {
+          booCheckColor = false;
+        }
+        if (EVENTS[Channel_Num].teDATA[Event_Num].strIdent == "")
+        {
+          booCheckIdent = false;
+        }
+
+        // Look for matches
+        if ((booCheckColor == false) && (booCheckIdent == false))
+        {
+          // Nothing targeted. Continue with STE.
+          cont = true;
+        }
+        else if (booCheckColor == true)
+        {
+          //We are only targeting events with specific color.  Need a match on any.
+          if (EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORSTART1 == EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORSTART1)
+          {
+            cont = true;
+          }
+          else if (EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORSTART1 == EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORSTART2)
+          {
+            cont = true;
+          }
+          else if (EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORSTART1 == EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST1)
+          {
+            cont = true;
+          }
+          else if (EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORSTART1 == EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST2)
+          {
+            cont = true;
+          }
+        }
+        else if (booCheckIdent == true)
+        {
+          //We are only targeting events with specific Identification.  Need a match on any.
+          if (EVENTS[Channel_Num].teDATA[Event_Num].String_Var_1 == EVENTS[Channel_Num].teDATA[eventscan].strIdent)
+          {
+            cont = true;
+          }
+        }
+
+        // Only continue with setting the event to end if it passed the above criteria.
+        if (cont == true)
+        {
+          // If the event hasn't started yet, set it to complete.
+          // *********
+
+          // Check the event we are stopping to make sure its not the event calling the SetToEnd.
+          if (Event_Num != eventscan)
+          {
+
+            // End Animations
+
+            // Manage the Fade Animations to End.
+            if (  (EVENTS[Channel_Num].teDATA[eventscan].bytLEDANIMATION == AnPiFade)     ||
+                  (EVENTS[Channel_Num].teDATA[eventscan].bytLEDANIMATION == AnPiFadeDith)  )
+            {
+              // Stop the event.
+              EVENTS[Channel_Num].teDATA[eventscan].booREPEAT = false;
+              EVENTS[Channel_Num].teDATA[eventscan].booCLEARONEND = true;
+              
+              EVENTS[Channel_Num].teDATA[eventscan].intDURATION = EVENTS[Channel_Num].teDATA[Event_Num].intDURATION;
+              EVENTS[Channel_Num].teDATA[eventscan].tmeSTARTTIME = tmeCurrentTime;
+
+              //EVENTS[channel].teDATA[eventscan].intSPEED =  EVENTS[channel].teDATA[Event_Num].intSPEED;
+              EVENTS[Channel_Num].teDATA[eventscan].intSPEED =  0;
+              // The above two lines will need to be addressed at a future date. 
+              //  Problem occurs when an event current time is before the start 
+              //  pixel update begins. This mean that the start color will not be set until current 
+              //  time is past start time.  Need to choose: apples or oranges during 
+              //  the crgb_anim_color and event routine.
+
+              if (EVENTS[Channel_Num].teDATA[Event_Num].booREPEAT == false)
+              {
+                EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORSTART1 = EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST1;
+                EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORSTART2 = EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST2;
+              }
+              else
+              {
+                EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORSTART1 = EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST1;
+                EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORSTART2 = EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST2;
+                EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST1 = EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORDEST1;
+                EVENTS[Channel_Num].teDATA[eventscan].crgbCOLORDEST2 = EVENTS[Channel_Num].teDATA[Event_Num].crgbCOLORDEST2;
+              }
+            }
+
+            // and
+            // End Pusles
+
+            // Manage the Pulse Animations to End
+            if (  (EVENTS[Channel_Num].teDATA[eventscan].bytLEDANIMATION == AnPiPulse)    ||
+                  (EVENTS[Channel_Num].teDATA[eventscan].bytLEDANIMATION == AnPiPulseTo)  )
+            {
+              // Tell the pulse to stop.
+              if (EVENTS[Channel_Num].teDATA[Event_Num].booREPEAT == false)
+              {
+                // For now, we will just kill it and hope another animation clears the artifacts.
+                // It would be nice to have a gracreful end and let the pixel end its animation,
+                // but, thats for another time.
+                
+                // Stop the event.
+                EVENTS[Channel_Num].teDATA[eventscan].booREPEAT = false;
+                EVENTS[Channel_Num].teDATA[eventscan].booCLEARONEND = true;
+                
+                EVENTS[Channel_Num].teDATA[eventscan].booCOMPLETE = true;
+              }
+              else
+              {
+                // Pulse will end on its on at end of animation.
+                EVENTS[Channel_Num].teDATA[eventscan].booREPEAT = false;
+                EVENTS[Channel_Num].teDATA[eventscan].booCLEARONEND = true;
+              }
+            }
+
+            // and
+            // End Scheduled Events
+
+            if (EVENTS[Channel_Num].teDATA[eventscan].bytANIMATION == AnEvSchedule)
+            {
+              // Stop the event.
+              EVENTS[Channel_Num].teDATA[eventscan].booREPEAT = false;
+              EVENTS[Channel_Num].teDATA[eventscan].booCLEARONEND = true;
+
+              EVENTS[Channel_Num].teDATA[eventscan].booCOMPLETE = true;
+            }
+
+          } // End Event not Self 
+        } // End If Event in Search Criteria
+      } // End If Event in Range
+    } // End If Time Start
+  } // End For Event Check  
+}
+
+void ANIMATION_HANDLER::EvSchedule(int Channel_Num, int Event_Num, unsigned long tmeCurrentTime)
+{
+  // Clear the Event whether the event ran or not.
+  if(EVENTS[Channel_Num].teDATA[Event_Num].booREPEAT == false)
+  {
+    EVENTS[Channel_Num].teDATA[Event_Num].booCOMPLETE = true;
+  }
+  else
+  {
+    EVENTS[Channel_Num].teDATA[Event_Num].tmeSTARTTIME = tmeCurrentTime + 
+    EVENTS[Channel_Num].teDATA[Event_Num].intDURATION;
+  }
+
+  add_to_schedule_list(EVENTS[Channel_Num].teDATA[Event_Num].String_Var_1, 
+                        EVENTS[Channel_Num].teDATA[Event_Num].String_Var_2);
+}
+
 int ANIMATION_HANDLER::determine_strip_animation(string Animation_Walk_Type)
 {
   int ret_stripanim = -1;
@@ -136,17 +376,20 @@ bool ANIMATION_HANDLER::load_collections(string Directory, string Filename)
   return LIBRARY.load_collections(Directory, Filename);
 }
 
-void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData, 
+void ANIMATION_HANDLER::call_animation(system_data &sdSysData, 
                     unsigned long tmeCurrentTime, 
                     string Collection_Name, string Animation_Name)
 
 {
-  int collection_pos = 0;
-  int animation_pos = 0;
+  int collection_pos = -1;
+  int animation_pos = -1;
   int channel = 0;
 
   collection_pos = LIBRARY.get_collection_pos(Collection_Name);
-  animation_pos = LIBRARY.get_animation_pos(collection_pos, Animation_Name);
+  if(collection_pos > -1)
+  {
+    animation_pos = LIBRARY.get_animation_pos(collection_pos, Animation_Name);
+  }
 
   // For Every Event in storage Collection/Animation
   if (collection_pos > -1 && animation_pos > -1)
@@ -167,7 +410,7 @@ void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData,
             // Determine the event channel to receive the event.
             channel = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL;
 
-            string Label = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Label;;
+            string Label = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Label;
             int Start_Delay_Time = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_Delay_Time;
             int Duration_Of_Brighness = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Duration_Of_Brighness;
             int Speed_Of_LED_Walk = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Speed_Of_LED_Walk;
@@ -185,11 +428,14 @@ void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData,
             bool Repeat = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Repeat;
             bool Clear_On_End = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Clear_On_End;
             bool Off_During_Day = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Off_During_Day;
+            string String_Var_1 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_1;
+            string String_Var_2 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_2;
 
             EVENTS[channel].set(Label, tmeCurrentTime, Start_Delay_Time, Duration_Of_Brighness, Speed_Of_LED_Walk, 
                                 Animation_Walk_Type, Animation_Of_LED, Invert_Color, 
                                 Start_1, Dest_1, Start_2, Dest_2, 
-                                LED_Start_Pos, LED_End_Pos, Repeat, Clear_On_End, Off_During_Day);
+                                LED_Start_Pos, LED_End_Pos, Repeat, Clear_On_End, Off_During_Day, 
+                                String_Var_1, String_Var_2);
 
 
 
@@ -210,7 +456,7 @@ void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData,
   {
     if (collection_pos == -1)
     {
-      sdSysData.ALERTS.add_generic_alert("Colection not found (" + Collection_Name + ") Collection Size: " + 
+      sdSysData.ALERTS.add_generic_alert("Collection not found (" + Collection_Name + ") Collection Size: " + 
                                           to_string(LIBRARY.COLLECTION.size()));
     }
     if (collection_pos > -1 && animation_pos == -1)
@@ -220,11 +466,10 @@ void ANIMATION_HANDLER::call_animation(Console &cons, system_data &sdSysData,
 
       sdSysData.ALERTS.add_generic_alert(" (" + LIBRARY.COLLECTION[collection_pos].ANIMATIONS[0].LABEL + ")");
     }
-    
   }
 }
 
-void ANIMATION_HANDLER::process_events(unsigned long tmeCurrentTime)
+void ANIMATION_HANDLER::process_events(system_data &sdSysData, unsigned long tmeCurrentTime)
 {
   for (int channel = 0; channel < EVENTS.size(); channel++)
   {
@@ -240,9 +485,7 @@ void ANIMATION_HANDLER::process_events(unsigned long tmeCurrentTime)
           
           case AnEvClear:   // Clear all events, whether running or not, if event is within Start and End Position.
           {
-              EVENTS[channel].teDATA[event].booCOMPLETE = true;
-              EVENTS[channel].ClearAll(EVENTS[channel].teDATA[event].intSTARTPOS,
-                                        EVENTS[channel].teDATA[event].intENDPOS);
+            EvClear(channel, event);
             break;
           }
 
@@ -250,26 +493,7 @@ void ANIMATION_HANDLER::process_events(unsigned long tmeCurrentTime)
 
           case AnEvClearRunning:  // Clear all active events if event is within Start and End Position.
           {                       // Possible problem if InTime is set to 0.
-            EVENTS[channel].teDATA[event].booCOMPLETE = true;
-            
-            for (int eventscan = 0; eventscan < EVENTS[channel].teDATA.size(); eventscan++)
-            {
-              if(tmeCurrentTime >= EVENTS[channel].teDATA[eventscan].tmeSTARTTIME)
-              {
-                if( (is_within(  EVENTS[channel].teDATA[event].intSTARTPOS, 
-                                  EVENTS[channel].teDATA[eventscan].intSTARTPOS, EVENTS[channel].teDATA[eventscan].intENDPOS))
-                                    ||
-                    (is_within(  EVENTS[channel].teDATA[event].intENDPOS, 
-                                  EVENTS[channel].teDATA[eventscan].intSTARTPOS, EVENTS[channel].teDATA[eventscan].intENDPOS))  )
-                {
-                  if (event != eventscan)
-                  {
-                    EVENTS[channel].teDATA[eventscan].booCOMPLETE = true;
-                  }
-                }
-              }
-            }
-
+            EvClearRunning(channel, event, tmeCurrentTime);
             break;
           }
 
@@ -277,7 +501,7 @@ void ANIMATION_HANDLER::process_events(unsigned long tmeCurrentTime)
 
           case AnEvSchedule:  //  Schedule an animation
           {
-
+            EvSchedule(channel, event, tmeCurrentTime);
             break;
           }
 
@@ -285,7 +509,7 @@ void ANIMATION_HANDLER::process_events(unsigned long tmeCurrentTime)
 
           case AnEvSetToEnd:  // Schedules an animation to end. Fades out and stops repeat on Pulses.
           {                   // Possible problem if InTime is set to 0.
-
+            EvSetToEnd(channel, event, tmeCurrentTime);
             break;
           }
 
@@ -294,6 +518,18 @@ void ANIMATION_HANDLER::process_events(unsigned long tmeCurrentTime)
       }
     }
   }
+
+  // Check Schedule list and call requested animations.
+  if (SCHEDULE_LIST.size() >= 0)
+  {
+    for(int pos = 0; pos < SCHEDULE_LIST.size(); pos ++)
+    {
+      call_animation(sdSysData, tmeCurrentTime, SCHEDULE_LIST[pos].Collection_Name, SCHEDULE_LIST[pos].Animation_Name);
+    }
+  }
+
+  SCHEDULE_LIST.clear();
+
 }
 
 #endif

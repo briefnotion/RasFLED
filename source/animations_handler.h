@@ -32,11 +32,26 @@ class ANIMATION_HANDLER
 {
   private:
 
+  class SCHEDULED_THING_TO_MAKE_BETTER_WHEN_NEEDED
+  {
+    public:
+    string Collection_Name = "";
+    string Animation_Name = "";
+  };
+  
   ANIMATIONS_STORAGE LIBRARY;
 
-  public:
+  deque<SCHEDULED_THING_TO_MAKE_BETTER_WHEN_NEEDED> SCHEDULE_LIST;
 
-  deque<timed_event> EVENTS;
+  void add_to_schedule_list(string Collection_Name, string Animation_Name);
+
+  void EvClear(int Channel_Num, int Event_Num);
+
+  void EvClearRunning(int Channel_Num, int Event_Num, unsigned long tmeCurrentTime);
+
+  void EvSetToEnd(int Channel_Num, int Event_Num, unsigned long tmeCurrentTime);
+
+  void EvSchedule(int Channel_Num, int Event_Num, unsigned long tmeCurrentTime);
 
   int determine_strip_animation(string Animation_Walk_Type);
 
@@ -44,14 +59,18 @@ class ANIMATION_HANDLER
 
   int determine_led_pos(string LED_Position, v_profile_strip Strip_Info);
 
+  public:
+
+  deque<timed_event> EVENTS;
+
   void create_events(system_data &sdSysData);
 
   bool load_collections(string Directory, string Filename);
 
-  void call_animation(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime,               
+  void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
                       string Collection_Name, string Animation_Name);
   
-  void process_events(unsigned long tmeCurrentTime);
+  void process_events(system_data &sdSysData, unsigned long tmeCurrentTime);
 };
 
 

@@ -75,6 +75,8 @@ class timed_event_data
   bool booREPEAT = false;
   bool booCLEARONEND = true;
   bool booOFFDURINGDAY = false;
+  string String_Var_1 = "";
+  string String_Var_2 = "";
 
   bool booCOMPLETE = true;
 
@@ -102,7 +104,7 @@ class timed_event
            char  bytAnimation, char  bytLEDAnimation, bool booInvertColor, 
            CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
            int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd,
-           bool booOffDuringDay);
+           bool booOffDuringDay, string String_Var_1, string String_Var_2);
 
   // -------------------------------------------------------------------------------------
   // Clear events in channel
