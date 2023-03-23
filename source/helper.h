@@ -218,10 +218,26 @@ class TRUTH_CATCH
   bool has_truth();
   // Returns true a true value was caught in the catch truth routine.
   //  Resets HAS_TRUTH = false after called.
-  // Returns if all catch_truths were false.
+  // Returns false if all catch_truths were false.
 };
 
+class FALSE_CATCH
+// Simple Variable to track if a FALSE value has entered.
+{
+  private:
 
+  bool HAS_FALSE = false;
+
+  public:
+
+  void catch_false(bool Value);
+  // Sets HAS_TRUTH = true if Value is true.
+
+  bool has_false();
+  // Returns true a false value was caught in the catch false routine.
+  //  Resets HAS_FALSE = false after called.
+  // Returns false if all catch_truths were true.
+};
 
 
 // ***************************************************************************************

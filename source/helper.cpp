@@ -374,6 +374,31 @@ void stupid_2d::clear()
     }
   }
 
+    void FALSE_CATCH::catch_false(bool Value)
+  // Sets HAS_TRUTH = true if Value is true.
+  {
+    if (Value == false)
+    {
+      HAS_FALSE = true;
+    }
+  }
+
+  bool FALSE_CATCH::has_false()
+  // Returns true a true value was caught in the catch truth routine.
+  //  Resets HAS_TRUTH = false after called.
+  // Returns if all catch_truths were false.
+  {
+    if (HAS_FALSE == true)
+    {
+      HAS_FALSE = false;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES
 // ***************************************************************************************

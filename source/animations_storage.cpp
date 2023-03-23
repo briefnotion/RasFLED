@@ -57,6 +57,12 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
           // Event items
           for (int item = 0; item < animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA.size(); item++)
           {
+            // Run on conditions
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Run_On_LED_Strip_ID", tmp_animation.Run_On_LED_Strip_ID);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Run_On_LED_LED_Strip_Name", tmp_animation.Run_On_LED_LED_Strip_Name);
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Run_On_Position", tmp_animation.Run_On_Position);
+
+            // Event details
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Label", tmp_event.Label);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Start_Delay_Time", tmp_event.Start_Delay_Time);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Duration_Of_Brighness", tmp_event.Duration_Of_Brighness);

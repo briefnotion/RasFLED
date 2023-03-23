@@ -36,8 +36,8 @@ class ANIMATIONS_EVENT
   int Start_Delay_Time = 0;
   int Duration_Of_Brighness = 0;
   int Speed_Of_LED_Walk = 100;
-  string Animation_Walk_Type = "AnEvSweep ";
-  string Animation_Of_LED = "AnPiFade";
+  string Animation_Walk_Type = "";
+  string Animation_Of_LED = "";
   bool Invert_Color = false;
   CRGB Start_1;
   CRGB Dest_1;
@@ -57,6 +57,13 @@ class ANIMATIONS_ANIMATION
   public:
 
   string LABEL = "";
+
+  int Run_On_LED_Strip_ID = -1;
+  string Run_On_LED_LED_Strip_Name = "";
+  string Run_On_Position = "";
+  string Run_On_LED_Direction = "";
+  string Run_On_LED_Type = "";
+
   deque<ANIMATIONS_EVENT> EVENTS;
 };
 

@@ -5,6 +5,12 @@
       "templates" :
       [
         {
+          "Run_On_LED_Strip_ID" : -1,
+          "Run_On_LED_LED_Strip_Name" : "Door" ,
+          "Run_On_Position" : "Back"
+        },
+
+        {
           "Start_Delay_Time" : 5000, 
           "Animation_Walk_Type" : "AnEvClear"
         },
@@ -108,8 +114,14 @@
         }
       ],
 
-      "test" :
+      "test1" :
       [
+        {
+          "Comment" : "This is a comment.",
+          "Run_On_LED_LED_Strip_Name" : "Door",
+          "Run_On_Position" : "Back"
+        },
+
         {
           "Label" : "turnoff1", 
           "Start_Delay_Time" : 1100, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 15, 
@@ -155,7 +167,146 @@
           "Start_Delay_Time" : 20000, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "test2"
         }
+      ],
+
+      "test" :
+      [
+        {
+          "Comment" : "Test animation called by ' animt'."
+        },
+        {
+          "Label" : "test", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "test1"
+        }
+      ],
+
+
+
+      "This Door Opened - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: TDOE",
+          "Comment_2" : "Animation runs on door newly opened, on door exterior, to present warning lights to traffic."
+        },
+        {
+          "Label" : "TDOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDOE - Simple"
+        }
+      ],
+
+      "This Door Opened - Overhead" : 
+      [
+        {
+          "Comment_1" : "Labels: TDOO",
+          "Comment_2" : "Animation runs on door newly opened, on door overhead, to provide illumination of seat."
+        },
+        {
+          "Label" : "TDOO", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDOO - Simple"
+        }
+      ],
+
+      "This Door Closed - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: TDCE",
+          "Comment_2" : "Animation runs on door newly closed, on door exterior, to remove warning lights."
+        },
+        {
+          "Label" : "TDCE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDCE - Simple"
+        }
+      ],
+
+      "This Door Closed - Overhead" : 
+      [
+        {
+          "Comment_1" : "Labels: TDCO",
+          "Comment_2" : "Animation runs on door newly closed, on door overhead, to remove illumination of seat."
+        },
+        {
+          "Label" : "TDCO", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDCO - Simple"
+        }
+      ],
+
+      "A Door Opened - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: ADOE",
+          "Comment_2" : "Animation runs on door all closed doors if another is opened, on door exterior, to present awareness lights to traffic."
+        },
+        {
+          "Label" : "ADOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "ADOE - Simple"
+        }
+      ],
+
+      "A Door Opened - Overhead" : 
+      [
+        {
+          "Comment_1" : "Labels: ADOO",
+          "Comment_2" : "Animation runs on door all closed doors if another is opened, on all overheads, to provide medium illumination."
+        },
+        {
+          "Label" : "ADOO", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "ADOO - Simple"
+        }
+      ],
+
+      "All Doors Closed - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: LDCE",
+          "Comment_2" : "Animation runs on all door exteriors, when all doors are closed, to remove all animations"
+        },
+        {
+          "Label" : "LDCE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "LDCE - Simple"
+        }
+      ],
+
+      "This Door Recently Closed - Overhead" : 
+      [
+        {
+          "Comment_1" : "Labels: TDRCO",
+          "Comment_2" : "Animation runs on recently closed door overhead when all doors are closed."
+        },
+        {
+          "Label" : "TDRCO", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDRCO - Simple"
+        }
+      ],
+
+      "All Doors Closed - Overhead" : 
+      [
+        {
+          "Comment_1" : "Labels: LDCO",
+          "Comment_2" : "Animation runs on all closed doors overhead when all doors are closed."
+        },
+        {
+          "Label" : "LDCO", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "LDCO - Simple"
+        }
       ]
+
+
+
+
+
+      
+
+
     }
   ]
 }

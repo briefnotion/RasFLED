@@ -1,0 +1,108 @@
+Required Animation Notes:
+
+    // Door Just Opened
+    // Start Open Door Animation on This Door
+
+    // Door Animation
+Status()
+vdDoorOpenAnimationADV00
+"This Door Opened - Exterior"
+"TDOE"
+(Animation runs on door newly opened, on door exterior, to present warning lights to traffic.)
+
+    // Turn on additional lights overhead
+Status()
+vdAdditionalOpenADV02
+"This Door Opened - Overhead"
+"TDOO"
+(Animation runs on door newly opened, on door overhead, to provide illumination of seat.)
+
+
+    // Door Just Closed
+    // Only if its real switch (with lights attached to it)
+    // Replace Open or Current door animation to closed door animation
+
+Status("Door", "Closed Door")
+"This Door Closed - Exterior"
+"TDCE"
+vdDoorCloseActiveADV00
+(Animation runs on door newly closed, on door exterior, to remove warning lights.)
+
+    // Turn off additional lights overhead
+Status()
+"This Door Closed - Overhead"
+"TDCO"
+vdAdditionalCloseADV00
+(Animation runs on door newly closed, on door overhead, to remove illumination of seat.)
+
+    // Check To See If Any Door Opened or Closed.
+
+    // There are open Doors
+
+    // If a door is open
+    // If this door is not open then make sure the closed door animation is running on it.
+    // Closed Active Doors animation
+
+Status()
+"A Door Opened - Exterior"
+"ADOE"
+vdDoorCloseActiveADV00
+(Animation runs on door all closed doors if another is opened, on door exterior, 
+to present awareness lights to traffic.)
+
+    // If  a door is open
+
+    // Make sure this door has the overhead animation running on it.
+    // Normal Overhead Animation
+
+Status("Overhead", "Open Overhead")
+"A Door Opened - Overhead"
+"ADOO"
+vdPacificaishAnimationADVColor_Door
+(Animation runs on door all closed doors if another is opened, on all overheads, 
+to provide medium illumination.)
+
+
+
+    // All doors are closed.
+
+    // Start the Doors Running Mode on each door.
+Status("Door", "Opened Door")
+"All Doors Closed - Exterior"
+"LDCE"
+vdDoorCloseRunningADV
+(Animation runs on all door exteriors, when all doors are closed,  
+to remove all animations.)
+
+    // Make sure lights are off or turning off and Amber Up the newly closded doors.
+
+    // Turn on Convienance Lights 
+Status()
+"This Door Recently Closed - Overhead"
+"TDRCO"
+vdCoADV01
+(Animation runs on recently closed door overhead when all doors are closed.)
+
+
+    // The door was closed for a while, just turn off the lights.
+    // Start the Close Door Overhead Animation
+
+    // Just turn off the lights.
+Status()
+"All Doors Closed - Overhead"
+"LDCO"
+vdCloseOverADV
+(Animation runs on all closed doors overhead when all doors are closed.)
+
+
+
+
+Hazzard Lights
+
+
+
+Flash Lights
+
+
+
+Waiting Lights
