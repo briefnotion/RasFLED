@@ -37,13 +37,14 @@ class ANIMATION_HANDLER
     public:
     string Collection_Name = "";
     string Animation_Name = "";
+    int Assigned_Group = -1;
   };
   
   ANIMATIONS_STORAGE LIBRARY;
 
   deque<SCHEDULED_THING_TO_MAKE_BETTER_WHEN_NEEDED> SCHEDULE_LIST;
 
-  void add_to_schedule_list(string Collection_Name, string Animation_Name);
+  void add_to_schedule_list(string Collection_Name, string Animation_Name, int Assigned_Group);
 
   void EvClear(int Channel_Num, int Event_Num);
 
@@ -68,8 +69,11 @@ class ANIMATION_HANDLER
   bool load_collections(string Directory, string Filename);
 
   void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
-                      string Collection_Name, string Animation_Name);
+                      string Collection_Name, string Animation_Name, int On_Group);
   
+  void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
+                      string Collection_Name, string Animation_Name);
+
   void process_events(system_data &sdSysData, unsigned long tmeCurrentTime);
 };
 

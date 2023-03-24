@@ -642,7 +642,7 @@ int loop()
       }
       else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
       {
-        //v_DoorMonitorAndAnimationControlModule(cons, sdSystem, animations.EVENTS, tmeCurrentMillis);
+        v_DoorMonitorAndAnimationControlModule2(cons, sdSystem, animations, tmeCurrentMillis);
       }
     } // Are switches ready -----------------
 

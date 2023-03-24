@@ -183,16 +183,16 @@
 
 
 
-      "This Door Opened - Exterior" : 
+      "A Door Opened - Overhead" : 
       [
         {
-          "Comment_1" : "Labels: TDOE",
-          "Comment_2" : "Animation runs on door newly opened, on door exterior, to present warning lights to traffic."
+          "Comment_1" : "Labels: ADOO",
+          "Comment_2" : "Animation runs on door all closed doors if another is opened, on all overheads, to provide medium illumination."
         },
         {
-          "Label" : "TDOE", 
+          "Label" : "ADOO", 
           "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "TDOE - Simple"
+          "String_Var_1" : "Car", "String_Var_2" : "ADOO - Simple"
         }
       ],
 
@@ -209,19 +209,6 @@
         }
       ],
 
-      "This Door Closed - Exterior" : 
-      [
-        {
-          "Comment_1" : "Labels: TDCE",
-          "Comment_2" : "Animation runs on door newly closed, on door exterior, to remove warning lights."
-        },
-        {
-          "Label" : "TDCE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "TDCE - Simple"
-        }
-      ],
-
       "This Door Closed - Overhead" : 
       [
         {
@@ -232,45 +219,6 @@
           "Label" : "TDCO", 
           "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "TDCO - Simple"
-        }
-      ],
-
-      "A Door Opened - Exterior" : 
-      [
-        {
-          "Comment_1" : "Labels: ADOE",
-          "Comment_2" : "Animation runs on door all closed doors if another is opened, on door exterior, to present awareness lights to traffic."
-        },
-        {
-          "Label" : "ADOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "ADOE - Simple"
-        }
-      ],
-
-      "A Door Opened - Overhead" : 
-      [
-        {
-          "Comment_1" : "Labels: ADOO",
-          "Comment_2" : "Animation runs on door all closed doors if another is opened, on all overheads, to provide medium illumination."
-        },
-        {
-          "Label" : "ADOO", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "ADOO - Simple"
-        }
-      ],
-
-      "All Doors Closed - Exterior" : 
-      [
-        {
-          "Comment_1" : "Labels: LDCE",
-          "Comment_2" : "Animation runs on all door exteriors, when all doors are closed, to remove all animations"
-        },
-        {
-          "Label" : "LDCE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "LDCE - Simple"
         }
       ],
 
@@ -298,15 +246,315 @@
           "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "LDCO - Simple"
         }
+      ],
+
+
+
+      "This Door Opened - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: TDOE",
+          "Comment_2" : "Animation runs on door newly closed, on door exterior, to remove warning lights."
+        },
+        {
+          "Label" : "TDOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDOE - Simple"
+        }
+      ],
+
+      "A Door is Opened - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: ADOE",
+          "Comment_2" : "Animation runs on door all closed doors if another is opened, on door exterior, to present awareness lights to traffic."
+        },
+        {
+          "Label" : "ADOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "ADOE - Simple"
+        }
+      ],
+
+      "This Door Closed - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: TDCE",
+          "Comment_2" : "Animation runs on door newly closed, on door exterior, to remove warning lights."
+        },
+        {
+          "Label" : "TDCE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDCE - Simple"
+        }
+      ],
+
+      "This Door Opened and Another Open - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: TDOAOE",
+          "Comment_2" : "Animation runs on door newly opened, on door exterior, to present warning lights to traffic."
+        },
+        {
+          "Label" : "TDOAOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDOE - Simple"
+        },
+        {
+          "Label" : "TDOAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
+        }
+      ],
+
+      "This Door Closed and Another Open - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: TDCAOE",
+          "Comment_2" : "Animation stops the A Door is Opened - Exterior animation"
+        },
+        {
+          "Label" : "TDCAOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "ADOE - Simple"
+        },
+        {
+          "Label" : "TDCAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
+        }
+      ],
+
+      "All Doors Closed - Exterior" : 
+      [
+        {
+          "Comment_1" : "Labels: LDCE",
+          "Comment_2" : "Animation runs on all door exteriors, when all doors are closed, to remove all animations"
+        },
+        {
+          "Label" : "LDCE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "LDCE - Simple"
+        }
+      ],
+
+
+
+      "HAZARD" : 
+      [
+        {
+          "Comment_1" : "Labels: HAZARD"
+        },
+        {
+          "Label" : "HAZARD", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "HAZARD - Simple"
+        }
+      ],
+
+      "HAZARD STOP" : 
+      [
+        {
+          "Comment_1" : "Labels: HAZARD"
+        },
+        {
+          "Label" : "HAZARD", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "HAZARD STOP - Simple"
+        }
+      ],
+
+
+
+      "ADOO - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Overhead"
+        },
+        {
+          "Label" : "ADOO",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", "Dest_1" : "0,64,0",
+          "Clear_On_End" : false
+        }
+      ],
+
+      "TDOO - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Overhead"
+        },
+        {
+          "Label" : "TDOO",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", "Dest_1" : "64,0,64",
+          "Clear_On_End" : false
+        }
+      ],
+
+      "TDCO - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Overhead"
+        },
+        {
+          "Label" : "TDCO",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOO"
+        }
+      ],
+
+      "TDRCO - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Overhead"
+        },
+        {
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 8000, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "0,0,64",
+          "Clear_On_End" : false
+        }
+      ],
+
+      "LDCO - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Overhead"
+        },
+        {
+          "Label" : "TDOAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOO"
+        }
+      ],
+
+
+
+      "TDOE - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Label" : "TDOE",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", "Dest_1" : "15,15,0",
+          "Clear_On_End" : false
+        }
+      ],
+
+      "ADOE - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 900, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", "Dest_1" : "5,5,5",
+          "Clear_On_End" : false
+        }
+      ],
+
+      "TDCE - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Label" : "LDCE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
+        }
+      ],
+
+      "TDOAOE - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Label" : "TDOAOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "TDOE - Simple"
+        },
+        {
+          "Label" : "TDOAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
+        }
+      ],
+
+      "TDCAOE - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Label" : "TDOAOE", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "ADOE - Simple"
+        },
+        {
+          "Label" : "TDOAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
+        }
+      ],
+
+      "LDCE - Simple" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Label" : "TDOAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
+        },
+        {
+          "Label" : "TDOAOE",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
+        }
+      ],
+
+
+
+      "HAZARD - Simple" : 
+      [
+        {
+          "Label" : "HAZARD",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "128,0,0",
+          "Clear_On_End" : false
+        },
+        {
+          "Label" : "HAZARD", 
+          "Start_Delay_Time" : 900, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "HAZARD - Simple"
+        }
+      ],
+
+      "HAZARD STOP - Simple" : 
+      [
+        {
+          "Label" : "HAZARD STOP",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "HAZARD"
+        }
       ]
-
-
-
-
-
-      
-
-
     }
   ]
 }

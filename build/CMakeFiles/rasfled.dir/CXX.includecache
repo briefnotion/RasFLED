@@ -297,6 +297,8 @@ timedeventsystem.h
 /home/pi/source/RasFLED/source/timedeventsystem.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
+animations_handler.h
+/home/pi/source/RasFLED/source/animations_handler.h
 
 /home/pi/source/RasFLED/source/hardware_status.cpp
 hardware_status.h
