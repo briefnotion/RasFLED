@@ -841,7 +841,7 @@ int loop()
       }
       else if (sdSystem.ACTIVE_EVENT_SYSTEM == 2)
       {
-        //extraanimationdoorcheck(cons, sdSystem, tmeCurrentMillis, animations.EVENTS);
+        extraanimationdoorcheck2(cons, sdSystem, tmeCurrentMillis, animations);
       }
       
     } // Is Keyboard or Mouse read ready -----------------

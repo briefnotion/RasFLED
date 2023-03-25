@@ -174,12 +174,10 @@ void process_power_animation(Console &cons, system_data &sdSysData, unsigned lon
 // Pulses
 
 // Set To End All Pulses
-void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
 {
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 5, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false, "", "", -1);
-  }
+  Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "PULSE COLOR STOP");
+  Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "COUNTDOWN TIMER STOP");
   sdSysData.booPulsesRunning = false;
 }
 
@@ -194,22 +192,17 @@ void processcommandflash(Console &cons, system_data &sdSysData, unsigned long tm
 }
 
 // Pulse Color All Channels
-void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations, CRGB cRGBpulsecolor)
 {
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColor, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "", -1);
-  }
+  sdSysData.PULSE_COLOR = cRGBpulsecolor;
+  Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "PULSE COLOR");
   sdSysData.booPulsesRunning = true;
 }
 
 // Pulse Color All Channels
-void processcommandpulsecountdown(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandpulsecountdown(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
 {
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Channel Light Pulse Color", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaChannelPulseColorCountdown, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "", -1);
-  }
+  Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "COUNTDOWN TIMER");
   sdSysData.booPulsesRunning = true;
 }
 
@@ -251,23 +244,16 @@ void processcommandpacificaishcolor(Console &cons, system_data &sdSysData, unsig
 // Hazard
 
 // Set To End All Hazard
-void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
+void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
 {
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Hazard", tmeCurrentTime, 0, 1000, 80, AnEvSetToEnd, 0, false, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 255, true, true, false, "", "", -1);
-  }
+  Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "HAZARD STOP");
   sdSysData.booHazardRunning = false;
 }
 
 // Hazard
-void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor)
+void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
 {
-  for (int channel = 0; channel < sdSysData.CONFIG.iNUM_CHANNELS; channel++)
-  {
-    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTavdOverhead_Mask, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "", -1);
-    teEvent[channel].set("Hazard", tmeCurrentTime, 100, 0, 0, AnEvSchedule, AnTaHazard, false, cRGBpulsecolor, CRGB(0, 0, 0), CRGB(0, 0, 0), CRGB(0, 0, 0), 0, 0, false, true, false, "", "", -1);
-  }
+  Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "HAZARD");
   sdSysData.booHazardRunning = true;
 }
 
@@ -424,9 +410,9 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
       // end Countdown Timer
       sdSysData.cdTIMER.end();
 
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
       processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
-      processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandhazardend(cons, sdSysData, tmeCurrentTime, Animations);
     }
 
     // -------------------------------------------------------------------------------------
@@ -745,75 +731,75 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
     // pulse end
     if (check_command(cons, "p`", "End Most Pulse Animations"))
     {
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
     }
 
     // pulse Running Timer
     if (check_command(cons, "  ", "5 minute Pulse Timer Started with Running Color"))
     {
       sdSysData.start_timer(DEFAULTTIMER * 60);
-      processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, Animations);
     }
 
     // pulse Running Timer end
     if (check_command(cons, " `", "Pulse Timer Stop"))
     {
       sdSysData.cdTIMER.end();
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
     }
 
     // pulse Running Color
     if (check_command(cons, "pp", "Pulse Running Color All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, sdSysData.get_running_color());
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
     }
 
     // pulse White
     if (check_command(cons, "pw", "Pulse White All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
     }
 
     // pulse Red
     if (check_command(cons, "pr", "Pulse Red All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbRed);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
     }
 
     // pulse Green
     if (check_command(cons, "pg", "Pulse Green All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbGreen);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
     }
 
     // pulse Blue
     if (check_command(cons, "pb", "Pulse Blue All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbBlue);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
     }
 
     // pulse Purple
     if (check_command(cons, "pu", "Pulse Purple All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbPurple);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
     }
 
     // pulse Yellow
     if (check_command(cons, "py", "Pulse Yellow All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbYellow);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
     }
 
     // pulse Cyan
     if (check_command(cons, "pc", "Pulse Cyan All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbCyan);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
     }
 
     // pulse Orange
     if (check_command(cons, "pn", "Pulse Orange All LEDs"))
     {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, teEvent, crgbOrange);
+      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
     }
 
     // -------------------------------------------------------------------------------------
@@ -945,34 +931,17 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
     // -------------------------------------------------------------------------------------
     // Hazard
-    
-    if (sdSysData.ACTIVE_EVENT_SYSTEM == 1)
-    {
-      // Hazard illum end
-      if (check_command(cons, "h`", "HAZARD LIGHTS OFF"))
-      {
-        processcommandhazardend(cons, sdSysData, tmeCurrentTime, teEvent);
-      }
 
-      // Hazard
-      if (check_command(cons, "hh", "HAZARD LIGHTS ON ('h`' to turn off"))
-      {
-        processcommandhazard(cons, sdSysData, tmeCurrentTime, teEvent, crgbWhite);
-      }
+    // Hazard illum end
+    if (check_command(cons, "h`", "HAZARD LIGHTS OFF"))
+    {
+      processcommandhazardend(cons, sdSysData, tmeCurrentTime, Animations);
     }
-    else if (sdSysData.ACTIVE_EVENT_SYSTEM == 2)
-    {
-      // Hazard illum end
-      if (check_command(cons, "h`", "HAZARD LIGHTS OFF"))
-      {
-        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "HAZARD STOP");
-      }
 
-      // Hazard
-      if (check_command(cons, "hh", "HAZARD LIGHTS ON ('h`' to turn off"))
-      {
-        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "HAZARD");
-      }
+    // Hazard
+    if (check_command(cons, "hh", "HAZARD LIGHTS ON ('h`' to turn off"))
+    {
+      processcommandhazard(cons, sdSysData, tmeCurrentTime, Animations);
     }
 
     // -------------------------------------------------------------------------------------
@@ -1092,14 +1061,31 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 
 // If a door is opened and DOORAWARE is on, we want to end these animations when the door
 //  has been opened.
-void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[] )
+void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[])
 {
   if ( (sdSysData.intDoorsOpen > 0)  && ((sdSysData.booPulsesRunning == true) || (sdSysData.booOverheadRunning == true)) )
   {
     // End pulses when door is opened and end countdown timer.
     sdSysData.cdTIMER.end();
-    processcommandpulseend(cons, sdSysData, tmeCurrentTime, teEvent);
-    processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
+    //processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
+    //processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, teEvent);
+  }
+}
+
+// If a door is opened and DOORAWARE is on, we want to end these animations when the door
+//  has been opened.
+void extraanimationdoorcheck2(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
+{
+  if(sdSysData.cdTIMER.is_active() == true)
+  {
+    if (sdSysData.intDoorsOpen > 0)
+    {
+      cons.printi(to_string(sdSysData.intDoorsOpen));
+      // End pulses when door is opened and end countdown timer.
+      sdSysData.cdTIMER.end();
+      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
+      //processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
+    }
   }
 }
 

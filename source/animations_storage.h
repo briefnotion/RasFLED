@@ -39,10 +39,10 @@ class ANIMATIONS_EVENT
   string Animation_Walk_Type = "";
   string Animation_Of_LED = "";
   bool Invert_Color = false;
-  CRGB Start_1;
-  CRGB Dest_1;
-  CRGB Start_2;
-  CRGB Dest_2;
+  string Start_1 = "0,0,0";
+  string Dest_1 = "0,0,0";
+  string Start_2 = "0,0,0";
+  string Dest_2 = "0,0,0";
   string LED_Start_Pos = "from_start|0";
   string LED_End_Pos = "from_end|0";
   bool Repeat = false;

@@ -59,15 +59,15 @@ void process_power_animation(Console &cons, system_data &sdSysData, unsigned lon
 // Pulses
 
 // Set To End All Pulses
-void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
+void processcommandpulseend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations);
 
 // Flash Color All Channels
 void processcommandflash(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBflashcolor);
 
 // Pulse Color All Channels
-void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor);
+void processcommandpulse(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations, CRGB cRGBpulsecolor);
 // Pulse Color All Channels
-void processcommandpulsecountdown(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
+void processcommandpulsecountdown(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations);
 
 // -------------------------------------------------------------------------------------
 // Overhead Illum
@@ -86,10 +86,10 @@ void processcommandpacificaishcolor(Console &cons, system_data &sdSysData, unsig
 // Hazard
 
 // Set To End All Hazard
-void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[]);
+void processcommandhazardend(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations);
 
 // Hazard
-void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[], CRGB cRGBpulsecolor);
+void processcommandhazard(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations);
 
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
@@ -108,6 +108,10 @@ void processcommandlineinput(Console &cons, system_data &sdSysData, unsigned lon
 // If a door is opened and DOORAWARE is on, we want to end these animations when the door
 //  has been opened.
 void extraanimationdoorcheck(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, timed_event teEvent[] );
+
+// If a door is opened and DOORAWARE is on, we want to end these animations when the door
+//  has been opened.
+void extraanimationdoorcheck2(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations);
 
 
 

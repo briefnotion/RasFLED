@@ -183,6 +183,84 @@
 
 
 
+      "PULSE COLOR" : 
+      [
+        {
+          "Comment_1" : "Labels: PC"
+        },
+        {
+          "Label" : "PC", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "PC - Simple"
+        }
+      ],
+
+      "PULSE COLOR STOP" : 
+      [
+        {
+          "Comment_1" : "Labels: PC"
+        },
+        {
+          "Label" : "PC", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "PC STOP - Simple"
+        }
+      ],
+
+
+
+      "COUNTDOWN TIMER" : 
+      [
+        {
+          "Comment_1" : "Labels: CD"
+        },
+        {
+          "Label" : "CD", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "CD - Simple"
+        }
+      ],
+
+      "COUNTDOWN TIMER STOP" : 
+      [
+        {
+          "Comment_1" : "Labels: CD"
+        },
+        {
+          "Label" : "CD", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "CD STOP - Simple"
+        }
+      ],
+
+
+
+      "HAZARD" : 
+      [
+        {
+          "Comment_1" : "Labels: HAZARD"
+        },
+        {
+          "Label" : "HAZARD", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "HAZARD - Simple"
+        }
+      ],
+
+      "HAZARD STOP" : 
+      [
+        {
+          "Comment_1" : "Labels: HAZARD"
+        },
+        {
+          "Label" : "HAZARD", 
+          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "HAZARD STOP - Simple"
+        }
+      ],
+
+
+
       "A Door Opened - Overhead" : 
       [
         {
@@ -342,27 +420,82 @@
 
 
 
-      "HAZARD" : 
+      "PC - Simple" : 
       [
         {
-          "Comment_1" : "Labels: HAZARD"
+          "Label" : "PC",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "pulse_color",
+          "Clear_On_End" : false
+        },
+        {
+          "Label" : "PC", 
+          "Start_Delay_Time" : 1000, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "PC - Simple"
+        }
+      ],
+
+      "PC STOP - Simple" : 
+      [
+        {
+          "Label" : "PC",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "PC"
+        }
+      ],
+
+
+
+      "CD - Simple" : 
+      [
+        {
+          "Label" : "CD",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2500, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "countdown_color",
+          "Clear_On_End" : false
+        },
+        {
+          "Label" : "CD", 
+          "Start_Delay_Time" : 3000, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "CD - Simple"
+        }
+      ],
+
+      "CD STOP - Simple" : 
+      [
+        {
+          "Label" : "CD",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "CD"
+        }
+      ],
+
+
+
+      "HAZARD - Simple" : 
+      [
+        {
+          "Label" : "HAZARD",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 0, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "128,0,0",
+          "Clear_On_End" : false
         },
         {
           "Label" : "HAZARD", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 1000, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "HAZARD - Simple"
         }
       ],
 
-      "HAZARD STOP" : 
+      "HAZARD STOP - Simple" : 
       [
         {
-          "Comment_1" : "Labels: HAZARD"
-        },
-        {
-          "Label" : "HAZARD", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "HAZARD STOP - Simple"
+          "Label" : "HAZARD STOP",  
+          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "HAZARD"
         }
       ],
 
@@ -526,33 +659,6 @@
           "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
-        }
-      ],
-
-
-
-      "HAZARD - Simple" : 
-      [
-        {
-          "Label" : "HAZARD",
-          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 0, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "128,0,0",
-          "Clear_On_End" : false
-        },
-        {
-          "Label" : "HAZARD", 
-          "Start_Delay_Time" : 900, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "HAZARD - Simple"
-        }
-      ],
-
-      "HAZARD STOP - Simple" : 
-      [
-        {
-          "Label" : "HAZARD STOP",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
-          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
-          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "HAZARD"
         }
       ]
     }

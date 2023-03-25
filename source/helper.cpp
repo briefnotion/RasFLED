@@ -1,4 +1,4 @@
-// ***************************************************************************************
+// ****************************************HELPER_CPP***********************************************
 // *
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.

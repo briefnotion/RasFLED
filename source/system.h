@@ -106,6 +106,8 @@ class system_data
   bool  booPulsesRunning = false;   // Are exta anims running.
   bool  booOverheadRunning = false; // Are exta anims running.
   bool  booHazardRunning = false;   // Are exta anims running.
+
+  CRGB PULSE_COLOR;
   
   // Timer and Color Schemes
   countdown_timer cdTIMER;

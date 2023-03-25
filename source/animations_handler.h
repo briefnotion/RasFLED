@@ -60,6 +60,8 @@ class ANIMATION_HANDLER
 
   int determine_led_pos(string LED_Position, v_profile_strip Strip_Info);
 
+  CRGB determine_led_color(system_data &sdSysData, string Color_or_Var);
+
   public:
 
   deque<timed_event> EVENTS;
@@ -69,10 +71,19 @@ class ANIMATION_HANDLER
   bool load_collections(string Directory, string Filename);
 
   void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
-                      string Collection_Name, string Animation_Name, int On_Group);
-  
+                      string Collection_Name, string Animation_Name, int On_Group, 
+                      string String_Var_1, string String_Var_2);
+
   void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
                       string Collection_Name, string Animation_Name);
+
+  void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
+                      string Collection_Name, string Animation_Name,
+                      int On_Group);
+
+  void call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
+                      string Collection_Name, string Animation_Name, 
+                      string String_Var_1, string String_Var_2);
 
   void process_events(system_data &sdSysData, unsigned long tmeCurrentTime);
 };

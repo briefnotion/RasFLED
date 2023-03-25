@@ -338,7 +338,57 @@ int ANIMATION_HANDLER::determine_led_pos(string LED_Position, v_profile_strip St
       {
         ret_pos = Strip_Info.fe(string_to_int(right));
       }
+    } else if (left == "from_top")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.ft(string_to_int(right));
+      }
     }
+    else if (left == "from_bot")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.fb(string_to_int(right));
+      }
+    }
+    /*
+    else if (left == "from_1/2")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.fb(string_to_int(right));
+      }
+    }
+    else if (left == "from_1/3")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.fb(string_to_int(right));
+      }
+    }
+    else if (left == "from_2/3")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.fb(string_to_int(right));
+      }
+    }
+    else if (left == "from_1/4")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.fb(string_to_int(right));
+      }
+    }
+    else if (left == "from_3/4")
+    {
+      if (right_of_char(LED_Position, '|', right) == true)
+      {
+        ret_pos = Strip_Info.fb(string_to_int(right));
+      }
+    }
+    */
   }
   else
   {
@@ -346,6 +396,26 @@ int ANIMATION_HANDLER::determine_led_pos(string LED_Position, v_profile_strip St
   }
 
   return ret_pos;
+}
+
+CRGB ANIMATION_HANDLER::determine_led_color(system_data &sdSysData, string Color_or_Var)
+{
+  CRGB ret_crgb;
+
+  if (Color_or_Var == "pulse_color")
+  {
+    ret_crgb = sdSysData.PULSE_COLOR;
+  }
+  else if (Color_or_Var == "countdown_color")
+  {
+    ret_crgb = sdSysData.get_countdown_color();
+  }
+  else
+  {
+    ret_crgb = ret_crgb.StringtoCRGB(Color_or_Var);
+  }
+
+  return ret_crgb;
 }
 
 void ANIMATION_HANDLER::create_events(system_data &sdSysData)
@@ -379,9 +449,9 @@ bool ANIMATION_HANDLER::load_collections(string Directory, string Filename)
   return LIBRARY.load_collections(Directory, Filename);
 }
 
-void ANIMATION_HANDLER::call_animation(system_data &sdSysData, 
-                    unsigned long tmeCurrentTime, 
-                    string Collection_Name, string Animation_Name, int On_Group)
+void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tmeCurrentTime, 
+                              string Collection_Name, string Animation_Name, int On_Group, 
+                              string String_Var_1, string String_Var_2)
 
 {
   int collection_pos = -1;
@@ -451,10 +521,10 @@ void ANIMATION_HANDLER::call_animation(system_data &sdSysData,
                 int Animation_Walk_Type = determine_strip_animation(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Animation_Walk_Type);
                 int Animation_Of_LED = determine_led_animation(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Animation_Of_LED);          
                 bool Invert_Color = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Invert_Color;
-                CRGB Start_1 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_1;
-                CRGB Dest_1 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_1;
-                CRGB Start_2 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_2;
-                CRGB Dest_2 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_2;
+                CRGB Start_1 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_1);
+                CRGB Dest_1 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_1);
+                CRGB Start_2 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_2);
+                CRGB Dest_2 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_2);
                 int LED_Start_Pos = determine_led_pos(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].LED_Start_Pos, 
                                                       sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip]);
                 int LED_End_Pos = determine_led_pos(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].LED_End_Pos, 
@@ -503,7 +573,21 @@ void ANIMATION_HANDLER::call_animation(system_data &sdSysData,
 void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
                       string Collection_Name, string Animation_Name)
 {
-  call_animation(sdSysData,  tmeCurrentTime,  Collection_Name, Animation_Name, -1);
+  call_animation(sdSysData,  tmeCurrentTime,  Collection_Name, Animation_Name, -1, "", "");
+}
+
+void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
+                      string Collection_Name, string Animation_Name,
+                      int On_Group)
+{
+  call_animation(sdSysData,  tmeCurrentTime,  Collection_Name, Animation_Name, On_Group, "", "");
+}
+
+void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tmeCurrentTime,               
+                      string Collection_Name, string Animation_Name, 
+                      string String_Var_1, string String_Var_2)
+{
+  call_animation(sdSysData,  tmeCurrentTime,  Collection_Name, Animation_Name, -1, String_Var_1, String_Var_2);
 }
 
 void ANIMATION_HANDLER::process_events(system_data &sdSysData, unsigned long tmeCurrentTime)
