@@ -352,43 +352,42 @@ int ANIMATION_HANDLER::determine_led_pos(string LED_Position, v_profile_strip St
         ret_pos = Strip_Info.fb(string_to_int(right));
       }
     }
-    /*
+    // strip value reverse and right value +- num overlap will occur.
     else if (left == "from_1/2")
     {
       if (right_of_char(LED_Position, '|', right) == true)
       {
-        ret_pos = Strip_Info.fb(string_to_int(right));
+        ret_pos = (Strip_Info.fe(0) / 2) + string_to_int(right);
       }
     }
     else if (left == "from_1/3")
     {
       if (right_of_char(LED_Position, '|', right) == true)
       {
-        ret_pos = Strip_Info.fb(string_to_int(right));
+        ret_pos = (Strip_Info.fe(0) / 3) + string_to_int(right);
       }
     }
     else if (left == "from_2/3")
     {
       if (right_of_char(LED_Position, '|', right) == true)
       {
-        ret_pos = Strip_Info.fb(string_to_int(right));
+        ret_pos = ((Strip_Info.fe(0) * 2) / 3) + string_to_int(right);
       }
     }
     else if (left == "from_1/4")
     {
       if (right_of_char(LED_Position, '|', right) == true)
       {
-        ret_pos = Strip_Info.fb(string_to_int(right));
+        ret_pos = (Strip_Info.fe(0) / 4) + string_to_int(right);
       }
     }
     else if (left == "from_3/4")
     {
       if (right_of_char(LED_Position, '|', right) == true)
       {
-        ret_pos = Strip_Info.fb(string_to_int(right));
+        ret_pos = ((Strip_Info.fe(0) * 3) / 4) + string_to_int(right);
       }
     }
-    */
   }
   else
   {
@@ -409,6 +408,14 @@ CRGB ANIMATION_HANDLER::determine_led_color(system_data &sdSysData, string Color
   else if (Color_or_Var == "countdown_color")
   {
     ret_crgb = sdSysData.get_countdown_color();
+  }
+  else if (Color_or_Var == "running_color")
+  {
+    ret_crgb = sdSysData.running_color_list.color[0];
+  }
+  else if (Color_or_Var == "color")
+  {
+    ret_crgb = sdSysData.TMP_PASSTHRU_COLOR;
   }
   else
   {

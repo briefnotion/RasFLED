@@ -107,8 +107,6 @@
 #include "LEDstuff.h"
 #include "fled_time.h"
 #include "fledcore.h"
-#include "timedeventsystem.h"
-#include "animations.h"
 #include "hardware_module_door.h"
 #include "interface.h"
 #include "animations_handler.h"
@@ -135,7 +133,7 @@ void MatxixFill(CRGB crgbPreparedMatix[], int intLEDCOUNT, CRGB crgbColor);
 // Console Update
 
 // Reference for the amount for events running.
-void store_event_counts(system_data &sdSysData, timed_event teEvent[]);
+void store_event_counts(system_data &sdSysData, ANIMATION_HANDLER Animations);
 
 
 // ***************************************************************************************

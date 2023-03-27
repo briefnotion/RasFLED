@@ -44,7 +44,6 @@ add_executable(
   hardware_status.cpp
   animations_storage.cpp
   animations_handler.cpp
-  animations.cpp
   gadgets.cpp
   gadgets_radio.cpp
   gadgets_alerts.cpp
@@ -55,7 +54,6 @@ add_executable(
   screen3.cpp
   system.cpp
   consoleanddata.cpp
-  timedeventsystem.cpp
   fledcore.cpp
   
   main.cpp

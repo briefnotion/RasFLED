@@ -108,6 +108,7 @@ class system_data
   bool  booHazardRunning = false;   // Are exta anims running.
 
   CRGB PULSE_COLOR;
+  CRGB TMP_PASSTHRU_COLOR;
   
   // Timer and Color Schemes
   countdown_timer cdTIMER;
@@ -135,8 +136,6 @@ class system_data
   API_CHANNEL_MEM API_CHANNEL;
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
-
-  int ACTIVE_EVENT_SYSTEM = 2;
 
   // Test Mode
   int t_group = 0;
