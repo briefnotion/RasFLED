@@ -12,6 +12,8 @@
 #ifndef FLEDCORE_H
 #define FLEDCORE_H
 
+#include "animations_definitions.h"
+
 // Standard Header Files
 #include <deque>
 

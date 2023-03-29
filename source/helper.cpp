@@ -62,36 +62,45 @@ void stupid_2d::clear()
     return ACTIVE;
   }
 
-  void countdown_timer::trigger_check(unsigned long Current_Time_millis)
+  void countdown_timer::update(unsigned long Current_Time_millis)
   {
-    if (elapsed_time(Current_Time_millis) >= DURATION)
+    if (ACTIVE == true)
     {
-      if (TRIGGERED == false)
+      if (elapsed_time(Current_Time_millis) >= DURATION)
       {
-        TRIGGERED = true;
+        if (TRIGGERED == false)
+        {
+          TRIGGERED = true;
+        }
       }
     }
   }
 
   bool countdown_timer::is_triggered()
   {
-    return TRIGGERED;
-  }
-
-  void countdown_timer::check()
-  {
-    CHECKED = true;
-  }
-
-  bool countdown_timer::is_checked()
-  {
-    return CHECKED;
+    if (ACTIVE == true)
+    {
+      if (TRIGGERED == true && TRIGGER_REPORTED == false)
+      {
+        TRIGGER_REPORTED = true;
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
   }
 
   void countdown_timer::end()
   {
     ACTIVE = false;
     TRIGGERED = false;
+    TRIGGER_REPORTED = false;
     CHECKED = false;
     TIME_START = 0;
     TIME_END = 0;
@@ -105,22 +114,35 @@ void stupid_2d::clear()
 
   long countdown_timer::elapsed_time(unsigned long Current_Time_millis)
   {
-    return Current_Time_millis - TIME_START;
+    if (ACTIVE == true)
+    {
+      return Current_Time_millis - TIME_START;
+    }
+    else
+    {
+      return 0;
+    }
   }
 
   float countdown_timer::timer_position(unsigned long Current_Time_millis)
   {
-    
-    if (DURATION <= 0)
-      return 0;
+    if (ACTIVE == true)
+    {
+      if (DURATION <= 0)
+        return 0;
 
-    unsigned long elapsed = Current_Time_millis - TIME_START;
-    float pos = (float)elapsed / (float)DURATION;
+      unsigned long elapsed = Current_Time_millis - TIME_START;
+      float pos = (float)elapsed / (float)DURATION;
 
-    if (pos > 1)
-      return 1;
+      if (pos > 1)
+        return 1;
+      else
+        return pos;
+    }
     else
-      return pos;
+    {
+      return 0;
+    }
   }
 
 // -------------------------------------------------------------------------------------

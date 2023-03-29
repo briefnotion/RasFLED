@@ -55,7 +55,10 @@ class countdown_timer
 {
   private:
   bool ACTIVE = false;
+  
   bool TRIGGERED = false;
+  bool TRIGGER_REPORTED = false;
+
   bool CHECKED = false;
 
   unsigned long TIME_START;
@@ -64,24 +67,36 @@ class countdown_timer
 
   public:
   void set_timer(unsigned long Current_Time_millis, int Seconds);
+  // Starts a timer with the Current_Time_millis to be triggered in 
+  //  Seconds.
 
   bool is_active();
+  // Returns true of timer is rinning.
 
-  void trigger_check(unsigned long Current_Time_millis);
+  void update(unsigned long Current_Time_millis);
+  // Updates values based on time.
 
   bool is_triggered();
-
-  void check();
-
-  bool is_checked();
+  // Returns true if the time passed the countdown timer 
+  //  threshold.
+  // Returns false countdown still running.
+  // Also, returns false if trigger previously reported true.
 
   void end();
+  // Resets the timer.
 
   unsigned long duration();
+  // returns duration of timer set at start.
 
   long elapsed_time(unsigned long Current_Time_millis);
+  // returns amount of time passed from start, in milliseconds.
 
   float timer_position(unsigned long Current_Time_millis);
+  // returns percentage of time passed, from start to finish.
+  // e.g.  0  = no passed time.
+  //      .5  = half way complete.
+  //      .95 = 95% complete, 5% remaining time.
+  //      Will not report any value > 1.
 };
 
 // -------------------------------------------------------------------------------------

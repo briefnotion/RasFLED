@@ -987,6 +987,12 @@ void extraanimationdoorcheck2(Console &cons, system_data &sdSysData, unsigned lo
 {
   if(sdSysData.cdTIMER.is_active() == true)
   {
+    // Check for newly expired timer
+    if (sdSysData.cdTIMER.is_triggered() == true)
+    {
+      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
+    }
+
     if (sdSysData.intDoorsOpen > 0)
     {
       cons.printi(to_string(sdSysData.intDoorsOpen));

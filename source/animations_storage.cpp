@@ -19,9 +19,6 @@
 
 bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
 {
-  // debug
-  deque<string> str_animations_json_debug;
-
   JSON_INTERFACE animations_json;
 
   bool ret_success = false;
@@ -96,29 +93,7 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
     }
 
   }
-
-  // Write Debug Info
-  if (true == true)
-  {
-    animations_json.json_debug_build_to_string_deque(str_animations_json_debug);
-
-    /*
-    str_animations_json_debug.push_back("");
-    str_animations_json_debug.push_back(LIST[0].LABEL);
-    str_animations_json_debug.push_back("events.size() : " + to_string(LIST[0].EVENTS.size()));
-    str_animations_json_debug.push_back(to_string(LIST[0].EVENTS[0].Start_Delay_Time));
-    str_animations_json_debug.push_back(to_string(LIST[0].EVENTS[0].LED_End_Pos));
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Start_1.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Start_2.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Dest_1.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[0].Dest_2.CRGBtoString());
-    str_animations_json_debug.push_back(LIST[0].EVENTS[1].Dest_2.CRGBtoString());
-    */
-
-    deque_string_to_file(Directory + "animations.json.debug", str_animations_json_debug);
-  }
   
-
   return ret_success;
 }
 

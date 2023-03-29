@@ -76,10 +76,7 @@ void system_data::init()
 void system_data::store_Current_Frame_Time(unsigned long tmeCurrent_Time_millis)
 {
   tmeCURRENT_FRAME_TIME = tmeCurrent_Time_millis;
-  if (cdTIMER.is_active())
-  {
-    cdTIMER.trigger_check(tmeCurrent_Time_millis);
-  }
+  cdTIMER.update(tmeCurrent_Time_millis);
 }
 
 // Reference to the door values
@@ -97,9 +94,9 @@ void system_data::init_running_color_list()
   running_color_list.color[0] = CRGB(0,0,0);
   running_color_list.color[1] = CRGB(0,64,0);  // Green
   running_color_list.color[2] = CRGB(48,48,0); // Yellow
-  running_color_list.color[3] = CRGB(64,16,0); // Orange
+  running_color_list.color[3] = CRGB(64,0,0);  // Red
   running_color_list.color[4] = CRGB(20,20,20); // White
-  running_color_list.color[5] = CRGB(64,0,0);  // Red
+  running_color_list.color[5] = CRGB(64,16,0); // Orange
 }
 
 CRGB system_data::get_running_color()

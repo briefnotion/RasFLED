@@ -176,7 +176,7 @@
         },
         {
           "Label" : "test", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "test1"
         }
       ],
@@ -190,7 +190,7 @@
         },
         {
           "Label" : "PC", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "PC"
         }
       ],
@@ -202,7 +202,7 @@
         },
         {
           "Label" : "PC", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "PC STOP"
         }
       ],
@@ -216,7 +216,7 @@
         },
         {
           "Label" : "CD", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "CD"
         }
       ],
@@ -228,7 +228,7 @@
         },
         {
           "Label" : "CD", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "CD STOP"
         }
       ],
@@ -242,7 +242,7 @@
         },
         {
           "Label" : "HAZARD", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "HAZARD"
         }
       ],
@@ -254,7 +254,7 @@
         },
         {
           "Label" : "HAZARD", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "HAZARD STOP"
         }
       ],
@@ -268,7 +268,7 @@
         },
         {
           "Label" : "FLASH", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "FLASH"
         }
       ],
@@ -282,7 +282,7 @@
         },
         {
           "Label" : "POWER", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "POWER"
         }
       ],
@@ -297,7 +297,7 @@
         },
         {
           "Label" : "ADOO", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "ADOO"
         }
       ],
@@ -310,7 +310,7 @@
         },
         {
           "Label" : "TDOO", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDOO"
         }
       ],
@@ -323,7 +323,7 @@
         },
         {
           "Label" : "TDCO", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDCO"
         }
       ],
@@ -336,7 +336,7 @@
         },
         {
           "Label" : "TDRCO", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDRCO"
         }
       ],
@@ -349,7 +349,7 @@
         },
         {
           "Label" : "LDCO", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "LDCO"
         }
       ],
@@ -364,7 +364,7 @@
         },
         {
           "Label" : "TDOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDOE"
         }
       ],
@@ -377,7 +377,7 @@
         },
         {
           "Label" : "ADOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "ADOE"
         }
       ],
@@ -390,7 +390,7 @@
         },
         {
           "Label" : "TDCE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDCE"
         }
       ],
@@ -403,12 +403,12 @@
         },
         {
           "Label" : "TDOAOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDOE"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         }
@@ -422,12 +422,12 @@
         },
         {
           "Label" : "TDCAOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "ADOE"
         },
         {
           "Label" : "TDCAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         }
@@ -441,7 +441,7 @@
         },
         {
           "Label" : "LDCE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "LDCE"
         }
       ],
@@ -467,7 +467,7 @@
       [
         {
           "Label" : "PC",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "PC"
         }
@@ -494,7 +494,7 @@
       [
         {
           "Label" : "CD",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "CD"
         }
@@ -521,7 +521,7 @@
       [
         {
           "Label" : "HAZARD STOP",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "HAZARD"
         }
@@ -598,7 +598,7 @@
         },
         {
           "Label" : "TDCO",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOO"
         }
@@ -624,7 +624,7 @@
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOO"
         }
@@ -665,7 +665,7 @@
         },
         {
           "Label" : "LDCE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         }
@@ -678,12 +678,12 @@
         },
         {
           "Label" : "TDOAOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "TDOE - Simple"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         }
@@ -696,12 +696,12 @@
         },
         {
           "Label" : "TDOAOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "ADOE - Simple"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         }
@@ -714,13 +714,13 @@
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         }
@@ -753,7 +753,7 @@
       [
         {
           "Label" : "PC",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "PC"
         }
@@ -765,13 +765,35 @@
       [
         {
           "Label" : "CD",
-          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2500, "Speed_Of_LED_Walk" : 0, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "countdown_color",
-          "Clear_On_End" : false
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 400, "Speed_Of_LED_Walk" : 200, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "64,64,64", 
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_top|0", "Off_During_Day" : true
+        },
+        {
+          "Label" : "CD",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 200, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "countdown_color", 
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_top|0"
+        },
+        {
+          "Label" : "CD",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 400, "Speed_Of_LED_Walk" : 200, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "64,64,64", 
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_bot|0", "Off_During_Day" : true
+        },
+        {
+          "Label" : "CD",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 200, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "countdown_color", 
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_bot|0"
         },
         {
           "Label" : "CD", 
-          "Start_Delay_Time" : 3000, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 4500, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "CD"
         }
       ],
@@ -780,7 +802,7 @@
       [
         {
           "Label" : "CD",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "CD"
         }
@@ -807,7 +829,7 @@
       [
         {
           "Label" : "HAZARD STOP",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "HAZARD"
         }
@@ -864,60 +886,99 @@
           "Run_On_LED_LED_Strip_Name" : "Overhead"
         },
         {
+          "Comment_1" : "Show Colors", 
           "Label" : "ADOO",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "running_color", 
-          "Start_2" : "0,0,0", "Dest_2" : "0,0,64",
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,32",
           "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_end|0", 
           "Clear_On_End" : false, "Off_During_Day" : true
         },
         {
           "Label" : "ADOO",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "running_color", 
-          "Start_2" : "0,0,0", "Dest_2" : "0,0,64",
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,32",
           "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_start|0", 
           "Clear_On_End" : false, "Off_During_Day" : true
+        },
+
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "ADOO",
+          "Start_Delay_Time" : 600, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "48,48,48",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "ADOO",
+          "Start_Delay_Time" : 800, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "48,48,48",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "ADOO",
+          "Start_Delay_Time" : 700, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 100, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "48,48,48",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
         }
       ],
 
       "TDOO" : 
       [
         {
+          "Comment_1" : "Open Door overhead illumination",
           "Run_On_LED_LED_Strip_Name" : "Overhead"
         },
         {
+          "Comment_1" : "Turn off current colors", 
           "Label" : "TDOO",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", 
+          "Start_Delay_Time" : 250, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "running_color", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,64",
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_end|0", 
+          "Clear_On_End" : false, "Off_During_Day" : true, 
+          "Invert_Color" : true
+        },
+        {
+          "Label" : "TDOO",
+          "Start_Delay_Time" : 250, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "running_color", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,64",
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_start|0", 
+          "Clear_On_End" : false, "Off_During_Day" : true, 
+          "Invert_Color" : true
+        },
+
+        {
+          "Comment_1" : "Show Colors", 
+          "Label" : "TDOO",
+          "Start_Delay_Time" : 750, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "32,32,32", 
-          "LED_Start_Pos" : "from_1/4|0", "LED_End_Pos" : "from_start|0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0", 
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_start|10", 
           "Clear_On_End" : false
         },
         {
           "Label" : "TDOO",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", 
+          "Start_Delay_Time" : 750, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "32,32,32", 
-          "LED_Start_Pos" : "from_1/4|0", "LED_End_Pos" : "from_1/2|0", 
-          "Clear_On_End" : false
-        },
-        {
-          "Label" : "TDOO",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", 
-          "Start_1" : "0,0,0", "Dest_1" : "32,32,32", 
-          "LED_Start_Pos" : "from_3/4|0", "LED_End_Pos" : "from_1/2|0", 
-          "Clear_On_End" : false
-        },
-        {
-          "Label" : "TDOO",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 1900, "Speed_Of_LED_Walk" : 15, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFade", 
-          "Start_1" : "0,0,0", "Dest_1" : "32,32,32", 
-          "LED_Start_Pos" : "from_3/4|0", "LED_End_Pos" : "from_end|0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0", 
+          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_end|10", 
           "Clear_On_End" : false
         }
       ],
@@ -929,7 +990,7 @@
         },
         {
           "Label" : "TDCO",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOO"
         }
@@ -943,17 +1004,83 @@
         {
           "Label" : "TDRCO",
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 8000, "Speed_Of_LED_Walk" : 50, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "0,0,64",
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "32,16,0",
           "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_1/2|0", 
-          "Clear_On_End" : false
+          "Clear_On_End" : false, "Off_During_Day" : true
         },
         {
           "Label" : "TDRCO",
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 8000, "Speed_Of_LED_Walk" : 50, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "0,0,64",
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "32,16,0",
           "LED_Start_Pos" : "from_end|0", "LED_End_Pos" : "from_1/2|0", 
-          "Clear_On_End" : false
+          "Clear_On_End" : false, "Off_During_Day" : true
+        },
+
+        {
+          "Comment_1" : "Pusle walk bright spot",
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 600, "Duration_Of_Brighness" : 100, "Speed_Of_LED_Walk" : 25, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "30,30,30",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 600, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 25, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "30,30,30",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+
+        {
+          "Comment_1" : "Pusle walk bright spot",
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 800, "Duration_Of_Brighness" : 300, "Speed_Of_LED_Walk" : 75, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "30,30,30",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 800, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 75, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "30,30,30",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+
+        {
+          "Comment_1" : "Pusle walk bright spot",
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 1000, "Duration_Of_Brighness" : 200, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "30,30,30",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "TDRCO",
+          "Start_Delay_Time" : 700, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "30,30,30",
+          "LED_Start_Pos" : "from_start|0", "LED_End_Pos" : "from_end|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+
+
+        {
+          "Label" : "TDRCO",  
+          "Start_Delay_Time" : 12000, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDRCO"
         }
+
       ],
 
       "LDCO" : 
@@ -963,7 +1090,7 @@
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOO"
         }
@@ -1051,6 +1178,34 @@
           "Start_2" : "0,0,0", "Dest_2" : "36,5,0",
           "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_start|0", 
           "Clear_On_End" : false, "Off_During_Day" : true
+        },
+
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 600, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 100, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "128,128,128",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_bot|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 800, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 300, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "128,128,128",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_bot|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Pusle walk dark spots",
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 700, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 200, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "128,128,128",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_bot|0", 
+          "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
         }
       ],
 
@@ -1061,7 +1216,7 @@
         },
         {
           "Label" : "LDCE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         }
@@ -1074,12 +1229,12 @@
         },
         {
           "Label" : "TDOAOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "TDOE"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         }
@@ -1092,12 +1247,12 @@
         },
         {
           "Label" : "TDOAOE", 
-          "Start_Delay_Time" : 0, "Animation_Walk_Type" : "AnEvSchedule",
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "ADOE"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         }
@@ -1110,13 +1265,13 @@
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOE"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 0, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         }
