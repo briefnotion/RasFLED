@@ -288,6 +288,23 @@ void run_test(Console &cons, system_data &sdSysData, unsigned long tmeCurrentTim
   cons.printwait("------------------");
 }
 
+void process_slow_commands(Console &cons, system_data &sdSysData, 
+            unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
+  {
+    if (cons.keywatch.Command.COMMANDLINE.size() > 1)
+    {
+      // Check for comm commands
+      if (cons.keywatch.Command.COMMANDLINE[0] == 'p')
+      {
+        string comm_command = cons.keywatch.Command.COMMANDLINE.substr(1, cons.keywatch.Command.COMMANDLINE.size()-1);
+        sdSysData.COMMS.send(comm_command);
+      }
+    }
+    
+    cons.keywatch.cmdClear();
+
+  }
+
 // Process and call routines as entered on the command line.
 void processcommandlineinput(Console &cons, system_data &sdSysData, 
               unsigned long tmeCurrentTime, ANIMATION_HANDLER &Animations)
@@ -297,685 +314,713 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
           
   if(cons.keywatch.cmdPressed() == true)
   {
-    // Color Palettes
-    CRGB crgbWhite  = CRGB(32,32,32); // W
-    CRGB crgbRed    = CRGB(64,0,0);   // R
-    CRGB crgbGreen  = CRGB(0,64,0);   // G
-    CRGB crgbBlue   = CRGB(0,0,64);   // B
-
-    CRGB crgbPurple = CRGB(32,0,64);  // U
-    CRGB crgbYellow = CRGB(48,48,0);  // Y
-    CRGB crgbCyan   = CRGB(0,48,48);  // C
-
-    CRGB crgbOrange = CRGB(64,16,0);  // N
-
-    
-    // Call routines that match the info on the command line.
-
-    // Test Routine
-    if(cons.keywatch.Command.COMMANDLINE == " test")
+    // Carrage Return
+    if (cons.keywatch.Command.CARRAGE_RETURN == true)
     {
-      // Keep values below 128
-      cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-      run_test(cons, sdSysData, tmeCurrentTime, Animations);
-      cons.keywatch.cmdClear();
+      process_slow_commands(cons, sdSysData, tmeCurrentTime, Animations);
     }
-
-    if (check_command(cons," animt", "Event System 2 Test Animation"))
+    else
     {
-      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "test");
-      cons.keywatch.cmdClear();
-    }
-    
-    // Program Exit
-    if (check_command(cons,"X", "Program Exit") || check_command(cons, "exit", "Program Exit"))
-    {
-      cons.keywatch.in(KEYEXIT);
-    }
+      // Process Quick Commands
 
-    // Program Restart
-    if (check_command(cons, " restart", "Restart Program"))
-    {
-      sdSysData.booREBOOT = true;
-      cons.keywatch.in(KEYEXIT);
-    }
+      // Color Palettes
+      CRGB crgbWhite  = CRGB(32,32,32); // W
+      CRGB crgbRed    = CRGB(64,0,0);   // R
+      CRGB crgbGreen  = CRGB(0,64,0);   // G
+      CRGB crgbBlue   = CRGB(0,0,64);   // B
 
-    // print help
-    if (check_command(cons, "help", "Help and Instructions"))
-    {
-      consoleprinthelp(cons);
-    }
+      CRGB crgbPurple = CRGB(32,0,64);  // U
+      CRGB crgbYellow = CRGB(48,48,0);  // Y
+      CRGB crgbCyan   = CRGB(0,48,48);  // C
 
-    // print event list
-    if (check_command(cons, " events", "All Currently Running Events"))
-    {
-      consoleprintevents(cons, sdSysData, Animations);
-    }
+      CRGB crgbOrange = CRGB(64,16,0);  // N
 
-    // print configuration data
-    if (check_command(cons, " config", "Current Configuration and Settings"))
-    {
-      consoleprintconfig(cons, sdSysData, Animations);
-    }
+      // Call routines that match the info on the command line.
 
-    // End All Extra Repeating Lights and Countdown Timer
-    if (check_command(cons, "``", "End Most Pulse Animations"))
-    {
-      // end Countdown Timer
-      sdSysData.cdTIMER.end();
-
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
-      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
-      processcommandhazardend(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Animations Load or Reload
-
-    if (check_command(cons, " animld", "Reload Animations"))
-    {
-      string Working_Directory = FILES_DIRECTORY;
-      string Animations_Library_JSON = FILES_ANIMATIONS;
-      string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
-
-      if (Animations.load_collections(Working_Directory, Animations_Library_JSON) == true)
+      // Start Comm Port
+      if (check_command(cons," startcomm", "Start Comms Port"))
       {
-        cons.printi("  Animations file loaded.");
+        if (sdSysData.COMMS.create() == true)
+        {
+          cons.printwait("Comm Port Started.");
+        }
+        else
+        {
+          cons.printwait("Comm Port Failed To Start.");
+        }
       }
-      else
+      
+      // Stop Comm Port
+      if (check_command(cons," stopcomm", "Start Comms Port"))
       {
-        cons.printi("    Animations file not loaded.");
+        sdSysData.COMMS.close_port();
+        cons.printwait("Comm Port Stop Command Sent.");
       }
-    }
 
-    // -------------------------------------------------------------------------------------
-    // DAY NIGHT MODE
-
-    // Toggle Day Night
-    if (check_command(cons, "dd", ""))
-    {
-      if (sdSysData.booDay_On == true)
+      // Test Routine
+      if(cons.keywatch.Command.COMMANDLINE == " test")
       {
-        command_desc(cons, "Toggle DAY mode OFF.");
-        sdSysData.booDay_On = false;
+        // Keep values below 128
+        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+        run_test(cons, sdSysData, tmeCurrentTime, Animations);
+        cons.keywatch.cmdClear();
       }
-      else
+
+      if (check_command(cons," animt", "Event System 2 Test Animation"))
       {
-        command_desc(cons, "Toggle DAY mode ON.");
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "test");
+      }
+      
+      // Program Exit
+      if (check_command(cons,"X", "Program Exit") || check_command(cons, "exit", "Program Exit"))
+      {
+        cons.keywatch.in(KEYEXIT);
+      }
+
+      // Program Restart
+      if (check_command(cons, " restart", "Restart Program"))
+      {
+        sdSysData.booREBOOT = true;
+        cons.keywatch.in(KEYEXIT);
+      }
+
+      // print help
+      if (check_command(cons, "help", "Help and Instructions"))
+      {
+        consoleprinthelp(cons);
+      }
+
+      // print event list
+      if (check_command(cons, " events", "All Currently Running Events"))
+      {
+        consoleprintevents(cons, sdSysData, Animations);
+      }
+
+      // print configuration data
+      if (check_command(cons, " config", "Current Configuration and Settings"))
+      {
+        consoleprintconfig(cons, sdSysData, Animations);
+      }
+
+      // End All Extra Repeating Lights and Countdown Timer
+      if (check_command(cons, "``", "End Most Pulse Animations"))
+      {
+        // end Countdown Timer
+        sdSysData.cdTIMER.end();
+
+        processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
+        processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
+        processcommandhazardend(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // -------------------------------------------------------------------------------------
+      // Animations Load or Reload
+
+      if (check_command(cons, " animld", "Reload Animations"))
+      {
+        string Working_Directory = FILES_DIRECTORY;
+        string Animations_Library_JSON = FILES_ANIMATIONS;
+        string Running_State_Filename = Working_Directory + FILES_RUNNING_STATE_SAVE;
+
+        if (Animations.load_collections(Working_Directory, Animations_Library_JSON) == true)
+        {
+          cons.printi("  Animations file loaded.");
+        }
+        else
+        {
+          cons.printi("    Animations file not loaded.");
+        }
+      }
+
+      // -------------------------------------------------------------------------------------
+      // DAY NIGHT MODE
+
+      // Toggle Day Night
+      if (check_command(cons, "dd", ""))
+      {
+        if (sdSysData.booDay_On == true)
+        {
+          command_desc(cons, "Toggle DAY mode OFF.");
+          sdSysData.booDay_On = false;
+        }
+        else
+        {
+          command_desc(cons, "Toggle DAY mode ON.");
+          sdSysData.booDay_On = true;
+        }
+      }
+
+      // Toggle Lights Off
+      if (check_command(cons, " lightsoff", "Lights Off."))
+      {
+        sdSysData.Lights_On = false;
+      }
+
+      // Toggle Lights On
+      if (check_command(cons, " lightson", "Lights ON."))
+      {
+        sdSysData.Lights_On = true;
+      }
+
+      // Toggle Day Mode On
+      if (check_command(cons, "dayon", "DAY mode ON."))
+      {
         sdSysData.booDay_On = true;
       }
-    }
 
-    // Toggle Lights Off
-    if (check_command(cons, " lightsoff", "Lights Off."))
-    {
-      sdSysData.Lights_On = false;
-    }
-
-    // Toggle Lights On
-    if (check_command(cons, " lightson", "Lights ON."))
-    {
-      sdSysData.Lights_On = true;
-    }
-
-    // Toggle Day Mode On
-    if (check_command(cons, "dayon", "DAY mode ON."))
-    {
-      sdSysData.booDay_On = true;
-    }
-
-    // Toggle Day Mode Off
-    if (check_command(cons, "dayoff", "DAY mode OFF."))
-    {
-      sdSysData.booDay_On = false;
-    }
-    
-    // -------------------------------------------------------------------------------------
-    // TERMINAL COMMANDS
- 
-    // Command Line (sudo shutdown now)
-    if (check_command(cons, " comshutd", "Shutdown Started"))
-    {
-      command_desc(cons, "Shutting System Down.");
+      // Toggle Day Mode Off
+      if (check_command(cons, "dayoff", "DAY mode OFF."))
+      {
+        sdSysData.booDay_On = false;
+      }
       
-      // Call Shutdown command.
-      command.shutdown_now();
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-
-      // Set system to exit
-      cons.keywatch.in(KEYEXIT);
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Threadable Commands with from command prompt   
-
-    // Radio -------------
-    // Command Line (load air_m)
-    if (check_command(cons, " airstop", "Airband Stop"))
-    { 
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_airstop.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Command Line (load air_m)
-    if (check_command(cons, " lafm", "Airband Lafayette Multi"))
-    {
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafm.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Call Airband Lafayette Scan Script Command
-    if (check_command(cons, " lafs", "Airband Lafayette Scan"))
-    {
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafs.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Call CB Channel Scan Script Command
-    if (check_command(cons, " cbs", "CB Channel Scan"))
-    {
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_cbs.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Call NOAA Channel Scan Script Command
-    if (check_command(cons, " rnoaa", "NOAA Channel Scan"))
-    {
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_noaa.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Call Emergency Channel Scan Script Command
-    if (check_command(cons, " remergenc", "Emergency Channel Scan"))
-    {
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_emergency.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Shutdown Channel Command
-    if (check_command(cons, " radoff", "Turn Off Radio"))
-    {
-      // Call command.
-      sdSysData.RADIO_COORD.command_send(-1, 0);
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Shutdown Channel Command
-    if (check_command(cons, " rclear", "Radio Clear Holds and Skips"))
-    {
-      // Call command.
-      sdSysData.RADIO_COORD.command_send(3, 0);
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-    }
-
-    // Radio Skip Channel Command
-    if (check_command_with_num_param(cons, " rs######", "Radio Skip Channel", 3, 6, parameter))
-    {
-      // Call command.
-      sdSysData.RADIO_COORD.command_send(1, parameter);
-      cons.printi("Skip Channel: " + to_string(parameter)); // eg  rs118500
-    }
-
-    // Radio Hold Channel Command
-    if (check_command_with_num_param(cons, " rh######", "Radio Hold Channel", 3, 6, parameter))
-    {
-      // Call command.
-      sdSysData.RADIO_COORD.command_send(2, parameter);
-      cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
-    }
-
-    // Radio Clear Channel Command
-    if (check_command_with_num_param(cons, " rc######", "Radio Hold Channel", 3, 6, parameter))
-    {
-      // Call command.
-      sdSysData.RADIO_COORD.command_send(4, parameter);
-      cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
-    }
-
-    /*
-    // -------------------------------------------------------------------------------------
-    // For Deguging Gadgets
-    // Debug Counter On
-    if (check_command(cons, " debugcon", "Debug Counter On"))
-    {
-      sdSysData.DEBUG_COUNTER = true;
-    }
-
-    // Debug Counter Off
-    if (check_command(cons, " debugcoff", "Debug Counter On"))
-    {
-      sdSysData.DEBUG_COUNTER = false;
-    }
-    */
-
-    // -------------------------------------------------------------------------------------
-    // ABS-B -------------
-    // Command Line (load fastart.sh)
-    if (check_command(cons, " absbon", "ABS-B On"))
-    { 
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/flightaware/fastart.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(15, 15, 0));
-    }
-
-    // Command Line (load fastop.sh)
-    if (check_command(cons, " absboff", "ABS-B Off"))
-    {
-      // Call command.
-      sdSysData.Command_Thread.run_command("/home/pi/flightaware/fastop.sh");
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(15, 15, 0));
-    }
-    
-    // Command Line (load copy direcory)
-    if (check_command(cons, " adsbsnap", "ADS-B Snapshot"))
-    {
-      // Call command.
-      //cons.printwait("cp -r /run/dump1090-fa/ ~/flightaware/snapshot." + to_string(tmeCurrentTime));
-      sdSysData.Command_Thread.run_command("cp -r /run/dump1090-fa/ /home/pi/flightaware/snapshot." + sdSysData.AIRCRAFT_COORD.DATA.NOW.get_str_value());
-
-      // Start Power Down Animation
-      process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(0, 30, 0));
-    }
-    // -------------------------------------------------------------------------------------
-    // PLAYLIST
-
-    // Print out the current playlist.
-    if (check_command(cons, " playlist", "Current Playlist:"))
-    {
-      for (int x=0; x < cons.the_player.Play_List.size(); x++)
-      {
-        cons.printwait("  " + cons.the_player.Play_List.MOVIE_LIST[x]);
-      }
-    }
-
-    // Skip to the next film in the playlist.
-    if (check_command(cons, " skip", "Play Next in Playlist:"))
-    {
-      cons.the_player.booSkip = true;
-    }
-
-    // -------------------------------------------------------------------------------------
-    // FLASH
-
-    // flash Running
-    if (check_command(cons, "ff", "Flash All LEDs with Running Color"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
-    }
-
-    // flash White
-    if (check_command(cons, "fw", "Flash White All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
-    }
-
-    // flash Red
-    if (check_command(cons, "fr", "Flash Red All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
-    }
-
-    // flash Green
-    if (check_command(cons, "fg", "Flash Green All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
-    }
-
-    // flash Blue
-    if (check_command(cons, "fb", "Flash Blue All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
-    }
-
-    // flash Purple
-    if (check_command(cons, "fu", "Flash Purple All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
-    }
+      // -------------------------------------------------------------------------------------
+      // TERMINAL COMMANDS
   
-    // flash Yellow
-    if (check_command(cons, "fy", "Flash Yellow All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
-    }
-    
-    // flash Cyan
-    if (check_command(cons, "fc", "Flash Cyan All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
-    }
-
-    // flash Orange
-    if (check_command(cons, "fn", "Flash Orange All LEDs"))
-    {
-      processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
-    }
-
-    // -------------------------------------------------------------------------------------
-    // PULSES
-
-    // pulse end
-    if (check_command(cons, "p`", "End Most Pulse Animations"))
-    {
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // pulse Running Timer
-    if (check_command(cons, "  ", "5 minute Pulse Timer Started with Running Color"))
-    {
-      sdSysData.start_timer(DEFAULTTIMER * 60);
-      processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // pulse Running Timer end
-    if (check_command(cons, " `", "Pulse Timer Stop"))
-    {
-      sdSysData.cdTIMER.end();
-      processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // pulse Running Color
-    if (check_command(cons, "pp", "Pulse Running Color All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
-    }
-
-    // pulse White
-    if (check_command(cons, "pw", "Pulse White All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
-    }
-
-    // pulse Red
-    if (check_command(cons, "pr", "Pulse Red All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
-    }
-
-    // pulse Green
-    if (check_command(cons, "pg", "Pulse Green All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
-    }
-
-    // pulse Blue
-    if (check_command(cons, "pb", "Pulse Blue All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
-    }
-
-    // pulse Purple
-    if (check_command(cons, "pu", "Pulse Purple All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
-    }
-
-    // pulse Yellow
-    if (check_command(cons, "py", "Pulse Yellow All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
-    }
-
-    // pulse Cyan
-    if (check_command(cons, "pc", "Pulse Cyan All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
-    }
-
-    // pulse Orange
-    if (check_command(cons, "pn", "Pulse Orange All LEDs"))
-    {
-      processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Overhead Illumination
-    
-    // pulse end overhead illum
-    if (check_command(cons, "o`", "Turn Off Overhead Illumination Lights"))
-    {
-      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // Overhead Running
-    if (check_command(cons,"oo", "Turn On Overhead Illumination Lights with Running Color") || 
-        check_command(cons,"zz", "Turn On Overhead Illumination Lights with Running Color"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
-    }
-
-    // Overhead White
-    if (check_command(cons, "ow", "Turn On White Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
-    }
-
-    // Overhead Red
-    if (check_command(cons, "or", "Turn On Red Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
-    }
-
-    // Overhead Green
-    if (check_command(cons, "og", "Turn On Green Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
-    }
-
-    // Overhead Blue
-    if (check_command(cons, "ob", "Turn On Blue Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
-    }
-
-    // Overhead Purple
-    if (check_command(cons, "ou", "Turn On Purple Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
-    }
-
-    // Overhead Yellow
-    if (check_command(cons, "oy", "Turn On Yellow Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
-    }
-
-    // Overhead Cyan
-    if (check_command(cons, "oc", "Turn On Cyan Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
-    }
-
-    // Overhead Orange
-    if (check_command(cons, "on", "Turn On Orange Overhead Illumination Lights"))
-    {
-      processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
-    }
-
-    // Set Running Color
-    if (check_command(cons, "rw", "Set Running Color to White"))
-    {
-      sdSysData.set_running_color(crgbWhite, "White");
-    }
-
-    if (check_command(cons, "rr", "Set Running Color to Red"))
-    {
-      sdSysData.set_running_color(crgbRed, "Red");
-    }
-
-    if (check_command(cons, "rg", "Set Running Color to Green"))
-    {
-      sdSysData.set_running_color(crgbGreen, "Green");
-    }
-
-    if (check_command(cons, "rb", "Set Running Color to Blue"))
-    {
-      sdSysData.set_running_color(crgbBlue, "Blue");
-    }
-
-    if (check_command(cons, "ru", "Set Running Color to Purple"))
-    {
-      sdSysData.set_running_color(crgbPurple, "Purple");
-    }
-
-    if (check_command(cons, "ry", "Set Running Color to Yellow"))
-    {
-      sdSysData.set_running_color(crgbYellow, "Yellow");
-    }
-
-    if (check_command(cons, "rc", "Set Running Color to Cyan"))
-    {
-      sdSysData.set_running_color(crgbCyan, "Cyan");
-    }
-
-    if (check_command(cons, "rn", "Set Running Color to Orange"))
-    {
-      sdSysData.set_running_color(crgbOrange, "Orange");
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Hazard
-
-    // Hazard illum end
-    if (check_command(cons, "h`", "HAZARD LIGHTS OFF"))
-    {
-      processcommandhazardend(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // Hazard
-    if (check_command(cons, "hh", "HAZARD LIGHTS ON ('h`' to turn off"))
-    {
-      processcommandhazard(cons, sdSysData, tmeCurrentTime, Animations);
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Debug Characters only active when debug mode is on
-    // debug
-    if (check_command(cons, "/", "Debug mode On/Off Toggle"))
-    {
-      cons.keywatch.in(KEYDEBUG);
-    }
-
-    // Only accept debug keys if debug is on.
-    if (cons.keywatch.getnoreset(KEYDEBUG) == 1)
-    {
-      // LED DOOR CYCLE
-      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDDRCYCL)
+      // Command Line (sudo shutdown now)
+      if (check_command(cons, " comshutd", "Shutdown Started"))
       {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in(KEYLEDDRCYCL);
-        cons.keywatch.cmdClear();
-      }
-
-      // LED TEST toggle all lights on to static value.
-      if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDTEST)
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in(KEYLEDTEST);
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '1')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('1');
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '2')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('2');
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '3')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('3');
-        cons.keywatch.cmdClear();
-      }
-
-      // Toggle door open or closed.
-      if(cons.keywatch.Command.COMMANDLINE[0] == '4')
-      {
-        cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
-        cons.keywatch.in('4');
-        cons.keywatch.cmdClear();
-      }
-    }
-
-    // -------------------------------------------------------------------------------------
-    // Turn on and off debug. Deactivate debug keys when off.
-    // Store behavior values for debug info.
-    if (cons.keywatch.pressed(KEYDEBUG) == true)
-    {
-      if (cons.keywatch.getnoreset(KEYDEBUG) == 0)
-      {
-        // Draw values for debug LED CYCLE through displayed range (all, Door #)
-        cons.keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
-        cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
-
-        // Draw values for debug LED TEST toggle all lights on to static value.
-        cons.keywatch.Chars[KEYLEDTEST].VALUE = 0;
-        cons.keywatch.Chars[KEYLEDTEST].ACTIVE = false;
-
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['1'].VALUE = 0;
-        cons.keywatch.Chars['1'].ACTIVE = false;
+        command_desc(cons, "Shutting System Down.");
         
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['2'].VALUE = 0;
-        cons.keywatch.Chars['2'].ACTIVE = false;
+        // Call Shutdown command.
+        command.shutdown_now();
 
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['3'].VALUE = 0;
-        cons.keywatch.Chars['3'].ACTIVE = false;
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
 
-        // Draw values for toggle door open or closed.
-        cons.keywatch.Chars['4'].VALUE = 0;
-        cons.keywatch.Chars['4'].ACTIVE = false;
+        // Set system to exit
+        cons.keywatch.in(KEYEXIT);
       }
-      else
+
+      // -------------------------------------------------------------------------------------
+      // Threadable Commands with from command prompt   
+
+      // Radio -------------
+      // Command Line (load air_m)
+      if (check_command(cons, " airstop", "Airband Stop"))
+      { 
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_airstop.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Command Line (load air_m)
+      if (check_command(cons, " lafm", "Airband Lafayette Multi"))
       {
-        // Reset console debug values to default values if debug turned off.
-        cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
-        cons.keywatch.Chars[KEYLEDTEST].ACTIVE = true;
-        cons.keywatch.Chars['1'].ACTIVE = true;
-        cons.keywatch.Chars['2'].ACTIVE = true;
-        cons.keywatch.Chars['3'].ACTIVE = true;
-        cons.keywatch.Chars['4'].ACTIVE = true;
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafm.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Call Airband Lafayette Scan Script Command
+      if (check_command(cons, " lafs", "Airband Lafayette Scan"))
+      {
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_lafs.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Call CB Channel Scan Script Command
+      if (check_command(cons, " cbs", "CB Channel Scan"))
+      {
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_cbs.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Call NOAA Channel Scan Script Command
+      if (check_command(cons, " rnoaa", "NOAA Channel Scan"))
+      {
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_noaa.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Call Emergency Channel Scan Script Command
+      if (check_command(cons, " remergenc", "Emergency Channel Scan"))
+      {
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/rtlsdr/ras_emergency.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Shutdown Channel Command
+      if (check_command(cons, " radoff", "Turn Off Radio"))
+      {
+        // Call command.
+        sdSysData.RADIO_COORD.command_send(-1, 0);
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Shutdown Channel Command
+      if (check_command(cons, " rclear", "Radio Clear Holds and Skips"))
+      {
+        // Call command.
+        sdSysData.RADIO_COORD.command_send(3, 0);
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+      }
+
+      // Radio Skip Channel Command
+      if (check_command_with_num_param(cons, " rs######", "Radio Skip Channel", 3, 6, parameter))
+      {
+        // Call command.
+        sdSysData.RADIO_COORD.command_send(1, parameter);
+        cons.printi("Skip Channel: " + to_string(parameter)); // eg  rs118500
+      }
+
+      // Radio Hold Channel Command
+      if (check_command_with_num_param(cons, " rh######", "Radio Hold Channel", 3, 6, parameter))
+      {
+        // Call command.
+        sdSysData.RADIO_COORD.command_send(2, parameter);
+        cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
+      }
+
+      // Radio Clear Channel Command
+      if (check_command_with_num_param(cons, " rc######", "Radio Hold Channel", 3, 6, parameter))
+      {
+        // Call command.
+        sdSysData.RADIO_COORD.command_send(4, parameter);
+        cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
+      }
+
+      /*
+      // -------------------------------------------------------------------------------------
+      // For Deguging Gadgets
+      // Debug Counter On
+      if (check_command(cons, " debugcon", "Debug Counter On"))
+      {
+        sdSysData.DEBUG_COUNTER = true;
+      }
+
+      // Debug Counter Off
+      if (check_command(cons, " debugcoff", "Debug Counter On"))
+      {
+        sdSysData.DEBUG_COUNTER = false;
+      }
+      */
+
+      // -------------------------------------------------------------------------------------
+      // ABS-B -------------
+      // Command Line (load fastart.sh)
+      if (check_command(cons, " absbon", "ABS-B On"))
+      { 
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/flightaware/fastart.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(15, 15, 0));
+      }
+
+      // Command Line (load fastop.sh)
+      if (check_command(cons, " absboff", "ABS-B Off"))
+      {
+        // Call command.
+        sdSysData.Command_Thread.run_command("/home/pi/flightaware/fastop.sh");
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(15, 15, 0));
+      }
+      
+      // Command Line (load copy direcory)
+      if (check_command(cons, " adsbsnap", "ADS-B Snapshot"))
+      {
+        // Call command.
+        //cons.printwait("cp -r /run/dump1090-fa/ ~/flightaware/snapshot." + to_string(tmeCurrentTime));
+        sdSysData.Command_Thread.run_command("cp -r /run/dump1090-fa/ /home/pi/flightaware/snapshot." + sdSysData.AIRCRAFT_COORD.DATA.NOW.get_str_value());
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(0, 30, 0));
+      }
+      // -------------------------------------------------------------------------------------
+      // PLAYLIST
+
+      // Print out the current playlist.
+      if (check_command(cons, " playlist", "Current Playlist:"))
+      {
+        for (int x=0; x < cons.the_player.Play_List.size(); x++)
+        {
+          cons.printwait("  " + cons.the_player.Play_List.MOVIE_LIST[x]);
+        }
+      }
+
+      // Skip to the next film in the playlist.
+      if (check_command(cons, " skip", "Play Next in Playlist:"))
+      {
+        cons.the_player.booSkip = true;
+      }
+
+      // -------------------------------------------------------------------------------------
+      // FLASH
+
+      // flash Running
+      if (check_command(cons, "ff", "Flash All LEDs with Running Color"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
+      }
+
+      // flash White
+      if (check_command(cons, "fw", "Flash White All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
+      }
+
+      // flash Red
+      if (check_command(cons, "fr", "Flash Red All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
+      }
+
+      // flash Green
+      if (check_command(cons, "fg", "Flash Green All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
+      }
+
+      // flash Blue
+      if (check_command(cons, "fb", "Flash Blue All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
+      }
+
+      // flash Purple
+      if (check_command(cons, "fu", "Flash Purple All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
+      }
+    
+      // flash Yellow
+      if (check_command(cons, "fy", "Flash Yellow All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
+      }
+      
+      // flash Cyan
+      if (check_command(cons, "fc", "Flash Cyan All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
+      }
+
+      // flash Orange
+      if (check_command(cons, "fn", "Flash Orange All LEDs"))
+      {
+        processcommandflash(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
+      }
+
+      // -------------------------------------------------------------------------------------
+      // PULSES
+
+      // pulse end
+      if (check_command(cons, "p`", "End Most Pulse Animations"))
+      {
+        processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // pulse Running Timer
+      if (check_command(cons, "  ", "5 minute Pulse Timer Started with Running Color"))
+      {
+        sdSysData.start_timer(DEFAULTTIMER * 60);
+        processcommandpulsecountdown(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // pulse Running Timer end
+      if (check_command(cons, " `", "Pulse Timer Stop"))
+      {
+        sdSysData.cdTIMER.end();
+        processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // pulse Running Color
+      if (check_command(cons, "pp", "Pulse Running Color All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
+      }
+
+      // pulse White
+      if (check_command(cons, "pw", "Pulse White All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
+      }
+
+      // pulse Red
+      if (check_command(cons, "pr", "Pulse Red All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
+      }
+
+      // pulse Green
+      if (check_command(cons, "pg", "Pulse Green All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
+      }
+
+      // pulse Blue
+      if (check_command(cons, "pb", "Pulse Blue All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
+      }
+
+      // pulse Purple
+      if (check_command(cons, "pu", "Pulse Purple All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
+      }
+
+      // pulse Yellow
+      if (check_command(cons, "py", "Pulse Yellow All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
+      }
+
+      // pulse Cyan
+      if (check_command(cons, "pc", "Pulse Cyan All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
+      }
+
+      // pulse Orange
+      if (check_command(cons, "pn", "Pulse Orange All LEDs"))
+      {
+        processcommandpulse(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
+      }
+
+      // -------------------------------------------------------------------------------------
+      // Overhead Illumination
+      
+      // pulse end overhead illum
+      if (check_command(cons, "o`", "Turn Off Overhead Illumination Lights"))
+      {
+        processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // Overhead Running
+      if (check_command(cons,"oo", "Turn On Overhead Illumination Lights with Running Color") || 
+          check_command(cons,"zz", "Turn On Overhead Illumination Lights with Running Color"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, sdSysData.get_running_color());
+      }
+
+      // Overhead White
+      if (check_command(cons, "ow", "Turn On White Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbWhite);
+      }
+
+      // Overhead Red
+      if (check_command(cons, "or", "Turn On Red Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbRed);
+      }
+
+      // Overhead Green
+      if (check_command(cons, "og", "Turn On Green Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbGreen);
+      }
+
+      // Overhead Blue
+      if (check_command(cons, "ob", "Turn On Blue Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbBlue);
+      }
+
+      // Overhead Purple
+      if (check_command(cons, "ou", "Turn On Purple Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbPurple);
+      }
+
+      // Overhead Yellow
+      if (check_command(cons, "oy", "Turn On Yellow Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbYellow);
+      }
+
+      // Overhead Cyan
+      if (check_command(cons, "oc", "Turn On Cyan Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbCyan);
+      }
+
+      // Overhead Orange
+      if (check_command(cons, "on", "Turn On Orange Overhead Illumination Lights"))
+      {
+        processcommandoverheadillum(cons, sdSysData, tmeCurrentTime, Animations, crgbOrange);
+      }
+
+      // Set Running Color
+      if (check_command(cons, "rw", "Set Running Color to White"))
+      {
+        sdSysData.set_running_color(crgbWhite, "White");
+      }
+
+      if (check_command(cons, "rr", "Set Running Color to Red"))
+      {
+        sdSysData.set_running_color(crgbRed, "Red");
+      }
+
+      if (check_command(cons, "rg", "Set Running Color to Green"))
+      {
+        sdSysData.set_running_color(crgbGreen, "Green");
+      }
+
+      if (check_command(cons, "rb", "Set Running Color to Blue"))
+      {
+        sdSysData.set_running_color(crgbBlue, "Blue");
+      }
+
+      if (check_command(cons, "ru", "Set Running Color to Purple"))
+      {
+        sdSysData.set_running_color(crgbPurple, "Purple");
+      }
+
+      if (check_command(cons, "ry", "Set Running Color to Yellow"))
+      {
+        sdSysData.set_running_color(crgbYellow, "Yellow");
+      }
+
+      if (check_command(cons, "rc", "Set Running Color to Cyan"))
+      {
+        sdSysData.set_running_color(crgbCyan, "Cyan");
+      }
+
+      if (check_command(cons, "rn", "Set Running Color to Orange"))
+      {
+        sdSysData.set_running_color(crgbOrange, "Orange");
+      }
+
+      // -------------------------------------------------------------------------------------
+      // Hazard
+
+      // Hazard illum end
+      if (check_command(cons, "h`", "HAZARD LIGHTS OFF"))
+      {
+        processcommandhazardend(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // Hazard
+      if (check_command(cons, "hh", "HAZARD LIGHTS ON ('h`' to turn off"))
+      {
+        processcommandhazard(cons, sdSysData, tmeCurrentTime, Animations);
+      }
+
+      // -------------------------------------------------------------------------------------
+      // Debug Characters only active when debug mode is on
+      // debug
+      if (check_command(cons, "/", "Debug mode On/Off Toggle"))
+      {
+        cons.keywatch.in(KEYDEBUG);
+      }
+
+      // Only accept debug keys if debug is on.
+      if (cons.keywatch.getnoreset(KEYDEBUG) == 1)
+      {
+        // LED DOOR CYCLE
+        if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDDRCYCL)
+        {
+          cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+          cons.keywatch.in(KEYLEDDRCYCL);
+          cons.keywatch.cmdClear();
+        }
+
+        // LED TEST toggle all lights on to static value.
+        if(cons.keywatch.Command.COMMANDLINE[0] == KEYLEDTEST)
+        {
+          cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+          cons.keywatch.in(KEYLEDTEST);
+          cons.keywatch.cmdClear();
+        }
+
+        // Toggle door open or closed.
+        if(cons.keywatch.Command.COMMANDLINE[0] == '1')
+        {
+          cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+          cons.keywatch.in('1');
+          cons.keywatch.cmdClear();
+        }
+
+        // Toggle door open or closed.
+        if(cons.keywatch.Command.COMMANDLINE[0] == '2')
+        {
+          cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+          cons.keywatch.in('2');
+          cons.keywatch.cmdClear();
+        }
+
+        // Toggle door open or closed.
+        if(cons.keywatch.Command.COMMANDLINE[0] == '3')
+        {
+          cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+          cons.keywatch.in('3');
+          cons.keywatch.cmdClear();
+        }
+
+        // Toggle door open or closed.
+        if(cons.keywatch.Command.COMMANDLINE[0] == '4')
+        {
+          cons.printwait("CMD: " + cons.keywatch.Command.COMMANDLINE);
+          cons.keywatch.in('4');
+          cons.keywatch.cmdClear();
+        }
+      }
+
+      // -------------------------------------------------------------------------------------
+      // Turn on and off debug. Deactivate debug keys when off.
+      // Store behavior values for debug info.
+      if (cons.keywatch.pressed(KEYDEBUG) == true)
+      {
+        if (cons.keywatch.getnoreset(KEYDEBUG) == 0)
+        {
+          // Draw values for debug LED CYCLE through displayed range (all, Door #)
+          cons.keywatch.Chars[KEYLEDDRCYCL].VALUE = 0;
+          cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = false;
+
+          // Draw values for debug LED TEST toggle all lights on to static value.
+          cons.keywatch.Chars[KEYLEDTEST].VALUE = 0;
+          cons.keywatch.Chars[KEYLEDTEST].ACTIVE = false;
+
+          // Draw values for toggle door open or closed.
+          cons.keywatch.Chars['1'].VALUE = 0;
+          cons.keywatch.Chars['1'].ACTIVE = false;
+          
+          // Draw values for toggle door open or closed.
+          cons.keywatch.Chars['2'].VALUE = 0;
+          cons.keywatch.Chars['2'].ACTIVE = false;
+
+          // Draw values for toggle door open or closed.
+          cons.keywatch.Chars['3'].VALUE = 0;
+          cons.keywatch.Chars['3'].ACTIVE = false;
+
+          // Draw values for toggle door open or closed.
+          cons.keywatch.Chars['4'].VALUE = 0;
+          cons.keywatch.Chars['4'].ACTIVE = false;
+        }
+        else
+        {
+          // Reset console debug values to default values if debug turned off.
+          cons.keywatch.Chars[KEYLEDDRCYCL].ACTIVE = true;
+          cons.keywatch.Chars[KEYLEDTEST].ACTIVE = true;
+          cons.keywatch.Chars['1'].ACTIVE = true;
+          cons.keywatch.Chars['2'].ACTIVE = true;
+          cons.keywatch.Chars['3'].ACTIVE = true;
+          cons.keywatch.Chars['4'].ACTIVE = true;
+        }
       }
     }
   }

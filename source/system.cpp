@@ -211,6 +211,7 @@ void Keys::cmdClear()
   Command.COMMANDLINE = "";
   Command.PRESSED = true;
   Command.CLEARED = true;
+  Command.CARRAGE_RETURN = false;
 }
 
 bool Keys::cmdPressed()
@@ -245,8 +246,9 @@ void Keys::cmdIn(int c)
 {
   if(c == (char)'\n')
   {
-    // If enter pressed, clear the line.
-    cmdClear();
+    // If enter pressed, set the flag.
+    Command.CARRAGE_RETURN = true;
+    Command.PRESSED = true;
   }
   else
   {

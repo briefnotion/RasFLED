@@ -27,6 +27,7 @@
 #include "radio_channel_coordinator.h"
 #include "aircraft_coordinator.h"
 #include "alert_system.h"
+#include "comport.h"
 
 using namespace std;
 
@@ -141,6 +142,9 @@ class system_data
   int t_group = 0;
   int t_strip = 0;
 
+  // Communications Port
+  COMPORT COMMS;
+
   // -------------------------------------------------------------------------------------
 
   int get_API_info(boost::interprocess::mapped_region &region_scan);
@@ -197,6 +201,7 @@ class Keys
     string COMMANDLINE = "";
     bool PRESSED = true;
     bool CLEARED = true;
+    bool CARRAGE_RETURN = false;
   };
 
   public:

@@ -1,3 +1,6 @@
+V 1.82_230329
+  - Started building a Comm Port interface.
+
 V 1.81_230327
   - Changes made to animations load system.
   - Changes made to animations.

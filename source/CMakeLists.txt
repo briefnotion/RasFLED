@@ -33,6 +33,7 @@ add_executable(
   LEDstuff.cpp
   api_shared_memory.cpp
   commands.cpp
+  comport.cpp
   configuration_storage.cpp
   helper.cpp
   stringthings.cpp

@@ -783,7 +783,6 @@ int loop()
       
     } // Is Keyboard or Mouse read ready -----------------
 
-
     // Is display to console ready -----------------
     if (display.is_ready(tmeCurrentMillis) == true)
     {
@@ -843,6 +842,21 @@ int loop()
         sdSystem.booRunning_State_File_Dirty = false;
       }
     } // Is display to console ready -----------------
+
+    // ________________________
+    
+    // Comm port proccessing will be the slowest. Process here after work is done.
+    // Display received messages.
+    for (int pos = 0; pos < sdSystem.COMMS.READ_FROM_COMM.size(); pos++)
+    {
+      cons.printwait(sdSystem.COMMS.READ_FROM_COMM[pos]);
+    }
+
+    sdSystem.COMMS.READ_FROM_COMM.clear();
+
+    sdSystem.COMMS.cycle();
+
+    // ________________________
 
     // Consider aborts on errors.
     // Check every cycle.
