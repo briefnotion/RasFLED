@@ -41,8 +41,23 @@ class COMPORT_PROPERTIES
 {
   public:
 
-  string PORT = "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0";
+  string PORT = "";
   int BAUD_RATE = 38400;
+
+  int BIT_COUNT = 8;
+  bool PARITY = false;
+  int STOP_BITS = 1;
+
+  // Not access because implementation is non blocking.
+  int READ_BYTE_MIN = 1;   // Minimum bytes to process.
+  int READ_MIN_TIME = 5;  // Minimum time to wait till process.
+
+  bool HARDWARE_FLOW_CONTROL = false;
+
+  // Experiemental (Not Implemented)
+  bool DISABLE_CANONICAL_MODE = false;
+  
+  bool XONXOFF = false;
 
 };
 

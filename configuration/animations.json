@@ -1105,7 +1105,7 @@
         },
         {
           "Label" : "TDOE",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 15, 
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "16,0,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
@@ -1114,11 +1114,21 @@
         },
         {
           "Label" : "TDOE",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 15, 
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "16,0,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
           "LED_Start_Pos" : "from_2/3|0", "LED_End_Pos" : "from_bot|0", 
+          "Clear_On_End" : false, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Puddle Lights", 
+          "Label" : "TDOE",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 5000, "Speed_Of_LED_Walk" : 500, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "64,64,64", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|0", "LED_End_Pos" : "from_bot|8", 
           "Clear_On_End" : false, "Off_During_Day" : true
         },
         {
@@ -1135,14 +1145,14 @@
         },
         {
           "Label" : "TDOE",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 25, 
+          "Start_Delay_Time" : 1000, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 50, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
           "Dest_1" : "32,32,0", 
           "LED_Start_Pos" : "from_2/3|0", "LED_End_Pos" : "from_top|0"
         },
         {
           "Label" : "TDOE",
-          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 25, 
+          "Start_Delay_Time" : 1000, "Duration_Of_Brighness" : 500, "Speed_Of_LED_Walk" : 50, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
           "Dest_1" : "32,32,0", 
           "LED_Start_Pos" : "from_2/3|0", "LED_End_Pos" : "from_bot|0"
@@ -1206,6 +1216,26 @@
           "Dest_1" : "128,128,128",
           "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_bot|0", 
           "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Door Handle", 
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|50", "LED_End_Pos" : "from_bot|52", 
+          "Clear_On_End" : false, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Door Handle", 
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|49", "LED_End_Pos" : "from_bot|47", 
+          "Clear_On_End" : false, "Off_During_Day" : true
         }
       ],
 
@@ -1274,6 +1304,26 @@
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
+        },
+        {
+          "Comment_1" : "Door Handle", 
+          "Label" : "TEMP",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 18000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "32,16,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|50", "LED_End_Pos" : "from_bot|52", 
+          "Clear_On_End" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Door Handle", 
+          "Label" : "TEMP",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 18000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "32,16,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|49", "LED_End_Pos" : "from_bot|47", 
+          "Clear_On_End" : true, "Off_During_Day" : true
         }
       ]
     }

@@ -150,6 +150,7 @@ bigCRGB timed_event::crgb_anim_color(stupid_random sRND, unsigned long tmeCurren
     case AnPiFade:
       // Fade Animation Path
       {
+        // if time is greater than the pixel animation duration then set it to the end color.
         if (tmeCurrentTime >= tmeAnimTime + EventInfo.intDURATION)
         {
           tmpColor.r = EventInfo.crgbCOLORDEST1.r;
@@ -162,6 +163,7 @@ bigCRGB timed_event::crgb_anim_color(stupid_random sRND, unsigned long tmeCurren
           break;
         }
         else
+        // compute the value based on the current time.
         {
           fltPower = ComputePower(tmeElapsed, EventInfo.intDURATION);
           tmpColor = Dither(fltPower, EventInfo.crgbCOLORSTART1, EventInfo.crgbCOLORDEST1);
@@ -590,16 +592,8 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
     }
     
     // Erase all completed events
-    for(int e = 0; e < teDATA.size(); e++ )
+    for(int e = teDATA.size() -1; e >= 0; e-- )
     {
-      // Correction needed to find and remove events that somehow escaped the completed flag.
-      //if (tmeCurrentTime > teDATA[e].tmeSTARTTIME + 
-      //                      teDATA[e].intDURATION + 
-      //                      (abs(teDATA[e].intSTARTPOS - teDATA[e].intENDPOS) * teDATA[e].intSPEED))
-      //{
-      //  teDATA[e].booCOMPLETE = true;
-      //}
-
       if (teDATA[e].booCOMPLETE == true)
       {
         teDATA.erase(teDATA.begin() + e);

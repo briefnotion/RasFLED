@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.82"
+#define Revision "00000001.83"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -42,6 +42,16 @@
 #define FILES_DEAMON_LOG          "/var/log/daemon.log"             // Raspi System Log
 #define FILES_AIRCRAFT_JSON       "/run/dump1090-fa/aircraft.json"  // FlightAware Aircraft JSON File
 //#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // For testing:  FlightAware Aircraft JSON File 
+
+// COMMS Settings
+#define COMMS_PORT        "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
+#define COMMS_BAUD        38400
+#define COMMS_BIT_COUNT   8
+#define COMMS_BIT_PARITY  false
+#define COMMS_STOP_BITS   1
+#define COMMS_HARDWARE_FLOW_CONTROL   false
+#define COMMS_DISABLE_CANONICAL_MODE  false
+#define COMMS_XONXOFF                 false
 
 // Key Mapping
 #define KEYEXIT           'X'

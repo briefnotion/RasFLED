@@ -294,7 +294,7 @@ void process_slow_commands(Console &cons, system_data &sdSysData,
     if (cons.keywatch.Command.COMMANDLINE.size() > 1)
     {
       // Check for comm commands
-      if (cons.keywatch.Command.COMMANDLINE[0] == 'p')
+      if (cons.keywatch.Command.COMMANDLINE[0] == 'q')
       {
         string comm_command = cons.keywatch.Command.COMMANDLINE.substr(1, cons.keywatch.Command.COMMANDLINE.size()-1);
         sdSysData.COMMS.send(comm_command);
@@ -340,6 +340,16 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
       // Start Comm Port
       if (check_command(cons," startcomm", "Start Comms Port"))
       {
+
+        sdSysData.COMMS.PROPS.PORT = COMMS_PORT;
+        sdSysData.COMMS.PROPS.BAUD_RATE = COMMS_BAUD;
+        sdSysData.COMMS.PROPS.BIT_COUNT = COMMS_BIT_PARITY;
+        sdSysData.COMMS.PROPS.PARITY = COMMS_BIT_PARITY;
+        sdSysData.COMMS.PROPS.STOP_BITS = COMMS_STOP_BITS;
+        sdSysData.COMMS.PROPS.HARDWARE_FLOW_CONTROL = COMMS_HARDWARE_FLOW_CONTROL;
+        sdSysData.COMMS.PROPS.DISABLE_CANONICAL_MODE = COMMS_DISABLE_CANONICAL_MODE;
+        sdSysData.COMMS.PROPS.XONXOFF = COMMS_XONXOFF;
+
         if (sdSysData.COMMS.create() == true)
         {
           cons.printwait("Comm Port Started.");

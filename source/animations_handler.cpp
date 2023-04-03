@@ -77,12 +77,25 @@ void ANIMATION_HANDLER::EvSetToEnd(int Channel_Num, int Event_Num, unsigned long
   // Clear the Event whether the event ran or not.
   EVENTS[Channel_Num].teDATA[Event_Num].booCOMPLETE = true;   
 
+  // Remove any scheduled events to run with same name, regardless of any other criteria.
+  if (SCHEDULE_LIST.size() >0 && EVENTS[Channel_Num].teDATA[Event_Num].String_Var_1 != "")
+  {
+    for (int pos = SCHEDULE_LIST.size() -1; pos >= 0; pos--)
+    {
+      if (SCHEDULE_LIST[pos].Animation_Name == EVENTS[Channel_Num].teDATA[Event_Num].String_Var_1)
+      {
+        SCHEDULE_LIST.erase(SCHEDULE_LIST.begin() + pos);
+      }
+    }
+  }
+
   // Step through each event in this channel. 
   for (int eventscan = 0; eventscan < EVENTS[Channel_Num].teDATA.size(); eventscan++)
   {
+    // *** Remove the event regardless of active or clear on end, the other stuff is too complex for scheduling. ***
     // Has the event started running yet, or do we plan on ending future scheduled events also?
     //  Continue with event removal if (event is active) or (clear on end is true)
-    if((EVENTS[Channel_Num].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime) || (EVENTS[Channel_Num].teDATA[Event_Num].booCLEARONEND == true))
+    // if((EVENTS[Channel_Num].teDATA[eventscan].tmeSTARTTIME <= tmeCurrentTime) || (EVENTS[Channel_Num].teDATA[Event_Num].booCLEARONEND == true))
     {
       // is the event we are currently looking at within, or overlapping, the targeted event range.
       if (  ((EVENTS[Channel_Num].teDATA[eventscan].intSTARTPOS >= EVENTS[Channel_Num].teDATA[Event_Num].intSTARTPOS)  

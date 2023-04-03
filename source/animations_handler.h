@@ -35,9 +35,10 @@ class ANIMATION_HANDLER
   class SCHEDULED_THING_TO_MAKE_BETTER_WHEN_NEEDED
   {
     public:
-    string Collection_Name = "";
-    string Animation_Name = "";
-    int Assigned_Group = -1;
+    string Collection_Name = "";  // Needed.
+    string Animation_Name = "";   // Needed.  Only animations can be called.
+    int Assigned_Group = -1;      // Not a parameter, will alwayays keep same 
+                                  //  group/channel.
   };
   
   ANIMATIONS_STORAGE LIBRARY;

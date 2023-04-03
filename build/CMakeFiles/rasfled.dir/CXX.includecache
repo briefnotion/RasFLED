@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/pi/source/RasFLED/source/LEDstuff.cpp
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
+
 /home/pi/source/RasFLED/source/LEDstuff.h
 string
 -
@@ -15,6 +19,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
+
+/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
+aircraft_coordinator.h
+/home/pi/source/RasFLED/source/aircraft_coordinator.h
 
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
@@ -40,6 +48,10 @@ deque
 
 /home/pi/source/RasFLED/source/animations_definitions.h
 
+/home/pi/source/RasFLED/source/animations_handler.cpp
+animations_handler.h
+/home/pi/source/RasFLED/source/animations_handler.h
+
 /home/pi/source/RasFLED/source/animations_handler.h
 string
 -
@@ -53,6 +65,10 @@ fledcore.h
 /home/pi/source/RasFLED/source/fledcore.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
+
+/home/pi/source/RasFLED/source/animations_storage.cpp
+animations_storage.h
+/home/pi/source/RasFLED/source/animations_storage.h
 
 /home/pi/source/RasFLED/source/animations_storage.h
 string
@@ -69,6 +85,10 @@ LEDstuff.h
 /home/pi/source/RasFLED/source/api_rtlairband.h
 string
 -
+
+/home/pi/source/RasFLED/source/api_shared_memory.cpp
+api_shared_memory.h
+/home/pi/source/RasFLED/source/api_shared_memory.h
 
 /home/pi/source/RasFLED/source/api_shared_memory.h
 fstream
@@ -126,6 +146,10 @@ hardware_status.h
 LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 
+/home/pi/source/RasFLED/source/configuration_storage.cpp
+configuration_storage.h
+/home/pi/source/RasFLED/source/configuration_storage.h
+
 /home/pi/source/RasFLED/source/configuration_storage.h
 deque
 -
@@ -135,6 +159,10 @@ consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
+
+/home/pi/source/RasFLED/source/consoleanddata.cpp
+consoleanddata.h
+/home/pi/source/RasFLED/source/consoleanddata.h
 
 /home/pi/source/RasFLED/source/consoleanddata.h
 stdio.h
@@ -176,6 +204,10 @@ chrono
 ctime
 -
 
+/home/pi/source/RasFLED/source/fledcore.cpp
+fledcore.h
+/home/pi/source/RasFLED/source/fledcore.h
+
 /home/pi/source/RasFLED/source/fledcore.h
 animations_definitions.h
 /home/pi/source/RasFLED/source/animations_definitions.h
@@ -185,6 +217,10 @@ LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
+
+/home/pi/source/RasFLED/source/gadgets.cpp
+gadgets.h
+/home/pi/source/RasFLED/source/gadgets.h
 
 /home/pi/source/RasFLED/source/gadgets.h
 stdio.h
@@ -203,6 +239,10 @@ system.h
 /home/pi/source/RasFLED/source/system.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
+
+/home/pi/source/RasFLED/source/gadgets_alerts.cpp
+gadgets_alerts.h
+/home/pi/source/RasFLED/source/gadgets_alerts.h
 
 /home/pi/source/RasFLED/source/gadgets_alerts.h
 stdio.h
@@ -225,6 +265,10 @@ gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
+
+/home/pi/source/RasFLED/source/gadgets_radio.cpp
+gadgets_radio.h
+/home/pi/source/RasFLED/source/gadgets_radio.h
 
 /home/pi/source/RasFLED/source/gadgets_radio.h
 stdio.h
@@ -250,6 +294,10 @@ api_rtlairband.h
 aircraft_coordinator.h
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 
+/home/pi/source/RasFLED/source/hardware_module_door.cpp
+hardware_module_door.h
+/home/pi/source/RasFLED/source/hardware_module_door.h
+
 /home/pi/source/RasFLED/source/hardware_module_door.h
 string
 -
@@ -259,6 +307,10 @@ consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+
+/home/pi/source/RasFLED/source/hardware_status.cpp
+hardware_status.h
+/home/pi/source/RasFLED/source/hardware_status.h
 
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
@@ -276,6 +328,10 @@ helper.h
 wiringPi.h
 -
 
+/home/pi/source/RasFLED/source/helper.cpp
+helper.h
+/home/pi/source/RasFLED/source/helper.h
+
 /home/pi/source/RasFLED/source/helper.h
 deque
 -
@@ -290,6 +346,10 @@ definitions.h
 ncurses.h
 -
 
+/home/pi/source/RasFLED/source/interface.cpp
+interface.h
+/home/pi/source/RasFLED/source/interface.h
+
 /home/pi/source/RasFLED/source/interface.h
 string
 -
@@ -301,6 +361,10 @@ commands.h
 /home/pi/source/RasFLED/source/commands.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+
+/home/pi/source/RasFLED/source/json_interface.cpp
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
 
 /home/pi/source/RasFLED/source/json_interface.h
 stdio.h
@@ -412,6 +476,10 @@ deque
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 
+/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp
+radio_channel_coordinator.h
+/home/pi/source/RasFLED/source/radio_channel_coordinator.h
+
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 deque
 -
@@ -464,6 +532,10 @@ rpihw.h
 pwm.h
 /home/pi/source/RasFLED/source/rpi_ws281x-master/pwm.h
 
+/home/pi/source/RasFLED/source/screen3.cpp
+screen3.h
+/home/pi/source/RasFLED/source/screen3.h
+
 /home/pi/source/RasFLED/source/screen3.h
 stdio.h
 -
@@ -497,6 +569,10 @@ deque
 -
 ncurses.h
 -
+
+/home/pi/source/RasFLED/source/system.cpp
+system.h
+/home/pi/source/RasFLED/source/system.h
 
 /home/pi/source/RasFLED/source/system.h
 stdio.h

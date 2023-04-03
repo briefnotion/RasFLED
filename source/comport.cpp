@@ -104,56 +104,161 @@ bool COMPORT::create()
 {
   bool ret_success = true;
 
-  memset (&tty, 0, sizeof tty);
-
-  // WARNING:
-  // Method #2: Allocate memory on stack and copy the contents of the
-  // original string. Keep in mind that once a current function returns,
-  // the memory is invalidated.
-  char *port;
-  port = (char *)alloca(PROPS.PORT.size() + 1);
-  memcpy(port, PROPS.PORT.c_str(), PROPS.PORT.size() + 1);
-
-  USB = open(port, O_RDWR| O_NOCTTY| O_NONBLOCK );
-
-  /* Error Handling */
-  if ( tcgetattr ( USB, &tty ) != 0 ) 
+  if (PROPS.PORT == "")
   {
-    //   std::cout << "Error " << errno << " from tcgetattr: " << strerror(errno) << std::endl;
     ret_success = false;
   }
-
-  /* Save old tty parameters */
-  tty_old = tty;
-
-  /* Set Baud Rate */
-  if (PROPS.BAUD_RATE == 38400)
+  else
   {
-    cfsetospeed (&tty, (speed_t)B38400);
-    cfsetispeed (&tty, (speed_t)B38400);
-  }
+    memset (&tty, 0, sizeof tty);
 
-  /* Setting other Port Stuff */
-  tty.c_cflag     &=  ~PARENB;            // Make 8n1
-  tty.c_cflag     &=  ~CSTOPB;
-  tty.c_cflag     &=  ~CSIZE;
-  tty.c_cflag     |=  CS8;
+    // WARNING:
+    // Method #2: Allocate memory on stack and copy the contents of the
+    // original string. Keep in mind that once a current function returns,
+    // the memory is invalidated.
+    char *port;
+    port = (char *)alloca(PROPS.PORT.size() + 1);
+    memcpy(port, PROPS.PORT.c_str(), PROPS.PORT.size() + 1);
 
-  tty.c_cflag     &=  ~CRTSCTS;           // no flow control
-  tty.c_cc[VMIN]   =  1;                  // read doesn't block
-  tty.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
-  tty.c_cflag     |=  CREAD | CLOCAL;     // turn on READ & ignore ctrl lines
+    USB = open(port, O_RDWR| O_NOCTTY| O_NONBLOCK );
 
-  /* Make raw */
-  cfmakeraw(&tty);
+    /* Error Handling */
+    if ( tcgetattr ( USB, &tty ) != 0 ) 
+    {
+      //   std::cout << "Error " << errno << " from tcgetattr: " << strerror(errno) << std::endl;
+      ret_success = false;
+    }
 
-  /* Flush Port, then applies attributes */
-  tcflush( USB, TCIFLUSH );
+    /* Save old tty parameters */
+    tty_old = tty;
 
-  if ( tcsetattr ( USB, TCSANOW, &tty ) != 0) 
-  {
-    //   std::cout << "Error " << errno << " from tcsetattr" << std::endl;
-    ret_success = false;
+    /* Set Baud Rate */
+    // Choices: B0,  B50,  B75,  B110,  B134,  B150,  B200, B300, B600, B1200, B1800, B2400, 
+    //          B4800, B9600, B19200, B38400, B57600, B115200, B230400, B460800
+    if (PROPS.BAUD_RATE == 300)
+    {
+      cfsetospeed (&tty, (speed_t)B300);
+      cfsetispeed (&tty, (speed_t)B300);
+    }
+    else if (PROPS.BAUD_RATE == 2400)
+    {
+      cfsetospeed (&tty, (speed_t)B2400);
+      cfsetispeed (&tty, (speed_t)B2400);
+    }
+    else if (PROPS.BAUD_RATE == 4800)
+    {
+      cfsetospeed (&tty, (speed_t)B4800);
+      cfsetispeed (&tty, (speed_t)B4800);
+    }
+    else if (PROPS.BAUD_RATE == 9600)
+    {
+      cfsetospeed (&tty, (speed_t)B9600);
+      cfsetispeed (&tty, (speed_t)B9600);
+    }
+    else if (PROPS.BAUD_RATE == 19200)
+    {
+      cfsetospeed (&tty, (speed_t)B19200);
+      cfsetispeed (&tty, (speed_t)B19200);
+    }
+    else if (PROPS.BAUD_RATE == 38400)
+    {
+      cfsetospeed (&tty, (speed_t)B38400);
+      cfsetispeed (&tty, (speed_t)B38400);
+    }
+    else if (PROPS.BAUD_RATE == 57600)
+    {
+      cfsetospeed (&tty, (speed_t)B57600);
+      cfsetispeed (&tty, (speed_t)B57600);
+    }
+    else if (PROPS.BAUD_RATE == 115200)
+    {
+      cfsetospeed (&tty, (speed_t)B115200);
+      cfsetispeed (&tty, (speed_t)B115200);
+    }
+    else if (PROPS.BAUD_RATE == 230400)
+    {
+      cfsetospeed (&tty, (speed_t)B230400);
+      cfsetispeed (&tty, (speed_t)B230400);
+    }
+    else if (PROPS.BAUD_RATE == 460800)
+    {
+      cfsetospeed (&tty, (speed_t)B460800);
+      cfsetispeed (&tty, (speed_t)B460800);
+    }
+
+    /* Setting other Port Stuff */
+    if (PROPS.PARITY == false)          // Set Parity
+    {
+      tty.c_cflag &= ~PARENB;           // No Parity
+    }
+    else
+    {
+      tty.c_cflag |= PARENB;            // Parity
+    }
+
+    if (PROPS.STOP_BITS == 1)           // Set Stop Bits
+    {
+      tty.c_cflag &=  ~CSTOPB;          // 1 Stop Bit
+    }
+    else
+    {
+      tty.c_cflag |= CSTOPB;            // 2 Stop Bit    
+    }
+
+    tty.c_cflag &=  ~CSIZE;             // Clear Bits per Byte
+    if (PROPS.BIT_COUNT == 5)           // 5 Bits per Byte
+    {
+      tty.c_cflag |=  CS5;
+    }
+    else if (PROPS.BIT_COUNT == 6)      // 6 Bits per Byte
+    {
+      tty.c_cflag |=  CS6;
+    }
+    else if (PROPS.BIT_COUNT == 7)      // 7 Bits per Byte
+    {
+      tty.c_cflag |=  CS7;
+    }
+    else //(PROPS.BIT_COUNT == 8)       // 8 Bits per Byte
+    {
+      tty.c_cflag |=  CS8;
+    }
+
+    if (PROPS.HARDWARE_FLOW_CONTROL == false) // Hardware Flow Control
+    {
+      tty.c_cflag &=  ~CRTSCTS;         // no flow control
+    }
+    else
+    {
+      tty.c_cflag |= CRTSCTS;           // flow control
+    }
+
+    tty.c_cc[VMIN]  = PROPS.READ_BYTE_MIN;  // default 1
+    tty.c_cc[VTIME] = PROPS.READ_MIN_TIME;  // default 0.5 seconds
+
+
+    tty.c_cflag |=  CREAD | CLOCAL; // turn on READ & ignore ctrl lines
+
+    if (PROPS.DISABLE_CANONICAL_MODE == true)
+    {
+      tty.c_cflag &= ~ICANON;
+    }
+
+    if (PROPS.XONXOFF == true)
+    {
+      tty.c_iflag |= IXON | IXOFF;            // enable XON/XOFF flow control
+    }
+
+    /* Make raw */
+    cfmakeraw(&tty);
+
+    /* Flush Port, then applies attributes */
+    tcflush( USB, TCIFLUSH );
+
+    if ( tcsetattr ( USB, TCSANOW, &tty ) != 0) 
+    {
+      //   std::cout << "Error " << errno << " from tcsetattr" << std::endl;
+      ret_success = false;
+    }
   }
 
   ACTIVE = ret_success;

@@ -1,3 +1,8 @@
+V 1.83_230402
+  - Continued building a Comm Port interface.
+  - Changes made in atttempt to prevent stuck animations.
+  - Added and changed animations.
+
 V 1.82_230329
   - Started building a Comm Port interface.
 
