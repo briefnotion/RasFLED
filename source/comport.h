@@ -30,6 +30,7 @@
 // RASFled related header files
 
 #include "stringthings.h"
+#include "rasapi.h"
 
 using namespace std;
 
@@ -58,6 +59,9 @@ class COMPORT_PROPERTIES
   bool DISABLE_CANONICAL_MODE = false;
   
   bool XONXOFF = false;
+
+  bool SAVE_TO_LOG = false;
+  string SAVE_LOG_FILENAME = "";
 
 };
 

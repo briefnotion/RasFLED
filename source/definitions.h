@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.83"
+#define Revision "00000001.84"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -44,8 +44,9 @@
 //#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // For testing:  FlightAware Aircraft JSON File 
 
 // COMMS Settings
-#define COMMS_PORT        "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
-#define COMMS_BAUD        38400
+#define COMMS_PORT        "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00"
+//#define COMMS_BAUD        38400
+#define COMMS_BAUD        115200
 #define COMMS_BIT_COUNT   8
 #define COMMS_BIT_PARITY  false
 #define COMMS_STOP_BITS   1

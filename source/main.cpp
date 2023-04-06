@@ -847,14 +847,16 @@ int loop()
     
     // Comm port proccessing will be the slowest. Process here after work is done.
     // Display received messages.
+
+    sdSystem.COMMS.cycle();
+
     for (int pos = 0; pos < sdSystem.COMMS.READ_FROM_COMM.size(); pos++)
     {
       cons.printwait(sdSystem.COMMS.READ_FROM_COMM[pos]);
     }
 
-    sdSystem.COMMS.READ_FROM_COMM.clear();
+    sdSystem.CAR_INFO.process(sdSystem.COMMS);
 
-    sdSystem.COMMS.cycle();
 
     // ________________________
 

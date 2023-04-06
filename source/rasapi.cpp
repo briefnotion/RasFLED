@@ -366,14 +366,21 @@ string file_to_string(string Dir_Filename)
   return file_to_string(Dir_Filename, success);
 }
 
-bool deque_string_to_file(string Dir_Filename, deque<string> &qFile)
+bool deque_string_to_file(string Dir_Filename, deque<string> &qFile, bool Append)
 {
   fstream fsFile;
   bool booSuccess = false;
 
   bool booActive = false;
 
-  fsFile.open(Dir_Filename, ios::out);
+  if (Append == true)
+  {
+    fsFile.open(Dir_Filename, ios::app);
+  }
+  else
+  {
+    fsFile.open(Dir_Filename, ios::out);
+  }
 
   if (!fsFile)
   {
@@ -387,19 +394,34 @@ bool deque_string_to_file(string Dir_Filename, deque<string> &qFile)
 
   if (booActive == true)
   {
-    while(qFile.empty() == false)
+    if (Append == true)
     {
-      fsFile << qFile.front();
+      for (int pos = 0; pos < qFile.size(); pos++)
+      {
+        fsFile << qFile[pos];
+        fsFile << endl;
+      }
       fsFile << endl;
-      qFile.pop_front();
+      fsFile.close();
+      booSuccess = true;
     }
-    fsFile << endl;
-    fsFile.close();
-    booSuccess = true;
+    else
+    {
+      while(qFile.empty() == false)
+      {
+        fsFile << qFile.front();
+        fsFile << endl;
+        qFile.pop_front();
+      }
+      fsFile << endl;
+      fsFile.close();
+      booSuccess = true;
+    }
   }
 
   return booSuccess;
 }
+
 
 
 

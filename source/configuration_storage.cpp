@@ -269,7 +269,7 @@ bool save_json_configuration(Console &cons, system_data &sdSysData, string Direc
   configuration_json.json_print_build_to_string_deque(configuration_file_dq_string);
   
   // Write string list of file
-  ret_success = deque_string_to_file(Directory+ Filename, configuration_file_dq_string);
+  ret_success = deque_string_to_file(Directory+ Filename, configuration_file_dq_string, false);
 
   return ret_success;
 }
@@ -352,7 +352,7 @@ bool save_running_state_json(Console &cons, system_data &sdSysData, string strFi
   state_json.ROOT.create_label_value(quotify("description"), quotify(sdSysData.get_running_color_str()));
 
   state_json.json_print_build_to_string_deque(state_dq_string);
-  ret_success = deque_string_to_file(strFilename, state_dq_string);
+  ret_success = deque_string_to_file(strFilename, state_dq_string, false);
 
   return ret_success;
 }

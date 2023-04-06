@@ -106,6 +106,24 @@ definitions.h
 api_rtlairband.h
 /home/pi/source/RasFLED/source/api_rtlairband.h
 
+/home/pi/source/RasFLED/source/auto.cpp
+auto.h
+/home/pi/source/RasFLED/source/auto.h
+
+/home/pi/source/RasFLED/source/auto.h
+stdio.h
+-
+string.h
+-
+deque
+-
+fled_time.h
+/home/pi/source/RasFLED/source/fled_time.h
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
+comport.h
+/home/pi/source/RasFLED/source/comport.h
+
 /home/pi/source/RasFLED/source/commands.h
 stdio.h
 -
@@ -137,6 +155,8 @@ termios.h
 -
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
+rasapi.h
+/home/pi/source/RasFLED/source/rasapi.h
 
 /home/pi/source/RasFLED/source/configuration.h
 definitions.h
@@ -601,4 +621,6 @@ alert_system.h
 /home/pi/source/RasFLED/source/alert_system.h
 comport.h
 /home/pi/source/RasFLED/source/comport.h
+auto.h
+/home/pi/source/RasFLED/source/auto.h
 

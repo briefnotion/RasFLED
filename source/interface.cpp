@@ -350,6 +350,9 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
         sdSysData.COMMS.PROPS.DISABLE_CANONICAL_MODE = COMMS_DISABLE_CANONICAL_MODE;
         sdSysData.COMMS.PROPS.XONXOFF = COMMS_XONXOFF;
 
+        sdSysData.COMMS.PROPS.SAVE_TO_LOG = true;
+        sdSysData.COMMS.PROPS.SAVE_LOG_FILENAME = "/home/pi/auto/rascomms.txt";
+
         if (sdSysData.COMMS.create() == true)
         {
           cons.printwait("Comm Port Started.");
@@ -358,6 +361,18 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
         {
           cons.printwait("Comm Port Failed To Start.");
         }
+      }
+      
+      if (check_command(cons," commo", "Start Comms Log"))
+      {
+        sdSysData.COMMS.PROPS.SAVE_TO_LOG = true;
+        sdSysData.COMMS.READ_FROM_COMM.push_back("-- STARTING COMMS LOG --");
+      }
+
+      if (check_command(cons," commf", "Stop Comms Log"))
+      {
+        sdSysData.COMMS.PROPS.SAVE_TO_LOG = false;
+        sdSysData.COMMS.READ_FROM_COMM.push_back("-- STOPPING COMMS LOG --");
       }
       
       // Stop Comm Port

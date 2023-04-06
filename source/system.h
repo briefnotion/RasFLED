@@ -28,6 +28,7 @@
 #include "aircraft_coordinator.h"
 #include "alert_system.h"
 #include "comport.h"
+#include "auto.h"
 
 using namespace std;
 
@@ -144,6 +145,7 @@ class system_data
 
   // Communications Port
   COMPORT COMMS;
+  AUTOMOBILE CAR_INFO;
 
   // -------------------------------------------------------------------------------------
 

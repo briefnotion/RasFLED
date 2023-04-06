@@ -287,6 +287,11 @@ void COMPORT::cycle()
     {
       data_received = read_from_comm();
     }
+
+    if (PROPS.SAVE_TO_LOG == true && READ_FROM_COMM.size() >0)
+    {
+      deque_string_to_file(PROPS.SAVE_LOG_FILENAME, READ_FROM_COMM, true);
+    }
   }
 }
 

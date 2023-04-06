@@ -34,6 +34,7 @@ add_executable(
   api_shared_memory.cpp
   commands.cpp
   comport.cpp
+  auto.cpp
   configuration_storage.cpp
   helper.cpp
   stringthings.cpp

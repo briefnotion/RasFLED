@@ -68,7 +68,7 @@ string quotify(string Text);
 
 bool left_of_char(string Text, char Break_Char, string &Left);
 // Returns left of Break_Char as Left;
-// Ruccess returns true if Break_Char exist.
+// Returns true if Break_Char exist.
 
 bool right_of_char(string Text, char Break_Char, string &Right);
 // Returns right of Break_Char as Right;

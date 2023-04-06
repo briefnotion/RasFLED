@@ -1,3 +1,6 @@
+V 1.84_230406
+  - Started building the Car Guages.
+
 V 1.83_230402
   - Continued building a Comm Port interface.
   - Changes made in atttempt to prevent stuck animations.
