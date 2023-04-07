@@ -28,6 +28,8 @@ class AUTOMOBILE_DATA_LINE
 {
   public:
 
+  string ORIG = "";
+
   string ID = "";
   char DATA[8];
 };
@@ -86,6 +88,8 @@ class AUTOMOBILE_DATA
   AUTOMOBILE_DATA_LINE AD_400;
   AUTOMOBILE_DATA_LINE AD_40A;
   AUTOMOBILE_DATA_LINE AD_455;
+
+  AUTOMOBILE_DATA_LINE AD_UNKNOWN;
 };
 
 class AUTOMOBILE_PROPERTIES
@@ -100,12 +104,14 @@ class AUTOMOBILE_PROPERTIES
 class AUTOMOBILE
 {
   private:
-  AUTOMOBILE_DATA DATA;
 
   void parse(string Line);
 
   public:
 
+  bool CHANGED = false;
+
+  AUTOMOBILE_DATA DATA;
   AUTOMOBILE_PROPERTIES PROPS;
 
   void process(COMPORT &Com_Port);

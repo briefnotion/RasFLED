@@ -106,10 +106,6 @@ definitions.h
 api_rtlairband.h
 /home/pi/source/RasFLED/source/api_rtlairband.h
 
-/home/pi/source/RasFLED/source/auto.cpp
-auto.h
-/home/pi/source/RasFLED/source/auto.h
-
 /home/pi/source/RasFLED/source/auto.h
 stdio.h
 -
@@ -285,6 +281,32 @@ gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
+
+/home/pi/source/RasFLED/source/gadgets_automobile.cpp
+gadgets_automobile.h
+/home/pi/source/RasFLED/source/gadgets_automobile.h
+
+/home/pi/source/RasFLED/source/gadgets_automobile.h
+stdio.h
+-
+ncurses.h
+-
+string
+-
+deque
+-
+fled_time.h
+/home/pi/source/RasFLED/source/fled_time.h
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
+system.h
+/home/pi/source/RasFLED/source/system.h
+gadgets.h
+/home/pi/source/RasFLED/source/gadgets.h
+helper_ncurses.h
+/home/pi/source/RasFLED/source/helper_ncurses.h
+auto.h
+/home/pi/source/RasFLED/source/auto.h
 
 /home/pi/source/RasFLED/source/gadgets_radio.cpp
 gadgets_radio.h
@@ -579,6 +601,8 @@ gadgets_radio.h
 /home/pi/source/RasFLED/source/gadgets_radio.h
 gadgets_alerts.h
 /home/pi/source/RasFLED/source/gadgets_alerts.h
+gadgets_automobile.h
+/home/pi/source/RasFLED/source/gadgets_automobile.h
 radio_channel_coordinator.h
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 

@@ -25,6 +25,7 @@
 #include "gadgets.h"
 #include "gadgets_radio.h"
 #include "gadgets_alerts.h"
+#include "gadgets_automobile.h"
 #include "radio_channel_coordinator.h"
 
 using namespace std;
@@ -189,6 +190,21 @@ class Screen3
 
   WINDOW * winPlayer;
 
+  private:
+  // AUTOMOBILE Screen Variables --------------------
+
+  int YAUTOMOBILE_ScreenPos = -1;
+  int XAUTOMOBILE_ScreenPos = 0;
+  int YAUTOMOBILE_ScreenSize = -1;
+  int XAUTOMOBILE_ScreenSize = -1;
+
+  Title_Bar tiAUTOMOBILE_Screen;
+
+  public:
+  AUTOMOBILE_GADGET AUTOMOBILE_PANEL;
+
+  private:
+
   // Radio Screen Variables --------------------
   int YRadioPos = -1;
   int XRadioPos = 0;
@@ -222,26 +238,6 @@ class Screen3
   int XRadioStatusSize = -1;
 
   WINDOW * winRadioStatus;
-
-  // Many Radio Screen Variables --------------------
-  int YManyRadioPos = -1;
-  int XManyRadioPos = 0;
-  int YManyRadioSize = -1;
-  int XManyRadioSize = -1;
-
-  int YManyGadChannelSize = 2;  // Frequency Gadges Size
-  int XManyGadChannelSize = 27;
-  int YManyGadChannelPos = 0;  // Frequency Gadges Start Position
-  int XManyGadChannelPos = 8;
-
-  WINDOW * winManyRadio;
-  Title_Bar tiManyRadio;
-
-  public:
-  // Radio Frequency Gadgets for Many_Radio Screen
-  int Many_Radio_Channel_Count = 50;  // Remove this limit in future if needed.
-  int Many_Radio_Channel_Max_Display_Count = -1;
-  deque<Radio_Channel> Many_Radio_Channels;
 
   private:
   // ADS_B Screen Variables --------------------
@@ -342,14 +338,14 @@ class Screen3
 
   string buffer();
 
-    // ---------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------
+  void automobile_screen(system_data &sdSysData, ScreenStatus &ScrStat);
+
+  // ---------------------------------------------------------------------------------------
   void radio_status(system_data &sdSysData, ScreenStatus &ScrStat);
 
   // ---------------------------------------------------------------------------------------
   void radio(system_data &sdSysData, ScreenStatus &ScrStat);
-  
-  // ---------------------------------------------------------------------------------------
-  void manyradio(system_data &sdSysData, ScreenStatus &ScrStat);
 
   // ---------------------------------------------------------------------------------------
   void ads_b_screen(system_data &sdSysData, ScreenStatus &ScrStat);

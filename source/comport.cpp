@@ -108,6 +108,11 @@ bool COMPORT::create()
   {
     ret_success = false;
   }
+  if (PROPS.RECEIVE_TEST_DATA == true)
+  {
+    file_to_deque_string(PROPS.TEST_DATA_FILENAME, TEST_DATA);
+    ret_success = true;
+  }
   else
   {
     memset (&tty, 0, sizeof tty);
@@ -283,14 +288,29 @@ void COMPORT::cycle()
       WRITE_TO_COMM.pop_front();
     }
 
-    while (data_received == true)
+    if(PROPS.RECEIVE_TEST_DATA == false)
     {
-      data_received = read_from_comm();
-    }
+      while (data_received == true)
+      {
+        data_received = read_from_comm();
+      }
 
-    if (PROPS.SAVE_TO_LOG == true && READ_FROM_COMM.size() >0)
+      if (PROPS.SAVE_TO_LOG == true && READ_FROM_COMM.size() >0)
+      {
+        deque_string_to_file(PROPS.SAVE_LOG_FILENAME, READ_FROM_COMM, true);
+      }
+    }
+    else
     {
-      deque_string_to_file(PROPS.SAVE_LOG_FILENAME, READ_FROM_COMM, true);
+      // send test data
+      for (int count = 0; count < 3; count++)
+      {
+        if (TEST_DATA.size() > 0)
+        {
+          READ_FROM_COMM.push_back(TEST_DATA.front());
+          TEST_DATA.pop_front();
+        }
+      }
     }
   }
 }

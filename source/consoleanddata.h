@@ -73,6 +73,8 @@ class Console
 
   void update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData);
 
+  void update_automobile_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData);
+
   bool load_reel(fstream &fsPlayer, string filename);
 
   bool play_next_movie(fstream &fsPlayer);
@@ -92,6 +94,8 @@ class Console
   void tab_open_console(system_data &sdSysData);
 
   void tab_open_player(system_data &sdSysData);
+
+  void tab_open_automobile(system_data &sdSysData);
 
   void tab_open_radio(system_data &sdSysData);
 

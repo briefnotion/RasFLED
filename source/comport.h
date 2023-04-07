@@ -63,6 +63,9 @@ class COMPORT_PROPERTIES
   bool SAVE_TO_LOG = false;
   string SAVE_LOG_FILENAME = "";
 
+  // Can't be hot enabled.  For testing.
+  bool RECEIVE_TEST_DATA = false;
+  string TEST_DATA_FILENAME = "";
 };
 
 class COMPORT
@@ -76,6 +79,8 @@ class COMPORT
 
   deque<string> WRITE_TO_COMM;
   // List of text to be sent to com port on next cycle.
+  
+  deque<string> TEST_DATA;
 
   public:
 

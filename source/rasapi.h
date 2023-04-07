@@ -116,4 +116,8 @@ bool deque_string_to_file(string Dir_Filename, deque<string> &qFile, bool Append
 // Opens and saves a dequed string into a file with append option
 // Reurns false if failed.
 
+bool file_to_deque_string(string Dir_Filename, deque<string> &qFile);
+// Opens and saves a dequed string into a file with append option
+// Reurns false if failed.
+
 #endif

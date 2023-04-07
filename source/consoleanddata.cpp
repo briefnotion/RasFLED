@@ -54,10 +54,6 @@ void Console::update_freqency_gadgets(system_data &sdSysData)
       {
         update_freqency_gadgets_QF(sdSysData, pos, Screen.Radio_Channels[pos]);
       }
-      if(pos < Screen.Many_Radio_Channels.size())
-      {
-        update_freqency_gadgets_QF(sdSysData, pos, Screen.Many_Radio_Channels[pos]);
-      }
       sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED = false;
       sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED = false;
     }
@@ -69,6 +65,14 @@ void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data 
   if(sdSysData.AIRCRAFT_COORD.DATA.CHANGED == true || Screen.ADSB_Grid.PROP.NEEDS_REFRESH_DATA == true)
   {
     Screen.ADSB_Grid.update(sdSysData, tmeCurrentMillis);
+  }
+}
+
+void Console::update_automobile_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
+{
+  if(sdSysData.CAR_INFO.CHANGED == true)
+  {
+    Screen.AUTOMOBILE_PANEL.update(sdSysData, tmeCurrentMillis);
   }
 }
 
@@ -264,9 +268,10 @@ void Console::tab_open_console(system_data &sdSysData)
   ScrStat.Window_Console.on(ScrStat.Needs_Refresh);        // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh);
   ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -285,9 +290,10 @@ void Console::tab_open_player(system_data &sdSysData)
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.on(ScrStat.Needs_Refresh);         // Player
 
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
   ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -300,15 +306,38 @@ void Console::tab_open_player(system_data &sdSysData)
   sdSysData.RADIO_COORD.pause();
 }
 
+void Console::tab_open_automobile(system_data &sdSysData)
+{
+  printi("Tab Radio");
+  ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
+  ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
+  
+  ScrStat.Window_Automobile_Screen.on(ScrStat.Needs_Refresh);  // Automobile
+
+  ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
+  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
+  ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
+
+  ScrStat.Window_Log_Screen.off(ScrStat.Needs_Refresh);    // Log
+
+  ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
+
+  the_player.pause();
+  sdSysData.RADIO_COORD.play();
+}
+
 void Console::tab_open_radio(system_data &sdSysData)
 {
   printi("Tab Radio");
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
   
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
   ScrStat.Window_Radio.on(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -327,9 +356,10 @@ void Console::tab_open_many_radio(system_data &sdSysData)
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
   ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.on(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -348,9 +378,10 @@ void Console::tab_open_ads_b_screen(system_data &sdSysData)
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
   ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.on(ScrStat.Needs_Refresh);   // ADS_B
   ScrStat.Window_ADS_B_Screen.on(ScrStat.Needs_Refresh);
@@ -369,9 +400,10 @@ void Console::tab_open_log_screen(system_data &sdSysData)
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
   ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -390,9 +422,10 @@ void Console::tab_open_alerts(system_data &sdSysData)
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
+  ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
+
   ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
   ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Many_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -419,16 +452,16 @@ void Console::tab_handler(string Button_Name, system_data &sdSysData)
     tab_open_player(sdSysData);
   }
 
+  if (Button_Name == "TAB_AUTOMOBILE")
+  // Turn on Tab
+  {
+    tab_open_automobile(sdSysData);
+  }
+
   if (Button_Name == "TABRADIO")
   // Turn on Tab
   {
     tab_open_radio(sdSysData);
-  }
-
-  if (Button_Name == "TABMANYRADIO")
-  // Turn on Tab
-  {
-    tab_open_many_radio(sdSysData);
   }
 
   if (Button_Name == "TAB_ADS_B_SCREEN")
@@ -691,7 +724,7 @@ void Console::processmouseinput(system_data &sdSysData)
     }
 
     // -----------------------------------
-    if(ScrStat.Window_Radio.value() == true || ScrStat.Window_Many_Radio.value() == true)
+    if(ScrStat.Window_Radio.value() == true)
     {
       if (Screen.bzRadio.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
       // Check for any clicked buttons or if it was just empty space.
@@ -759,30 +792,6 @@ void Console::processmouseinput(system_data &sdSysData)
           else if(name == "CLEAR")
           {
             keywatch.cmdInString(" rc" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
-          }
-        }
-      }
-    }
-
-    if(ScrStat.Window_Many_Radio.value() == true)
-    // Check the Radio_Frequencies Radio_Channel Gadgets
-    {
-      string name = "empty";
-      for(int pos = 0; pos < Screen.Many_Radio_Channel_Count; pos++)
-      {
-        if(Screen.Many_Radio_Channels[pos].check_click(mouse.x_clicked(),mouse.y_clicked(), name) == true)
-        {
-          if(name == "HOLD")
-          {
-            keywatch.cmdInString(" rh" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
-          }
-          else if(name == "SKIP")
-          {
-            keywatch.cmdInString(" rs" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
-          }
-          else if(name == "CLEAR")
-          {
-            keywatch.cmdInString(" rc" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Many_Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
           }
         }
       }

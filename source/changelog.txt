@@ -1,3 +1,13 @@
+V 1.85_230407
+  - Continued building the Car Guages.
+  - Removed Many Radios Screen.
+  - Created an Automobile Screen.
+  - Started Automobile_Gadgets Library.
+  - Addeded file_to_deque_string funtion to rasapi.
+  - Changes made to comport.
+  - Changes made to animations.json.
+  - Added some testing related lines to the Definitions.
+
 V 1.84_230406
   - Started building the Car Guages.
 

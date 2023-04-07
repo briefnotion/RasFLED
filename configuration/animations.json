@@ -1224,7 +1224,7 @@
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|50", "LED_End_Pos" : "from_bot|52", 
+          "LED_Start_Pos" : "from_bot|40", "LED_End_Pos" : "from_bot|42", 
           "Clear_On_End" : false, "Off_During_Day" : true
         },
         {
@@ -1234,7 +1234,7 @@
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|49", "LED_End_Pos" : "from_bot|47", 
+          "LED_Start_Pos" : "from_bot|39", "LED_End_Pos" : "from_bot|37", 
           "Clear_On_End" : false, "Off_During_Day" : true
         }
       ],
@@ -1312,7 +1312,7 @@
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "32,16,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|50", "LED_End_Pos" : "from_bot|52", 
+          "LED_Start_Pos" : "from_bot|40", "LED_End_Pos" : "from_bot|42", 
           "Clear_On_End" : true, "Off_During_Day" : true
         },
         {
@@ -1322,7 +1322,7 @@
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "32,16,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|49", "LED_End_Pos" : "from_bot|47", 
+          "LED_Start_Pos" : "from_bot|39", "LED_End_Pos" : "from_bot|37", 
           "Clear_On_End" : true, "Off_During_Day" : true
         }
       ]

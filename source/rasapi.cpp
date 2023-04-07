@@ -422,6 +422,44 @@ bool deque_string_to_file(string Dir_Filename, deque<string> &qFile, bool Append
   return booSuccess;
 }
 
+bool file_to_deque_string(string Dir_Filename, deque<string> &qFile)
+{
+  fstream fsFile;
+
+  bool booSuccess = false;
+  bool booActive = false;
+
+  fsFile.open(Dir_Filename, ios::in);
+
+  if (!fsFile)
+  {
+    booActive = false;
+  }
+  else 
+  {
+    booActive = true;
+  }
+
+  if (booActive == true)
+  {
+    string strRead = "";
+
+    while(booActive == true)
+    {
+      getline(fsFile,strRead);
+
+      qFile.push_back(strRead);
+
+      if(fsFile.eof())
+      {
+        booActive = false;
+        booSuccess = true;
+      }
+    }
+  }
+
+  return booSuccess;
+}
 
 
 

@@ -806,6 +806,9 @@ int loop()
         // ADS-B - Update all ADS-B gadgets with new data.
         cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
 
+        // Automobile - Update all ADS-B gadgets with new data.
+        cons.update_automobile_gadgets(tmeCurrentMillis, sdSystem);
+
         // Update Switches to Alert system.
         for (int door=0; door < sdSystem.CONFIG.vhwDOORS.size(); door++)
         {
@@ -850,13 +853,8 @@ int loop()
 
     sdSystem.COMMS.cycle();
 
-    for (int pos = 0; pos < sdSystem.COMMS.READ_FROM_COMM.size(); pos++)
-    {
-      cons.printwait(sdSystem.COMMS.READ_FROM_COMM[pos]);
-    }
-
+    // Process info from comm port int automobile system.
     sdSystem.CAR_INFO.process(sdSystem.COMMS);
-
 
     // ________________________
 

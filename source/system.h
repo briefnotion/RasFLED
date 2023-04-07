@@ -299,10 +299,10 @@ class ScreenStatus
   SECTION_STATUS Window_CPicker;
   SECTION_STATUS Window_Tabs;
   SECTION_STATUS Window_Console;
+  SECTION_STATUS Window_Automobile_Screen;
   SECTION_STATUS Window_Player;
   SECTION_STATUS Window_Radio_Buttons;
   SECTION_STATUS Window_Radio;
-  SECTION_STATUS Window_Many_Radio;
   SECTION_STATUS Window_ADS_B_Buttons;
   SECTION_STATUS Window_ADS_B_Screen;
   SECTION_STATUS Window_Log_Screen;
