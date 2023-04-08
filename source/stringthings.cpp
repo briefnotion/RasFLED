@@ -254,6 +254,27 @@ int string_to_int(string String_Value)
   return tmp_int;
 }
 
+bool string_hex_to_int(string Hex_String_Value, int &Int_Value)
+{
+  try
+  {
+    Int_Value = stoi(Hex_String_Value, 0, 16);
+    return true;
+  }
+  catch(const std::exception& e)
+  {
+    Int_Value = 0;
+    return false;
+  }
+}
+
+int string_hex_to_int(string Hex_String_Value)
+{
+  int tmp_int = 0;
+  string_hex_to_int(Hex_String_Value, tmp_int);
+  return tmp_int;
+}
+
 bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value)
 {
   try

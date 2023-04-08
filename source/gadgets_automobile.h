@@ -55,6 +55,8 @@ class AUTOMOBILE_GADGET
 
   PANEL AUTOMOBILE_PANEL;
 
+  Text_Field MESSAGES;
+
   Text_Field AD_0;
   Text_Field AD_10;
   Text_Field AD_30;

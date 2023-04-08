@@ -30,8 +30,8 @@ class AUTOMOBILE_DATA_LINE
 
   string ORIG = "";
 
-  string ID = "";
-  char DATA[8];
+  int ID = 0;
+  int DATA[8];
 };
 
 class AUTOMOBILE_DATA
@@ -113,6 +113,8 @@ class AUTOMOBILE
 
   AUTOMOBILE_DATA DATA;
   AUTOMOBILE_PROPERTIES PROPS;
+
+  int message_count = 0;
 
   void process(COMPORT &Com_Port);
 

@@ -32,16 +32,19 @@ void AUTOMOBILE_GADGET::create()
   AUTOMOBILE_PANEL.create();
 
   Text_Field_Properties temp_prop;
+  Text_Field_Properties temp_prop_2;
 
   //TEST.set_color(COLOR_RED, COLOR_WHITE);
 
   temp_prop.POSX = 3;
   temp_prop.POSY = 1;
-  temp_prop.SIZEX = 40;
+  temp_prop.SIZEX = 50;
   temp_prop.COLORS_ON = true;
   temp_prop.BCOLOR = COLOR_BLACK;
   temp_prop.COLOR = COLOR_WHITE;
   temp_prop.JUSTIFICATION_LEFT = true;
+
+  MESSAGES.PROP = temp_prop;
 
   AD_0.PROP = temp_prop;
   AD_10.PROP = temp_prop;
@@ -66,7 +69,11 @@ void AUTOMOBILE_GADGET::create()
   AD_130.PROP = temp_prop;
   AD_138.PROP = temp_prop;
 
+
+
   AD_UNKNOWN.PROP = temp_prop;
+
+  MESSAGES.PROP.POSY = 0;
 
   AD_0.PROP.POSY = 1;
   AD_10.PROP.POSY = 2;
@@ -91,11 +98,18 @@ void AUTOMOBILE_GADGET::create()
   AD_130.PROP.POSY = 21;
   AD_138.PROP.POSY = 22;
 
+
   AD_UNKNOWN.PROP.POSY = 24;
+
+
+
+
 }
 
 void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
 {
+  MESSAGES.set_text(to_string(sdSysData.CAR_INFO.message_count));
+
   AD_0.set_text(sdSysData.CAR_INFO.DATA.AD_0.ORIG);
   AD_10.set_text(sdSysData.CAR_INFO.DATA.AD_10.ORIG);
   AD_30.set_text(sdSysData.CAR_INFO.DATA.AD_30.ORIG);
@@ -130,6 +144,8 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   {
 
   }
+
+  MESSAGES.draw(AUTOMOBILE_PANEL, Refresh);
 
   AD_0.draw(AUTOMOBILE_PANEL, Refresh);
   AD_10.draw(AUTOMOBILE_PANEL, Refresh);

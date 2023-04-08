@@ -84,8 +84,15 @@ bool string_to_int(string String_Value, int &Int_Value);
 
 int string_to_int(string String_Value);
 // Convert in String_Value number to out int.
+//  Returns Integer Value
+
+bool string_hex_to_int(string String_Value, int &Int_Value);
+// Convert in String_Value number to out Int_Value.
 //  Returns true if value sucessful.
-// ! No Error Checking
+
+int string_hex_to_int(string String_Value);
+// Convert in String_Value number to out int.
+//  Returns Integer Value
 
 bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value);
 // Convert in String_Value number to out Int_Value.
@@ -93,8 +100,7 @@ bool string_to_ulong(string String_Value, unsigned long &Unsigned_Long_Value);
 
 unsigned long string_to_ulong(string String_Value);
 // Convert in String_Value number to out ulong.
-//  Returns true if value sucessful.
-// ! No Error Checking
+//  Returns Unsigned Long Value
 
 bool string_to_ulonglong(string String_Value, unsigned long long &Unsigned_Long_Long_Value);
 // Convert in String_Value number to out Unsigned_Long_Long_Value.

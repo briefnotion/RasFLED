@@ -284,8 +284,16 @@ void COMPORT::cycle()
   {
     if (WRITE_TO_COMM.size() > 0)
     {
+      if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0)
+      {
+        WRITE_TO_COMM.push_front("- Send");
+        deque_string_to_file(PROPS.SAVE_LOG_FILENAME, WRITE_TO_COMM, true);
+        WRITE_TO_COMM.pop_front();
+      }
+
       write_to_comm(WRITE_TO_COMM.front());
       WRITE_TO_COMM.pop_front();
+
     }
 
     if(PROPS.RECEIVE_TEST_DATA == false)
