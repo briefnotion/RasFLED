@@ -942,6 +942,8 @@ class BAR_PROPERTIES
   string LABEL = "";        // Displayed left of the gadget.
   int LABEL_SIZE = 0;       // Character size of label.
 
+  char INDICATOR_CHARACTER = '|';
+
   int COLOR = COLOR_WHITE;
   int BCOLOR = COLOR_BLACK;
 
@@ -949,6 +951,7 @@ class BAR_PROPERTIES
   int COLOR_BAR_BACK = COLOR_BLACK;
 
   int COLOR_MARKER = COLOR_WHITE;
+  int BCOLOR_MARKER = COLOR_BLACK;
   int COLOR_MARKER_LIMIT = COLOR_RED;
 
   int POSY = 0;             // Y start position of gadget in window.

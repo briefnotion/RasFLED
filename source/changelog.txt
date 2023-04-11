@@ -1,3 +1,8 @@
+V 1.87_230409
+  - FOR TESTING ONLY.
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+
 V 1.86_230408
   - FOR TESTING ONLY.
   - Continued building Auto library.

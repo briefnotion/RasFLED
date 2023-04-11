@@ -1537,7 +1537,7 @@ void BAR::print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
 //  Draws > if exceeding max of guage size.
 //  Draws < if exceeding min of guage size.
 {
-  char marker = '|';
+  char marker = PROP.INDICATOR_CHARACTER;
   
   if (value > PROP.MAX_VALUE)
   {
@@ -1734,14 +1734,14 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
     // Print Value Marker
     if (PROP.COLORS_ON == true)
     {
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.COLOR_MARKER)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR_MARKER, PROP.COLOR_MARKER)));
     }
 
     print_marker(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + 1, PROP.VALUE);
 
     if (PROP.COLORS_ON == true)
     {
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.COLOR_MARKER)));
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR_MARKER, PROP.COLOR_MARKER)));
     }
 
     // If Print Min Max Values are on

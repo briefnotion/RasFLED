@@ -107,10 +107,12 @@ bool COMPORT::create()
   if (PROPS.PORT == "")
   {
     ret_success = false;
+    READ_FROM_COMM.push_back("Test file failed to load.");
   }
   if (PROPS.RECEIVE_TEST_DATA == true)
   {
     file_to_deque_string(PROPS.TEST_DATA_FILENAME, TEST_DATA);
+    READ_FROM_COMM.push_back("Test file loaded.");
     ret_success = true;
   }
   else
@@ -284,7 +286,7 @@ void COMPORT::cycle()
   {
     if (WRITE_TO_COMM.size() > 0)
     {
-      if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0)
+      if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0 && PROPS.RECEIVE_TEST_DATA == false)
       {
         WRITE_TO_COMM.push_front("- Send");
         deque_string_to_file(PROPS.SAVE_LOG_FILENAME, WRITE_TO_COMM, true);
@@ -293,7 +295,6 @@ void COMPORT::cycle()
 
       write_to_comm(WRITE_TO_COMM.front());
       WRITE_TO_COMM.pop_front();
-
     }
 
     if(PROPS.RECEIVE_TEST_DATA == false)
@@ -311,7 +312,7 @@ void COMPORT::cycle()
     else
     {
       // send test data
-      for (int count = 0; count < 3; count++)
+      for (int count = 0; count < 6; count++)
       {
         if (TEST_DATA.size() > 0)
         {

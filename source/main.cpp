@@ -853,6 +853,12 @@ int loop()
 
     sdSystem.COMMS.cycle();
 
+    // Need to stop deleting this.
+    //for (int pos = 0; pos < sdSystem.COMMS.READ_FROM_COMM.size(); pos++)
+    //{
+    //  cons.printwait(sdSystem.COMMS.READ_FROM_COMM[pos]);
+    //}
+
     // Process info from comm port int automobile system.
     sdSystem.CAR_INFO.process(sdSystem.COMMS);
 

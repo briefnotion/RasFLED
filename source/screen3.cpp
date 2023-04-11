@@ -300,6 +300,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Compute_Time.PROP.COLOR = COLOR_WHITE;
   Compute_Time.PROP.BCOLOR = COLOR_RED;
   Compute_Time.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Compute_Time.PROP.BCOLOR_MARKER = COLOR_GREEN;
   Compute_Time.PROP.COLOR_MARKER = COLOR_WHITE;
   Compute_Time.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
   Compute_Time.PROP.POSY = 0;
@@ -326,6 +327,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Sleep_Time.PROP.COLOR = COLOR_WHITE;
   Sleep_Time.PROP.BCOLOR = COLOR_RED;
   Sleep_Time.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Sleep_Time.PROP.BCOLOR_MARKER = COLOR_GREEN;
   Sleep_Time.PROP.COLOR_MARKER = COLOR_WHITE;
   Sleep_Time.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
   Sleep_Time.PROP.POSY = 1;
@@ -352,6 +354,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Cycle_Time.PROP.COLOR = COLOR_WHITE;
   Cycle_Time.PROP.BCOLOR = COLOR_RED;
   Cycle_Time.PROP.COLOR_BAR_BACK = COLOR_YELLOW;
+  Cycle_Time.PROP.BCOLOR_MARKER = COLOR_GREEN;
   Cycle_Time.PROP.COLOR_MARKER = COLOR_WHITE;
   Cycle_Time.PROP.COLOR_MARKER_LIMIT = COLOR_RED;
   Cycle_Time.PROP.POSY = 2;

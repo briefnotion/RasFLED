@@ -14,6 +14,7 @@
 
 // Standard Header Files
 #include <string>
+#include <tgmath.h>
 #include <deque>
 
 // Optional Includes
@@ -120,7 +121,8 @@ float string_to_float(string String_Value);
 //  Returns true if value sucessful.
 // ! No Error Checking
 
-//string to_string_round_to_nth(float Value, int nth);
+string to_string_round_to_nth(float Value, int nth);
+// Returns string of float rounded to nth decimal.
 
 int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue);
 // Returns color in ranges of 1st to 5th of values

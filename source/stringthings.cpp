@@ -339,20 +339,22 @@ float string_to_float(string String_Value)
   return tmp_float;
 }
 
-/*
 string to_string_round_to_nth(float Value, int nth)
 {
-  // UNDER_CONSTRUCTION
+  string ret_string = to_string(Value);
 
-  string ret_string;
+  int pos = ret_string.find('.');
 
-    ret_string = to_string(Value) + 
-                            "." + 
-                            to_string((int)((Value / (10 * nth))) - ((10 * nth) * (round(Value))));
-
+  if (pos != string::npos)
+  {
+    if (pos + nth +1 <= ret_string.size())
+    {
+      ret_string.erase(pos + nth +1, ret_string.size() - (pos + nth));
+    }
+  }
+  
+  return ret_string;
 }
-*/
-
 
 int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)
 // Returns color in ranges of 1st to 5th of values

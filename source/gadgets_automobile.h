@@ -57,30 +57,64 @@ class AUTOMOBILE_GADGET
 
   Text_Field MESSAGES;
 
-  Text_Field AD_0;
-  Text_Field AD_10;
-  Text_Field AD_30;
-  Text_Field AD_32;
-  Text_Field AD_50;
-  Text_Field AD_60;
-  Text_Field AD_64;
-  Text_Field AD_90;
-  Text_Field AD_A0;
-  Text_Field AD_C0;
-  Text_Field AD_C8;
-  Text_Field AD_D0;
-  Text_Field AD_E0;
-  Text_Field AD_F0;
-  Text_Field AD_F8;
-  Text_Field AD_100;
-  Text_Field AD_102;
-  Text_Field AD_1C0;
-  Text_Field AD_120;
-  Text_Field AD_128;
-  Text_Field AD_130;
-  Text_Field AD_138;
+  Text_Field AD_260;
+  Text_Field AD_2C0;
+  Text_Field AD_360;
 
   Text_Field AD_UNKNOWN;
+
+  //-----------
+
+  Text_Field AD_F0;
+  BAR SPEEDOMETER;
+  Text_Field SPEED;
+  Text_Field GEAR;
+
+  //-----------
+
+  Text_Field AD_10;
+  BAR STEERING_WHEEL;
+  Text_Field STEERING_WHEEL_ANGLE;
+
+  //-----------
+
+  Text_Field AD_90;
+  BAR RPM_GUAGE;
+  Text_Field RPM;
+
+  //-----------
+
+  Text_Field AD_80;
+  BAR BRAKE_PRESSURE_GUAGE;
+  Text_Field BRAKE_PRESSURE;
+
+  //-----------
+
+  Text_Field AD_x0;
+  BAR ACCELERATOR_POSITION_GUAGE;
+  Text_Field ACCELERATOR_POSITION;
+
+  //-----------
+
+  Text_Field AD_x1;
+  BAR TEMP_COOLANT_GUAGE;
+  Text_Field TEMP_COOLANT;
+
+  //-----------
+
+  Text_Field AD_x2;
+  BAR FUEL_LEVEL_GUAGE;
+  Text_Field FUEL_LEVEL;
+
+  //-----------
+
+  Text_Field AD_C8;   // - Headlamp status, Ignition Status, Parking Brake Status
+  Text_Field AD_D0;   // - Gear Lever Status, Transmission Gear Position
+  Text_Field AD_130;  // - Speed
+  Text_Field AD_200;  // - Fuel Consumed From Start
+  Text_Field AD_380;  // - Fuel Level
+  Text_Field AD_218;  // - Odometer
+  Text_Field AD_C0;   // - Fuel % hex 3A
 
   bool CHANGED = false;
 
