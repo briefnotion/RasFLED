@@ -103,7 +103,7 @@ class AUTOMOBILE_DATA
   AUTOMOBILE_DATA_LINE AD_310;
   AUTOMOBILE_DATA_LINE AD_318;
   AUTOMOBILE_DATA_LINE AD_340;
-  AUTOMOBILE_DATA_LINE AD_360;  // 864? -High Beam Status ?
+  AUTOMOBILE_DATA_LINE AD_360;  // 864? -High Beam Status and doors?
   AUTOMOBILE_DATA_LINE AD_380;  // 896? - Fuel Level
   AUTOMOBILE_DATA_LINE AD_388;
   AUTOMOBILE_DATA_LINE AD_390;
@@ -121,18 +121,76 @@ class AUTOMOBILE_DATA
   AUTOMOBILE_DATA_LINE AD_UNKNOWN;
 };
 
-class AUTOMOBILE_BRAKE_PRESSURE
+class AUTOMOBILE_FUEL
 {
   private:
-  int VAL_PRESSURE;
+  float CONSUMED = 0;
+  string CONSUMED_DISP = "";
 
-  string PRESSURE;
+  float PERCENTAGE = 0;
+  string PERCENTAGE_DISP = "";
+
+  float LEVEL = 0;
+  string LEVEL_DISP = "";
 
   public:
 
-  void store(int Pressure);
-  int val_pressure();
-  string pressure();
+  void store_consumed(int Consumed);
+  void store_percentage(int Percentage);
+  void store_level(int Level);
+
+  float val_consumed();
+  string consumed();
+
+  float val_percentage();
+  string percentage();
+
+  float val_level();
+  string level();
+};
+
+class AUTOMOBILE_INDICATORS
+{
+  private:
+  bool LIGHTS = false;
+  int LIGHTS_POS = 0;
+  string LIGHTS_DESC = "";
+
+  bool PARKING_BRAKE = false;
+  string PARKING_BRAKE_DESC = "";
+
+  bool IGNITION = false;
+  string IGNITION_DESC = "";
+
+  public:
+
+  void store_lights(int Lights);
+  void store_parking_brake(int Parking_Brake);
+  void store_ignition(int Ignition);
+
+  bool val_lights();
+  int val_lights_pos();
+  string lights();
+
+  bool val_parking_brake();
+  string parking_brake();
+
+  bool ignition();
+  string val_ignition();
+};
+
+class AUTOMOBILE_POWER
+{
+  private:
+  int VAL_LOAD;
+
+  string LOAD;
+
+  public:
+
+  void store(int Load);
+  int val_load();
+  string load();
 };
 
 class AUTOMOBILE_RPM
@@ -152,8 +210,11 @@ class AUTOMOBILE_RPM
 class AUTOMOBILE_STEERING
 {
   private:
+
+  float PREVIOUS_STEERING_WHEEL_ANGLE = 0;
+
   int REPORTED_STEERING_WHEEL_ANGLE = 0;
-  bool CLOCKWISE = false;
+  int CLOCKWISE = -1;
 
   float VAL_STEERING_WHEEL_ANGLE;
   string STEERING_WHEEL_ANGLE;
@@ -171,18 +232,65 @@ class AUTOMOBILE_STEERING
 class AUTOMOBILE_VELOCITY
 {
   private:
-  float KMPH_X_10 = 0;
-  float MPH_X_10 = 0;
-  string KMPH;
-  string MPH;
+
+  float MULTIPLIER = 1;
+
+  float KMPH = 0;
+  float MPH = 0;
+  string KMPH_DISP;
+  string MPH_DISP;
+
+  float LF_KMPH = 0;
+  float LF_MPH = 0;
+  string LF_KMPH_DISP;
+  string LF_MPH_DISP;
+
+  float RF_KMPH = 0;
+  float RF_MPH = 0;
+  string RF_KMPH_DISP;
+  string RF_MPH_DISP;
+
+  float LB_KMPH = 0;
+  float LB_MPH = 0;
+  string LB_KMPH_DISP;
+  string LB_MPH_DISP;
+
+  float RB_KMPH = 0;
+  float RB_MPH = 0;
+  string RB_KMPH_DISP;
+  string RB_MPH_DISP;
 
   public:
 
   void store(int kmph, float Multiplier);
-  float kmph_x_10();
-  float mph_x_10();
+  float val_kmph();
+  float val_mph();
   string kmph();
   string mph();
+
+  void store_LF(int mps);
+  float val_LF_kmph();
+  float val_LF_mph();
+  string LF_kmph();
+  string LF_mph();
+
+  void store_RF(int mps);
+  float val_RF_kmph();
+  float val_RF_mph();
+  string RF_kmph();
+  string RF_mph();
+
+  void store_LB(int mps);
+  float val_LB_kmph();
+  float val_LB_mph();
+  string LB_kmph();
+  string LB_mph();
+
+  void store_RB(int mps);
+  float val_RB_kmph();
+  float val_RB_mph();
+  string RB_kmph();
+  string RB_mph();
 };
 
 class AUTOMOBILE_TEMPATURE
@@ -218,7 +326,9 @@ class AUTOMOBILE_TRANSLATED_DATA
   AUTOMOBILE_VELOCITY SPEED;
   AUTOMOBILE_TEMPATURE COOLANT_TEMP;
   AUTOMOBILE_RPM RPM;
-  AUTOMOBILE_BRAKE_PRESSURE BRAKE_PRESSURE;
+  AUTOMOBILE_POWER POWER;
+  AUTOMOBILE_INDICATORS INDICATORS;
+  AUTOMOBILE_FUEL FUEL;
 };
 
 class AUTOMOBILE_PROPERTIES

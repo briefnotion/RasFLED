@@ -59,7 +59,8 @@ class AUTOMOBILE_GADGET
 
   Text_Field AD_260;
   Text_Field AD_2C0;
-  Text_Field AD_360;
+  Text_Field AD_190;
+
 
   Text_Field AD_UNKNOWN;
 
@@ -85,8 +86,8 @@ class AUTOMOBILE_GADGET
   //-----------
 
   Text_Field AD_80;
-  BAR BRAKE_PRESSURE_GUAGE;
-  Text_Field BRAKE_PRESSURE;
+  BAR POWER_LOAD_GUAGE;
+  Text_Field POWER_LOAD;
 
   //-----------
 
@@ -115,6 +116,17 @@ class AUTOMOBILE_GADGET
   Text_Field AD_380;  // - Fuel Level
   Text_Field AD_218;  // - Odometer
   Text_Field AD_C0;   // - Fuel % hex 3A
+  Text_Field AD_360;  // - Diirs and High Beam
+
+  //-----------
+
+  // Tire Test
+  Text_Field LF_SPEED;
+  Text_Field RF_SPEED;
+  Text_Field LB_SPEED;
+  Text_Field RB_SPEED;
+
+  //-----------
 
   bool CHANGED = false;
 
