@@ -14,23 +14,120 @@
 
 #include "auto.h"
 
+void VELOCITY::store(float kmps)
+{
+  KMPH = kmps;  
+
+  MPH = velocity_translate_kmph_to_mph(KMPH);
+  KMPH_DISP = to_string_round_to_nth(KMPH, 2);
+  MPH_DISP = to_string_round_to_nth(MPH, 2);
+}
+
+float VELOCITY::val_kmph()
+{
+  return KMPH;
+}
+
+float VELOCITY::val_mph()
+{
+  return MPH;
+}
+
+string VELOCITY::kmph()
+{
+  return KMPH_DISP;
+}
+
+string VELOCITY::mph()
+{
+  return MPH_DISP;
+}
+
+void AUTOMOBILE_DOORS::store(int Data)
+{
+  // AD_360 also contains info on the engine running status  
+
+  // RB - Door
+  LF_DOOR_OPEN = !get_bit_value(Data, 1);
+  RF_DOOR_OPEN = !get_bit_value(Data, 2);
+  LB_DOOR_OPEN = !get_bit_value(Data, 4);
+  RB_DOOR_OPEN = !get_bit_value(Data, 8);
+
+  HATCHBACK_DOOR_OPEN = !get_bit_value(Data, 16);
+  HOOD_DOOR_OPEN = !get_bit_value(Data, 32);
+
+  //1[2]
+  //MOONROOF_DOOR_OPEN = get_bit_value(Data, 8);
+}
+
+bool AUTOMOBILE_DOORS::lf_door_open()
+{
+  return LF_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::rf_door_open()
+{
+  return RF_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::lb_door_open()
+{
+  return LB_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::rb_door_open()
+{
+  return RB_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::hatchback_door_open()
+{
+  return HATCHBACK_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::moonroof_door_open()
+{
+  return MOONROOF_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::hood_door_open()
+{
+  return HOOD_DOOR_OPEN;
+}
+
+void AUTOMOBILE_GUAGES::store_coolant(int Value)
+{
+  COOLANT = Value;
+  COLLANT_DISP = to_string(COOLANT) + "c";
+}
+
+int AUTOMOBILE_GUAGES::val_coolant()
+{
+  return COOLANT;
+}
+
+string AUTOMOBILE_GUAGES::coolant()
+{
+  return COLLANT_DISP;
+}
+
 void AUTOMOBILE_FUEL::store_consumed(int Consumed)
 {
-  CONSUMED = ((float)Consumed) * 0.0015259021896696;
+  CONSUMED = ((float)Consumed) / 20;
 
   CONSUMED_DISP = to_string_round_to_nth(CONSUMED, 2) + " gal";
 }
 
 void AUTOMOBILE_FUEL::store_percentage(int Percentage)
 {
-  PERCENTAGE = ((float)Percentage) * 0.0015259021896696;
+  PERCENTAGE = ((float)Percentage * 100) / 256 ;
 
-  PERCENTAGE_DISP = to_string_round_to_nth(PERCENTAGE, 2) + " %";
+  PERCENTAGE_DISP = to_string_round_to_nth(PERCENTAGE, 1) + " %";
 }
 
 void AUTOMOBILE_FUEL::store_level(int Level)
 {
-  LEVEL = ((float)Level) * 0.0015259021896696;
+  LEVEL = ((float)Level) / 20;
 
   LEVEL_DISP = to_string_round_to_nth(LEVEL, 1) + " gal";
 }
@@ -103,15 +200,17 @@ void AUTOMOBILE_INDICATORS::store_lights(int Lights)
 void AUTOMOBILE_INDICATORS::store_parking_brake(int Parking_Brake)
 {
   // Parse Parking Brake
-  if (Parking_Brake == 176)
+  // B0 or B1 - OFF
+  // F0 or F1 - On
+  if (Parking_Brake == 176 || Parking_Brake == 177)
   {
     PARKING_BRAKE = false;
-    PARKING_BRAKE_DESC = "PARKING BRAKE ON";
+    PARKING_BRAKE_DESC = "PARKING BRAKE OFF";
   }
-  else if (Parking_Brake == 177)
+  else if (Parking_Brake == 240 || Parking_Brake == 241)
   {
     PARKING_BRAKE = true;
-    PARKING_BRAKE_DESC = "PARKING BRAKE OFF";
+    PARKING_BRAKE_DESC = "PARKING BRAKE ON";
   }
   else
   {
@@ -182,7 +281,6 @@ string AUTOMOBILE_POWER::load()
   return LOAD;
 }
 
-
 void AUTOMOBILE_RPM::store(int Rpm)
 {
   // val - x6000
@@ -201,6 +299,24 @@ string AUTOMOBILE_RPM::rpm()
   return RPM;
 }
 
+void AUTOMOBILE_RPM::store_2(int Rpm)
+{
+  // val - xC000
+  VAL_RPM_2 = (Rpm - 49152) * 2;    // Wrong
+
+  RPM_2 = to_string(VAL_RPM_2);
+}
+
+int AUTOMOBILE_RPM::val_rpm_2()
+{
+  return VAL_RPM_2;
+}
+
+string AUTOMOBILE_RPM::rpm_2()
+{
+  return RPM_2;
+}
+
 void AUTOMOBILE_STEERING::store_steering_wheel_angle(int Angle, int Direction)
 {
   // x8000 at 0 deg. x8500 at 90 deg. x9000 at 180 deg.
@@ -210,6 +326,7 @@ void AUTOMOBILE_STEERING::store_steering_wheel_angle(int Angle, int Direction)
 
   // MSB for Direction
 
+  // Determine direction of wheel turn.
   if (VAL_STEERING_WHEEL_ANGLE == PREVIOUS_STEERING_WHEEL_ANGLE)
   {
     CLOCKWISE = 0;
@@ -228,6 +345,32 @@ void AUTOMOBILE_STEERING::store_steering_wheel_angle(int Angle, int Direction)
       DIRECTION = "<-";
     }
 
+    // Determine if wheel is left or right of center.
+    if (CLOCKWISE == 1)
+    {
+      if (VAL_STEERING_WHEEL_ANGLE > PREVIOUS_STEERING_WHEEL_ANGLE)
+      {
+        LEFT_OF_CENTER = false;
+      }
+    }
+    else if (CLOCKWISE = -1)
+    {
+      if (VAL_STEERING_WHEEL_ANGLE > PREVIOUS_STEERING_WHEEL_ANGLE)
+      {
+        LEFT_OF_CENTER = true;
+      }
+    }
+
+    if (LEFT_OF_CENTER == true)
+    {
+      LEFT_OF_CENTER_DISP = "<-";
+    }
+    else
+    {
+      LEFT_OF_CENTER_DISP = "->";
+    }
+
+    // Set Display Variables
     PREVIOUS_STEERING_WHEEL_ANGLE = VAL_STEERING_WHEEL_ANGLE;
     STEERING_WHEEL_ANGLE = to_string_round_to_nth(VAL_STEERING_WHEEL_ANGLE, 1) + " deg";
   }
@@ -251,6 +394,16 @@ string AUTOMOBILE_STEERING::turning_direction()
 bool AUTOMOBILE_STEERING::clockwise()
 {
   return CLOCKWISE;
+}
+
+bool AUTOMOBILE_STEERING::val_left_of_center()
+{
+  return LEFT_OF_CENTER;
+}
+
+string AUTOMOBILE_STEERING::left_of_center()
+{
+  return LEFT_OF_CENTER_DISP;
 }
 
 // Multiplier source unknown.  not calculating correctly.
@@ -450,7 +603,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store(int gear)
     SHORT_DESC = "P";
     LONG_DESC = "Park";
   }
-  else if (gear == -1)
+  else if (gear == 13)
   {
     SHORT_DESC = "R";
     LONG_DESC = "Reverse";
@@ -475,6 +628,16 @@ string AUTOMOBILE_TRANSMISSION_GEAR::short_desc()
 string AUTOMOBILE_TRANSMISSION_GEAR::long_desc()
 {
   return LONG_DESC;
+}
+
+void AUTOMOBILE_CALCULATED::compute(AUTOMOBILE_TRANSLATED_DATA Status)
+{
+
+  LF_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_LF_kmph());
+  RF_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_RF_kmph());
+  LB_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_LB_kmph());
+  RB_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_RB_kmph());
+
 }
 
 void AUTOMOBILE::parse(string Line)
@@ -834,6 +997,7 @@ void AUTOMOBILE::translate()
 
   // RPM
   STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
+  STATUS.RPM.store_2((DATA.AD_90.DATA[2] *256) + DATA.AD_90.DATA[3]);
 
   // BRAKE PRESSURE
   STATUS.POWER.store((DATA.AD_80.DATA[5] *256) + DATA.AD_80.DATA[6]);
@@ -844,9 +1008,19 @@ void AUTOMOBILE::translate()
   //STATUS.INDICATORS.store_ignition(DATA.AD_C8.DATA[1]);
 
   // FUEL
-  STATUS.FUEL.store_consumed((DATA.AD_200.DATA[6] *256) + DATA.AD_200.DATA[7]);
-  STATUS.FUEL.store_percentage((DATA.AD_C0.DATA[6] *256) + DATA.AD_C0.DATA[7]);
-  STATUS.FUEL.store_level((DATA.AD_380.DATA[6] *256) + DATA.AD_380.DATA[7]);
+  STATUS.FUEL.store_consumed(DATA.AD_200.DATA[7]);
+  STATUS.FUEL.store_percentage(DATA.AD_C0.DATA[7]);
+  STATUS.FUEL.store_level(DATA.AD_380.DATA[7]);
+
+  // DOORS 3B 3F
+  STATUS.DOORS.store(DATA.AD_360.DATA[2]);
+
+  // Guages
+  STATUS.GUAGES.store_coolant(DATA.AD_100.DATA[3]);
+  
+  // 
+  CALCULATED.compute(STATUS);
+
 }
 
 #endif

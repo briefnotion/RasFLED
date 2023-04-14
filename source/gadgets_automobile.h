@@ -57,55 +57,47 @@ class AUTOMOBILE_GADGET
 
   Text_Field MESSAGES;
 
-  Text_Field AD_260;
-  Text_Field AD_2C0;
-  Text_Field AD_190;
-
-
   Text_Field AD_UNKNOWN;
 
   //-----------
 
-  Text_Field AD_F0;
+  Text_Field SPEEDOMETER_DESC;
   BAR SPEEDOMETER;
   Text_Field SPEED;
   Text_Field GEAR;
+  Text_Field SPEEDOMETER_MIN;
+  Text_Field SPEEDOMETER_MAX;
 
   //-----------
 
-  Text_Field AD_10;
+  Text_Field RPM_DESC;
+  BAR RPM_GUAGE;
+  Text_Field RPM;
+  Text_Field RPM_MIN;
+  Text_Field RPM_MAX;
+
+  //-----------
+
+  Text_Field POWER_LOAD_DESC;
+  BAR POWER_LOAD_GUAGE;
+  Text_Field POWER_LOAD;
+  Text_Field POWER_LOAD_MIN;
+  Text_Field POWER_LOAD_MAX;
+
+  //-----------
+
+  Text_Field STEERING_WHEEL_DESC;
   BAR STEERING_WHEEL;
   Text_Field STEERING_WHEEL_ANGLE;
 
   //-----------
 
-  Text_Field AD_90;
-  BAR RPM_GUAGE;
-  Text_Field RPM;
+
 
   //-----------
 
-  Text_Field AD_80;
-  BAR POWER_LOAD_GUAGE;
-  Text_Field POWER_LOAD;
-
   //-----------
 
-  Text_Field AD_x0;
-  BAR ACCELERATOR_POSITION_GUAGE;
-  Text_Field ACCELERATOR_POSITION;
-
-  //-----------
-
-  Text_Field AD_x1;
-  BAR TEMP_COOLANT_GUAGE;
-  Text_Field TEMP_COOLANT;
-
-  //-----------
-
-  Text_Field AD_x2;
-  BAR FUEL_LEVEL_GUAGE;
-  Text_Field FUEL_LEVEL;
 
   //-----------
 
@@ -125,6 +117,11 @@ class AUTOMOBILE_GADGET
   Text_Field RF_SPEED;
   Text_Field LB_SPEED;
   Text_Field RB_SPEED;
+
+  Text_Field LF_SPEED_OFFSET;
+  Text_Field RF_SPEED_OFFSET;
+  Text_Field LB_SPEED_OFFSET;
+  Text_Field RB_SPEED_OFFSET;
 
   //-----------
 

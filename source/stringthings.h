@@ -124,6 +124,12 @@ float string_to_float(string String_Value);
 string to_string_round_to_nth(float Value, int nth);
 // Returns string of float rounded to nth decimal.
 
+bool get_bit_value(int baseline, int bit_set_compare);
+// Compares Baseline with bitwise of bit_set_compare.
+// Returns true if bit is same else returns false.
+// eg: D8, check for bit 0001000 is:
+//   if (get_bit_value(216, 8) == true)
+
 int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue);
 // Returns color in ranges of 1st to 5th of values
 // eg (12, 5, 10, 15, 20, 25) returns color yellow

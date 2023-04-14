@@ -341,20 +341,6 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
       if (check_command(cons," startcomm", "Start Comms Port"))
       {
 
-        sdSysData.COMMS.PROPS.PORT = COMMS_PORT;
-        sdSysData.COMMS.PROPS.BAUD_RATE = COMMS_BAUD;
-        sdSysData.COMMS.PROPS.BIT_COUNT = COMMS_BIT_PARITY;
-        sdSysData.COMMS.PROPS.PARITY = COMMS_BIT_PARITY;
-        sdSysData.COMMS.PROPS.STOP_BITS = COMMS_STOP_BITS;
-        sdSysData.COMMS.PROPS.HARDWARE_FLOW_CONTROL = COMMS_HARDWARE_FLOW_CONTROL;
-        sdSysData.COMMS.PROPS.DISABLE_CANONICAL_MODE = COMMS_DISABLE_CANONICAL_MODE;
-        sdSysData.COMMS.PROPS.XONXOFF = COMMS_XONXOFF;
-
-        sdSysData.COMMS.PROPS.SAVE_TO_LOG = false;
-        sdSysData.COMMS.PROPS.SAVE_LOG_FILENAME = COMMS_SAVE_LOG_FILENAME;
-        sdSysData.COMMS.PROPS.RECEIVE_TEST_DATA = COMMS_RECEIVE_TEST_DATA;
-        sdSysData.COMMS.PROPS.TEST_DATA_FILENAME = COMMS_TEST_DATA_FILENAME;
-
         if (sdSysData.COMMS.create() == true)
         {
           cons.printwait("Comm Port Started.");

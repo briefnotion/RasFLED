@@ -129,6 +129,9 @@ class TIMED_PING
   
   public:
 
+  bool enabled();
+  // Retruns enabled;
+
   void ping_up(unsigned long current_time, int delay);
   // Start the timer for the event that needs to be triggered.
 

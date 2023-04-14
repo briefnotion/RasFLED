@@ -277,9 +277,20 @@ void COMPORT::send(string Text)
   WRITE_TO_COMM.push_back(Text);
 }
 
-void COMPORT::cycle()
+void COMPORT::cycle(unsigned long tmeFrame_Time)
 {
   bool data_received = true;
+
+  // Check auto start
+  if (ACTIVE == false && PROPS.AUTOSTART == true && AUTOSTART_TIMER.ping_down(tmeFrame_Time) == false)
+  {
+    if (AUTOSTART_TIMER.enabled() == false)
+    {
+      AUTOSTART_TIMER.ping_up(tmeFrame_Time, 5000);
+    }
+
+    create();
+  }
 
   // Do not access comm port if it is shut down.
   if (ACTIVE == true)

@@ -29,6 +29,7 @@
 
 // RASFled related header files
 
+#include "fled_time.h"
 #include "stringthings.h"
 #include "rasapi.h"
 
@@ -41,6 +42,8 @@ class COMPORT_PROPERTIES
 // Panel border characters.
 {
   public:
+
+  bool AUTOSTART =  false;
 
   string PORT = "";
   int BAUD_RATE = 38400;
@@ -76,6 +79,8 @@ class COMPORT
   struct termios tty_old;
 
   int USB = 0;
+
+  TIMED_PING AUTOSTART_TIMER;
 
   deque<string> WRITE_TO_COMM;
   // List of text to be sent to com port on next cycle.
@@ -116,7 +121,7 @@ class COMPORT
   void send(string Text);
   // Stack send commands to be processed at cycle.
 
-  void cycle();
+  void cycle(unsigned long tmeFrame_Time);
   // Writes and Reads data to comm port to send and
   //  recieve queues.
 

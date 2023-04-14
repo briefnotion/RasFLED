@@ -301,6 +301,23 @@ int loop()
 
   // Disposable Variables
   int count  = 0;
+
+  // Comm Port Setup
+  sdSystem.COMMS.PROPS.PORT = COMMS_PORT;
+  sdSystem.COMMS.PROPS.BAUD_RATE = COMMS_BAUD;
+  sdSystem.COMMS.PROPS.BIT_COUNT = COMMS_BIT_PARITY;
+  sdSystem.COMMS.PROPS.PARITY = COMMS_BIT_PARITY;
+  sdSystem.COMMS.PROPS.STOP_BITS = COMMS_STOP_BITS;
+  sdSystem.COMMS.PROPS.HARDWARE_FLOW_CONTROL = COMMS_HARDWARE_FLOW_CONTROL;
+  sdSystem.COMMS.PROPS.DISABLE_CANONICAL_MODE = COMMS_DISABLE_CANONICAL_MODE;
+  sdSystem.COMMS.PROPS.XONXOFF = COMMS_XONXOFF;
+
+  sdSystem.COMMS.PROPS.AUTOSTART = true;
+
+  sdSystem.COMMS.PROPS.SAVE_TO_LOG = false;
+  sdSystem.COMMS.PROPS.SAVE_LOG_FILENAME = COMMS_SAVE_LOG_FILENAME;
+  sdSystem.COMMS.PROPS.RECEIVE_TEST_DATA = COMMS_RECEIVE_TEST_DATA;
+  sdSystem.COMMS.PROPS.TEST_DATA_FILENAME = COMMS_TEST_DATA_FILENAME;
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console
@@ -851,7 +868,7 @@ int loop()
     // Comm port proccessing will be the slowest. Process here after work is done.
     // Display received messages.
 
-    sdSystem.COMMS.cycle();
+    sdSystem.COMMS.cycle(tmeCurrentMillis);
 
     // Need to stop deleting this.
     //for (int pos = 0; pos < sdSystem.COMMS.READ_FROM_COMM.size(); pos++)

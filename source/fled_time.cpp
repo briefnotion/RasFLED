@@ -272,6 +272,11 @@ void TIMED_IS_READY::set_earliest_ready_time(unsigned long current_time)
 
 // ---------------------------------------------------------------------------------------
 
+bool TIMED_PING::enabled()
+{
+  return ENABLED;
+}
+
 void TIMED_PING::ping_up(unsigned long current_time, int delay)
 // Start the timer for the event that needs to be triggered.
 {

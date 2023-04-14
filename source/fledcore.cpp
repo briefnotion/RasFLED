@@ -497,8 +497,22 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
 
       // Only continue processing the event if the event hasnt been completed.
       // or if the event shouldnt be skipped because of display in day is off.
-      if (teDATA[event].booCOMPLETE == false && 
-                    (teDATA[event].booOFFDURINGDAY == false || sdSysData.booDay_On == false))
+      if (teDATA[event].booOFFDURINGDAY == true && sdSysData.booDay_On == true)
+      {
+        // Check end conditions of animations that will be skipped, including those that may be set to end already.
+
+        // Calculate event end time.
+        int end_time = teDATA[event].tmeSTARTTIME + 
+                        (teDATA[event].intSPEED * (abs(teDATA[event].intSTARTPOS - teDATA[event].intENDPOS))) + 
+                        teDATA[event].intDURATION;
+        
+        if (tmeCurrentTime > end_time)
+        {
+          teDATA[event].booCOMPLETE = true;
+          teDATA[event].PostCheck(tmeCurrentTime);
+        }
+      }
+      else if (teDATA[event].booCOMPLETE == false)
       {
         // OK, so an event is schedule, but is it ready to start?
         if (tmeCurrentTime >= teDATA[event].tmeSTARTTIME)

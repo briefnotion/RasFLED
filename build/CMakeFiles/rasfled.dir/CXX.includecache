@@ -155,6 +155,8 @@ errno.h
 -
 termios.h
 -
+fled_time.h
+/home/pi/source/RasFLED/source/fled_time.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 rasapi.h
