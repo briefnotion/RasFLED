@@ -134,6 +134,7 @@ class TIMED_PING
 
   void ping_up(unsigned long current_time, int delay);
   // Start the timer for the event that needs to be triggered.
+  // If already running, resets the trigger time.
 
   bool ping_down(unsigned long current_time);
   // Check for the event triggered time.

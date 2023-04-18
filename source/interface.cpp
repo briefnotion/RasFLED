@@ -451,15 +451,15 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
       // Toggle Day Night
       if (check_command(cons, "dd", ""))
       {
-        if (sdSysData.booDay_On == true)
+        if (sdSysData.Day_On == true)
         {
           command_desc(cons, "Toggle DAY mode OFF.");
-          sdSysData.booDay_On = false;
+          sdSysData.Day_On = false;
         }
         else
         {
           command_desc(cons, "Toggle DAY mode ON.");
-          sdSysData.booDay_On = true;
+          sdSysData.Day_On = true;
         }
       }
 
@@ -478,13 +478,13 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
       // Toggle Day Mode On
       if (check_command(cons, "dayon", "DAY mode ON."))
       {
-        sdSysData.booDay_On = true;
+        sdSysData.Day_On = true;
       }
 
       // Toggle Day Mode Off
       if (check_command(cons, "dayoff", "DAY mode OFF."))
       {
-        sdSysData.booDay_On = false;
+        sdSysData.Day_On = false;
       }
       
       // -------------------------------------------------------------------------------------

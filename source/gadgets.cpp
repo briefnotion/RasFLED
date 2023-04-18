@@ -3,18 +3,91 @@
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
-// *    Department : (R+D)^2                        Name: gadgets.cpp
+// *    Department : (R+D)^2                        Name: gadgets.h
 // *       Sub Dept: Programming
 // *    Location ID: 856-45B
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
-#ifndef GADGETS_CPP
-#define GADGETS_CPP
+#ifndef GADGETS_H
+#define GADGETS_H
 
 #include "gadgets.h"
 
 using namespace std;
+
+/*
+// -------------------------------------------------------------------------------------
+//  Blank Gadget
+
+// ---------- Creating
+
+// Calculate Size and Position
+YAUTOMOBILE_ScreenPos = YSplit;
+XAUTOMOBILE_ScreenPos = XAUTOMOBILE_OVERVIEW_ScreenPos + XAUTOMOBILE_OVERVIEW_ScreenSize;
+YAUTOMOBILE_ScreenSize = YMax - YSplit - YTabSize;
+XAUTOMOBILE_ScreenSize =  XSplit - XAUTOMOBILE_OVERVIEW_ScreenSize;
+
+// Build Window
+AUTOMOBILE_PANEL.PROP.SIZEY = YAUTOMOBILE_ScreenSize;
+AUTOMOBILE_PANEL.PROP.SIZEX = XAUTOMOBILE_ScreenSize;
+AUTOMOBILE_PANEL.PROP.POSY = YAUTOMOBILE_ScreenPos;
+AUTOMOBILE_PANEL.PROP.POSX = XAUTOMOBILE_ScreenPos;
+
+AUTOMOBILE_PANEL.create();
+
+// ---------- Update Data
+Screen.AUTOMOBILE_OVERVIEW_PANEL.update(sdSysData, tmeCurrentMillis);
+
+// ---------- Screen Draw
+AUTOMOBILE_OVERVIEW_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+
+// -------------------------------------------------------------------------------------
+//  Panel Class
+
+void AUTOMOBILE_OVERVIEW_GADGET::create()
+{
+  // Build Display Window
+  GADGET_PANEL.PROP.SIZEY = PROP.SIZEY;
+  GADGET_PANEL.PROP.SIZEX = PROP.SIZEX;
+  GADGET_PANEL.PROP.POSY = PROP.POSY;
+  GADGET_PANEL.PROP.POSX = PROP.POSX;
+  GADGET_PANEL.PROP.COLOR = COLOR_WHITE;
+  GADGET_PANEL.PROP.BCOLOR = COLOR_RED;
+
+  GADGET_PANEL.create();
+
+  test.PROP.POSY = 5;
+  test.PROP.POSX = 1;
+  test.PROP.SIZEX = 10;
+  test.PROP.COLORS_ON = true;
+  test.PROP.BCOLOR = COLOR_BLACK;
+  test.PROP.COLOR = COLOR_WHITE;
+  test.PROP.JUSTIFICATION_LEFT = true;
+  test.set_text("test");
+}
+
+void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
+{
+
+}
+
+bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
+{
+  //-----------
+  if (CHANGED == false)
+  {
+
+  }
+
+  test.draw(GADGET_PANEL, Refresh);
+
+  GADGET_PANEL.draw(Refresh);
+
+  CHANGED = false;
+  return false;
+}
+*/
 
 // -------------------------------------------------------------------------------------
 //  Panel Class

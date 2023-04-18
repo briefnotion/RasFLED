@@ -162,9 +162,11 @@ class AUTOMOBILE_DOORS
 
   bool HATCHBACK_DOOR_OPEN = false;
 
-  bool MOONROOF_DOOR_OPEN = false;  // Not Implemented
+  //bool MOONROOF_DOOR_OPEN = false;  // Not Implemented
 
   bool HOOD_DOOR_OPEN = false;
+
+  bool AVAILABLE = true;
 
   public:
 
@@ -174,9 +176,10 @@ class AUTOMOBILE_DOORS
   bool lb_door_open();
   bool rb_door_open();
   bool hatchback_door_open();
-  bool moonroof_door_open();
-  bool hood_door_open();  
+  //bool moonroof_door_open();
+  bool hood_door_open();
 
+  bool door_switch_available();
 };
 
 class AUTOMOBILE_GUAGES
@@ -234,6 +237,8 @@ class AUTOMOBILE_INDICATORS
   bool IGNITION = false;
   string IGNITION_DESC = "";
 
+  bool AVAILABLE = true;
+
   public:
 
   void store_lights(int Lights);
@@ -249,6 +254,8 @@ class AUTOMOBILE_INDICATORS
 
   bool ignition();
   string val_ignition();
+
+  bool light_switch_available();
 };
 
 class AUTOMOBILE_POWER
@@ -443,6 +450,9 @@ class AUTOMOBILE
 {
   private:
 
+  bool ACTIVE = false;
+  TIMED_PING ACTIVITY_TIMER;
+
   void parse(string Line);
 
   public:
@@ -456,7 +466,9 @@ class AUTOMOBILE
 
   int message_count = 0;
 
-  void process(COMPORT &Com_Port);
+  bool active();
+
+  void process(COMPORT &Com_Port, unsigned long tmeFrame_Time);
 
   void translate();
 };

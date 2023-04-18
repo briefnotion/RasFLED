@@ -123,7 +123,8 @@ class system_data
   bool Lights_On = true;
 
   // Day Mode Active
-  bool booDay_On = false;
+  bool Day_On = false;
+  BOOL_WITH_OVERRIDE Day_On_With_Override;
 
   // Files
   bool booRunning_State_File_Dirty = false;

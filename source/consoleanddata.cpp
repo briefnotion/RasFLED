@@ -72,6 +72,8 @@ void Console::update_automobile_gadgets(unsigned long &tmeCurrentMillis, system_
 {
   if(sdSysData.CAR_INFO.CHANGED == true)
   {
+    sdSysData.CAR_INFO.translate();
+    Screen.AUTOMOBILE_OVERVIEW_PANEL.update(sdSysData, tmeCurrentMillis);
     Screen.AUTOMOBILE_PANEL.update(sdSysData, tmeCurrentMillis);
   }
 }
@@ -308,7 +310,7 @@ void Console::tab_open_player(system_data &sdSysData)
 
 void Console::tab_open_automobile(system_data &sdSysData)
 {
-  printi("Tab Radio");
+  printi("Tab Automobile");
   ScrStat.Window_Console.off(ScrStat.Needs_Refresh);       // Console
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
   
@@ -551,7 +553,7 @@ void Console::processmouseinput(system_data &sdSysData)
       else if (name == "DAYNIGHT")
       // Day Night Mode
       {
-        if (sdSysData.booDay_On == false)
+        if (sdSysData.Day_On_With_Override.value() == false)
         {
           keywatch.cmdInString("dayon");
           Screen.bzButtons.set_label("DAYNIGHT", "\nDay\nMode");

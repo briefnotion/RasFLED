@@ -564,6 +564,9 @@ int loop()
   // MAIN LOOP START
   while( cons.keywatch.get(KEYEXIT) == 0 )
   {
+    // ---------------------------------------------------------------------------------------
+    // Thread Management
+
     // Close all completed and active threads after sleep cycle is complete.
 
     // Before starting a new loop, close the render thread from the previous loop, if 
@@ -590,6 +593,7 @@ int loop()
       }
     }
 
+    // ---------------------------------------------------------------------------------------
     // --- Prpare the Loop ---
 
     //  Get current time.  This will be our timeframe to work in.
@@ -602,13 +606,37 @@ int loop()
     //    the loop will just walk on past any hardware updates that would otherwise be
     //    sent.
 
+    // ---------------------------------------------------------------------------------------
+    // --- Read Switchs --- 
+
      // Are switches ready -----------------
     if (input_from_switches.is_ready(tmeCurrentMillis) == true)
     {    
       // Read values of switches
-      for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+      // Read information from car system. If not available, then get door info 
+      //  from original system as redundancy.
+
+      if (sdSystem.CAR_INFO.active() == true && sdSystem.CAR_INFO.STATUS.DOORS.door_switch_available() == true)
       {
-        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
+        // Not sure how to tie this in with the load configuration file yet.
+        sdSystem.CONFIG.vSWITCH_PIN_MAP[0].value = sdSystem.CAR_INFO.STATUS.DOORS.lb_door_open();
+        sdSystem.CONFIG.vSWITCH_PIN_MAP[1].value = sdSystem.CAR_INFO.STATUS.DOORS.lf_door_open();
+        sdSystem.CONFIG.vSWITCH_PIN_MAP[2].value = sdSystem.CAR_INFO.STATUS.DOORS.rb_door_open();
+        sdSystem.CONFIG.vSWITCH_PIN_MAP[3].value = sdSystem.CAR_INFO.STATUS.DOORS.rf_door_open();
+        
+        if (sdSystem.CONFIG.vSWITCH_PIN_MAP.size() >= 4 && sdSystem.CONFIG.vSWITCH_PIN_MAP.size() <= 6)
+        {
+          sdSystem.CONFIG.vSWITCH_PIN_MAP[4].value = sdSystem.CAR_INFO.STATUS.DOORS.hatchback_door_open();
+          sdSystem.CONFIG.vSWITCH_PIN_MAP[5].value = sdSystem.CAR_INFO.STATUS.DOORS.hood_door_open();
+        }
+      }
+      else
+      // Redundant system in case auto door switchs arent avail.
+      {
+        for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+        {
+          sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
+        }
       }
 
       // Override the digital pins if in debugging mode.
@@ -623,8 +651,12 @@ int loop()
 
       // Check the doors and start or end all animations
       v_DoorMonitorAndAnimationControlModule2(cons, sdSystem, animations, tmeCurrentMillis);
+    }
 
-    } // Are switches ready -----------------
+    // Read light switchs and set day on or day off modes.
+    sdSystem.Day_On_With_Override.set(sdSystem.CAR_INFO.active() == true && 
+                                sdSystem.CAR_INFO.STATUS.INDICATORS.light_switch_available() == true,
+                                sdSystem.CAR_INFO.STATUS.INDICATORS.val_lights() == false, sdSystem.Day_On);
 
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---
@@ -877,7 +909,7 @@ int loop()
     //}
 
     // Process info from comm port int automobile system.
-    sdSystem.CAR_INFO.process(sdSystem.COMMS);
+    sdSystem.CAR_INFO.process(sdSystem.COMMS, tmeCurrentMillis);
 
     // ________________________
 

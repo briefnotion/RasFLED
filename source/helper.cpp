@@ -421,6 +421,32 @@ void stupid_2d::clear()
     }
   }
 
+  void BOOL_WITH_OVERRIDE::set(bool Override_Condition, bool Override_Value, bool Redundant_Value)
+  {
+    if (Override_Condition == true)
+    {
+      VALUE = Override_Value;
+      OVERRIDDEN = true;
+    }
+    else
+    {
+      VALUE = Redundant_Value;
+      OVERRIDDEN = false;
+    }
+  }
+  
+  bool BOOL_WITH_OVERRIDE::value()
+  {
+    return VALUE;
+  }
+  
+  bool BOOL_WITH_OVERRIDE::overridden()
+  {
+    return OVERRIDDEN;
+  }
+
+
+
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES
 // ***************************************************************************************
@@ -506,6 +532,27 @@ bool is_within(int Value, int Number_1, int Number_2)
   }
 }
 
+bool set_bool_with_change_notify(bool Set_Value, bool &Bool_Variable)
+{
+  if (Bool_Variable == Set_Value)
+  {
+    return false;
+  }
+  else
+  {
+    Bool_Variable = Set_Value;
+    return true;
+  }
+}
 
+int get_1_pos_of_int(int Number)
+{
+  return Number % 10;
+}
+
+int get_2_pos_of_int(int Number)
+{
+  return (Number % 100 - Number % 10) / 10;
+}
 
 #endif

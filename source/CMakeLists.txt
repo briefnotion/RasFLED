@@ -46,6 +46,7 @@ add_executable(
   hardware_status.cpp
   animations_storage.cpp
   animations_handler.cpp
+  symbols.cpp
   gadgets.cpp
   gadgets_radio.cpp
   gadgets_alerts.cpp

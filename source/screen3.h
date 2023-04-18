@@ -193,6 +193,16 @@ class Screen3
   private:
   // AUTOMOBILE Screen Variables --------------------
 
+  int YAUTOMOBILE_OVERVIEW_ScreenPos = -1;
+  int XAUTOMOBILE_OVERVIEW_ScreenPos = 0;
+  int YAUTOMOBILE_OVERVIEW_ScreenSize = -1;
+  int XAUTOMOBILE_OVERVIEW_ScreenSize = 30;
+
+  public:
+  AUTOMOBILE_OVERVIEW_GADGET AUTOMOBILE_OVERVIEW_PANEL;
+
+  private:
+
   int YAUTOMOBILE_ScreenPos = -1;
   int XAUTOMOBILE_ScreenPos = 0;
   int YAUTOMOBILE_ScreenSize = -1;

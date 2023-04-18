@@ -14,7 +14,6 @@
 
 // Standard Header Files
 #include <string>
-#include <tgmath.h>
 #include <deque>
 
 // Optional Includes

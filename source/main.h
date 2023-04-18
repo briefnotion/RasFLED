@@ -85,7 +85,7 @@
 #include <stdarg.h>
 #include <getopt.h>
 
-#include "clk.h"
+//#include "clk.h"
 #include "gpio.h"
 #include "dma.h"
 #include "pwm.h"

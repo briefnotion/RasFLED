@@ -86,11 +86,21 @@ void Screen3::buttons_menu_control(system_data &sdSysData)
 
   bzButtons.set_name(2, "DAYNIGHT");
   bzButtons.set_label(2, "\nDay\nNight");
-  bzButtons.set_value(2, int(sdSysData.booDay_On));
+  //bzButtons.set_value(2, int(sdSysData.booDay_On));
+  bzButtons.set_value(2, int(sdSysData.Day_On_With_Override.value()));
   bzButtons.set_type(2, 1);
   bzButtons.set_color(2, COLOR_GREEN, COLOR_WHITE);
-  bzButtons.set_hidden(2, false);
-  bzButtons.set_enabled(2, true);
+  if (sdSysData.Day_On_With_Override.overridden() == false)
+  {
+    bzButtons.set_hidden(2, false);
+    bzButtons.set_enabled(2, true);
+  }
+  else
+  {
+    bzButtons.set_hidden(2, true);
+    bzButtons.set_enabled(2, false);
+  }
+  
 
   bzButtons.set_name(3, "RUNNINGCOLOR");
   bzButtons.set_label(3, "Set\nRunning\nColor");
@@ -124,7 +134,7 @@ void Screen3::buttons_menu_control(system_data &sdSysData)
   bzButtons.set_hidden(6, false);
   bzButtons.set_enabled(6, true);
 
-  if (sdSysData.booDay_On == true)
+  if (sdSysData.Day_On_With_Override.value() == true)
   {
     bzButtons.set_label("DAYNIGHT", "\nDay\nMode");
   }
@@ -1035,13 +1045,28 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
   // ---------------------------------------------------------------------------------------
   // Color AUTOMOBILE Buttons Panel
   if (ScrStat.Window_Automobile_Screen.value() == true)
-  {
+  {    
+    // AUTOMOBILE_OVERVIEW Window
+    // Calculate Size and Position
+    YAUTOMOBILE_OVERVIEW_ScreenPos = YSplit;
+    XAUTOMOBILE_OVERVIEW_ScreenPos = XAUTOMOBILE_OVERVIEW_ScreenPos;
+    YAUTOMOBILE_OVERVIEW_ScreenSize = YMax - YSplit - YTabSize;
+    XAUTOMOBILE_OVERVIEW_ScreenSize = XAUTOMOBILE_OVERVIEW_ScreenSize;
+
+    // Build Window
+    AUTOMOBILE_OVERVIEW_PANEL.PROP.SIZEY = YAUTOMOBILE_OVERVIEW_ScreenSize;
+    AUTOMOBILE_OVERVIEW_PANEL.PROP.SIZEX = XAUTOMOBILE_OVERVIEW_ScreenSize;
+    AUTOMOBILE_OVERVIEW_PANEL.PROP.POSY = YAUTOMOBILE_OVERVIEW_ScreenPos;
+    AUTOMOBILE_OVERVIEW_PANEL.PROP.POSX = XAUTOMOBILE_OVERVIEW_ScreenPos;
+
+    AUTOMOBILE_OVERVIEW_PANEL.create();
+    
     // AUTOMOBILE Window
     // Calculate Size and Position
     YAUTOMOBILE_ScreenPos = YSplit;
-    XAUTOMOBILE_ScreenPos = XAUTOMOBILE_ScreenPos;
+    XAUTOMOBILE_ScreenPos = XAUTOMOBILE_OVERVIEW_ScreenPos + XAUTOMOBILE_OVERVIEW_ScreenSize;
     YAUTOMOBILE_ScreenSize = YMax - YSplit - YTabSize;
-    XAUTOMOBILE_ScreenSize =  XSplit;
+    XAUTOMOBILE_ScreenSize =  XSplit - XAUTOMOBILE_OVERVIEW_ScreenSize;
 
     // Build Window
     AUTOMOBILE_PANEL.PROP.SIZEY = YAUTOMOBILE_ScreenSize;
@@ -1059,7 +1084,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     tiAUTOMOBILE_Screen.PROP.SIZE = TitleSize;
     
     tiAUTOMOBILE_Screen.PROP.LABEL = "AUTOMOBILE";
-    tiAUTOMOBILE_Screen.PROP.BCOLOR = COLOR_RED;
+    tiAUTOMOBILE_Screen.PROP.BCOLOR = COLOR_BLACK;
     tiAUTOMOBILE_Screen.PROP.COLOR = COLOR_WHITE;
     tiAUTOMOBILE_Screen.create();
 
@@ -1334,7 +1359,7 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   }
 
   // Display Day or Night mode toggle.
-  if(sdSysData.booDay_On == true)
+  if(sdSysData.Day_On_With_Override.value() == true)
   {
     NIGHT.set_inverse(true);
     NIGHT.set_text("  DAY  ");
@@ -1791,7 +1816,9 @@ void Screen3::radio_status(system_data &sdSysData, ScreenStatus &ScrStat)
 void Screen3::automobile_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
 {
+  AUTOMOBILE_OVERVIEW_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   AUTOMOBILE_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
+  
   tiAUTOMOBILE_Screen.draw(ScrStat.Needs_Refresh == true);
 }
 

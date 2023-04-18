@@ -315,6 +315,10 @@ helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
 auto.h
 /home/pi/source/RasFLED/source/auto.h
+helper.h
+/home/pi/source/RasFLED/source/helper.h
+symbols.h
+/home/pi/source/RasFLED/source/symbols.h
 
 /home/pi/source/RasFLED/source/gadgets_radio.cpp
 gadgets_radio.h
@@ -477,8 +481,6 @@ stdarg.h
 -
 getopt.h
 -
-clk.h
-/home/pi/source/RasFLED/source/clk.h
 gpio.h
 /home/pi/source/RasFLED/source/gpio.h
 dma.h
@@ -554,10 +556,6 @@ deque
 boost/filesystem.hpp
 -
 
-/home/pi/source/RasFLED/source/rpi_ws281x-master/clk.h
-stdint.h
--
-
 /home/pi/source/RasFLED/source/rpi_ws281x-master/dma.h
 stdint.h
 -
@@ -617,11 +615,19 @@ radio_channel_coordinator.h
 /home/pi/source/RasFLED/source/stringthings.h
 string
 -
-tgmath.h
--
 deque
 -
 ncurses.h
+-
+
+/home/pi/source/RasFLED/source/symbols.cpp
+symbols.h
+/home/pi/source/RasFLED/source/symbols.h
+
+/home/pi/source/RasFLED/source/symbols.h
+stdio.h
+-
+string
 -
 
 /home/pi/source/RasFLED/source/system.cpp

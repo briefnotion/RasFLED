@@ -3,14 +3,14 @@
 // *    Core       | Everything within this document is proprietary to Core Dynamics.
 // *    Dynamics   | Any unauthorized duplication will be subject to prosecution.
 // *
-// *    Department : (R+D)^2                        Name: gadgets.h
+// *    Department : (R+D)^2                        Name: gadgets.cpp
 // *       Sub Dept: Programming
 // *    Location ID: 856-45B
 // *                                                      (c) 2856 - 2858 Core Dynamics
 // ***************************************************************************************
 
-#ifndef GADGETS_H
-#define GADGETS_H
+#ifndef GADGETS_CPP
+#define GADGETS_CPP
 
 // Standard Header Files
 #include <stdio.h>
@@ -32,6 +32,58 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 //  Panel Class
+
+/*
+// -------------------------------------------------------------------------------------
+//  Blank Gadget
+
+//  Panel Properties
+class AUTOMOBILE_OVERVIEW_GADGET_PROPERTIES
+// Properties (duh)
+{
+  public: 
+
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 18;
+
+};
+
+class AUTOMOBILE_OVERVIEW_GADGET
+{
+  private:
+
+  PANEL GADGET_PANEL;
+
+  //-----------
+
+  Text_Field test;
+
+  //-----------
+
+  bool CHANGED = false;
+
+  public:
+
+  AUTOMOBILE_OVERVIEW_GADGET_PROPERTIES PROP;  
+
+  void create();
+  // Panel to be drawn.  
+  //  Define PROP (properties) before calling this routine.
+  //    Property Size and Position is necessary before calling create.
+
+  void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
+  // Update values of panel
+  //  Gadget will be redrawn if values did changed or animations scheduled. 
+
+  bool draw(bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations require time reference.
+  // Returns true if panel was redrawn.
+};
+*/
 
 class WINDOW_BODER_PROPERTIES
 // Panel border characters.

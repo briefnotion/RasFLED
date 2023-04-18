@@ -254,6 +254,20 @@ class FALSE_CATCH
   // Returns false if all catch_truths were true.
 };
 
+class BOOL_WITH_OVERRIDE
+{
+  private:
+
+  bool VALUE = false;
+  bool OVERRIDDEN = false;
+
+  public:
+
+  void set(bool Override_Condition, bool Override_Value, bool Redundant_Value);
+  bool value();
+  bool overridden();
+};
+
 
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES
@@ -283,7 +297,10 @@ bool is_within(int Value, int Number_1, int Number_2);
 //  or equal to Num 1 and Num 2, regardless if Number 1 
 //  is less than or greater than Number 2.
 
+bool set_bool_with_change_notify(bool Set_Value, bool &Bool_Variable);
 
+int get_1_pos_of_int(int Number);
 
+int get_2_pos_of_int(int Number);
 
 #endif

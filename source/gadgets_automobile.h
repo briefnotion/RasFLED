@@ -21,10 +21,11 @@
 #include "fled_time.h"
 #include "stringthings.h"
 #include "system.h"
-
 #include "gadgets.h"
 #include "helper_ncurses.h"
 #include "auto.h"
+#include "helper.h"
+#include "symbols.h"
 
 using namespace std;
 
@@ -35,6 +36,79 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 //  Panel Class
+
+//  Panel Properties
+class AUTOMOBILE_OVERVIEW_GADGET_PROPERTIES
+// Properties (duh)
+{
+  public: 
+
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 0;
+  int SIZEX = 18;
+
+};
+
+class AUTOMOBILE_OVERVIEW_GADGET
+{
+  private:
+
+  PANEL GADGET_PANEL;
+  AUTOMOTIVE_SYMBOLS CAR_SYMBOLS;
+
+  //-----------
+  Text_Field_Multi_Line SYMBOL_CAR_BODY;
+  Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_FRONT;
+  Text_Field_Multi_Line SYMBOL_CAR_DOOR_RIGHT_FRONT;
+  Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_BACK;
+  Text_Field_Multi_Line SYMBOL_CAR_DOOR_RIGHT_BACK;
+
+  // Door Values
+  bool LEFT_FRONT_DOOR_VAL = true;
+  bool RIGHT_FRONT_DOOR_VAL = true;
+  bool LEFT_BACK_DOOR_VAL = true;
+  bool RIGHT_BACK_DOOR_VAL = true;
+
+  //-----------
+  // Tire Test
+  Text_Field LF_SPEED;
+  Text_Field RF_SPEED;
+  Text_Field LB_SPEED;
+  Text_Field RB_SPEED;
+
+  Text_Field LF_SPEED_OFFSET;
+  Text_Field RF_SPEED_OFFSET;
+  Text_Field LB_SPEED_OFFSET;
+  Text_Field RB_SPEED_OFFSET;
+
+  //-----------
+  Text_Field LIGHTS_STATUS;
+  Text_Field FUEL_LEVEL;
+
+  //-----------
+
+  bool CHANGED = false;
+
+  public:
+
+  AUTOMOBILE_OVERVIEW_GADGET_PROPERTIES PROP;  
+
+  void create();
+  // Panel to be drawn.  
+  //  Define PROP (properties) before calling this routine.
+  //    Property Size and Position is necessary before calling create.
+
+  void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
+  // Update values of panel
+  //  Gadget will be redrawn if values did changed or animations scheduled. 
+
+  bool draw(bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations require time reference.
+  // Returns true if panel was redrawn.
+};
 
 //  Panel Properties
 class AUTOMOBILE_GADGET_PROPERTIES
@@ -58,6 +132,21 @@ class AUTOMOBILE_GADGET
   Text_Field MESSAGES;
 
   Text_Field AD_UNKNOWN;
+
+  //-----------
+
+  SYMBOLS_5X5_NUMBERS NUMBERS_5X5;
+
+  //-----------
+  // Large Velocity
+  Text_Field_Multi_Line LARGE_SPEED_DESC;
+  Text_Field_Multi_Line LARGE_SPEED_1;
+  Text_Field_Multi_Line LARGE_SPEED_10;
+
+  //-----------
+  // Large Gear
+  Text_Field_Multi_Line LARGE_GEAR_DESC;
+  Text_Field_Multi_Line LARGE_GEAR_1;
 
   //-----------
 
@@ -92,36 +181,15 @@ class AUTOMOBILE_GADGET
 
   //-----------
 
-
-
   //-----------
 
-  //-----------
-
-
-  //-----------
-
-  Text_Field AD_C8;   // - Headlamp status, Ignition Status, Parking Brake Status
   Text_Field AD_D0;   // - Gear Lever Status, Transmission Gear Position
   Text_Field AD_130;  // - Speed
   Text_Field AD_200;  // - Fuel Consumed From Start
-  Text_Field AD_380;  // - Fuel Level
   Text_Field AD_218;  // - Odometer
   Text_Field AD_C0;   // - Fuel % hex 3A
-  Text_Field AD_360;  // - Diirs and High Beam
 
   //-----------
-
-  // Tire Test
-  Text_Field LF_SPEED;
-  Text_Field RF_SPEED;
-  Text_Field LB_SPEED;
-  Text_Field RB_SPEED;
-
-  Text_Field LF_SPEED_OFFSET;
-  Text_Field RF_SPEED_OFFSET;
-  Text_Field LB_SPEED_OFFSET;
-  Text_Field RB_SPEED_OFFSET;
 
   //-----------
 

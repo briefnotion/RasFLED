@@ -85,14 +85,21 @@ bool AUTOMOBILE_DOORS::hatchback_door_open()
   return HATCHBACK_DOOR_OPEN;
 }
 
+/*
 bool AUTOMOBILE_DOORS::moonroof_door_open()
 {
   return MOONROOF_DOOR_OPEN;
 }
+*/
 
 bool AUTOMOBILE_DOORS::hood_door_open()
 {
   return HOOD_DOOR_OPEN;
+}
+
+bool AUTOMOBILE_DOORS::door_switch_available()
+{
+  return AVAILABLE;
 }
 
 void AUTOMOBILE_GUAGES::store_coolant(int Value)
@@ -261,6 +268,11 @@ bool AUTOMOBILE_INDICATORS::ignition()
 string AUTOMOBILE_INDICATORS::val_ignition()
 {
   return IGNITION_DESC;
+}
+
+bool AUTOMOBILE_INDICATORS::light_switch_available()
+{
+  return AVAILABLE;
 }
 
 void AUTOMOBILE_POWER::store(int Load)
@@ -563,10 +575,10 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store(int gear)
 {
   REPORTED = gear;    // Wrong on park and neutral and reverse.
 
-  if (gear == 0)
+  if (gear == 19)
   {
-    SHORT_DESC = "N";
-    LONG_DESC = "Neutral";
+    SHORT_DESC = "PN (19)";
+    LONG_DESC = "NeuPrk";
   }
   else if (gear == 1)
   {
@@ -598,14 +610,14 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store(int gear)
     SHORT_DESC = "6";
     LONG_DESC = "6th";
   }
-  else if (gear == 19)
+  //else if (gear == 19)
+  //{
+  //  SHORT_DESC = "P";
+  //  LONG_DESC = "Park";
+  //}
+  else if (gear == 0)
   {
-    SHORT_DESC = "P";
-    LONG_DESC = "Park";
-  }
-  else if (gear == 13)
-  {
-    SHORT_DESC = "R";
+    SHORT_DESC = "R (0)";
     LONG_DESC = "Reverse";
   }
   else
@@ -632,12 +644,10 @@ string AUTOMOBILE_TRANSMISSION_GEAR::long_desc()
 
 void AUTOMOBILE_CALCULATED::compute(AUTOMOBILE_TRANSLATED_DATA Status)
 {
-
   LF_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_LF_kmph());
   RF_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_RF_kmph());
   LB_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_LB_kmph());
   RB_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_RB_kmph());
-
 }
 
 void AUTOMOBILE::parse(string Line)
@@ -955,8 +965,19 @@ void AUTOMOBILE::parse(string Line)
 
 }
 
-void AUTOMOBILE::process(COMPORT &Com_Port)
+bool AUTOMOBILE::active()
 {
+  return ACTIVE;
+}
+
+void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
+{
+  if (ACTIVITY_TIMER.ping_down(tmeFrame_Time) == false)
+  {
+    ACTIVE = false;
+  }
+
+
   if (Com_Port.READ_FROM_COMM.size() > 0)
   {
     for (int pos = 0; pos < Com_Port.READ_FROM_COMM.size(); pos++)
@@ -966,10 +987,10 @@ void AUTOMOBILE::process(COMPORT &Com_Port)
       {
         message_count++;
         
-        if(input[0] != '-')
-        {
-          parse(input);
-        }
+        parse(input);
+
+        ACTIVITY_TIMER.ping_up(tmeFrame_Time, 500);
+        ACTIVE = true;
       }
     }
 

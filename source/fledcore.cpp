@@ -497,7 +497,7 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
 
       // Only continue processing the event if the event hasnt been completed.
       // or if the event shouldnt be skipped because of display in day is off.
-      if (teDATA[event].booOFFDURINGDAY == true && sdSysData.booDay_On == true)
+      if (teDATA[event].booOFFDURINGDAY == true && sdSysData.Day_On_With_Override.value() == true)
       {
         // Check end conditions of animations that will be skipped, including those that may be set to end already.
 
