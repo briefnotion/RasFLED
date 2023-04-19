@@ -620,10 +620,6 @@ deque
 ncurses.h
 -
 
-/home/pi/source/RasFLED/source/symbols.cpp
-symbols.h
-/home/pi/source/RasFLED/source/symbols.h
-
 /home/pi/source/RasFLED/source/symbols.h
 stdio.h
 -

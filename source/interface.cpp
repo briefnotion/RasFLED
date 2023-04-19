@@ -1057,7 +1057,10 @@ void extraanimationdoorcheck2(Console &cons, system_data &sdSysData, unsigned lo
       // End pulses when door is opened and end countdown timer.
       sdSysData.cdTIMER.end();
       processcommandpulseend(cons, sdSysData, tmeCurrentTime, Animations);
-      processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
+      //processcommandoverheadillumend(cons, sdSysData, tmeCurrentTime, Animations);
+
+      // Check if Overhead Lights are on, then if a door is opened turn off button and turn off 
+      //  illumination only if door is closed.
     }
   }
 }

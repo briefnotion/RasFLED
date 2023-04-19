@@ -96,6 +96,179 @@ string AUTOMOTIVE_SYMBOLS::car_door_right_open()
   return CAR_RIGHT_OPEN_BUILT;
 }
 
+/*
+// -------------------------------------------------------------------------------------
+
+string SYMBOLS_5X5_BLANK::num_x()
+{
+  if (NUM_X_MADE == false)
+  {
+    NUM_X = X_01 + X_02 + X_03 + X_04 + X_05;
+    NUM_X_MADE = true;
+  }
+
+  return NUM_X;
+}
+
+string SYMBOLS_5X5_BLANK::num_0()
+{
+  if (NUM_0_MADE == false)
+  {
+    NUM_0 = N_0_01 + N_0_02 + N_0_03 + N_0_04 + N_0_05;
+    NUM_0_MADE = true;
+  }
+
+  return NUM_0;
+}
+
+string SYMBOLS_5X5_BLANK::num_1()
+{
+  if (NUM_1_MADE == false)
+  {
+    NUM_1 = N_1_01 + N_1_02 + N_1_03 + N_1_04 + N_1_05;
+    NUM_1_MADE = true;
+  }
+
+  return NUM_1;
+}
+
+string SYMBOLS_5X5_BLANK::num_2()
+{
+  if (NUM_2_MADE == false)
+  {
+    NUM_2 = N_2_01 + N_2_02 + N_2_03 + N_2_04 + N_2_05;
+    NUM_2_MADE = true;
+  }
+
+  return NUM_2;
+}
+
+string SYMBOLS_5X5_BLANK::num_3()
+{
+  if (NUM_3_MADE == false)
+  {
+    NUM_3 = N_3_01 + N_3_02 + N_3_03 + N_3_04 + N_3_05;
+    NUM_3_MADE = true;
+  }
+
+  return NUM_3;
+}
+
+string SYMBOLS_5X5_BLANK::num_4()
+{
+  if (NUM_4_MADE == false)
+  {
+    NUM_4 = N_4_01 + N_4_02 + N_4_03 + N_4_04 + N_4_05;
+    NUM_4_MADE = true;
+  }
+
+  return NUM_4;
+}
+
+string SYMBOLS_5X5_BLANK::num_5()
+{
+  if (NUM_5_MADE == false)
+  {
+    NUM_5 = N_5_01 + N_5_02 + N_5_03 + N_5_04 + N_5_05;
+    NUM_5_MADE = true;
+  }
+
+  return NUM_5;
+}
+
+string SYMBOLS_5X5_BLANK::num_6()
+{
+  if (NUM_6_MADE == false)
+  {
+    NUM_6 = N_6_01 + N_6_02 + N_6_03 + N_6_04 + N_6_05;
+    NUM_6_MADE = true;
+  }
+
+  return NUM_6;
+}
+
+string SYMBOLS_5X5_BLANK::num_7()
+{
+  if (NUM_7_MADE == false)
+  {
+    NUM_7 = N_7_01 + N_7_02 + N_7_03 + N_7_04 + N_7_05;
+    NUM_7_MADE = true;
+  }
+
+  return NUM_7;
+}
+
+string SYMBOLS_5X5_BLANK::num_8()
+{
+  if (NUM_8_MADE == false)
+  {
+    NUM_8 = N_8_01 + N_8_02 + N_8_03 + N_8_04 + N_8_05;
+    NUM_8_MADE = true;
+  }
+
+  return NUM_8;
+}
+
+string SYMBOLS_5X5_BLANK::num_9()
+{
+  if (NUM_9_MADE == false)
+  {
+    NUM_9 = N_9_01 + N_9_02 + N_9_03 + N_9_04 + N_9_05;
+    NUM_9_MADE = true;
+  }
+
+  return NUM_9;
+}
+
+string SYMBOLS_5X5_BLANK::number(int Number)
+{
+  if (Number == 0)
+  {
+    return num_0();
+  }
+  else if (Number == 1)
+  {
+    return num_1();
+  }
+  else if (Number == 2)
+  {
+    return num_2();
+  }
+  else if (Number == 3)
+  {
+    return num_3();
+  }
+  else if (Number == 4)
+  {
+    return num_4();
+  }
+  else if (Number == 5)
+  {
+    return num_5();
+  }
+  else if (Number == 6)
+  {
+    return num_6();
+  }
+  else if (Number == 7)
+  {
+    return num_7();
+  }
+  else if (Number == 8)
+  {
+    return num_8();
+  }
+  else if (Number == 9)
+  {
+    return num_9();
+  }
+  else
+  {
+    return num_x();
+  }
+}
+*/
+
 // -------------------------------------------------------------------------------------
 
 string SYMBOLS_5X5_NUMBERS::num_x()
@@ -220,6 +393,177 @@ string SYMBOLS_5X5_NUMBERS::num_9()
 }
 
 string SYMBOLS_5X5_NUMBERS::number(int Number)
+{
+  if (Number == 0)
+  {
+    return num_0();
+  }
+  else if (Number == 1)
+  {
+    return num_1();
+  }
+  else if (Number == 2)
+  {
+    return num_2();
+  }
+  else if (Number == 3)
+  {
+    return num_3();
+  }
+  else if (Number == 4)
+  {
+    return num_4();
+  }
+  else if (Number == 5)
+  {
+    return num_5();
+  }
+  else if (Number == 6)
+  {
+    return num_6();
+  }
+  else if (Number == 7)
+  {
+    return num_7();
+  }
+  else if (Number == 8)
+  {
+    return num_8();
+  }
+  else if (Number == 9)
+  {
+    return num_9();
+  }
+  else
+  {
+    return num_x();
+  }
+}
+
+// -------------------------------------------------------------------------------------
+
+string SYMBOLS_6X5_SMALL::num_x()
+{
+  if (NUM_X_MADE == false)
+  {
+    NUM_X = X_01 + X_02 + X_03 + X_04 + X_05;
+    NUM_X_MADE = true;
+  }
+
+  return NUM_X;
+}
+
+string SYMBOLS_6X5_SMALL::num_0()
+{
+  if (NUM_0_MADE == false)
+  {
+    NUM_0 = N_0_01 + N_0_02 + N_0_03 + N_0_04 + N_0_05;
+    NUM_0_MADE = true;
+  }
+
+  return NUM_0;
+}
+
+string SYMBOLS_6X5_SMALL::num_1()
+{
+  if (NUM_1_MADE == false)
+  {
+    NUM_1 = N_1_01 + N_1_02 + N_1_03 + N_1_04 + N_1_05;
+    NUM_1_MADE = true;
+  }
+
+  return NUM_1;
+}
+
+string SYMBOLS_6X5_SMALL::num_2()
+{
+  if (NUM_2_MADE == false)
+  {
+    NUM_2 = N_2_01 + N_2_02 + N_2_03 + N_2_04 + N_2_05;
+    NUM_2_MADE = true;
+  }
+
+  return NUM_2;
+}
+
+string SYMBOLS_6X5_SMALL::num_3()
+{
+  if (NUM_3_MADE == false)
+  {
+    NUM_3 = N_3_01 + N_3_02 + N_3_03 + N_3_04 + N_3_05;
+    NUM_3_MADE = true;
+  }
+
+  return NUM_3;
+}
+
+string SYMBOLS_6X5_SMALL::num_4()
+{
+  if (NUM_4_MADE == false)
+  {
+    NUM_4 = N_4_01 + N_4_02 + N_4_03 + N_4_04 + N_4_05;
+    NUM_4_MADE = true;
+  }
+
+  return NUM_4;
+}
+
+string SYMBOLS_6X5_SMALL::num_5()
+{
+  if (NUM_5_MADE == false)
+  {
+    NUM_5 = N_5_01 + N_5_02 + N_5_03 + N_5_04 + N_5_05;
+    NUM_5_MADE = true;
+  }
+
+  return NUM_5;
+}
+
+string SYMBOLS_6X5_SMALL::num_6()
+{
+  if (NUM_6_MADE == false)
+  {
+    NUM_6 = N_6_01 + N_6_02 + N_6_03 + N_6_04 + N_6_05;
+    NUM_6_MADE = true;
+  }
+
+  return NUM_6;
+}
+
+string SYMBOLS_6X5_SMALL::num_7()
+{
+  if (NUM_7_MADE == false)
+  {
+    NUM_7 = N_7_01 + N_7_02 + N_7_03 + N_7_04 + N_7_05;
+    NUM_7_MADE = true;
+  }
+
+  return NUM_7;
+}
+
+string SYMBOLS_6X5_SMALL::num_8()
+{
+  if (NUM_8_MADE == false)
+  {
+    NUM_8 = N_8_01 + N_8_02 + N_8_03 + N_8_04 + N_8_05;
+    NUM_8_MADE = true;
+  }
+
+  return NUM_8;
+}
+
+string SYMBOLS_6X5_SMALL::num_9()
+{
+  if (NUM_9_MADE == false)
+  {
+    NUM_9 = N_9_01 + N_9_02 + N_9_03 + N_9_04 + N_9_05;
+    NUM_9_MADE = true;
+  }
+
+  return NUM_9;
+}
+
+string SYMBOLS_6X5_SMALL::number(int Number)
 {
   if (Number == 0)
   {

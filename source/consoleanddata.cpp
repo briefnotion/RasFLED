@@ -72,7 +72,7 @@ void Console::update_automobile_gadgets(unsigned long &tmeCurrentMillis, system_
 {
   if(sdSysData.CAR_INFO.CHANGED == true)
   {
-    sdSysData.CAR_INFO.translate();
+    sdSysData.CAR_INFO.translate(tmeCurrentMillis);
     Screen.AUTOMOBILE_OVERVIEW_PANEL.update(sdSysData, tmeCurrentMillis);
     Screen.AUTOMOBILE_PANEL.update(sdSysData, tmeCurrentMillis);
   }

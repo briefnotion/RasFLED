@@ -176,6 +176,121 @@ class AUTOMOTIVE_SYMBOLS
 
 // -------------------------------------------------------------------------------------
 
+/*
+class SYMBOLS_5X5_BLANK
+{
+  private:
+
+  string X_01 = "\n";
+  string X_02 = "\n";
+  string X_03 = "\n";
+  string X_04 = "\n";
+  string X_05 = "\n";
+
+  string N_0_01 = "\n";
+  string N_0_02 = "\n";
+  string N_0_03 = "\n";
+  string N_0_04 = "\n";
+  string N_0_05 = "\n";
+
+  string N_1_01 = "\n";
+  string N_1_02 = "\n";
+  string N_1_03 = "\n";
+  string N_1_04 = "\n";
+  string N_1_05 = "\n";
+
+  string N_2_01 = "\n";
+  string N_2_02 = "\n";
+  string N_2_03 = "\n";
+  string N_2_04 = "\n";
+  string N_2_05 = "\n";
+
+  string N_3_01 = "\n";
+  string N_3_02 = "\n";
+  string N_3_03 = "\n";
+  string N_3_04 = "\n";
+  string N_3_05 = "\n";
+  
+  string N_4_01 = "\n";
+  string N_4_02 = "\n";
+  string N_4_03 = "\n";
+  string N_4_04 = "\n";
+  string N_4_05 = "\n";
+
+  string N_5_01 = "\n";
+  string N_5_02 = "\n";
+  string N_5_03 = "\n";
+  string N_5_04 = "\n";
+  string N_5_05 = "\n";
+
+  string N_6_01 = "\n";
+  string N_6_02 = "\n";
+  string N_6_03 = "\n";
+  string N_6_04 = "\n";
+  string N_6_05 = "\n";
+
+  string N_7_01 = "\n";
+  string N_7_02 = "\n";
+  string N_7_03 = "\n";
+  string N_7_04 = "\n";
+  string N_7_05 = "\n";
+
+  string N_8_01 = "\n";
+  string N_8_02 = "\n";
+  string N_8_03 = "\n";
+  string N_8_04 = "\n";
+  string N_8_05 = "\n";
+
+  string N_9_01 = "\n";
+  string N_9_02 = "\n";
+  string N_9_03 = "\n";
+  string N_9_04 = "\n";
+  string N_9_05 = "\n";
+
+  string NUM_X = "";
+  string NUM_0 = "";
+  string NUM_1 = "";
+  string NUM_2 = "";
+  string NUM_3 = "";
+  string NUM_4 = "";
+  string NUM_5 = "";
+  string NUM_6 = "";
+  string NUM_7 = "";
+  string NUM_8 = "";
+  string NUM_9 = "";
+
+  bool NUM_X_MADE = false;
+  bool NUM_0_MADE = false;
+  bool NUM_1_MADE = false;
+  bool NUM_2_MADE = false;
+  bool NUM_3_MADE = false;
+  bool NUM_4_MADE = false;
+  bool NUM_5_MADE = false;
+  bool NUM_6_MADE = false;
+  bool NUM_7_MADE = false;
+  bool NUM_8_MADE = false;
+  bool NUM_9_MADE = false;
+
+  public:
+
+  string num_x();
+  string num_0();
+  string num_1();
+  string num_2();
+  string num_3();
+  string num_4();
+  string num_5();
+  string num_6();
+  string num_7();
+  string num_8();
+  string num_9();
+
+  string number(int Number);
+};
+*/
+
+// -------------------------------------------------------------------------------------
+
 class SYMBOLS_5X5_NUMBERS
 {
   private:
@@ -245,6 +360,132 @@ class SYMBOLS_5X5_NUMBERS
   string N_9_03 = "  ###\n";
   string N_9_04 = "    #\n";
   string N_9_05 = "  ## \n";
+
+  string NUM_X = "";
+  string NUM_0 = "";
+  string NUM_1 = "";
+  string NUM_2 = "";
+  string NUM_3 = "";
+  string NUM_4 = "";
+  string NUM_5 = "";
+  string NUM_6 = "";
+  string NUM_7 = "";
+  string NUM_8 = "";
+  string NUM_9 = "";
+
+  bool NUM_X_MADE = false;
+  bool NUM_0_MADE = false;
+  bool NUM_1_MADE = false;
+  bool NUM_2_MADE = false;
+  bool NUM_3_MADE = false;
+  bool NUM_4_MADE = false;
+  bool NUM_5_MADE = false;
+  bool NUM_6_MADE = false;
+  bool NUM_7_MADE = false;
+  bool NUM_8_MADE = false;
+  bool NUM_9_MADE = false;
+
+  public:
+
+  string num_x();
+  string num_0();
+  string num_1();
+  string num_2();
+  string num_3();
+  string num_4();
+  string num_5();
+  string num_6();
+  string num_7();
+  string num_8();
+  string num_9();
+
+  string number(int Number);
+};
+
+// -------------------------------------------------------------------------------------
+
+// Text to ASCII Art Generator. (Much better than what I can do on my own.)
+//  http://www.patorjk.com/software/taag/#p=display&h=0&v=0&c=c&f=Small&t=12345678910
+
+// Small
+/***
+ *      _   ___   ____  _ _    ___    __   ____   ___   ___   _    __  
+ *     / | |_  ) |__ / | | |  | __|  / /  |__  | ( _ ) / _ \ / |  /  \ 
+ *     | |  / /   |_ \ |_  _| |__ \ / _ \   / /  / _ \ \_, / | | | () |
+ *     |_| /___| |___/   |_|  |___/ \___/  /_/   \___/  /_/  |_|  \__/ 
+ *                                                                     
+ */
+// Notable: Mini, Straight, Goofy, Bigfig
+
+class SYMBOLS_6X5_SMALL
+{
+  private:
+
+  string X_01 = "__  __\n";
+  string X_02 = "\\ \\/ /\n";
+  string X_03 = " >  < \n";
+  string X_04 = "/_/\\_\\\n";
+  string X_05 = "      \n";
+
+  string N_0_01 = "  __  \n";
+  string N_0_02 = " /  \\ \n";
+  string N_0_03 = "| () |\n";
+  string N_0_04 = " \\__/ \n";
+  string N_0_05 = "      \n";
+
+  string N_1_01 = "  _   \n";
+  string N_1_02 = " / |  \n";
+  string N_1_03 = " | |  \n";
+  string N_1_04 = " |_|  \n";
+  string N_1_05 = "      \n";
+
+  string N_2_01 = " ___  \n";
+  string N_2_02 = "|_  ) \n";
+  string N_2_03 = " / /  \n";
+  string N_2_04 = "/___| \n";
+  string N_2_05 = "      \n";
+
+  string N_3_01 = " ____ \n";
+  string N_3_02 = "|__ / \n";
+  string N_3_03 = " |_ \\ \n";
+  string N_3_04 = "|___/ \n";
+  string N_3_05 = "      \n";
+  
+  string N_4_01 = " _ _  \n";
+  string N_4_02 = "| | | \n";
+  string N_4_03 = "|_  | \n";
+  string N_4_04 = "  |_| \n";
+  string N_4_05 = "      \n";
+
+  string N_5_01 = " ___  \n";
+  string N_5_02 = "| __| \n";
+  string N_5_03 = "|__ \\ \n";
+  string N_5_04 = "|___/ \n";
+  string N_5_05 = "      \n";
+
+  string N_6_01 = "  __  \n";
+  string N_6_02 = " / /  \n";
+  string N_6_03 = "/ _ \\ \n";
+  string N_6_04 = "\\___/ \n";
+  string N_6_05 = "      \n";
+
+  string N_7_01 = " ____ \n";
+  string N_7_02 = "|__  |\n";
+  string N_7_03 = "  / / \n";
+  string N_7_04 = " /_/  \n";
+  string N_7_05 = "      \n";
+
+  string N_8_01 = " ___  \n";
+  string N_8_02 = "( _ ) \n";
+  string N_8_03 = "/ _ \\ \n";
+  string N_8_04 = "\\___/ \n";
+  string N_8_05 = "      \n";
+
+  string N_9_01 = " ___  \n";
+  string N_9_02 = "/ _ \\ \n";
+  string N_9_03 = "\\_, / \n";
+  string N_9_04 = " /_/  \n";
+  string N_9_05 = "      \n";
 
   string NUM_X = "";
   string NUM_0 = "";

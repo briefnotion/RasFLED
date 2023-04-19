@@ -14,6 +14,8 @@
 
 #include "auto.h"
 
+//-----------
+
 void VELOCITY::store(float kmps)
 {
   KMPH = kmps;  
@@ -42,6 +44,8 @@ string VELOCITY::mph()
 {
   return MPH_DISP;
 }
+
+//-----------
 
 void AUTOMOBILE_DOORS::store(int Data)
 {
@@ -642,13 +646,39 @@ string AUTOMOBILE_TRANSMISSION_GEAR::long_desc()
   return LONG_DESC;
 }
 
-void AUTOMOBILE_CALCULATED::compute(AUTOMOBILE_TRANSLATED_DATA Status)
+//-----------
+
+void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time)
 {
-  LF_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_LF_kmph());
-  RF_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_RF_kmph());
-  LB_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_LB_kmph());
-  RB_WHEEL_SPEED_OFFSET.store(Status.SPEED.val_kmph() - Status.SPEED.val_RB_kmph());
+  // Temp solution to keep the values from going to infinity.
+  if (DATA_CLEAR_TIMER.ping_down(tmeFrame_Time) == false)
+  {
+    DATA_CLEAR_TIMER.ping_up(tmeFrame_Time, 30000);
+    counter = 0;
+    SPEED_TOTAL = 0;
+    LF_WHEEL_SPEED_TOTAL = 0;
+    RF_WHEEL_SPEED_TOTAL = 0;
+    LB_WHEEL_SPEED_TOTAL = 0;
+    RB_WHEEL_SPEED_TOTAL = 0;
+  }
+
+  counter++;
+
+  //tw/c - ts/c
+
+  SPEED_TOTAL = SPEED_TOTAL + Status.SPEED.val_kmph();
+  LF_WHEEL_SPEED_TOTAL = LF_WHEEL_SPEED_TOTAL + Status.SPEED.val_LF_kmph();
+  RF_WHEEL_SPEED_TOTAL = RF_WHEEL_SPEED_TOTAL + Status.SPEED.val_RF_kmph();
+  LB_WHEEL_SPEED_TOTAL = LB_WHEEL_SPEED_TOTAL + Status.SPEED.val_LB_kmph();
+  RB_WHEEL_SPEED_TOTAL = RB_WHEEL_SPEED_TOTAL + Status.SPEED.val_RB_kmph();
+
+  LF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LF_WHEEL_SPEED_TOTAL/counter));
+  RF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RF_WHEEL_SPEED_TOTAL/counter));
+  LB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LB_WHEEL_SPEED_TOTAL/counter));
+  RB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RB_WHEEL_SPEED_TOTAL/counter));
 }
+
+//-----------
 
 void AUTOMOBILE::parse(string Line)
 {
@@ -989,6 +1019,10 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
         
         parse(input);
 
+        // High level Compute requiring calculation on all data.
+        //  Compute on all data but can be processor intensive.
+        //compute_high();
+
         ACTIVITY_TIMER.ping_up(tmeFrame_Time, 500);
         ACTIVE = true;
       }
@@ -999,14 +1033,14 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
   }
 }
 
-void AUTOMOBILE::translate()
+void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
 {
   // Steering Wheel Angle
   STATUS.STEERING.store_steering_wheel_angle((DATA.AD_10.DATA[6] *256) + DATA.AD_10.DATA[7], 
                                               DATA.AD_10.DATA[2]);
 
   // Speed
-  STATUS.SPEED.store((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.12);
+  STATUS.SPEED.store((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13);
 
   STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1]);
   STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3]);
@@ -1039,8 +1073,10 @@ void AUTOMOBILE::translate()
   // Guages
   STATUS.GUAGES.store_coolant(DATA.AD_100.DATA[3]);
   
-  // 
-  CALCULATED.compute(STATUS);
+  // Low level Compute not requiring calculation on all data.
+  //  Fast but not fully acurate.
+  //  Currently call just before the data is displayed.
+  CALCULATED.compute_low(STATUS, tmeFrame_Time);
 
 }
 

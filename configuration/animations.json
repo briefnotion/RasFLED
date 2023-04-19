@@ -941,7 +941,7 @@
           "Run_On_LED_LED_Strip_Name" : "Overhead"
         },
         {
-          "Comment_1" : "Turn off current colors", 
+          "Comment_1" : "Turn off or reverse current overhead colored lights", 
           "Label" : "TDOO",
           "Start_Delay_Time" : 250, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
@@ -963,11 +963,11 @@
         },
 
         {
-          "Comment_1" : "Show Colors", 
+          "Comment_1" : "Show Door Illumination Light", 
           "Label" : "TDOO",
           "Start_Delay_Time" : 750, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
-          "Start_1" : "0,0,0", "Dest_1" : "32,32,32", 
+          "Start_1" : "0,0,0", "Dest_1" : "64,64,64", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0", 
           "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_start|10", 
           "Clear_On_End" : false
@@ -976,9 +976,9 @@
           "Label" : "TDOO",
           "Start_Delay_Time" : 750, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 15, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
-          "Start_1" : "0,0,0", "Dest_1" : "32,32,32", 
+          "Start_1" : "0,0,0", "Dest_1" : "64,64,64", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0", 
-          "LED_Start_Pos" : "from_1/2|0", "LED_End_Pos" : "from_end|10", 
+          "LED_Start_Pos" : "from_1/2|1", "LED_End_Pos" : "from_end|10", 
           "Clear_On_End" : false
         }
       ],
@@ -990,7 +990,7 @@
         },
         {
           "Label" : "TDCO",  
-          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 5000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "TDOO"
         }
@@ -999,6 +999,7 @@
       "TDRCO" : 
       [
         {
+          "Comment_1" : "This door recently closed, overhead lights", 
           "Run_On_LED_LED_Strip_Name" : "Overhead"
         },
         {
@@ -1086,11 +1087,12 @@
       "LDCO" : 
       [
         {
+          "Comment_1" : "All doors closed, overhead lights routine", 
           "Run_On_LED_LED_Strip_Name" : "Overhead"
         },
         {
           "Label" : "TDOAOE",  
-          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 5000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOO"
         }

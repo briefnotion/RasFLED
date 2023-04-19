@@ -426,6 +426,15 @@ class AUTOMOBILE_CALCULATED
 {
   private:
 
+  float SPEED_TOTAL;
+  float LF_WHEEL_SPEED_TOTAL;
+  float RF_WHEEL_SPEED_TOTAL;
+  float LB_WHEEL_SPEED_TOTAL;
+  float RB_WHEEL_SPEED_TOTAL;
+
+  TIMED_PING DATA_CLEAR_TIMER;
+  int counter = 0;
+
   public:
 
   VELOCITY LF_WHEEL_SPEED_OFFSET;
@@ -433,8 +442,10 @@ class AUTOMOBILE_CALCULATED
   VELOCITY LB_WHEEL_SPEED_OFFSET;
   VELOCITY RB_WHEEL_SPEED_OFFSET;
 
-  void compute(AUTOMOBILE_TRANSLATED_DATA Status);
-
+  void compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time);
+  // Low level Compute not requiring calculation on all data.
+  //  Fast but not fully acurate.
+  //  Currently call just before the data is displayed.
 };
 
 class AUTOMOBILE_PROPERTIES
@@ -470,7 +481,7 @@ class AUTOMOBILE
 
   void process(COMPORT &Com_Port, unsigned long tmeFrame_Time);
 
-  void translate();
+  void translate(unsigned long tmeFrame_Time);
 };
 
 
