@@ -37,6 +37,9 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Panel Class
 
+// -------------------------------------------------------------------------------------
+//  AUTOMOBILE_OVERVIEW
+
 //  Panel Properties
 class AUTOMOBILE_OVERVIEW_GADGET_PROPERTIES
 // Properties (duh)
@@ -110,8 +113,10 @@ class AUTOMOBILE_OVERVIEW_GADGET
   // Returns true if panel was redrawn.
 };
 
-//  Panel Properties
-class AUTOMOBILE_GADGET_PROPERTIES
+// -------------------------------------------------------------------------------------
+//  DATA_SET_GADGET
+
+class DATA_SET_GADGET_PROPERTIES
 // Properties (duh)
 {
   public: 
@@ -121,8 +126,55 @@ class AUTOMOBILE_GADGET_PROPERTIES
   int SIZEY = 0;
   int SIZEX = 0;
 
+  string DESCRIPTION = "";
 };
 
+class DATA_SET_GADGET
+{
+  private:
+
+  Text_Field DESCRIPTION;
+
+  Text_Field ID_0;
+  Text_Field ID_1;
+
+  BAR DATA_DISPLAY_A;
+  BAR DATA_DISPLAY_B;
+
+  Text_Field DATA_FIELD_0;
+  Text_Field DATA_FIELD_1;
+  Text_Field DATA_FIELD_2;
+  Text_Field DATA_FIELD_3;
+  Text_Field DATA_FIELD_4;
+  Text_Field DATA_FIELD_5;
+  Text_Field DATA_FIELD_6;
+  Text_Field DATA_FIELD_7;
+
+  public:
+
+  DATA_SET_GADGET_PROPERTIES PROP;
+
+  void create();
+  void update(AUTOMOBILE_DATA_LINE Data, unsigned long tmeFrame_Time);
+  void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
+};
+
+// -------------------------------------------------------------------------------------
+//  AUTOMOBILE_GADGET
+
+
+//  Panel Properties
+class AUTOMOBILE_GADGET_PROPERTIES
+// Properties (duh)
+{
+  public: 
+
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 4;
+  int SIZEX = 12;
+
+};
 class AUTOMOBILE_GADGET
 {
   private:
@@ -181,13 +233,22 @@ class AUTOMOBILE_GADGET
 
   //-----------
 
+  DATA_SET_GADGET DATA_SET_01;
+  DATA_SET_GADGET DATA_SET_02;
+  DATA_SET_GADGET DATA_SET_03;
+  DATA_SET_GADGET DATA_SET_04;
+  DATA_SET_GADGET DATA_SET_05;
+  DATA_SET_GADGET DATA_SET_06;
+  DATA_SET_GADGET DATA_SET_07;
+  DATA_SET_GADGET DATA_SET_08;
+
   //-----------
 
-  Text_Field AD_D0;   // - Gear Lever Status, Transmission Gear Position
-  Text_Field AD_130;  // - Speed
-  Text_Field AD_200;  // - Fuel Consumed From Start
-  Text_Field AD_218;  // - Odometer
-  Text_Field AD_C0;   // - Fuel % hex 3A
+  //Text_Field AD_D0;   // - Gear Lever Status, Transmission Gear Position
+  //Text_Field AD_130;  // - Speed
+  //Text_Field AD_200;  // - Fuel Consumed From Start
+  //Text_Field AD_218;  // - Odometer
+  //Text_Field AD_C0;   // - Fuel % hex 3A
 
   //-----------
 
@@ -204,7 +265,7 @@ class AUTOMOBILE_GADGET
   //  Define PROP (properties) before calling this routine.
   //    Property Size and Position is necessary before calling create.
 
-  void update(system_data &sdSysData, unsigned long &tmeCurrentMillis);
+  void update(system_data &sdSysData, unsigned long tmeFrame_Time);
   // Update values of panel
   //  Gadget will be redrawn if values did changed or animations scheduled. 
 

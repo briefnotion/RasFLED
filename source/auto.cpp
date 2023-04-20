@@ -690,6 +690,10 @@ void AUTOMOBILE::parse(string Line)
   data.ORIG = Line;
 
   data.ID = string_hex_to_int(Line.substr(0, 2)) * 256 + string_hex_to_int(Line.substr(3, 2));
+
+  data.ID_DATA[0] = string_hex_to_int(Line.substr(0, 2));
+  data.ID_DATA[1] = string_hex_to_int(Line.substr(3, 2));
+
   data.DATA[0] = string_hex_to_int(Line.substr(6, 2));
   data.DATA[1] = string_hex_to_int(Line.substr(9, 2));
   data.DATA[2] = string_hex_to_int(Line.substr(12, 2));

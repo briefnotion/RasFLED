@@ -253,7 +253,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   }
   else if (sdSysData.CAR_INFO.STATUS.FUEL.val_level() >= 1 && sdSysData.CAR_INFO.STATUS.FUEL.val_level() < 4)
   {
-    FUEL_LEVEL.set_color(COLOR_YELLOW, COLOR_WHITE);
+    FUEL_LEVEL.set_color(COLOR_YELLOW, COLOR_BLACK);
   }
   else 
   {
@@ -301,6 +301,128 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   CHANGED = false;
   return false;
+}
+
+// -------------------------------------------------------------------------------------
+//  DATA_SET_GADGET
+
+void DATA_SET_GADGET::create()
+{
+  DESCRIPTION.PROP.POSX = PROP.POSX + 0;
+  DESCRIPTION.PROP.POSY = PROP.POSY + 0;
+  DESCRIPTION.PROP.SIZEX = PROP.SIZEX + 0;
+  DESCRIPTION.PROP.COLORS_ON = true;
+  DESCRIPTION.PROP.BCOLOR = COLOR_BLACK;
+  DESCRIPTION.PROP.COLOR = COLOR_WHITE;
+  DESCRIPTION.PROP.JUSTIFICATION_LEFT = true;
+  DESCRIPTION.PROP.INVERSE = true;
+  DESCRIPTION.set_text(PROP.DESCRIPTION);
+
+  // Data
+  DATA_FIELD_0.PROP.POSX = PROP.POSX + 0;
+  DATA_FIELD_0.PROP.POSY = PROP.POSY + 1;
+  DATA_FIELD_0.PROP.SIZEX = 2;
+  DATA_FIELD_0.PROP.COLORS_ON = true;
+  DATA_FIELD_0.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_0.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_0.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_0.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_1.PROP.POSX = PROP.POSX + 3;
+  DATA_FIELD_1.PROP.POSY = PROP.POSY + 1;
+  DATA_FIELD_1.PROP.SIZEX = 2;
+  DATA_FIELD_1.PROP.COLORS_ON = true;
+  DATA_FIELD_1.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_1.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_1.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_1.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_2.PROP.POSX = PROP.POSX + 6;
+  DATA_FIELD_2.PROP.POSY = PROP.POSY + 1;
+  DATA_FIELD_2.PROP.SIZEX = 2;
+  DATA_FIELD_2.PROP.COLORS_ON = true;
+  DATA_FIELD_2.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_2.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_2.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_2.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_3.PROP.POSX = PROP.POSX + 9;
+  DATA_FIELD_3.PROP.POSY = PROP.POSY + 1;
+  DATA_FIELD_3.PROP.SIZEX = 2;
+  DATA_FIELD_3.PROP.COLORS_ON = true;
+  DATA_FIELD_3.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_3.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_3.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_3.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_4.PROP.POSX = PROP.POSX + 0;
+  DATA_FIELD_4.PROP.POSY = PROP.POSY + 2;
+  DATA_FIELD_4.PROP.SIZEX = 2;
+  DATA_FIELD_4.PROP.COLORS_ON = true;
+  DATA_FIELD_4.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_4.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_4.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_4.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_5.PROP.POSX = PROP.POSX + 3;
+  DATA_FIELD_5.PROP.POSY = PROP.POSY + 2;
+  DATA_FIELD_5.PROP.SIZEX = 2;
+  DATA_FIELD_5.PROP.COLORS_ON = true;
+  DATA_FIELD_5.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_5.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_5.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_5.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_6.PROP.POSX = PROP.POSX + 6;
+  DATA_FIELD_6.PROP.POSY = PROP.POSY + 2;
+  DATA_FIELD_6.PROP.SIZEX = 2;
+  DATA_FIELD_6.PROP.COLORS_ON = true;
+  DATA_FIELD_6.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_6.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_6.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_6.PROP.UPDATE_INDICATION = true;
+
+  DATA_FIELD_7.PROP.POSX = PROP.POSX + 9;
+  DATA_FIELD_7.PROP.POSY = PROP.POSY + 2;
+  DATA_FIELD_7.PROP.SIZEX = 2;
+  DATA_FIELD_7.PROP.COLORS_ON = true;
+  DATA_FIELD_7.PROP.BCOLOR = COLOR_BLACK;
+  DATA_FIELD_7.PROP.COLOR = COLOR_WHITE;
+  DATA_FIELD_7.PROP.JUSTIFICATION_LEFT = true;
+  DATA_FIELD_7.PROP.UPDATE_INDICATION = true;
+
+}
+
+void DATA_SET_GADGET::update(AUTOMOBILE_DATA_LINE Data, unsigned long tmeFrame_Time)
+{
+  DESCRIPTION.set_text(to_string_hex(Data.ID_DATA[0]) + " " + 
+                        to_string_hex(Data.ID_DATA[1]) + " " +
+                        PROP.DESCRIPTION, tmeFrame_Time);
+
+  DATA_FIELD_0.set_text(to_string_hex(Data.DATA[0]), tmeFrame_Time);
+  DATA_FIELD_1.set_text(to_string_hex(Data.DATA[1]), tmeFrame_Time);
+  DATA_FIELD_2.set_text(to_string_hex(Data.DATA[2]), tmeFrame_Time);
+  DATA_FIELD_3.set_text(to_string_hex(Data.DATA[3]), tmeFrame_Time);
+  DATA_FIELD_4.set_text(to_string_hex(Data.DATA[4]), tmeFrame_Time);
+  DATA_FIELD_5.set_text(to_string_hex(Data.DATA[5]), tmeFrame_Time);
+  DATA_FIELD_6.set_text(to_string_hex(Data.DATA[6]), tmeFrame_Time);
+  DATA_FIELD_7.set_text(to_string_hex(Data.DATA[7]), tmeFrame_Time);
+
+}
+
+void DATA_SET_GADGET::draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time)
+{
+  DESCRIPTION.draw(Host_Panel, Refresh);
+
+  DATA_FIELD_0.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_1.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_2.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_3.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_4.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_5.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_6.draw(Host_Panel, Refresh, tmeFrame_Time);
+  DATA_FIELD_7.draw(Host_Panel, Refresh, tmeFrame_Time);
+
 }
 
 // -------------------------------------------------------------------------------------
@@ -639,9 +761,50 @@ void AUTOMOBILE_GADGET::create()
   STEERING_WHEEL_ANGLE.PROP.JUSTIFICATION_LEFT = true;
 
   //-----------
+  
+  DATA_SET_01.PROP.POSX = 1 + 0;
+  DATA_SET_01.PROP.POSY = 13;
+  DATA_SET_01.PROP.DESCRIPTION = "Speed";
+  DATA_SET_01.create();
+  
+  DATA_SET_02.PROP.POSX = 1 + 14;
+  DATA_SET_02.PROP.POSY = 13;
+  DATA_SET_02.PROP.DESCRIPTION = "Gear";
+  DATA_SET_02.create();
+  
+  DATA_SET_03.PROP.POSX = 1 + 28;
+  DATA_SET_03.PROP.POSY = 13;
+  DATA_SET_03.PROP.DESCRIPTION = "Cons";
+  DATA_SET_03.create();
+  
+  DATA_SET_04.PROP.POSX = 1 + 42;
+  DATA_SET_04.PROP.POSY = 13;
+  DATA_SET_04.PROP.DESCRIPTION = "Fuel";
+  DATA_SET_04.create();
+  
+  DATA_SET_05.PROP.POSX = 1 + 0;
+  DATA_SET_05.PROP.POSY = 17;
+  DATA_SET_05.PROP.DESCRIPTION = "Lamp";
+  DATA_SET_05.create();
+  
+  DATA_SET_06.PROP.POSX = 1 + 14;
+  DATA_SET_06.PROP.POSY = 17;
+  DATA_SET_06.PROP.DESCRIPTION = "Temp";
+  DATA_SET_06.create();
+  
+  DATA_SET_07.PROP.POSX = 1 + 28;
+  DATA_SET_07.PROP.POSY = 17;
+  DATA_SET_07.PROP.DESCRIPTION = "Beam";
+  DATA_SET_07.create();
+  
+  DATA_SET_08.PROP.POSX = 1 + 42;
+  DATA_SET_08.PROP.POSY = 17;
+  DATA_SET_08.PROP.DESCRIPTION = "EngT";
+  DATA_SET_08.create();
 
   //-----------
 
+  /*
   // Raw Data
   AD_D0.PROP.POSX = 0;
   AD_D0.PROP.POSY = 19;
@@ -682,10 +845,11 @@ void AUTOMOBILE_GADGET::create()
   AD_C0.PROP.BCOLOR = COLOR_BLACK;
   AD_C0.PROP.COLOR = COLOR_WHITE;
   AD_C0.PROP.JUSTIFICATION_LEFT = true;
+  */
 
 }
 
-void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
+void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Time)
 {  
   //--
 
@@ -696,17 +860,17 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrent
   //-----------
   // Large Velocity
   
-  LARGE_SPEED_1.set_text(NUMBERS_5X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.val_mph())), tmeCurrentMillis);
-  LARGE_SPEED_10.set_text(NUMBERS_5X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.val_mph())), tmeCurrentMillis);
+  LARGE_SPEED_1.set_text(NUMBERS_5X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.val_mph())), tmeFrame_Time);
+  LARGE_SPEED_10.set_text(NUMBERS_5X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.val_mph())), tmeFrame_Time);
 
   //-----------
   // Large Velocity
   
-  LARGE_GEAR_1.set_text(NUMBERS_5X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeCurrentMillis);
+  LARGE_GEAR_1.set_text(NUMBERS_5X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeFrame_Time);
 
   //-----------
 
-  SPEEDOMETER.update(sdSysData.CAR_INFO.STATUS.SPEED.val_mph(), tmeCurrentMillis);
+  SPEEDOMETER.update(sdSysData.CAR_INFO.STATUS.SPEED.val_mph(), tmeFrame_Time);
   SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.mph());
   GEAR.set_text(sdSysData.CAR_INFO.STATUS.GEAR.long_desc());
   SPEEDOMETER_MIN.set_text(to_string(SPEEDOMETER.MIN_MAX_HISTORY.min()));
@@ -714,27 +878,36 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrent
 
   //-----------
 
-  RPM_GUAGE.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeCurrentMillis);
+  RPM_GUAGE.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeFrame_Time);
   RPM.set_text(sdSysData.CAR_INFO.STATUS.RPM.rpm());
   RPM_MIN.set_text(to_string(RPM_GUAGE.MIN_MAX_HISTORY.min()));
   RPM_MAX.set_text(to_string(RPM_GUAGE.MIN_MAX_HISTORY.max()));
 
   //-----------
 
-  POWER_LOAD_GUAGE.update(sdSysData.CAR_INFO.STATUS.POWER.val_load(), tmeCurrentMillis);
+  POWER_LOAD_GUAGE.update(sdSysData.CAR_INFO.STATUS.POWER.val_load(), tmeFrame_Time);
   POWER_LOAD.set_text(sdSysData.CAR_INFO.STATUS.POWER.load());
   POWER_LOAD_MIN.set_text(to_string(POWER_LOAD_GUAGE.MIN_MAX_HISTORY.min()));
   POWER_LOAD_MAX.set_text(to_string(POWER_LOAD_GUAGE.MIN_MAX_HISTORY.max()));
 
   //-----------
-  STEERING_WHEEL.update(sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle(), tmeCurrentMillis);
+  STEERING_WHEEL.update(sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle(), tmeFrame_Time);
   STEERING_WHEEL_ANGLE.set_text(sdSysData.CAR_INFO.STATUS.STEERING.left_of_center() + " " + 
                                   sdSysData.CAR_INFO.STATUS.STEERING.turning_direction() + " " + 
                                   sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
   //-----------
 
+  DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, tmeFrame_Time);
+  DATA_SET_02.update(sdSysData.CAR_INFO.DATA.AD_D0, tmeFrame_Time);
+  DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, tmeFrame_Time);
+  DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, tmeFrame_Time);
+  DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_C8, tmeFrame_Time);
+  DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_400, tmeFrame_Time);
+  DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_360, tmeFrame_Time);
+  DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_100, tmeFrame_Time);
 
   //-----------
+  /*
 
   AD_D0.set_text("Gear: " + sdSysData.CAR_INFO.DATA.AD_D0.ORIG);
   AD_130.set_text("Sped: " + sdSysData.CAR_INFO.DATA.AD_130.ORIG);
@@ -743,7 +916,7 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrent
   AD_218.set_text("Odom: " + sdSysData.CAR_INFO.DATA.AD_218.ORIG);
   AD_C0.set_text("Fuel: " + sdSysData.CAR_INFO.DATA.AD_C0.ORIG + " " + 
                                     sdSysData.CAR_INFO.STATUS.FUEL.percentage());
-
+  */
   //-----------
 
   sdSysData.CAR_INFO.CHANGED = false;
@@ -805,18 +978,26 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   //-----------
 
-
+  DATA_SET_01.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_02.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_03.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_04.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_05.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_06.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_07.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  DATA_SET_08.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
 
   //-----------
 
 
   //-----------
-
+  /*
   AD_D0.draw(AUTOMOBILE_PANEL, Refresh);
   AD_130.draw(AUTOMOBILE_PANEL, Refresh);
   AD_200.draw(AUTOMOBILE_PANEL, Refresh);
   AD_218.draw(AUTOMOBILE_PANEL, Refresh);
   AD_C0.draw(AUTOMOBILE_PANEL, Refresh);
+  */
 
   //-----------
 

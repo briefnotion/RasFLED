@@ -66,6 +66,8 @@ string trim(const string &Text);
 string quotify(string Text);
 // Put quotes around string;
 
+string to_string_hex(char Char_Byte);
+
 bool left_of_char(string Text, char Break_Char, string &Left);
 // Returns left of Break_Char as Left;
 // Returns true if Break_Char exist.

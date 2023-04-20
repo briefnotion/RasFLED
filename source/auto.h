@@ -32,6 +32,8 @@ class AUTOMOBILE_DATA_LINE
   string ORIG = "";
 
   int ID = 0;
+
+  int ID_DATA[2];
   int DATA[8];
 };
 

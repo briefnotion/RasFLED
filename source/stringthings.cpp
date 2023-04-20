@@ -181,6 +181,23 @@ string quotify(string Text)
   return "\"" + Text + "\"";
 }
 
+//string to_string_hex(I w, size_t hex_len = sizeof(I)<<1) 
+string to_string_hex(char Char_Byte) 
+{
+  static const char* digits = "0123456789ABCDEF";
+  
+  string ret_number = "";
+
+  int d1 = (Char_Byte % 256 - Char_Byte % 16) / 16;
+  int d2 = Char_Byte % 16;
+  
+  ret_number = digits[d1];
+  ret_number = ret_number + digits[d2];
+
+  return ret_number;
+}
+
+
 bool left_of_char(string Text, char Break_Char, string &Left)
 {
   bool ret_success = true;
