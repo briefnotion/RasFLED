@@ -16,9 +16,9 @@
 
 //-----------
 
-void VELOCITY::store(float kmps)
+void VELOCITY::store(float kmph)
 {
-  KMPH = kmps;  
+  KMPH = kmph;  
 
   MPH = velocity_translate_kmph_to_mph(KMPH);
   KMPH_DISP = to_string_round_to_nth(KMPH, 2);
@@ -424,39 +424,13 @@ string AUTOMOBILE_STEERING::left_of_center()
 
 // Multiplier source unknown.  not calculating correctly.
 // Possibly wrong spec tire size.  How the car knows is beyond me.
-void AUTOMOBILE_VELOCITY::store(int kmph, float Multiplier)
+void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier)
 {
   // Possibly meters per second devided by 3  (Multiplier = 1.2 for kmph conversion )
   //                                          (3.6 kmph = 1 mps                     )
 
   MULTIPLIER = Multiplier;
-
-  KMPH = (kmph * MULTIPLIER) / 10;  // Multiplier passed is 1.2 but needs verification
-                                  //  at higher speeds to rule out 1.1.
-
-  MPH = velocity_translate_kmph_to_mph(KMPH);
-  KMPH_DISP = to_string_round_to_nth(KMPH, 1);
-  MPH_DISP = to_string_round_to_nth(MPH, 1);
-}
-
-float AUTOMOBILE_VELOCITY::val_kmph()
-{
-  return KMPH;
-}
-
-float AUTOMOBILE_VELOCITY::val_mph()
-{
-  return MPH;
-}
-
-string AUTOMOBILE_VELOCITY::kmph()
-{
-  return KMPH_DISP;
-}
-
-string AUTOMOBILE_VELOCITY::mph()
-{
-  return MPH_DISP;
+  SPEED_TRANS.store((kmph * MULTIPLIER) / 10);
 }
 
 void AUTOMOBILE_VELOCITY::store_LF(int mps)
@@ -466,6 +440,8 @@ void AUTOMOBILE_VELOCITY::store_LF(int mps)
   LF_MPH = velocity_translate_kmph_to_mph(LF_KMPH);
   LF_KMPH_DISP = to_string_round_to_nth(LF_KMPH, 1);
   LF_MPH_DISP = to_string_round_to_nth(LF_MPH, 1);
+
+  SPEED_LF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
 }
 
 float AUTOMOBILE_VELOCITY::val_LF_kmph()
@@ -495,6 +471,8 @@ void AUTOMOBILE_VELOCITY::store_RF(int mps)
   RF_MPH = velocity_translate_kmph_to_mph(RF_KMPH);
   RF_KMPH_DISP = to_string_round_to_nth(RF_KMPH, 1);
   RF_MPH_DISP = to_string_round_to_nth(RF_MPH, 1);
+
+  SPEED_RF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
 }
 
 float AUTOMOBILE_VELOCITY::val_RF_kmph()
@@ -524,6 +502,8 @@ void AUTOMOBILE_VELOCITY::store_LB(int mps)
   LB_MPH = velocity_translate_kmph_to_mph(LB_KMPH);
   LB_KMPH_DISP = to_string_round_to_nth(LB_KMPH, 1);
   LB_MPH_DISP = to_string_round_to_nth(LB_MPH, 1);
+
+  SPEED_LB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
 }
 
 float AUTOMOBILE_VELOCITY::val_LB_kmph()
@@ -553,6 +533,8 @@ void AUTOMOBILE_VELOCITY::store_RB(int mps)
   RB_MPH = velocity_translate_kmph_to_mph(RB_KMPH);
   RB_KMPH_DISP = to_string_round_to_nth(RB_KMPH, 1);
   RB_MPH_DISP = to_string_round_to_nth(RB_MPH, 1);
+
+  SPEED_RB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
 }
 
 float AUTOMOBILE_VELOCITY::val_RB_kmph()
@@ -664,9 +646,7 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
 
   counter++;
 
-  //tw/c - ts/c
-
-  SPEED_TOTAL = SPEED_TOTAL + Status.SPEED.val_kmph();
+  SPEED_TOTAL = SPEED_TOTAL + Status.SPEED.SPEED_TRANS.val_kmph();
   LF_WHEEL_SPEED_TOTAL = LF_WHEEL_SPEED_TOTAL + Status.SPEED.val_LF_kmph();
   RF_WHEEL_SPEED_TOTAL = RF_WHEEL_SPEED_TOTAL + Status.SPEED.val_RF_kmph();
   LB_WHEEL_SPEED_TOTAL = LB_WHEEL_SPEED_TOTAL + Status.SPEED.val_LB_kmph();
@@ -1044,12 +1024,14 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
                                               DATA.AD_10.DATA[2]);
 
   // Speed
-  STATUS.SPEED.store((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13);
+  STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13);
 
   STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1]);
   STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3]);
   STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5]);
   STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7]);
+
+  STATUS.SPEED.SPEED_DASH.store(DATA.AD_130.DATA[6] + ((DATA.AD_130.DATA[7] / 255) / 10));
 
   // Transmission Gear Position
   STATUS.GEAR.store(DATA.AD_F0.DATA[2]);

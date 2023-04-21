@@ -120,7 +120,7 @@ string left_justify(int size, string text)
 
   if (text.size() > size)
   {
-    return_string = text.erase(0, text.size()- size);
+    return_string = text.erase(size +1) , text.size() - (size +1);
   }
   else if (text.size() == size)
   {
@@ -128,7 +128,7 @@ string left_justify(int size, string text)
   }
   else
   {
-    return_string = text + return_string.append(size - text.size() ,' ');
+    return_string = text.append(size - text.size() ,' ');
   }
 
   return return_string;

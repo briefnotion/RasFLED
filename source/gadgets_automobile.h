@@ -48,8 +48,8 @@ class AUTOMOBILE_OVERVIEW_GADGET_PROPERTIES
 
   int POSY = 0;
   int POSX = 0;
-  int SIZEY = 0;
-  int SIZEX = 18;
+  int SIZEY = 6;
+  int SIZEX = 22;
 
 };
 
@@ -123,8 +123,8 @@ class DATA_SET_GADGET_PROPERTIES
 
   int POSY = 0;
   int POSX = 0;
-  int SIZEY = 0;
-  int SIZEX = 0;
+  int SIZEY = 5;
+  int SIZEX = 13;
 
   string DESCRIPTION = "";
 };
@@ -138,8 +138,8 @@ class DATA_SET_GADGET
   Text_Field ID_0;
   Text_Field ID_1;
 
-  BAR DATA_DISPLAY_A;
-  BAR DATA_DISPLAY_B;
+  BAR DATA_BAR_A;
+  BAR DATA_BAR_B;
 
   Text_Field DATA_FIELD_0;
   Text_Field DATA_FIELD_1;
@@ -150,12 +150,20 @@ class DATA_SET_GADGET
   Text_Field DATA_FIELD_6;
   Text_Field DATA_FIELD_7;
 
+  Text_Field CALCULATION;
+
   public:
 
   DATA_SET_GADGET_PROPERTIES PROP;
 
   void create();
-  void update(AUTOMOBILE_DATA_LINE Data, unsigned long tmeFrame_Time);
+
+  void update(AUTOMOBILE_DATA_LINE Data, int Bar_Value_1, int Bar_Value_2, 
+              string Calculation, unsigned long tmeFrame_Time);
+
+  void update(AUTOMOBILE_DATA_LINE Data, 
+              string Calculation, unsigned long tmeFrame_Time);
+
   void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
 };
 
@@ -244,13 +252,7 @@ class AUTOMOBILE_GADGET
 
   //-----------
 
-  //Text_Field AD_D0;   // - Gear Lever Status, Transmission Gear Position
-  //Text_Field AD_130;  // - Speed
-  //Text_Field AD_200;  // - Fuel Consumed From Start
-  //Text_Field AD_218;  // - Odometer
-  //Text_Field AD_C0;   // - Fuel % hex 3A
 
-  //-----------
 
   //-----------
 

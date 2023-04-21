@@ -99,6 +99,7 @@ class Screen3
   Text_Field HAZARD;
   Text_Field NIGHT;
   Text_Field TIMER;
+  Text_Field AUTO;
   Text_Field ADSB;
 
   Text_Field DOOR1;

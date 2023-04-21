@@ -537,12 +537,15 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     TIMER.PROP.POSY = 1;
     TIMER.PROP.POSX = 29;
 
+    AUTO.PROP.POSY = 0;
+    AUTO.PROP.POSX = 53;
+
     ADSB.PROP.POSY = 1;
     ADSB.PROP.POSX = 53;
 
     VERSION.PROP.POSY = 0;
-    VERSION.PROP.POSX = XStatusSize - 6 - TitleSize;
-    VERSION.PROP.SIZEX = 5;
+    VERSION.PROP.POSX = XStatusSize - 15 - TitleSize;
+    VERSION.PROP.SIZEX = 15;
     VERSION.PROP.JUSTIFICATION_LEFT = true;
 
     TEMPERATURE.PROP.POSY = 1;
@@ -1397,6 +1400,10 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   */
 
   // Display ADS-B Indicaor
+  AUTO.set_inverse(sdSysData.CAR_INFO.active());
+  AUTO.set_text(" AUTO  ");
+
+  // Display ADS-B Indicaor
   ADSB.set_inverse(sdSysData.AIRCRAFT_COORD.is_active());
   ADSB.set_text(" ADS-B ");
   
@@ -1437,6 +1444,7 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   HAZARD.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
   OVERHEAD.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
   TIMER.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
+  AUTO.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
   ADSB.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
   TEMPERATURE.draw(STATUS_PANEL, ScrStat.Needs_Refresh);
   VERSION.draw(STATUS_PANEL, ScrStat.Needs_Refresh);

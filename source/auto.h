@@ -79,7 +79,7 @@ class AUTOMOBILE_DATA
   AUTOMOBILE_DATA_LINE AD_102;
   AUTOMOBILE_DATA_LINE AD_120;
   AUTOMOBILE_DATA_LINE AD_128;
-  AUTOMOBILE_DATA_LINE AD_130;  //? 304 - Speed
+  AUTOMOBILE_DATA_LINE AD_130;  //* 304 - Speed, Data 6 kph, Data 7 Decimal
   AUTOMOBILE_DATA_LINE AD_138;
   AUTOMOBILE_DATA_LINE AD_140;  // - Actual Stearing Effort?
   AUTOMOBILE_DATA_LINE AD_150;
@@ -145,7 +145,7 @@ class VELOCITY
 
   public:
 
-  void store(float kmps);
+  void store(float kmph);
   float val_kmph();
   float val_mph();
   string kmph();
@@ -326,11 +326,6 @@ class AUTOMOBILE_VELOCITY
 
   float MULTIPLIER = 1;
 
-  float KMPH = 0;
-  float MPH = 0;
-  string KMPH_DISP;
-  string MPH_DISP;
-
   float LF_KMPH = 0;
   float LF_MPH = 0;
   string LF_KMPH_DISP;
@@ -353,11 +348,15 @@ class AUTOMOBILE_VELOCITY
 
   public:
 
-  void store(int kmph, float Multiplier);
-  float val_kmph();
-  float val_mph();
-  string kmph();
-  string mph();
+  VELOCITY SPEED_TRANS;
+  VELOCITY SPEED_DASH;
+  
+  VELOCITY SPEED_LF_TIRE;
+  VELOCITY SPEED_RF_TIRE;
+  VELOCITY SPEED_LB_TIRE;
+  VELOCITY SPEED_RB_TIRE;
+
+  void store_trans(int kmph, float Multiplier);
 
   void store_LF(int mps);
   float val_LF_kmph();
