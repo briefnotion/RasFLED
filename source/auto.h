@@ -140,17 +140,24 @@ class VELOCITY
 
   float KMPH = 0;
   float MPH = 0;
+  float METERS_PER_SECOND = 0;
+
   string KMPH_DISP;
   string MPH_DISP;
 
+  unsigned long TIME_STAMP; // Miliseconds.  Fairly loose timings.
+
   public:
 
-  void store(float kmph);
+  void store(float kmph, unsigned long tmeFrame_Time);
+  void store_meters_per_second(float mps, unsigned long tmeFrame_Time);
   float val_kmph();
+  float val_meters_per_second();
   float val_mph();
   string kmph();
   string mph();
 
+  unsigned long time_stamp();
 };
 
 class AUTOMOBILE_DOORS
@@ -241,11 +248,15 @@ class AUTOMOBILE_INDICATORS
 
   bool AVAILABLE = true;
 
+  bool CRUISE_CONTROL = false;
+  int CRUISE_CONTROL_SPEED = 0;
+
   public:
 
   void store_lights(int Lights);
   void store_parking_brake(int Parking_Brake);
   void store_ignition(int Ignition);
+  void store_cruise_control(int Data_1, int Data_2);
 
   bool val_lights();
   int val_lights_pos();
@@ -258,6 +269,9 @@ class AUTOMOBILE_INDICATORS
   string val_ignition();
 
   bool light_switch_available();
+
+  bool cruise_control();
+  int cruise_control_speed();
 };
 
 class AUTOMOBILE_POWER
@@ -326,29 +340,10 @@ class AUTOMOBILE_VELOCITY
 
   float MULTIPLIER = 1;
 
-  float LF_KMPH = 0;
-  float LF_MPH = 0;
-  string LF_KMPH_DISP;
-  string LF_MPH_DISP;
-
-  float RF_KMPH = 0;
-  float RF_MPH = 0;
-  string RF_KMPH_DISP;
-  string RF_MPH_DISP;
-
-  float LB_KMPH = 0;
-  float LB_MPH = 0;
-  string LB_KMPH_DISP;
-  string LB_MPH_DISP;
-
-  float RB_KMPH = 0;
-  float RB_MPH = 0;
-  string RB_KMPH_DISP;
-  string RB_MPH_DISP;
-
   public:
 
   VELOCITY SPEED_TRANS;
+  
   VELOCITY SPEED_DASH;
   
   VELOCITY SPEED_LF_TIRE;
@@ -356,31 +351,14 @@ class AUTOMOBILE_VELOCITY
   VELOCITY SPEED_LB_TIRE;
   VELOCITY SPEED_RB_TIRE;
 
-  void store_trans(int kmph, float Multiplier);
+  void store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time);
+  void store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time);
+  void store_LF(int mps, unsigned long tmeFrame_Time);
+  void store_RF(int mps, unsigned long tmeFrame_Time);
+  void store_LB(int mps, unsigned long tmeFrame_Time);
+  void store_RB(int mps, unsigned long tmeFrame_Time);
 
-  void store_LF(int mps);
-  float val_LF_kmph();
-  float val_LF_mph();
-  string LF_kmph();
-  string LF_mph();
-
-  void store_RF(int mps);
-  float val_RF_kmph();
-  float val_RF_mph();
-  string RF_kmph();
-  string RF_mph();
-
-  void store_LB(int mps);
-  float val_LB_kmph();
-  float val_LB_mph();
-  string LB_kmph();
-  string LB_mph();
-
-  void store_RB(int mps);
-  float val_RB_kmph();
-  float val_RB_mph();
-  string RB_kmph();
-  string RB_mph();
+  float multiplier();
 };
 
 class AUTOMOBILE_TEMPATURE
@@ -395,9 +373,19 @@ class AUTOMOBILE_TRANSMISSION_GEAR
 {
   private:
   
+  // Transmission Info
   int REPORTED = 0;
-  string SHORT_DESC = " ";
-  string LONG_DESC = " ";
+  string SHORT_DESC = "";
+  string LONG_DESC = "";
+
+  // Transmission Gear Selection
+  int GEAR_SELECTION_REPORTED = 0;
+  string GEAR_SELECTION_LONG_DESC = "";
+  bool GEAR_SELECTION_PARK = false;
+  bool GEAR_SELECTION_REVERSE = false;
+  bool GEAR_SELECTION_NEUTRAL = false;
+  bool GEAR_SELECTION_DRIVE = false;
+  bool GEAR_SELECTION_LOW = false;
   
   public:
 
@@ -405,6 +393,15 @@ class AUTOMOBILE_TRANSMISSION_GEAR
   int reported();
   string short_desc();
   string long_desc();
+
+  void store_gear_selection(int Gear, int Gear_Alt);
+  int gear_selection_reported();
+  string gear_selection_long_desc();
+  bool gear_selection_park();
+  bool gear_selection_reverse();
+  bool gear_selection_neutral();
+  bool gear_selection_drive();
+  bool gear_selection_low();
 };
 
 class AUTOMOBILE_TRANSLATED_DATA
@@ -436,6 +433,10 @@ class AUTOMOBILE_CALCULATED
   TIMED_PING DATA_CLEAR_TIMER;
   int counter = 0;
 
+  TIMED_PING ACCELERATION_TIMER;
+
+  float ACCELERATION; //  m/s^2
+
   public:
 
   VELOCITY LF_WHEEL_SPEED_OFFSET;
@@ -443,10 +444,14 @@ class AUTOMOBILE_CALCULATED
   VELOCITY LB_WHEEL_SPEED_OFFSET;
   VELOCITY RB_WHEEL_SPEED_OFFSET;
 
+  VELOCITY PREVIOUS_VELOCITY;
+
   void compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time);
   // Low level Compute not requiring calculation on all data.
   //  Fast but not fully acurate.
   //  Currently call just before the data is displayed.
+
+  float acceleration();
 };
 
 class AUTOMOBILE_PROPERTIES

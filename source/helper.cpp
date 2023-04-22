@@ -490,6 +490,16 @@ float velocity_translate_kmph_to_mph(float kmph)
   return kmph * 0.6213711922;
 }
 
+float velocity_translate_kmph_to_meters_per_second(float kmph)
+{
+  return kmph * 0.2777777778;
+}
+
+float velocity_translate_meters_per_second_to_kmph(float mps)
+{
+  return mps * 3.6;
+}
+
 int position_of_scale(int size, int scale, int value)
 // Calculate position of value on scale (eg 100%) with size.
 //  Will not return anything larger than size.

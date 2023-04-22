@@ -16,18 +16,40 @@
 
 //-----------
 
-void VELOCITY::store(float kmph)
+void VELOCITY::store(float kmph, unsigned long tmeFrame_Time)
 {
   KMPH = kmph;  
 
   MPH = velocity_translate_kmph_to_mph(KMPH);
+  METERS_PER_SECOND = velocity_translate_kmph_to_meters_per_second(KMPH);
+
   KMPH_DISP = to_string_round_to_nth(KMPH, 2);
   MPH_DISP = to_string_round_to_nth(MPH, 2);
+
+  TIME_STAMP = tmeFrame_Time;
+}
+
+void VELOCITY::store_meters_per_second(float mps, unsigned long tmeFrame_Time)
+{
+  METERS_PER_SECOND = mps;
+
+  KMPH = velocity_translate_meters_per_second_to_kmph(mps);  
+  MPH = velocity_translate_kmph_to_mph(KMPH);
+
+  KMPH_DISP = to_string_round_to_nth(KMPH, 2);
+  MPH_DISP = to_string_round_to_nth(MPH, 2);
+
+  TIME_STAMP = tmeFrame_Time;
 }
 
 float VELOCITY::val_kmph()
 {
   return KMPH;
+}
+
+float VELOCITY::val_meters_per_second()
+{
+  return METERS_PER_SECOND;
 }
 
 float VELOCITY::val_mph()
@@ -43,6 +65,11 @@ string VELOCITY::kmph()
 string VELOCITY::mph()
 {
   return MPH_DISP;
+}
+
+unsigned long VELOCITY::time_stamp()
+{
+  return TIME_STAMP;
 }
 
 //-----------
@@ -239,6 +266,19 @@ void AUTOMOBILE_INDICATORS::store_ignition(int Ignition)
   }
 }
 
+void AUTOMOBILE_INDICATORS::store_cruise_control(int Data_1, int Data_2)
+{
+  if (Data_1 == 194)  // c2 (194) on
+  {
+    CRUISE_CONTROL = true;
+    CRUISE_CONTROL_SPEED = Data_2 / 3;
+  }
+  else                //  c0 (192) off
+  {
+    CRUISE_CONTROL = false;
+  }
+}
+
 bool AUTOMOBILE_INDICATORS::val_lights()
 {
   return LIGHTS;
@@ -277,6 +317,16 @@ string AUTOMOBILE_INDICATORS::val_ignition()
 bool AUTOMOBILE_INDICATORS::light_switch_available()
 {
   return AVAILABLE;
+}
+
+bool AUTOMOBILE_INDICATORS::cruise_control()
+{
+  return CRUISE_CONTROL;
+}
+
+int AUTOMOBILE_INDICATORS::cruise_control_speed()
+{
+  return CRUISE_CONTROL_SPEED;
 }
 
 void AUTOMOBILE_POWER::store(int Load)
@@ -424,137 +474,43 @@ string AUTOMOBILE_STEERING::left_of_center()
 
 // Multiplier source unknown.  not calculating correctly.
 // Possibly wrong spec tire size.  How the car knows is beyond me.
-void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier)
+void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time)
 {
   // Possibly meters per second devided by 3  (Multiplier = 1.2 for kmph conversion )
   //                                          (3.6 kmph = 1 mps                     )
 
   MULTIPLIER = Multiplier;
-  SPEED_TRANS.store((kmph * MULTIPLIER) / 10);
+  SPEED_TRANS.store((kmph * MULTIPLIER) / 10, tmeFrame_Time);
 }
 
-void AUTOMOBILE_VELOCITY::store_LF(int mps)
+void AUTOMOBILE_VELOCITY::store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time)
 {
-  LF_KMPH = ((mps - 32768) * MULTIPLIER) / 100;  
-
-  LF_MPH = velocity_translate_kmph_to_mph(LF_KMPH);
-  LF_KMPH_DISP = to_string_round_to_nth(LF_KMPH, 1);
-  LF_MPH_DISP = to_string_round_to_nth(LF_MPH, 1);
-
-  SPEED_LF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
+  SPEED_DASH.store(kmph + (kmph_decimal / 255), tmeFrame_Time);
 }
 
-float AUTOMOBILE_VELOCITY::val_LF_kmph()
+void AUTOMOBILE_VELOCITY::store_LF(int mps, unsigned long tmeFrame_Time)
 {
-  return LF_KMPH;
+  SPEED_LF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
 }
 
-float AUTOMOBILE_VELOCITY::val_LF_mph()
+void AUTOMOBILE_VELOCITY::store_RF(int mps, unsigned long tmeFrame_Time)
 {
-  return LF_MPH;
+  SPEED_RF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
 }
 
-string AUTOMOBILE_VELOCITY::LF_kmph()
+void AUTOMOBILE_VELOCITY::store_LB(int mps, unsigned long tmeFrame_Time)
 {
-  return LF_KMPH_DISP;
+  SPEED_LB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
 }
 
-string AUTOMOBILE_VELOCITY::LF_mph()
+void AUTOMOBILE_VELOCITY::store_RB(int mps, unsigned long tmeFrame_Time)
 {
-  return LF_MPH_DISP;
+  SPEED_RB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
 }
 
-void AUTOMOBILE_VELOCITY::store_RF(int mps)
+float AUTOMOBILE_VELOCITY::multiplier()
 {
-  RF_KMPH = ((mps - 32768) * MULTIPLIER) / 100;  
-
-  RF_MPH = velocity_translate_kmph_to_mph(RF_KMPH);
-  RF_KMPH_DISP = to_string_round_to_nth(RF_KMPH, 1);
-  RF_MPH_DISP = to_string_round_to_nth(RF_MPH, 1);
-
-  SPEED_RF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
-}
-
-float AUTOMOBILE_VELOCITY::val_RF_kmph()
-{
-  return RF_KMPH;
-}
-
-float AUTOMOBILE_VELOCITY::val_RF_mph()
-{
-  return RF_MPH;
-}
-
-string AUTOMOBILE_VELOCITY::RF_kmph()
-{
-  return RF_KMPH_DISP;
-}
-
-string AUTOMOBILE_VELOCITY::RF_mph()
-{
-  return RF_MPH_DISP;
-}
-
-void AUTOMOBILE_VELOCITY::store_LB(int mps)
-{
-  LB_KMPH = ((mps - 32768) * MULTIPLIER) / 100;  
-
-  LB_MPH = velocity_translate_kmph_to_mph(LB_KMPH);
-  LB_KMPH_DISP = to_string_round_to_nth(LB_KMPH, 1);
-  LB_MPH_DISP = to_string_round_to_nth(LB_MPH, 1);
-
-  SPEED_LB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
-}
-
-float AUTOMOBILE_VELOCITY::val_LB_kmph()
-{
-  return LB_KMPH;
-}
-
-float AUTOMOBILE_VELOCITY::val_LB_mph()
-{
-  return LB_MPH;
-}
-
-string AUTOMOBILE_VELOCITY::LB_kmph()
-{
-  return LB_KMPH_DISP;
-}
-
-string AUTOMOBILE_VELOCITY::LB_mph()
-{
-  return LB_MPH_DISP;
-}
-
-void AUTOMOBILE_VELOCITY::store_RB(int mps)
-{
-  RB_KMPH = ((mps - 32768) * MULTIPLIER) / 100;  
-
-  RB_MPH = velocity_translate_kmph_to_mph(RB_KMPH);
-  RB_KMPH_DISP = to_string_round_to_nth(RB_KMPH, 1);
-  RB_MPH_DISP = to_string_round_to_nth(RB_MPH, 1);
-
-  SPEED_RB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100);
-}
-
-float AUTOMOBILE_VELOCITY::val_RB_kmph()
-{
-  return RB_KMPH;
-}
-
-float AUTOMOBILE_VELOCITY::val_RB_mph()
-{
-  return RB_MPH;
-}
-
-string AUTOMOBILE_VELOCITY::RB_kmph()
-{
-  return RB_KMPH_DISP;
-}
-
-string AUTOMOBILE_VELOCITY::RB_mph()
-{
-  return RB_MPH_DISP;
+  return MULTIPLIER;
 }
 
 void AUTOMOBILE_TRANSMISSION_GEAR::store(int gear)
@@ -628,6 +584,115 @@ string AUTOMOBILE_TRANSMISSION_GEAR::long_desc()
   return LONG_DESC;
 }
 
+void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
+{
+  GEAR_SELECTION_REPORTED = Gear;
+
+  /*
+  E0 Reverse
+  00 Neutral
+  10 Drive
+  data 2 51 low
+  01 Park
+  */
+
+  if (Gear == 1)
+  {
+    // Park
+    SHORT_DESC = "Park";
+    GEAR_SELECTION_PARK = true;
+    GEAR_SELECTION_REVERSE = false;
+    GEAR_SELECTION_NEUTRAL = false;
+    GEAR_SELECTION_DRIVE = false;
+    GEAR_SELECTION_LOW = false;
+  }
+  else if (Gear == 224)
+  {
+    // Reverse
+    SHORT_DESC = "Reverse";
+    GEAR_SELECTION_PARK = false;
+    GEAR_SELECTION_REVERSE = true;
+    GEAR_SELECTION_NEUTRAL = false;
+    GEAR_SELECTION_DRIVE = false;
+    GEAR_SELECTION_LOW = false;
+  }
+  else if (Gear == 0)
+  {
+    // Reverse
+    SHORT_DESC = "Neutral";
+    GEAR_SELECTION_PARK = false;
+    GEAR_SELECTION_REVERSE = false;
+    GEAR_SELECTION_NEUTRAL = true;
+    GEAR_SELECTION_DRIVE = false;
+    GEAR_SELECTION_LOW = false;
+  }
+  else if (Gear >= 10 && Gear <= 96 && Gear_Alt != 81)
+  {
+    // Drive
+    SHORT_DESC = "Drive";
+    GEAR_SELECTION_PARK = false;
+    GEAR_SELECTION_REVERSE = false;
+    GEAR_SELECTION_NEUTRAL = false;
+    GEAR_SELECTION_DRIVE = true;
+    GEAR_SELECTION_LOW = false;
+  }
+  else if (Gear >= 10 && Gear <= 96 && Gear_Alt == 81)
+  {
+    // Low
+    SHORT_DESC = "Low";
+    GEAR_SELECTION_PARK = false;
+    GEAR_SELECTION_REVERSE = false;
+    GEAR_SELECTION_NEUTRAL = false;
+    GEAR_SELECTION_DRIVE = false;
+    GEAR_SELECTION_LOW = true;
+  }
+  else
+  {
+    // Unknown
+    SHORT_DESC = "Unknown";
+    GEAR_SELECTION_PARK = false;
+    GEAR_SELECTION_REVERSE = false;
+    GEAR_SELECTION_NEUTRAL = false;
+    GEAR_SELECTION_DRIVE = false;
+    GEAR_SELECTION_LOW = false;
+  }
+}
+
+int AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_reported()
+{
+  return GEAR_SELECTION_REPORTED;
+}
+
+string AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_long_desc()
+{
+  return GEAR_SELECTION_LONG_DESC;
+}
+
+bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_park()
+{
+  return GEAR_SELECTION_PARK;
+}
+
+bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_reverse()
+{
+  return GEAR_SELECTION_REVERSE;
+}
+
+bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_neutral()
+{
+  return GEAR_SELECTION_NEUTRAL;
+}
+
+bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_drive()
+{
+  return GEAR_SELECTION_DRIVE;
+}
+
+bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_low()
+{
+  return GEAR_SELECTION_LOW;
+}
+
 //-----------
 
 void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time)
@@ -644,18 +709,41 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
     RB_WHEEL_SPEED_TOTAL = 0;
   }
 
-  counter++;
+  if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
+  {
+    // Calculate Wheelspeed Offset or Differance.  
+    counter++;
 
-  SPEED_TOTAL = SPEED_TOTAL + Status.SPEED.SPEED_TRANS.val_kmph();
-  LF_WHEEL_SPEED_TOTAL = LF_WHEEL_SPEED_TOTAL + Status.SPEED.val_LF_kmph();
-  RF_WHEEL_SPEED_TOTAL = RF_WHEEL_SPEED_TOTAL + Status.SPEED.val_RF_kmph();
-  LB_WHEEL_SPEED_TOTAL = LB_WHEEL_SPEED_TOTAL + Status.SPEED.val_LB_kmph();
-  RB_WHEEL_SPEED_TOTAL = RB_WHEEL_SPEED_TOTAL + Status.SPEED.val_RB_kmph();
+    SPEED_TOTAL = SPEED_TOTAL + Status.SPEED.SPEED_TRANS.val_kmph();
+    LF_WHEEL_SPEED_TOTAL = LF_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_LF_TIRE.val_kmph();
+    RF_WHEEL_SPEED_TOTAL = RF_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_RF_TIRE.val_kmph();
+    LB_WHEEL_SPEED_TOTAL = LB_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_LB_TIRE.val_kmph();
+    RB_WHEEL_SPEED_TOTAL = RB_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_RB_TIRE.val_kmph();
 
-  LF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LF_WHEEL_SPEED_TOTAL/counter));
-  RF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RF_WHEEL_SPEED_TOTAL/counter));
-  LB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LB_WHEEL_SPEED_TOTAL/counter));
-  RB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RB_WHEEL_SPEED_TOTAL/counter));
+    LF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LF_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
+    RF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RF_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
+    LB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
+    RB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
+
+    // Calculate Acceleration
+
+    if (ACCELERATION_TIMER.ping_down(tmeFrame_Time) == false)
+    {
+      ACCELERATION = 1000 * (Status.SPEED.SPEED_TRANS.val_meters_per_second() - PREVIOUS_VELOCITY.val_meters_per_second()) / 
+                        (Status.SPEED.SPEED_TRANS.time_stamp() - PREVIOUS_VELOCITY.time_stamp());
+
+      ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
+    }
+
+    //
+    PREVIOUS_VELOCITY = Status.SPEED.SPEED_TRANS;
+  }
+
+}
+
+float AUTOMOBILE_CALCULATED::acceleration()
+{
+  return ACCELERATION;
 }
 
 //-----------
@@ -1024,17 +1112,18 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
                                               DATA.AD_10.DATA[2]);
 
   // Speed
-  STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13);
+  STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time);
 
-  STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1]);
-  STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3]);
-  STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5]);
-  STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7]);
+  STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1], tmeFrame_Time);
+  STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3], tmeFrame_Time);
+  STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5], tmeFrame_Time);
+  STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7], tmeFrame_Time);
 
-  STATUS.SPEED.SPEED_DASH.store(DATA.AD_130.DATA[6] + ((DATA.AD_130.DATA[7] / 255) / 10));
+  STATUS.SPEED.store_dash(DATA.AD_130.DATA[6], DATA.AD_130.DATA[7], tmeFrame_Time);
 
   // Transmission Gear Position
   STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
+  STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_F0.DATA[2]);
 
   // RPM
   STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
@@ -1047,6 +1136,7 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
   STATUS.INDICATORS.store_lights(DATA.AD_C8.DATA[7]);
   STATUS.INDICATORS.store_parking_brake(DATA.AD_C8.DATA[3]);
   //STATUS.INDICATORS.store_ignition(DATA.AD_C8.DATA[1]);
+  STATUS.INDICATORS.store_cruise_control(DATA.AD_200.DATA[6], DATA.AD_200.DATA[7]);
 
   // FUEL
   STATUS.FUEL.store_consumed(DATA.AD_200.DATA[7]);

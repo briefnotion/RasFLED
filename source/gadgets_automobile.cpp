@@ -77,6 +77,53 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   SYMBOL_CAR_DOOR_RIGHT_BACK.PROP.JUSTIFICATION_LEFT = true;
   
   //-----------
+  // Gear Selection Values
+  GEAR_SELECTION_PARK.PROP.POSX = 1;
+  GEAR_SELECTION_PARK.PROP.POSY = 9;
+  GEAR_SELECTION_PARK.PROP.SIZEX = 1;
+  GEAR_SELECTION_PARK.PROP.COLORS_ON = true;
+  GEAR_SELECTION_PARK.PROP.BCOLOR = COLOR_BLACK;
+  GEAR_SELECTION_PARK.PROP.COLOR = COLOR_WHITE;
+  GEAR_SELECTION_PARK.PROP.JUSTIFICATION_LEFT = true;
+  GEAR_SELECTION_PARK.set_text("P");
+  
+  GEAR_SELECTION_REVERSE.PROP.POSX = 1;
+  GEAR_SELECTION_REVERSE.PROP.POSY = 10;
+  GEAR_SELECTION_REVERSE.PROP.SIZEX = 1;
+  GEAR_SELECTION_REVERSE.PROP.COLORS_ON = true;
+  GEAR_SELECTION_REVERSE.PROP.BCOLOR = COLOR_BLACK;
+  GEAR_SELECTION_REVERSE.PROP.COLOR = COLOR_WHITE;
+  GEAR_SELECTION_REVERSE.PROP.JUSTIFICATION_LEFT = true;
+  GEAR_SELECTION_REVERSE.set_text("R");
+
+  GEAR_SELECTION_NEUTRAL.PROP.POSX = 1;
+  GEAR_SELECTION_NEUTRAL.PROP.POSY = 11;
+  GEAR_SELECTION_NEUTRAL.PROP.SIZEX = 1;
+  GEAR_SELECTION_NEUTRAL.PROP.COLORS_ON = true;
+  GEAR_SELECTION_NEUTRAL.PROP.BCOLOR = COLOR_BLACK;
+  GEAR_SELECTION_NEUTRAL.PROP.COLOR = COLOR_WHITE;
+  GEAR_SELECTION_NEUTRAL.PROP.JUSTIFICATION_LEFT = true;
+  GEAR_SELECTION_NEUTRAL.set_text("N");
+
+  GEAR_SELECTION_DRIVE.PROP.POSX = 1;
+  GEAR_SELECTION_DRIVE.PROP.POSY = 12;
+  GEAR_SELECTION_DRIVE.PROP.SIZEX = 1;
+  GEAR_SELECTION_DRIVE.PROP.COLORS_ON = true;
+  GEAR_SELECTION_DRIVE.PROP.BCOLOR = COLOR_BLACK;
+  GEAR_SELECTION_DRIVE.PROP.COLOR = COLOR_WHITE;
+  GEAR_SELECTION_DRIVE.PROP.JUSTIFICATION_LEFT = true;
+  GEAR_SELECTION_DRIVE.set_text("D");
+
+  GEAR_SELECTION_LOW.PROP.POSX = 1;
+  GEAR_SELECTION_LOW.PROP.POSY = 13;
+  GEAR_SELECTION_LOW.PROP.SIZEX = 1;
+  GEAR_SELECTION_LOW.PROP.COLORS_ON = true;
+  GEAR_SELECTION_LOW.PROP.BCOLOR = COLOR_BLACK;
+  GEAR_SELECTION_LOW.PROP.COLOR = COLOR_WHITE;
+  GEAR_SELECTION_LOW.PROP.JUSTIFICATION_LEFT = true;
+  GEAR_SELECTION_LOW.set_text("L");
+
+  //-----------
   // Individual Tire Speeds
   LF_SPEED.PROP.POSX = 3;
   LF_SPEED.PROP.POSY = 5;
@@ -159,6 +206,14 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   FUEL_LEVEL.PROP.BCOLOR = COLOR_BLACK;
   FUEL_LEVEL.PROP.COLOR = COLOR_WHITE;
   FUEL_LEVEL.PROP.JUSTIFICATION_LEFT = true;
+  
+  CRUIS_CONTROL.PROP.POSX = 3;
+  CRUIS_CONTROL.PROP.POSY = 23;
+  CRUIS_CONTROL.PROP.SIZEX = 20;
+  CRUIS_CONTROL.PROP.COLORS_ON = true;
+  CRUIS_CONTROL.PROP.BCOLOR = COLOR_BLACK;
+  CRUIS_CONTROL.PROP.COLOR = COLOR_WHITE;
+  CRUIS_CONTROL.PROP.JUSTIFICATION_LEFT = true;
 }
 
 void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &tmeCurrentMillis)
@@ -229,12 +284,20 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   }
 
   //-----------
+  // Gear Selection
+  GEAR_SELECTION_PARK.set_inverse(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_park());
+  GEAR_SELECTION_REVERSE.set_inverse(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_reverse());
+  GEAR_SELECTION_NEUTRAL.set_inverse(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_neutral());
+  GEAR_SELECTION_DRIVE.set_inverse(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_drive());
+  GEAR_SELECTION_LOW.set_inverse(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_low());
+
+  //-----------
   // Individual Tire Speeds
 
-  LF_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.LF_mph());
-  RF_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.RF_mph());
-  LB_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.LB_mph());
-  RB_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.RB_mph());
+  LF_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_LF_TIRE.mph());
+  RF_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_RF_TIRE.mph());
+  LB_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_LB_TIRE.mph());
+  RB_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_RB_TIRE.mph());
 
   LF_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.LF_WHEEL_SPEED_OFFSET.mph());
   RF_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.RF_WHEEL_SPEED_OFFSET.mph());
@@ -246,6 +309,8 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
 
   LIGHTS_STATUS.set_text("LIGHTS: " + sdSysData.CAR_INFO.STATUS.INDICATORS.lights(), tmeCurrentMillis);
   FUEL_LEVEL.set_text("  FUEL: " + sdSysData.CAR_INFO.STATUS.FUEL.level(), tmeCurrentMillis);
+  CRUIS_CONTROL.set_text("CRUISE: " + to_string(sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control_speed()), tmeCurrentMillis);
+  CRUIS_CONTROL.set_inverse(sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control());
 
   if (sdSysData.CAR_INFO.STATUS.FUEL.val_level() >= 4)
   {
@@ -279,6 +344,14 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   SYMBOL_CAR_DOOR_RIGHT_BACK.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
 
   //-----------
+  // Gear Selection
+  GEAR_SELECTION_PARK.draw(GADGET_PANEL, Refresh);
+  GEAR_SELECTION_REVERSE.draw(GADGET_PANEL, Refresh);
+  GEAR_SELECTION_NEUTRAL.draw(GADGET_PANEL, Refresh);
+  GEAR_SELECTION_DRIVE.draw(GADGET_PANEL, Refresh);
+  GEAR_SELECTION_LOW.draw(GADGET_PANEL, Refresh);
+
+  //-----------
   // Individual Tire Speeds
   LF_SPEED.draw(GADGET_PANEL, Refresh);
   RF_SPEED.draw(GADGET_PANEL, Refresh);
@@ -295,6 +368,7 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   LIGHTS_STATUS.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
   FUEL_LEVEL.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+  CRUIS_CONTROL.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
 
   //-----------
   GADGET_PANEL.draw(Refresh);
@@ -622,7 +696,7 @@ void AUTOMOBILE_GADGET::create()
   SPEEDOMETER.PROP.PRINT_MAX = false;
 
   //Speed Text
-  SPEED.PROP.POSX = 13 + 28;
+  SPEED.PROP.POSX = 13 + 23;
   SPEED.PROP.POSY = 1;
   SPEED.PROP.SIZEX = 5;
   SPEED.PROP.COLORS_ON = true;
@@ -631,7 +705,7 @@ void AUTOMOBILE_GADGET::create()
   SPEED.PROP.JUSTIFICATION_LEFT = true;
 
   //Gear Text
-  GEAR.PROP.POSX = 13 + 35;
+  GEAR.PROP.POSX = 13 + 30;
   GEAR.PROP.POSY = 1;
   GEAR.PROP.SIZEX = 10;
   GEAR.PROP.COLORS_ON = true;
@@ -656,6 +730,17 @@ void AUTOMOBILE_GADGET::create()
   SPEEDOMETER_MAX.PROP.BCOLOR = COLOR_BLACK;
   SPEEDOMETER_MAX.PROP.COLOR = COLOR_WHITE;
   SPEEDOMETER_MAX.PROP.JUSTIFICATION_RIGHT = true;
+
+  //-----------
+  //Speed MIN Text
+
+  ACCELERATION.PROP.POSX = 13 + 35;
+  ACCELERATION.PROP.POSY = 1;
+  ACCELERATION.PROP.SIZEX = 5;
+  ACCELERATION.PROP.COLORS_ON = true;
+  ACCELERATION.PROP.BCOLOR = COLOR_BLACK;
+  ACCELERATION.PROP.COLOR = COLOR_WHITE;
+  ACCELERATION.PROP.JUSTIFICATION_LEFT = true;
 
   //-----------
 
@@ -894,6 +979,8 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   
   LARGE_SPEED_1.set_text(NUMBERS_5X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
   LARGE_SPEED_10.set_text(NUMBERS_5X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
+  LARGE_SPEED_1.set_inverse(sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control());
+  LARGE_SPEED_10.set_inverse(sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control());
 
   //-----------
   // Large Velocity
@@ -907,6 +994,11 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   GEAR.set_text(sdSysData.CAR_INFO.STATUS.GEAR.long_desc());
   SPEEDOMETER_MIN.set_text(to_string(SPEEDOMETER.MIN_MAX_HISTORY.min()));
   SPEEDOMETER_MAX.set_text(to_string(SPEEDOMETER.MIN_MAX_HISTORY.max()));
+
+  //-----------
+
+  ACCELERATION.set_text(to_string_round_to_nth(abs(sdSysData.CAR_INFO.CALCULATED.acceleration()), 2));
+  //ACCELERATION.set_text(to_string(sdSysData.CAR_INFO.CALCULATED.acceleration()));
 
   //-----------
 
@@ -931,7 +1023,7 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, sdSysData.CAR_INFO.DATA.AD_130.DATA[6], sdSysData.CAR_INFO.DATA.AD_130.DATA[7], "67", tmeFrame_Time);
   DATA_SET_02.update(sdSysData.CAR_INFO.DATA.AD_D0, sdSysData.CAR_INFO.DATA.AD_D0.DATA[6], sdSysData.CAR_INFO.DATA.AD_D0.DATA[7], "67", tmeFrame_Time);
-  DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, sdSysData.CAR_INFO.DATA.AD_200.DATA[6], sdSysData.CAR_INFO.DATA.AD_200.DATA[3], "63", tmeFrame_Time);
+  DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, sdSysData.CAR_INFO.DATA.AD_200.DATA[6], sdSysData.CAR_INFO.DATA.AD_200.DATA[3], to_string(sdSysData.CAR_INFO.DATA.AD_200.DATA[7] / 3), tmeFrame_Time);
   DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "67", tmeFrame_Time);
   DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_C8, sdSysData.CAR_INFO.DATA.AD_C8.DATA[1], sdSysData.CAR_INFO.DATA.AD_C8.DATA[2], "12", tmeFrame_Time);
   DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_400, sdSysData.CAR_INFO.DATA.AD_400.DATA[6], sdSysData.CAR_INFO.DATA.AD_400.DATA[7], "67", tmeFrame_Time);
@@ -985,6 +1077,10 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   GEAR.draw(AUTOMOBILE_PANEL, Refresh);
   SPEEDOMETER_MIN.draw(AUTOMOBILE_PANEL, Refresh);
   SPEEDOMETER_MAX.draw(AUTOMOBILE_PANEL, Refresh);
+
+  //-----------
+
+  ACCELERATION.draw(AUTOMOBILE_PANEL, Refresh);
 
   //-----------
 

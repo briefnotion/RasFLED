@@ -67,11 +67,20 @@ class AUTOMOBILE_OVERVIEW_GADGET
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_BACK;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_RIGHT_BACK;
 
+  //-----------
   // Door Values
   bool LEFT_FRONT_DOOR_VAL = true;
   bool RIGHT_FRONT_DOOR_VAL = true;
   bool LEFT_BACK_DOOR_VAL = true;
   bool RIGHT_BACK_DOOR_VAL = true;
+
+  //-----------
+  // Gear Selection Values
+  Text_Field GEAR_SELECTION_PARK;
+  Text_Field GEAR_SELECTION_REVERSE;
+  Text_Field GEAR_SELECTION_NEUTRAL;
+  Text_Field GEAR_SELECTION_DRIVE;
+  Text_Field GEAR_SELECTION_LOW;
 
   //-----------
   // Tire Test
@@ -88,6 +97,7 @@ class AUTOMOBILE_OVERVIEW_GADGET
   //-----------
   Text_Field LIGHTS_STATUS;
   Text_Field FUEL_LEVEL;
+  Text_Field CRUIS_CONTROL;
 
   //-----------
 
@@ -168,6 +178,60 @@ class DATA_SET_GADGET
 };
 
 // -------------------------------------------------------------------------------------
+//  DATA_SET_GADGET
+
+class DUEL_BAR_GUAGE_GADGET_PROPERTIES
+// Properties (duh)
+{
+  public: 
+
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 5;
+  int SIZEX = 13;
+
+  string DESCRIPTION = "";
+};
+
+class DUEL_BAR_GUAGE_GADGET
+{
+  private:
+
+  Text_Field DESCRIPTION;
+
+  Text_Field ID_0;
+  Text_Field ID_1;
+
+  BAR DATA_BAR_A;
+  BAR DATA_BAR_B;
+
+  Text_Field DATA_FIELD_0;
+  Text_Field DATA_FIELD_1;
+  Text_Field DATA_FIELD_2;
+  Text_Field DATA_FIELD_3;
+  Text_Field DATA_FIELD_4;
+  Text_Field DATA_FIELD_5;
+  Text_Field DATA_FIELD_6;
+  Text_Field DATA_FIELD_7;
+
+  Text_Field CALCULATION;
+
+  public:
+
+  DUEL_BAR_GUAGE_GADGET_PROPERTIES PROP;
+
+  void create();
+
+  void update(AUTOMOBILE_DATA_LINE Data, int Bar_Value_1, int Bar_Value_2, 
+              string Calculation, unsigned long tmeFrame_Time);
+
+  void update(AUTOMOBILE_DATA_LINE Data, 
+              string Calculation, unsigned long tmeFrame_Time);
+
+  void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
+};
+
+// -------------------------------------------------------------------------------------
 //  AUTOMOBILE_GADGET
 
 
@@ -216,6 +280,10 @@ class AUTOMOBILE_GADGET
   Text_Field GEAR;
   Text_Field SPEEDOMETER_MIN;
   Text_Field SPEEDOMETER_MAX;
+
+  //-----------
+
+  Text_Field ACCELERATION;
 
   //-----------
 
