@@ -266,12 +266,12 @@ void AUTOMOBILE_INDICATORS::store_ignition(int Ignition)
   }
 }
 
-void AUTOMOBILE_INDICATORS::store_cruise_control(int Data_1, int Data_2)
+void AUTOMOBILE_INDICATORS::store_cruise_control(int Data_1, int Data_2, float Multiplier)
 {
   if (Data_1 == 194)  // c2 (194) on
   {
     CRUISE_CONTROL = true;
-    CRUISE_CONTROL_SPEED = Data_2 / 3;
+    CRUISE_CONTROL_SPEED = Data_2 * Multiplier;
   }
   else                //  c0 (192) off
   {
@@ -324,7 +324,7 @@ bool AUTOMOBILE_INDICATORS::cruise_control()
   return CRUISE_CONTROL;
 }
 
-int AUTOMOBILE_INDICATORS::cruise_control_speed()
+float AUTOMOBILE_INDICATORS::cruise_control_speed()
 {
   return CRUISE_CONTROL_SPEED;
 }
@@ -723,20 +723,18 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
     LF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LF_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
     RF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RF_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
     LB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
-    RB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
+    RB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);   
+  }
 
-    // Calculate Acceleration
+  // Calculate Acceleration
+  if (ACCELERATION_TIMER.ping_down(tmeFrame_Time) == false)
+  {
+    ACCELERATION = 1000 * (Status.SPEED.SPEED_TRANS.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
+                        (Status.SPEED.SPEED_TRANS.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
 
-    if (ACCELERATION_TIMER.ping_down(tmeFrame_Time) == false)
-    {
-      ACCELERATION = 1000 * (Status.SPEED.SPEED_TRANS.val_meters_per_second() - PREVIOUS_VELOCITY.val_meters_per_second()) / 
-                        (Status.SPEED.SPEED_TRANS.time_stamp() - PREVIOUS_VELOCITY.time_stamp());
+    PREVIOUS_VELOCITY_FOR_ACC = Status.SPEED.SPEED_TRANS;
 
-      ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
-    }
-
-    //
-    PREVIOUS_VELOCITY = Status.SPEED.SPEED_TRANS;
+    ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
   }
 
 }
@@ -1064,7 +1062,6 @@ void AUTOMOBILE::parse(string Line)
   {
     DATA.AD_UNKNOWN = data;
   }
-
 }
 
 bool AUTOMOBILE::active()
@@ -1078,7 +1075,6 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
   {
     ACTIVE = false;
   }
-
 
   if (Com_Port.READ_FROM_COMM.size() > 0)
   {
@@ -1136,7 +1132,7 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
   STATUS.INDICATORS.store_lights(DATA.AD_C8.DATA[7]);
   STATUS.INDICATORS.store_parking_brake(DATA.AD_C8.DATA[3]);
   //STATUS.INDICATORS.store_ignition(DATA.AD_C8.DATA[1]);
-  STATUS.INDICATORS.store_cruise_control(DATA.AD_200.DATA[6], DATA.AD_200.DATA[7]);
+  STATUS.INDICATORS.store_cruise_control(DATA.AD_200.DATA[6], DATA.AD_200.DATA[7], .312);
 
   // FUEL
   STATUS.FUEL.store_consumed(DATA.AD_200.DATA[7]);

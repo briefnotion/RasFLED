@@ -271,6 +271,17 @@ string SYMBOLS_5X5_BLANK::number(int Number)
 
 // -------------------------------------------------------------------------------------
 
+string SYMBOLS_5X5_NUMBERS::space()
+{
+  if (SPACE_MADE == false)
+  {
+    SPACE = SPACE_01 + SPACE_02 + SPACE_03 + SPACE_04 + SPACE_05;
+    SPACE_MADE = true;
+  }
+
+  return SPACE;
+}
+
 string SYMBOLS_5X5_NUMBERS::num_x()
 {
   if (NUM_X_MADE == false)
@@ -441,6 +452,17 @@ string SYMBOLS_5X5_NUMBERS::number(int Number)
 }
 
 // -------------------------------------------------------------------------------------
+
+string SYMBOLS_6X5_SMALL::space()
+{
+  if (SPACE_MADE == false)
+  {
+    SPACE = SPACE_01 + SPACE_02 + SPACE_03 + SPACE_04 + SPACE_05;
+    SPACE_MADE = true;
+  }
+
+  return SPACE;
+}
 
 string SYMBOLS_6X5_SMALL::num_x()
 {

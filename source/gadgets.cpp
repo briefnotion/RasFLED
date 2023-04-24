@@ -574,7 +574,7 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFr
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR, PROP.BCOLOR)));
     }
 
     // Check for Text Modification
@@ -583,7 +583,7 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFr
     // Check for Blink
     if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
     {
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR, PROP.BCOLOR)));
     }
 
     // Check for Colored Text

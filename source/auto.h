@@ -249,14 +249,14 @@ class AUTOMOBILE_INDICATORS
   bool AVAILABLE = true;
 
   bool CRUISE_CONTROL = false;
-  int CRUISE_CONTROL_SPEED = 0;
+  float CRUISE_CONTROL_SPEED = 0;
 
   public:
 
   void store_lights(int Lights);
   void store_parking_brake(int Parking_Brake);
   void store_ignition(int Ignition);
-  void store_cruise_control(int Data_1, int Data_2);
+  void store_cruise_control(int Data_1, int Data_2, float Multiplier);
 
   bool val_lights();
   int val_lights_pos();
@@ -271,7 +271,7 @@ class AUTOMOBILE_INDICATORS
   bool light_switch_available();
 
   bool cruise_control();
-  int cruise_control_speed();
+  float cruise_control_speed();
 };
 
 class AUTOMOBILE_POWER
@@ -436,6 +436,7 @@ class AUTOMOBILE_CALCULATED
   TIMED_PING ACCELERATION_TIMER;
 
   float ACCELERATION; //  m/s^2
+  VELOCITY PREVIOUS_VELOCITY_FOR_ACC;
 
   public:
 

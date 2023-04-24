@@ -295,6 +295,12 @@ class SYMBOLS_5X5_NUMBERS
 {
   private:
 
+  string SPACE_01 = "     \n";
+  string SPACE_02 = "     \n";
+  string SPACE_03 = "     \n";
+  string SPACE_04 = "     \n";
+  string SPACE_05 = "     \n";
+
   string X_01 = "#   #\n";
   string X_02 = " # #\n";
   string X_03 = "  #\n";
@@ -361,6 +367,7 @@ class SYMBOLS_5X5_NUMBERS
   string N_9_04 = "    #\n";
   string N_9_05 = "  ## \n";
 
+  string SPACE = "";
   string NUM_X = "";
   string NUM_0 = "";
   string NUM_1 = "";
@@ -373,6 +380,7 @@ class SYMBOLS_5X5_NUMBERS
   string NUM_8 = "";
   string NUM_9 = "";
 
+  bool SPACE_MADE = false;
   bool NUM_X_MADE = false;
   bool NUM_0_MADE = false;
   bool NUM_1_MADE = false;
@@ -387,6 +395,7 @@ class SYMBOLS_5X5_NUMBERS
 
   public:
 
+  string space();
   string num_x();
   string num_0();
   string num_1();
@@ -420,6 +429,12 @@ class SYMBOLS_5X5_NUMBERS
 class SYMBOLS_6X5_SMALL
 {
   private:
+
+  string SPACE_01 = "      \n";
+  string SPACE_02 = "      \n";
+  string SPACE_03 = "      \n";
+  string SPACE_04 = "      \n";
+  string SPACE_05 = "      \n";
 
   string X_01 = "__  __\n";
   string X_02 = "\\ \\/ /\n";
@@ -487,6 +502,7 @@ class SYMBOLS_6X5_SMALL
   string N_9_04 = " /_/  \n";
   string N_9_05 = "      \n";
 
+  string SPACE = "";
   string NUM_X = "";
   string NUM_0 = "";
   string NUM_1 = "";
@@ -499,6 +515,7 @@ class SYMBOLS_6X5_SMALL
   string NUM_8 = "";
   string NUM_9 = "";
 
+  bool SPACE_MADE = false;
   bool NUM_X_MADE = false;
   bool NUM_0_MADE = false;
   bool NUM_1_MADE = false;
@@ -512,7 +529,7 @@ class SYMBOLS_6X5_SMALL
   bool NUM_9_MADE = false;
 
   public:
-
+  string space();
   string num_x();
   string num_0();
   string num_1();

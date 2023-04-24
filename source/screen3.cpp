@@ -1047,7 +1047,8 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
   // ---------------------------------------------------------------------------------------
   // Color AUTOMOBILE Buttons Panel
-  if (ScrStat.Window_Automobile_Screen.value() == true)
+  if (ScrStat.Window_Automobile_Screen.value() == true || 
+        ScrStat.Window_Alerts_Screen.value() == true)
   {    
     // AUTOMOBILE_OVERVIEW Window
     // Calculate Size and Position
@@ -1063,7 +1064,13 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     AUTOMOBILE_OVERVIEW_PANEL.PROP.POSX = XAUTOMOBILE_OVERVIEW_ScreenPos;
 
     AUTOMOBILE_OVERVIEW_PANEL.create();
+  }
     
+  // ---------------------------------------------------------------------------------------
+  // Color AUTOMOBILE Buttons Panel
+
+  if (ScrStat.Window_Automobile_Screen.value() == true)
+  { 
     // AUTOMOBILE Window
     // Calculate Size and Position
     YAUTOMOBILE_ScreenPos = YSplit;
@@ -1197,9 +1204,9 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     // Alerts Window
     // Calculate Size and Position
     YALERTS_ScreenPos = YSplit;
-    XALERTS_ScreenPos = XALERTS_ScreenPos;
+    XALERTS_ScreenPos =  XAUTOMOBILE_OVERVIEW_ScreenPos + XAUTOMOBILE_OVERVIEW_ScreenSize;
     YALERTS_ScreenSize = YMax - YSplit - YTabSize;
-    XALERTS_ScreenSize =  XSplit;
+    XALERTS_ScreenSize =  XSplit - XAUTOMOBILE_OVERVIEW_ScreenSize;
 
     // Build Window
     ALERTS_GRID.PROP.SIZEY = YALERTS_ScreenSize;
@@ -1873,6 +1880,7 @@ void Screen3::log_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 void Screen3::alerts_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
 {
+  AUTOMOBILE_OVERVIEW_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   ALERTS_GRID.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME, sdSysData.ALERTS);
   tiALERTS_Screen.draw(ScrStat.Needs_Refresh == true);
 }

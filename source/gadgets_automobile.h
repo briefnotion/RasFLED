@@ -188,33 +188,28 @@ class DUEL_BAR_GUAGE_GADGET_PROPERTIES
   int POSY = 0;
   int POSX = 0;
   int SIZEY = 5;
-  int SIZEX = 13;
+  int SIZEX = 22;
+
+  int SCALE = 1;
 
   string DESCRIPTION = "";
+
 };
 
 class DUEL_BAR_GUAGE_GADGET
 {
   private:
 
-  Text_Field DESCRIPTION;
-
-  Text_Field ID_0;
-  Text_Field ID_1;
-
   BAR DATA_BAR_A;
   BAR DATA_BAR_B;
+  
+  Text_Field SCALE;
 
-  Text_Field DATA_FIELD_0;
-  Text_Field DATA_FIELD_1;
-  Text_Field DATA_FIELD_2;
-  Text_Field DATA_FIELD_3;
-  Text_Field DATA_FIELD_4;
-  Text_Field DATA_FIELD_5;
-  Text_Field DATA_FIELD_6;
-  Text_Field DATA_FIELD_7;
+  Text_Field VALUE;
+  Text_Field MIN;
+  Text_Field MAX;
 
-  Text_Field CALCULATION;
+  Text_Field DESCRIPTION;
 
   public:
 
@@ -222,11 +217,7 @@ class DUEL_BAR_GUAGE_GADGET
 
   void create();
 
-  void update(AUTOMOBILE_DATA_LINE Data, int Bar_Value_1, int Bar_Value_2, 
-              string Calculation, unsigned long tmeFrame_Time);
-
-  void update(AUTOMOBILE_DATA_LINE Data, 
-              string Calculation, unsigned long tmeFrame_Time);
+  void update(float Value, unsigned long tmeFrame_Time);
 
   void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
 };
@@ -272,6 +263,11 @@ class AUTOMOBILE_GADGET
   Text_Field_Multi_Line LARGE_GEAR_DESC;
   Text_Field_Multi_Line LARGE_GEAR_1;
 
+  // Large Acceleration
+  Text_Field_Multi_Line LARGE_ACCELERATION_DESC;
+  Text_Field_Multi_Line LARGE_ACCELERATION_1;
+  Text_Field_Multi_Line LARGE_ACCELERATION_10;
+
   //-----------
 
   Text_Field SPEEDOMETER_DESC;
@@ -280,6 +276,11 @@ class AUTOMOBILE_GADGET
   Text_Field GEAR;
   Text_Field SPEEDOMETER_MIN;
   Text_Field SPEEDOMETER_MAX;
+
+  //-----------
+
+  DUEL_BAR_GUAGE_GADGET SPEEDO;
+  DUEL_BAR_GUAGE_GADGET TACHO;
 
   //-----------
 
