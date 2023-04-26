@@ -188,7 +188,7 @@ class DUEL_BAR_GUAGE_GADGET_PROPERTIES
   int POSY = 0;
   int POSX = 0;
   int SIZEY = 5;
-  int SIZEX = 22;
+  int SIZEX = 21;
 
   int SCALE = 1;
 
@@ -250,7 +250,7 @@ class AUTOMOBILE_GADGET
 
   //-----------
 
-  SYMBOLS_6X5_SMALL NUMBERS_5X5;
+  SYMBOLS_6X5_SMALL NUMBERS_6X5;
 
   //-----------
   // Large Velocity
@@ -268,14 +268,8 @@ class AUTOMOBILE_GADGET
   Text_Field_Multi_Line LARGE_ACCELERATION_1;
   Text_Field_Multi_Line LARGE_ACCELERATION_10;
 
-  //-----------
-
-  Text_Field SPEEDOMETER_DESC;
-  BAR SPEEDOMETER;
-  Text_Field SPEED;
-  Text_Field GEAR;
-  Text_Field SPEEDOMETER_MIN;
-  Text_Field SPEEDOMETER_MAX;
+  Text_Field LARGE_ACCELERATION_MIN;
+  Text_Field LARGE_ACCELERATION_MAX;
 
   //-----------
 
@@ -285,22 +279,6 @@ class AUTOMOBILE_GADGET
   //-----------
 
   Text_Field ACCELERATION;
-
-  //-----------
-
-  Text_Field RPM_DESC;
-  BAR RPM_GUAGE;
-  Text_Field RPM;
-  Text_Field RPM_MIN;
-  Text_Field RPM_MAX;
-
-  //-----------
-
-  Text_Field POWER_LOAD_DESC;
-  BAR POWER_LOAD_GUAGE;
-  Text_Field POWER_LOAD;
-  Text_Field POWER_LOAD_MIN;
-  Text_Field POWER_LOAD_MAX;
 
   //-----------
 

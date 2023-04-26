@@ -433,6 +433,8 @@ class AUTOMOBILE_CALCULATED
   TIMED_PING DATA_CLEAR_TIMER;
   int counter = 0;
 
+  bool FIRST_RUN = true;
+
   TIMED_PING ACCELERATION_TIMER;
 
   float ACCELERATION; //  m/s^2
@@ -446,6 +448,8 @@ class AUTOMOBILE_CALCULATED
   VELOCITY RB_WHEEL_SPEED_OFFSET;
 
   VELOCITY PREVIOUS_VELOCITY;
+  
+  MIN_MAX_TIME ACCELERATION_MIN_MAX_HISTORY;
 
   void compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time);
   // Low level Compute not requiring calculation on all data.

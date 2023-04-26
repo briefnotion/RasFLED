@@ -697,6 +697,15 @@ bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_low()
 
 void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time)
 {
+  // No init process. Set first run variables
+  if (FIRST_RUN == true)
+  {
+    ACCELERATION_MIN_MAX_HISTORY.PROP.SLICES = 6;
+    ACCELERATION_MIN_MAX_HISTORY.PROP.TIME_SPAN = 30000;
+    
+    FIRST_RUN = false;
+  }
+
   // Temp solution to keep the values from going to infinity.
   if (DATA_CLEAR_TIMER.ping_down(tmeFrame_Time) == false)
   {
@@ -729,12 +738,16 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
   // Calculate Acceleration
   if (ACCELERATION_TIMER.ping_down(tmeFrame_Time) == false)
   {
-    ACCELERATION = 1000 * (Status.SPEED.SPEED_TRANS.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
-                        (Status.SPEED.SPEED_TRANS.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
+    // Reading Acceleration from tire speed may be more accurate.
+    ACCELERATION = 1000 * (Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
+                        (Status.SPEED.SPEED_LB_TIRE.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
 
-    PREVIOUS_VELOCITY_FOR_ACC = Status.SPEED.SPEED_TRANS;
+    ACCELERATION_MIN_MAX_HISTORY.put_value(ACCELERATION, tmeFrame_Time);
+
+    PREVIOUS_VELOCITY_FOR_ACC = Status.SPEED.SPEED_LB_TIRE;
 
     ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
+
   }
 
 }

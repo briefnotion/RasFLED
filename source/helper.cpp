@@ -45,407 +45,563 @@ void stupid_2d::clear()
 // -------------------------------------------------------------------------------------
 // Countdown Timer
 
-  void countdown_timer::set_timer(unsigned long Current_Time_millis, int Seconds)
+void countdown_timer::set_timer(unsigned long Current_Time_millis, int Seconds)
+{
+  TIME_START = Current_Time_millis;
+  DURATION = Seconds * 1000;
+  TIME_END = Current_Time_millis + DURATION;
+
+  TRIGGERED = false;
+  CHECKED = false;
+
+  ACTIVE = true;
+}
+
+bool countdown_timer::is_active()
+{
+  return ACTIVE;
+}
+
+void countdown_timer::update(unsigned long Current_Time_millis)
+{
+  if (ACTIVE == true)
   {
-    TIME_START = Current_Time_millis;
-    DURATION = Seconds * 1000;
-    TIME_END = Current_Time_millis + DURATION;
-
-    TRIGGERED = false;
-    CHECKED = false;
-
-    ACTIVE = true;
-  }
-
-  bool countdown_timer::is_active()
-  {
-    return ACTIVE;
-  }
-
-  void countdown_timer::update(unsigned long Current_Time_millis)
-  {
-    if (ACTIVE == true)
+    if (elapsed_time(Current_Time_millis) >= DURATION)
     {
-      if (elapsed_time(Current_Time_millis) >= DURATION)
+      if (TRIGGERED == false)
       {
-        if (TRIGGERED == false)
-        {
-          TRIGGERED = true;
-        }
+        TRIGGERED = true;
       }
     }
   }
+}
 
-  bool countdown_timer::is_triggered()
+bool countdown_timer::is_triggered()
+{
+  if (ACTIVE == true)
   {
-    if (ACTIVE == true)
+    if (TRIGGERED == true && TRIGGER_REPORTED == false)
     {
-      if (TRIGGERED == true && TRIGGER_REPORTED == false)
-      {
-        TRIGGER_REPORTED = true;
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+      TRIGGER_REPORTED = true;
+      return true;
     }
     else
     {
       return false;
     }
   }
-
-  void countdown_timer::end()
+  else
   {
-    ACTIVE = false;
-    TRIGGERED = false;
-    TRIGGER_REPORTED = false;
-    CHECKED = false;
-    TIME_START = 0;
-    TIME_END = 0;
-    DURATION = 0;
+    return false;
   }
+}
 
-  unsigned long countdown_timer::duration()
+void countdown_timer::end()
+{
+  ACTIVE = false;
+  TRIGGERED = false;
+  TRIGGER_REPORTED = false;
+  CHECKED = false;
+  TIME_START = 0;
+  TIME_END = 0;
+  DURATION = 0;
+}
+
+unsigned long countdown_timer::duration()
+{
+  return DURATION;
+}
+
+long countdown_timer::elapsed_time(unsigned long Current_Time_millis)
+{
+  if (ACTIVE == true)
   {
-    return DURATION;
+    return Current_Time_millis - TIME_START;
   }
-
-  long countdown_timer::elapsed_time(unsigned long Current_Time_millis)
+  else
   {
-    if (ACTIVE == true)
-    {
-      return Current_Time_millis - TIME_START;
-    }
-    else
-    {
+    return 0;
+  }
+}
+
+float countdown_timer::timer_position(unsigned long Current_Time_millis)
+{
+  if (ACTIVE == true)
+  {
+    if (DURATION <= 0)
       return 0;
-    }
-  }
 
-  float countdown_timer::timer_position(unsigned long Current_Time_millis)
-  {
-    if (ACTIVE == true)
-    {
-      if (DURATION <= 0)
-        return 0;
+    unsigned long elapsed = Current_Time_millis - TIME_START;
+    float pos = (float)elapsed / (float)DURATION;
 
-      unsigned long elapsed = Current_Time_millis - TIME_START;
-      float pos = (float)elapsed / (float)DURATION;
-
-      if (pos > 1)
-        return 1;
-      else
-        return pos;
-    }
+    if (pos > 1)
+      return 1;
     else
-    {
-      return 0;
-    }
+      return pos;
   }
+  else
+  {
+    return 0;
+  }
+}
 
 // -------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------
 // Stupid Random Generator Structure
-  void stupid_random::set()
+void stupid_random::set()
+{
+  long number;
+  int pos = 0;
+  bool found = false;
+
+  // Create seed onece.
+  srand((unsigned int)time(NULL));
+
+  // Clear Array.
+  for (int x = 0; x < StuRNDsize; x++)
   {
-    long number;
-    int pos = 0;
-    bool found = false;
+    stupidnumbers[x] = 255;
+  }
+  
+  // Fill the array with random numbers.
+  while(pos < StuRNDsize)
+  {
+    // Get a number.
+    number = rand() % StuRNDsize;
+    number = floor(number);
 
-    // Create seed onece.
-    srand((unsigned int)time(NULL));
+    found = false;
 
-    // Clear Array.
-    for (int x = 0; x < StuRNDsize; x++)
+    // If number already in list then seach for a new
+    //  random number.
+    for (int x = 0; x <= pos; x++)
     {
-      stupidnumbers[x] = 255;
-    }
-    
-    // Fill the array with random numbers.
-    while(pos < StuRNDsize)
-    {
-      // Get a number.
-      number = rand() % StuRNDsize;
-      number = floor(number);
-
-      found = false;
-
-      // If number already in list then seach for a new
-      //  random number.
-      for (int x = 0; x <= pos; x++)
+      if (number == (int)(stupidnumbers[x]))
       {
-        if (number == (int)(stupidnumbers[x]))
-        {
-          found = true;
-        }
-      }
-
-      // If number not in list then add it.
-      if (found == false)
-      {
-        stupidnumbers[pos] =(char )(number);
-        pos ++;
+        found = true;
       }
     }
-  }
 
-  // Return random char from list based on seed.
-  char stupid_random::getB(unsigned long seed, int size)
-  {
-    int pos = (seed % StuRNDsize);
-
-    return (stupidnumbers[pos] % size);  
-    
-   }
-
-  // Return random unsigned long from list based on seed.
-  //  Number will evenly distributed from other numbers 
-  //    based on list size.  Precision is way off, but should
-  //    be random
-  // Size is the Upper Limit. Lower Limit is 0.
-  unsigned long stupid_random::getUL(unsigned long seed, int size)
-  {
-    int pos = (seed % StuRNDsize);
-
-    return (stupidnumbers[pos] % size) * (size / StuRNDsize);
-  }
-
-
-  bool VAR_CHANGE_MON::switched(int Value)
-  {
-    if (Value == PREV_VALUE)
+    // If number not in list then add it.
+    if (found == false)
     {
-      return false;
-    }
-    else
-    {
-      PREV_VALUE = Value;
-      return true;
+      stupidnumbers[pos] =(char )(number);
+      pos ++;
     }
   }
+}
+
+// Return random char from list based on seed.
+char stupid_random::getB(unsigned long seed, int size)
+{
+  int pos = (seed % StuRNDsize);
+
+  return (stupidnumbers[pos] % size);  
+  
+  }
+
+// Return random unsigned long from list based on seed.
+//  Number will evenly distributed from other numbers 
+//    based on list size.  Precision is way off, but should
+//    be random
+// Size is the Upper Limit. Lower Limit is 0.
+unsigned long stupid_random::getUL(unsigned long seed, int size)
+{
+  int pos = (seed % StuRNDsize);
+
+  return (stupidnumbers[pos] % size) * (size / StuRNDsize);
+}
+
+
+bool VAR_CHANGE_MON::switched(int Value)
+{
+  if (Value == PREV_VALUE)
+  {
+    return false;
+  }
+  else
+  {
+    PREV_VALUE = Value;
+    return true;
+  }
+}
 
 // ---------------------------------------------------------------------------------------
 // Hardware Monitor Class
 
-  void hardware_monitor::set(bool booValue, unsigned long tmeCheckTime, int tmeLeeWay, bool isHardware)
-  // Prepare the switch.
+void hardware_monitor::set(bool booValue, unsigned long tmeCheckTime, int tmeLeeWay, bool isHardware)
+// Prepare the switch.
+{
+  tmeCHANGEDETECTEDTIME = tmeCheckTime;
+  tmeLEEWAY = tmeLeeWay;
+  booVALUE = booValue;
+  booPREVCHANGEDETECTED = false;
+  ISHARDWARE = isHardware;
+}
+
+bool hardware_monitor::changed(bool booValue, unsigned long tmeCheckTime)
+// Return true if the switch state change from on to off or off to on.
+{
+  unsigned long tmeTme = tmeCheckTime;
+
+  // If the switch was just activated then run any set up its initial state and run
+  //  any special routines.
+  if (booFIRSTRUN == true)
   {
-    tmeCHANGEDETECTEDTIME = tmeCheckTime;
-    tmeLEEWAY = tmeLeeWay;
     booVALUE = booValue;
     booPREVCHANGEDETECTED = false;
-    ISHARDWARE = isHardware;
-  }
+    tmeCHANGEDETECTEDTIME = tmeTme;
+    booFIRSTRUN = false;
 
-  bool hardware_monitor::changed(bool booValue, unsigned long tmeCheckTime)
-  // Return true if the switch state change from on to off or off to on.
-  {
-    unsigned long tmeTme = tmeCheckTime;
-
-    // If the switch was just activated then run any set up its initial state and run
-    //  any special routines.
-    if (booFIRSTRUN == true)
+    if (BOOTEST == false)
     {
-      booVALUE = booValue;
-      booPREVCHANGEDETECTED = false;
-      tmeCHANGEDETECTEDTIME = tmeTme;
-      booFIRSTRUN = false;
-
-      if (BOOTEST == false)
-      {
-        return booValue;  // Comment this line out when testing
-        //return false;   // Comment this line out when not testing
-      }
-      else
-      {
-        //return booValue;// Comment this line out when testing
-        return false;     // Comment this line out when not testing
-      }
-    }
-    else if (booVALUE == booValue)
-    {
-      booPREVCHANGEDETECTED = false;
-      return false;
-    }
-    else if (booPREVCHANGEDETECTED == false)
-    {
-      tmeCHANGEDETECTEDTIME = tmeTme;
-      booPREVCHANGEDETECTED = true;
-      return  false;
-    }
-    // Only report change of status when Leeway time is passed.  This is a essentially a
-    //  debouncer.
-    else if (tmeTme < (tmeCHANGEDETECTEDTIME + tmeLEEWAY))
-    {
-      return false;
+      return booValue;  // Comment this line out when testing
+      //return false;   // Comment this line out when not testing
     }
     else
     {
-      booVALUE = booValue;
-      booPREVCHANGEDETECTED = false;
-      tmeCHANGEDETECTEDTIME = tmeTme;
-      tmeTOGGLEDTIME = tmeTme;
-      return true;
+      //return booValue;// Comment this line out when testing
+      return false;     // Comment this line out when not testing
     }
   }
-
-  void hardware_monitor::read(bool booValue, unsigned long tmeCheckTime)
+  else if (booVALUE == booValue)
   {
-    changed(booValue, tmeCheckTime);
+    booPREVCHANGEDETECTED = false;
+    return false;
   }
+  else if (booPREVCHANGEDETECTED == false)
+  {
+    tmeCHANGEDETECTEDTIME = tmeTme;
+    booPREVCHANGEDETECTED = true;
+    return  false;
+  }
+  // Only report change of status when Leeway time is passed.  This is a essentially a
+  //  debouncer.
+  else if (tmeTme < (tmeCHANGEDETECTEDTIME + tmeLEEWAY))
+  {
+    return false;
+  }
+  else
+  {
+    booVALUE = booValue;
+    booPREVCHANGEDETECTED = false;
+    tmeCHANGEDETECTEDTIME = tmeTme;
+    tmeTOGGLEDTIME = tmeTme;
+    return true;
+  }
+}
+
+void hardware_monitor::read(bool booValue, unsigned long tmeCheckTime)
+{
+  changed(booValue, tmeCheckTime);
+}
 // ---------------------------------------------------------------------------------------
 
 
-  void STAT_DATA_DOUBLE::set_data(double data)
-  // Provide minor min max stats over time of resets.
-  // I real stats ever necessary, then weighted average 
-  //  routine needed.
-  {
-    DATA = data;
-    
-    if (set == false)
-    {
-      set = true;
-      MIN = DATA;
-      MAX = DATA;
-    }
-    else if (data < MIN)
-    {
-      MIN = data;
-    }
-    else if (data > MAX)
-    {
-      MAX = data;
-    }
-  }
-
-  double STAT_DATA_DOUBLE::get_data()
-  {
-    return DATA;
-  }
-
-    double STAT_DATA_DOUBLE::get_min()
-  {
-    return MIN;
-  }
-
-    double STAT_DATA_DOUBLE::get_max()
-  {
-    return MAX;
-  }
+void STAT_DATA_DOUBLE::set_data(double data)
+// Provide minor min max stats over time of resets.
+// I real stats ever necessary, then weighted average 
+//  routine needed.
+{
+  DATA = data;
   
-  void STAT_DATA_DOUBLE::reset_minmax()
+  if (set == false)
   {
-    set = false;
+    set = true;
     MIN = DATA;
     MAX = DATA;
   }
+  else if (data < MIN)
+  {
+    MIN = data;
+  }
+  else if (data > MAX)
+  {
+    MAX = data;
+  }
+}
+
+double STAT_DATA_DOUBLE::get_data()
+{
+  return DATA;
+}
+
+  double STAT_DATA_DOUBLE::get_min()
+{
+  return MIN;
+}
+
+  double STAT_DATA_DOUBLE::get_max()
+{
+  return MAX;
+}
+
+void STAT_DATA_DOUBLE::reset_minmax()
+{
+  set = false;
+  MIN = DATA;
+  MAX = DATA;
+}
 // ---------------------------------------------------------------------------------------
 
 
-  void EFFICIANTCY_TIMER::start_timer(double dblCurrent_Time)
-  // Start the timer (stopwatch) by setting its the stopwatch time.
-  //  The timer is a simple and can be considered always active. 
-  {
-    TIMER_STARTED = dblCurrent_Time;
-  }
+void EFFICIANTCY_TIMER::start_timer(double dblCurrent_Time)
+// Start the timer (stopwatch) by setting its the stopwatch time.
+//  The timer is a simple and can be considered always active. 
+{
+  TIMER_STARTED = dblCurrent_Time;
+}
 
-  double EFFICIANTCY_TIMER::elapsed_timer_time(double dblCurrent_Time)
-  //  Returns the amount of time passed since the reset. 
-  {
-    return dblCurrent_Time - TIMER_STARTED;
-  }
+double EFFICIANTCY_TIMER::elapsed_timer_time(double dblCurrent_Time)
+//  Returns the amount of time passed since the reset. 
+{
+  return dblCurrent_Time - TIMER_STARTED;
+}
 
-  double EFFICIANTCY_TIMER::elapsed_time(double dblCurrent_Time)
-  // Measures the amount of time elaspeds since the privious time the function was 
-  //  called, then returns the value, then resets for next time. 
-  {
-    double time_elapsed = dblCurrent_Time - LAST_ASKED_TIME;
-    LAST_ASKED_TIME = dblCurrent_Time;
-    return time_elapsed;
-  }
+double EFFICIANTCY_TIMER::elapsed_time(double dblCurrent_Time)
+// Measures the amount of time elaspeds since the privious time the function was 
+//  called, then returns the value, then resets for next time. 
+{
+  double time_elapsed = dblCurrent_Time - LAST_ASKED_TIME;
+  LAST_ASKED_TIME = dblCurrent_Time;
+  return time_elapsed;
+}
 // ---------------------------------------------------------------------------------------
 
-  // Simple Variable to track if a TRUE value has entered.
+// Simple Variable to track if a TRUE value has entered.
 
-  void TRUTH_CATCH::catch_truth(bool Value)
-  // Sets HAS_TRUTH = true if Value is true.
+void TRUTH_CATCH::catch_truth(bool Value)
+// Sets HAS_TRUTH = true if Value is true.
+{
+  if (Value == true)
   {
-    if (Value == true)
+    HAS_TRUTH = true;
+  }
+}
+
+bool TRUTH_CATCH::has_truth()
+// Returns true a true value was caught in the catch truth routine.
+//  Resets HAS_TRUTH = false after called.
+// Returns if all catch_truths were false.
+{
+  if (HAS_TRUTH == true)
+  {
+    HAS_TRUTH = false;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+  void FALSE_CATCH::catch_false(bool Value)
+// Sets HAS_TRUTH = true if Value is true.
+{
+  if (Value == false)
+  {
+    HAS_FALSE = true;
+  }
+}
+
+bool FALSE_CATCH::has_false()
+// Returns true a true value was caught in the catch truth routine.
+//  Resets HAS_TRUTH = false after called.
+// Returns if all catch_truths were false.
+{
+  if (HAS_FALSE == true)
+  {
+    HAS_FALSE = false;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+void BOOL_WITH_OVERRIDE::set(bool Override_Condition, bool Override_Value, bool Redundant_Value)
+{
+  if (Override_Condition == true)
+  {
+    VALUE = Override_Value;
+    OVERRIDDEN = true;
+  }
+  else
+  {
+    VALUE = Redundant_Value;
+    OVERRIDDEN = false;
+  }
+}
+
+bool BOOL_WITH_OVERRIDE::value()
+{
+  return VALUE;
+}
+
+bool BOOL_WITH_OVERRIDE::overridden()
+{
+  return OVERRIDDEN;
+}
+
+
+// ---------------------------------------------------------------------------------------
+// Min Max Time Classes
+
+void MIN_MAX_TIME_SLICE::store_min_max(float Value)
+{
+  VALUE = VALUE + Value;
+  SAMPLES++;
+
+  if (ACTIVE == false)
+  {
+    MIN_VALUE = Value;
+    MAX_VALUE = Value;
+    ACTIVE = true;
+  }
+  else
+  {
+    if (Value < MIN_VALUE)
     {
-      HAS_TRUTH = true;
+      MIN_VALUE = Value;
+    }
+    if (Value > MAX_VALUE)
+    {
+      MAX_VALUE = Value;
+    }
+  }
+}
+
+float MIN_MAX_TIME_SLICE::value()
+{
+  if (SAMPLES > 0)
+  {
+    return VALUE / SAMPLES;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+float MIN_MAX_TIME_SLICE::min()
+{
+  return MIN_VALUE;
+}
+
+float MIN_MAX_TIME_SLICE::max()
+{
+  return MAX_VALUE;
+}
+
+// ---------------------------------------------------------------------------------------
+
+void MIN_MAX_TIME::create()
+{
+  SLICE_TIME =  PROP.TIME_SPAN / PROP.SLICES;
+}
+
+void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
+{
+  if (tmeFrame_Time > TIME_SLICE_CREATED_FRAME_TIME + SLICE_TIME)
+  {
+    if (TIME_SLICES.size() >= PROP.SLICES)
+    {
+      TIME_SLICES.pop_front();
+      MIN_MAX_TIME_SLICE new_time_slice;
+      create();
+      TIME_SLICES.push_back(new_time_slice);
+    }
+    else if (TIME_SLICES.size() < PROP.SLICES)
+    {
+      MIN_MAX_TIME_SLICE new_time_slice;
+      create();
+      TIME_SLICES.push_back(new_time_slice);
+    }
+
+    TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;
+  }
+
+  TIME_SLICES.back().store_min_max(Value);
+
+}
+
+float MIN_MAX_TIME::min_float()
+{
+  float min = 0;
+
+  if (TIME_SLICES.size()> 0)
+  {
+    min = TIME_SLICES[0].min();
+
+    for (int x = 1; x < TIME_SLICES.size(); x++)
+    {
+      if (min > TIME_SLICES[x].min())
+      {
+        min = TIME_SLICES[x].min();
+      }
     }
   }
 
-  bool TRUTH_CATCH::has_truth()
-  // Returns true a true value was caught in the catch truth routine.
-  //  Resets HAS_TRUTH = false after called.
-  // Returns if all catch_truths were false.
+  return min;
+}
+
+int MIN_MAX_TIME::min()
+{
+  return min_float();
+}
+
+float MIN_MAX_TIME::max_float()
+{
+  float max = 0;
+
+  if (TIME_SLICES.size()> 0)
   {
-    if (HAS_TRUTH == true)
+    max = TIME_SLICES[0].max();
+
+    for (int x = 1; x < TIME_SLICES.size(); x++)
     {
-      HAS_TRUTH = false;
-      return true;
-    }
-    else
-    {
-      return false;
+      if (max < TIME_SLICES[x].max())
+      {
+        max = TIME_SLICES[x].max();
+      }
     }
   }
 
-    void FALSE_CATCH::catch_false(bool Value)
-  // Sets HAS_TRUTH = true if Value is true.
+  return max;
+}
+
+int MIN_MAX_TIME::max()
+{
+  return max_float();
+}
+
+int MIN_MAX_TIME::direction()
+{
+  int ret_direction = 0;
+
+  float value_difference = 0;
+
+  if (TIME_SLICES.size()> 0)
   {
-    if (Value == false)
+    for (int x = 1; x < TIME_SLICES.size(); x++)
     {
-      HAS_FALSE = true;
+      value_difference = value_difference + (TIME_SLICES[x].value() - TIME_SLICES[x-1].value());
+    }
+
+    if (value_difference > (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
+    {
+      ret_direction = 1;
+    }
+    else if (value_difference < (-1) * (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
+    {
+      ret_direction = -1;
     }
   }
 
-  bool FALSE_CATCH::has_false()
-  // Returns true a true value was caught in the catch truth routine.
-  //  Resets HAS_TRUTH = false after called.
-  // Returns if all catch_truths were false.
-  {
-    if (HAS_FALSE == true)
-    {
-      HAS_FALSE = false;
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  void BOOL_WITH_OVERRIDE::set(bool Override_Condition, bool Override_Value, bool Redundant_Value)
-  {
-    if (Override_Condition == true)
-    {
-      VALUE = Override_Value;
-      OVERRIDDEN = true;
-    }
-    else
-    {
-      VALUE = Redundant_Value;
-      OVERRIDDEN = false;
-    }
-  }
-  
-  bool BOOL_WITH_OVERRIDE::value()
-  {
-    return VALUE;
-  }
-  
-  bool BOOL_WITH_OVERRIDE::overridden()
-  {
-    return OVERRIDDEN;
-  }
-
-
+  return ret_direction;
+}
 
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES
