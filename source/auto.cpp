@@ -700,61 +700,60 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
   // No init process. Set first run variables
   if (FIRST_RUN == true)
   {
+    LF_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
+    LF_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+
+    RF_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
+    RF_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+
+    LB_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
+    LB_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+
+    RB_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
+    RB_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+
     ACCELERATION_MIN_MAX_HISTORY.PROP.SLICES = 6;
     ACCELERATION_MIN_MAX_HISTORY.PROP.TIME_SPAN = 30000;
+
+    ACCELERATION_QUICK_MEAN_HISTORY.PROP.SLICES = 4;
+    ACCELERATION_QUICK_MEAN_HISTORY.PROP.TIME_SPAN = 1000;
     
     FIRST_RUN = false;
   }
-
-  // Temp solution to keep the values from going to infinity.
-  if (DATA_CLEAR_TIMER.ping_down(tmeFrame_Time) == false)
+ 
+  // Calculate Acceleration and Wheel Speed offsets.
+  if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
   {
-    DATA_CLEAR_TIMER.ping_up(tmeFrame_Time, 30000);
-    counter = 0;
-    SPEED_TOTAL = 0;
-    LF_WHEEL_SPEED_TOTAL = 0;
-    RF_WHEEL_SPEED_TOTAL = 0;
-    LB_WHEEL_SPEED_TOTAL = 0;
-    RB_WHEEL_SPEED_TOTAL = 0;
-  }
+    // Calculate Wheelspeed Offset or Differance.
+    if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
+    {
+      LF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+      RF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+      LB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+      RB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+      
+      LF_WHEEL_SPEED_OFFSET.store(LF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+      RF_WHEEL_SPEED_OFFSET.store(RF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+      LB_WHEEL_SPEED_OFFSET.store(LB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+      RB_WHEEL_SPEED_OFFSET.store(RB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);  
+    }
 
-  if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
-  {
-    // Calculate Wheelspeed Offset or Differance.  
-    counter++;
-
-    SPEED_TOTAL = SPEED_TOTAL + Status.SPEED.SPEED_TRANS.val_kmph();
-    LF_WHEEL_SPEED_TOTAL = LF_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_LF_TIRE.val_kmph();
-    RF_WHEEL_SPEED_TOTAL = RF_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_RF_TIRE.val_kmph();
-    LB_WHEEL_SPEED_TOTAL = LB_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_LB_TIRE.val_kmph();
-    RB_WHEEL_SPEED_TOTAL = RB_WHEEL_SPEED_TOTAL + Status.SPEED.SPEED_RB_TIRE.val_kmph();
-
-    LF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LF_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
-    RF_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RF_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
-    LB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (LB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);
-    RB_WHEEL_SPEED_OFFSET.store((SPEED_TOTAL/counter) - (RB_WHEEL_SPEED_TOTAL/counter), tmeFrame_Time);   
-  }
-
-  // Calculate Acceleration
-  if (ACCELERATION_TIMER.ping_down(tmeFrame_Time) == false)
-  {
     // Reading Acceleration from tire speed may be more accurate.
-    ACCELERATION = 1000 * (Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
+    float ACCELERATION = 1000 * (Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
                         (Status.SPEED.SPEED_LB_TIRE.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
 
-    ACCELERATION_MIN_MAX_HISTORY.put_value(ACCELERATION, tmeFrame_Time);
+    ACCELERATION_QUICK_MEAN_HISTORY.put_value(ACCELERATION, tmeFrame_Time);
+
+    ACCELERATION_MIN_MAX_HISTORY.put_value(ACCELERATION_QUICK_MEAN_HISTORY.mean_float(), tmeFrame_Time);
 
     PREVIOUS_VELOCITY_FOR_ACC = Status.SPEED.SPEED_LB_TIRE;
-
     ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
-
   }
-
 }
 
 float AUTOMOBILE_CALCULATED::acceleration()
 {
-  return ACCELERATION;
+  return ACCELERATION_QUICK_MEAN_HISTORY.mean_float();
 }
 
 //-----------

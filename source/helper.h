@@ -286,11 +286,11 @@ class MIN_MAX_TIME_SLICE
 
   public:
 
-  void store_min_max(float Value);
+  void store_value(float Value);
   // Store value and updates min max.
 
-  float value();
-  // Returns stored value of data point.
+  float mean();
+  // Returns mean value of stored data points.
 
   float min();
   // Returns min value of data point.
@@ -307,7 +307,8 @@ class MIN_MAX_TIME_PROPERTIES
   public:
 
   int SLICES = 0;                     // Number of slices to retain
-  int TIME_SPAN = 0;                  // Elaped time from first to last slice.
+  int TIME_SPAN = 0;                  // TOTAL TIME
+                                      // Elaped time from first to last slice.
                                       //  e.g: 10,000ms over 5 slices = 1 slice per 2 sec
                                       // Measured in ms.  1000 = 1 sec.
   float DIRECTION_NUTRAL_RANGE = 0;   // Average value change over number of 
@@ -326,6 +327,7 @@ class MIN_MAX_TIME
 {
   private:
 
+  bool ENABLED = false;
   int SLICE_TIME = 0;
 
   deque<MIN_MAX_TIME_SLICE> TIME_SLICES;
@@ -357,6 +359,10 @@ class MIN_MAX_TIME
   int max();
   // Returns Max value of variable over time slice
   //  as int value.
+
+  float mean_float();
+  // Returns Mean value of variable over time slice
+  //  as float value.
 
   int direction();
   // Returns direction (pos, same, neg) of varible over time slice.

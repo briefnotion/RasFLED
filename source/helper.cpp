@@ -449,7 +449,7 @@ bool BOOL_WITH_OVERRIDE::overridden()
 // ---------------------------------------------------------------------------------------
 // Min Max Time Classes
 
-void MIN_MAX_TIME_SLICE::store_min_max(float Value)
+void MIN_MAX_TIME_SLICE::store_value(float Value)
 {
   VALUE = VALUE + Value;
   SAMPLES++;
@@ -473,7 +473,7 @@ void MIN_MAX_TIME_SLICE::store_min_max(float Value)
   }
 }
 
-float MIN_MAX_TIME_SLICE::value()
+float MIN_MAX_TIME_SLICE::mean()
 {
   if (SAMPLES > 0)
   {
@@ -499,7 +499,11 @@ float MIN_MAX_TIME_SLICE::max()
 
 void MIN_MAX_TIME::create()
 {
-  SLICE_TIME =  PROP.TIME_SPAN / PROP.SLICES;
+  if (PROP.SLICES > 0)
+  {
+    SLICE_TIME = PROP.TIME_SPAN / PROP.SLICES;
+    ENABLED = true;
+  }
 }
 
 void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
@@ -523,25 +527,34 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
     TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;
   }
 
-  TIME_SLICES.back().store_min_max(Value);
-
+  if (PROP.SLICES > 0)
+  {
+    TIME_SLICES.back().store_value(Value);
+  }
 }
 
 float MIN_MAX_TIME::min_float()
 {
   float min = 0;
 
-  if (TIME_SLICES.size()> 0)
+  if (ENABLED == true)
   {
-    min = TIME_SLICES[0].min();
-
-    for (int x = 1; x < TIME_SLICES.size(); x++)
+    if (TIME_SLICES.size()> 0)
     {
-      if (min > TIME_SLICES[x].min())
+      min = TIME_SLICES[0].min();
+
+      for (int x = 1; x < TIME_SLICES.size(); x++)
       {
-        min = TIME_SLICES[x].min();
+        if (min > TIME_SLICES[x].min())
+        {
+          min = TIME_SLICES[x].min();
+        }
       }
     }
+  }
+  else
+  {
+    min = -1;
   }
 
   return min;
@@ -549,24 +562,31 @@ float MIN_MAX_TIME::min_float()
 
 int MIN_MAX_TIME::min()
 {
-  return min_float();
+  return (int)min_float();
 }
 
 float MIN_MAX_TIME::max_float()
 {
   float max = 0;
 
-  if (TIME_SLICES.size()> 0)
+  if (ENABLED == true)
   {
-    max = TIME_SLICES[0].max();
-
-    for (int x = 1; x < TIME_SLICES.size(); x++)
+    if (TIME_SLICES.size()> 0)
     {
-      if (max < TIME_SLICES[x].max())
+      max = TIME_SLICES[0].max();
+
+      for (int x = 1; x < TIME_SLICES.size(); x++)
       {
-        max = TIME_SLICES[x].max();
+        if (max < TIME_SLICES[x].max())
+        {
+          max = TIME_SLICES[x].max();
+        }
       }
     }
+  }
+  else
+  {
+    max = -1;
   }
 
   return max;
@@ -574,7 +594,32 @@ float MIN_MAX_TIME::max_float()
 
 int MIN_MAX_TIME::max()
 {
-  return max_float();
+  return (int)max_float();
+}
+
+float MIN_MAX_TIME::mean_float()
+{
+  float mean = 0;
+
+  if (ENABLED == true)
+  {
+    if (TIME_SLICES.size()> 0)
+    {
+      for (int x = 0; x < TIME_SLICES.size(); x++)
+      {
+        mean = mean + TIME_SLICES[x].mean();
+      }
+
+      mean = mean / TIME_SLICES.size();
+
+    }
+  }
+  else
+  {
+    mean = -1;
+  }
+
+  return mean;
 }
 
 int MIN_MAX_TIME::direction()
@@ -583,21 +628,28 @@ int MIN_MAX_TIME::direction()
 
   float value_difference = 0;
 
-  if (TIME_SLICES.size()> 0)
+  if (ENABLED == true)
   {
-    for (int x = 1; x < TIME_SLICES.size(); x++)
+    if (TIME_SLICES.size()> 0)
     {
-      value_difference = value_difference + (TIME_SLICES[x].value() - TIME_SLICES[x-1].value());
-    }
+      for (int x = 1; x < TIME_SLICES.size(); x++)
+      {
+        value_difference = value_difference + (TIME_SLICES[x].mean() - TIME_SLICES[x-1].mean());
+      }
 
-    if (value_difference > (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
-    {
-      ret_direction = 1;
+      if (value_difference > (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
+      {
+        ret_direction = 1;
+      }
+      else if (value_difference < (-1) * (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
+      {
+        ret_direction = -1;
+      }
     }
-    else if (value_difference < (-1) * (PROP.DIRECTION_NUTRAL_RANGE * (TIME_SLICES.size() -1)))
-    {
-      ret_direction = -1;
-    }
+  }
+  else
+  {
+    ret_direction = -1;
   }
 
   return ret_direction;
