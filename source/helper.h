@@ -255,6 +255,9 @@ class FALSE_CATCH
 };
 
 class BOOL_WITH_OVERRIDE
+// Bool variable with method to set from seperate sources, dependant on condition. 
+// Value work as normal.
+// Overridden reveals source of value.
 {
   private:
 
@@ -266,6 +269,24 @@ class BOOL_WITH_OVERRIDE
   void set(bool Override_Condition, bool Override_Value, bool Redundant_Value);
   bool value();
   bool overridden();
+};
+
+class BOOL_BOUNCE
+// BOOL variable with bounce (change) indication.
+// Set and Value work as normal.
+// First call to Bounce will return true if variable changed.
+// Subsequent calls to Bounce will return false until variable changes again.
+{
+  private:
+
+  bool VALUE = false;
+  bool CHANGED = false;
+
+  public:
+
+  void set(bool Value);
+  bool value();
+  bool bounce();
 };
 
 // ---------------------------------------------------------------------------------------
@@ -409,5 +430,13 @@ bool set_bool_with_change_notify(bool Set_Value, bool &Bool_Variable);
 int get_1_pos_of_int(int Number);
 
 int get_2_pos_of_int(int Number);
+
+bool get_bit_value(int baseline, int bit_set_compare);
+// Compares Baseline with bitwise of bit_set_compare.
+// Returns true if bit is same else returns false.
+// eg: D8, check for bit 0001000 is:
+//   if (get_bit_value(216, 8) == true)
+
+
 
 #endif

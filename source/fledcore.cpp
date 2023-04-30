@@ -434,7 +434,7 @@ void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_d
     {
       case AnEvSweep:
         {
-          // Calculate how much this Event will chaange the pixel.
+          // Calculate how much this Event will change the pixel.
           //  Breaking the norm, but also passing the led ID and
           //  original 4 colors to ... (consider rewrite)
           tempColor = crgb_anim_color(sRND, tmeCurrentTime, tmeStartAnim, 
@@ -446,18 +446,26 @@ void timed_event::process_led_light(int &led, timed_event_data &teDATA, system_d
             booEventComplete = false;
           }
 
-          // Check for inverted color and invert if necessary.
-          if (teDATA.booINVERTCOLOR == false)
+          // Process the light animation but make no changes if off during day and day set.
+          if (teDATA.booOFFDURINGDAY == true && sdSysData.Day_On_With_Override.value() == true)
           {
-            bigcrgbNewColor[led].r = bigcrgbNewColor[led].r + tempColor.r;
-            bigcrgbNewColor[led].g = bigcrgbNewColor[led].g + tempColor.g;
-            bigcrgbNewColor[led].b = bigcrgbNewColor[led].b + tempColor.b;
+            // do nothing.
           }
           else
           {
-            bigcrgbNewColor[led].r = bigcrgbNewColor[led].r - tempColor.r;
-            bigcrgbNewColor[led].g = bigcrgbNewColor[led].g - tempColor.g;
-            bigcrgbNewColor[led].b = bigcrgbNewColor[led].b - tempColor.b;
+            // Check for inverted color and invert if necessary.
+            if (teDATA.booINVERTCOLOR == false)
+            {
+              bigcrgbNewColor[led].r = bigcrgbNewColor[led].r + tempColor.r;
+              bigcrgbNewColor[led].g = bigcrgbNewColor[led].g + tempColor.g;
+              bigcrgbNewColor[led].b = bigcrgbNewColor[led].b + tempColor.b;
+            }
+            else
+            {
+              bigcrgbNewColor[led].r = bigcrgbNewColor[led].r - tempColor.r;
+              bigcrgbNewColor[led].g = bigcrgbNewColor[led].g - tempColor.g;
+              bigcrgbNewColor[led].b = bigcrgbNewColor[led].b - tempColor.b;
+            }            
           }
 
           booPixelColorChanged = true;
@@ -495,24 +503,7 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
       int led_start = 0;
       int led_end = 0;
 
-      // Only continue processing the event if the event hasnt been completed.
-      // or if the event shouldnt be skipped because of display in day is off.
-      if (teDATA[event].booOFFDURINGDAY == true && sdSysData.Day_On_With_Override.value() == true)
-      {
-        // Check end conditions of animations that will be skipped, including those that may be set to end already.
-
-        // Calculate event end time.
-        int end_time = teDATA[event].tmeSTARTTIME + 
-                        (teDATA[event].intSPEED * (abs(teDATA[event].intSTARTPOS - teDATA[event].intENDPOS))) + 
-                        teDATA[event].intDURATION;
-        
-        if (tmeCurrentTime > end_time)
-        {
-          teDATA[event].booCOMPLETE = true;
-          teDATA[event].PostCheck(tmeCurrentTime);
-        }
-      }
-      else if (teDATA[event].booCOMPLETE == false)
+      if (teDATA[event].booCOMPLETE == false)
       {
         // OK, so an event is schedule, but is it ready to start?
         if (tmeCurrentTime >= teDATA[event].tmeSTARTTIME)

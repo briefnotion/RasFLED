@@ -466,13 +466,13 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
       // Toggle Lights Off
       if (check_command(cons, " lightsoff", "Lights Off."))
       {
-        sdSysData.Lights_On = false;
+        sdSysData.Lights_On.set(false);
       }
 
       // Toggle Lights On
       if (check_command(cons, " lightson", "Lights ON."))
       {
-        sdSysData.Lights_On = true;
+        sdSysData.Lights_On.set(true);
       }
 
       // Toggle Day Mode On

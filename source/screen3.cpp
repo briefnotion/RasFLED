@@ -301,6 +301,7 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Countdown_Timer.PROP.MIN_MAX_FILLER_BCOLOR = COLOR_YELLOW;
   Countdown_Timer.PROP.MIN_MAX_FILLER_COLOR = COLOR_WHITE;
   Countdown_Timer.PROP.MIN_MAX_INDICATORS = false;
+  Countdown_Timer.PROP.BRACKET_END_CAPS = true;
 
   // Debug Screen 
   
@@ -1357,7 +1358,7 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   
 
   // Display Lights Off mode toggle.
-  if(sdSysData.Lights_On == false)
+  if(sdSysData.Lights_On.value() == false)
   {
     LIGHTSOFF.set_inverse(true);
     LIGHTSOFF.set_text("  LIGHTS OFF  ");
@@ -1833,7 +1834,6 @@ void Screen3::automobile_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 {
   AUTOMOBILE_OVERVIEW_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   AUTOMOBILE_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-  
   tiAUTOMOBILE_Screen.draw(ScrStat.Needs_Refresh == true);
 }
 
@@ -1907,7 +1907,7 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   bzButtons.set_value("TIMER", int(sdSysData.cdTIMER.is_active()));
   bzButtons.set_value("MENUOVERHEAD", int(sdSysData.booOverheadRunning));
   bzButtons.set_value("HAZARD", int(sdSysData.booHazardRunning));
-  bzButtons.set_value("LIGHTSOFF", int(sdSysData.Lights_On));
+  bzButtons.set_value("LIGHTSOFF", int(sdSysData.Lights_On.value()));
   bzADS_B.set_value("ADS_BON", int(sdSysData.AIRCRAFT_COORD.is_active()));
 
   // Check for Timer Window

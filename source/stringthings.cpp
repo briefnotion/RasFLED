@@ -197,6 +197,21 @@ string to_string_hex(char Char_Byte)
   return ret_number;
 }
 
+string to_string_binary(char Char_Byte)
+{
+  string ret_number = "";
+
+  ret_number =  to_string(get_bit_value(Char_Byte, 128)) + 
+                to_string(get_bit_value(Char_Byte, 64)) + 
+                to_string(get_bit_value(Char_Byte, 32)) + 
+                to_string(get_bit_value(Char_Byte, 16)) + 
+                to_string(get_bit_value(Char_Byte, 8)) + 
+                to_string(get_bit_value(Char_Byte, 4)) + 
+                to_string(get_bit_value(Char_Byte, 2)) + 
+                to_string(get_bit_value(Char_Byte, 1));
+
+  return ret_number;
+}
 
 bool left_of_char(string Text, char Break_Char, string &Left)
 {
@@ -371,15 +386,6 @@ string to_string_round_to_nth(float Value, int nth)
   }
   
   return ret_string;
-}
-
-bool get_bit_value(int baseline, int bit_set_compare)
-{
-  bool ret_bit_on = false;
-
-  ret_bit_on = (baseline & bit_set_compare) == bit_set_compare;
-
-  return ret_bit_on;
 }
 
 int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Blue)

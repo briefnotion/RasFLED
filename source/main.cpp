@@ -121,6 +121,14 @@ void MatxixFill(CRGB crgbPreparedMatix[], int intLEDCOUNT, CRGB crgbColor)
   }
 }
 
+void MatxixBlank(CRGB crgbPreparedMatix[], int intLEDCOUNT, CRGB crgbColor)
+{
+  for (int lcount = 0; lcount < intLEDCOUNT; lcount++)
+  {
+    crgbPreparedMatix[lcount] = crgbColor;
+  }
+}
+
 
 
 // -------------------------------------------------------------------------------------
@@ -272,8 +280,11 @@ int loop()
   int return_code = 0;
   Console cons;
   system_data sdSystem;
+
+  // Switch Lights On
+  sdSystem.Lights_On.set(true);
   
-    // Open Shared memory regions to manager
+  // Open Shared memory regions to manager
   sdSystem.API_CHANNEL.open(region_scan);
 
   // Initialize wiring pi
@@ -691,7 +702,7 @@ int loop()
       //    changed.  Then, Redraw the entire strip. 
 
       // Calculate LED values and update if enabled.
-      if (sdSystem.Lights_On == true)
+      if (sdSystem.Lights_On.value() == true)
       {
         // Update?    
         for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
@@ -705,90 +716,115 @@ int loop()
           }
         }
 
-        if (booUpdate == true)
+        // If debug mode Display all lights static color are selectted, replace all generated led colors
+        // with a static color
+        if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
         {
-          int mcount = 0;
-
-          // If debug mode Display all lights static color are selectted, replace all generated led colors
-          // with a static color
-          if ((cons.keywatch.getnoreset(KEYDEBUG) != 0) && (cons.keywatch.get(KEYLEDTEST) !=0))
+          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
           {
+            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            {
+              MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+              CRGB(25,25,25));
+            }
+          }
+
+          booUpdate = true;
+        }
+      }
+      else // lights are off, blank values if neccessary.
+      {
+        // make sure the thread is free, otherwise the blank will be thrown away.
+        if (thread_render_running == false)
+        {
+          // only actively blank if the bounce of lights off was detected.
+          if (sdSystem.Lights_On.bounce() == true)
+          {
+            // Clear Lights
             for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
             {
               for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
               {
-                MatxixFill(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                MatxixBlank(sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
                 sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
-                CRGB(25,25,25));
-              }
-            }
-          }
-          
-          // Copy the prepared Matrixes to the display matrix
-          if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
-          {
-            for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-            {
-              for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-              {
-                MatrixPrepare(cons, sdSystem, 
-                      sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
-                      sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
-                      matrix, mcount);
-              }
-            }
-          }
-          else
-          {
-            // Build TEST array to display
-            int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
-            int pos = 0;
-            int g = 0; 
-            int s = 0;
-
-            // Find Strip
-            for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
-            {
-              for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
-              {
-                if (selected_test_array == pos)
-                {
-                  g = group;
-                  s = strip;
-                  sdSystem.t_group = group;
-                  sdSystem.t_strip = strip;
-                }
-                pos++;
+                CRGB(0,0,0));
               }
             }
 
-            // Draw fround strip
-            MatrixPrepare(cons, sdSystem, 
-                              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
-                              sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
-                              matrix, mcount);
-          }
-
-          //  Are the lights enable to display.       
-          //    Lights off will not turn the lights off and clear their values.  
-          //      Instead, transmitting those color are to the lights disabled.
-          
-          // LED Library Renderer -- Recommend: DON'T TOUCH
-          matrix_render(led_count);
-          
-          // Create a seperate thread only to render the LEDs with the hardware.  This process
-          //  is very intensive for the system and is only one way.  The render thread only needs 
-          //  to rejoin with the main program, at the end of the main loop, to signify its 
-          //  completion, so that the loop can restart and begin computing its values and colors 
-          //  again. 
-          // A render thread should not be created if no changes have been made to the led values.
-          if (thread_render_running == false)
-          {
-            thread_render = async(proc_render_thread);
-            thread_render_running = true;
+            booUpdate = true;
           }
         }
       }
+
+      if (booUpdate == true)
+      {
+        int mcount = 0;
+        // Copy the prepared Matrixes to the display matrix
+        if((cons.keywatch.getnoreset(KEYDEBUG) == 0) || (cons.keywatch.get(KEYLEDDRCYCL) == 0))
+        {
+          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+          {
+            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            {
+              MatrixPrepare(cons, sdSystem, 
+                    sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).crgbARRAY, 
+                    sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(group).vLED_STRIPS.at(strip).led_count(), 
+                    matrix, mcount);
+            }
+          }
+        }
+        else
+        {
+          // Build TEST array to display
+          int selected_test_array = cons.keywatch.get(KEYLEDDRCYCL) - 1;
+          int pos = 0;
+          int g = 0; 
+          int s = 0;
+
+          // Find Strip
+          for(int group=0; group < sdSystem.CONFIG.LED_MAIN.at(0).g_size(); group++)
+          {
+            for(int strip=0; strip < sdSystem.CONFIG.LED_MAIN.at(0).s_size(group); strip++)
+            {
+              if (selected_test_array == pos)
+              {
+                g = group;
+                s = strip;
+                sdSystem.t_group = group;
+                sdSystem.t_strip = strip;
+              }
+              pos++;
+            }
+          }
+
+          // Draw found strip
+          MatrixPrepare(cons, sdSystem, 
+                            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).crgbARRAY, 
+                            sdSystem.CONFIG.LED_MAIN.at(0).vLED_GROUPS.at(g).vLED_STRIPS.at(s).led_count(), 
+                            matrix, mcount);
+        }
+
+        //  Are the lights enable to display.       
+        //    Lights off will not turn the lights off and clear their values.  
+        //      Instead, transmitting those color are to the lights disabled.
+        
+        // LED Library Renderer -- Recommend: DON'T TOUCH
+        matrix_render(led_count);
+        
+        // Create a seperate thread only to render the LEDs with the hardware.  This process
+        //  is very intensive for the system and is only one way.  The render thread only needs 
+        //  to rejoin with the main program, at the end of the main loop, to signify its 
+        //  completion, so that the loop can restart and begin computing its values and colors 
+        //  again. 
+        // A render thread should not be created if no changes have been made to the led values.
+        if (thread_render_running == false)
+        {
+          thread_render = async(proc_render_thread);
+          thread_render_running = true;
+        }
+      }
+    
     } // Is Events and Render ready -----------------
      
 

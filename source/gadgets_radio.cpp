@@ -921,6 +921,7 @@ void ADSB_Channel_Grid::create()
   DELTA_MESSAGES_BAR.PROP.PRINT_MIN = true;
   DELTA_MESSAGES_BAR.PROP.PRINT_MAX = true;
   DELTA_MESSAGES_BAR.PROP.COLORS_ON = true;
+  DELTA_MESSAGES_BAR.PROP.BRACKET_END_CAPS = true;
 
   // Calculate size of ADS-B Channel Grid.
   int x = PROP.SIZEX / (Default_ADS_B.PROP.SIZEX + 1);

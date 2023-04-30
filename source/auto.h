@@ -237,6 +237,7 @@ class AUTOMOBILE_INDICATORS
 {
   private:
   bool LIGHTS = false;
+  bool LIGHTS_HIGH_BEAM_ON;
   int LIGHTS_POS = 0;
   string LIGHTS_DESC = "";
 
@@ -254,6 +255,7 @@ class AUTOMOBILE_INDICATORS
   public:
 
   void store_lights(int Lights);
+  void store_lights_high_beam(int Data_1);
   void store_parking_brake(int Parking_Brake);
   void store_ignition(int Ignition);
   void store_cruise_control(int Data_1, int Data_2, float Multiplier);
@@ -261,6 +263,7 @@ class AUTOMOBILE_INDICATORS
   bool val_lights();
   int val_lights_pos();
   string lights();
+  bool val_lights_high_beam_on();
 
   bool val_parking_brake();
   string parking_brake();
@@ -455,6 +458,23 @@ class AUTOMOBILE_CALCULATED
   float acceleration();
 };
 
+class AUTOMOBILE_AVAILABILITY
+{
+  private:
+
+  TIMED_PING ACTIVITY_TIMER;
+  bool ACTIVE = false;
+
+  public:
+
+  void check_for_live_data(unsigned long tmeFrame_Time);
+
+  void set_active(unsigned long tmeFrame_Time);
+
+  bool is_active();
+
+};
+
 class AUTOMOBILE_PROPERTIES
 // Panel border characters.
 {
@@ -468,8 +488,7 @@ class AUTOMOBILE
 {
   private:
 
-  bool ACTIVE = false;
-  TIMED_PING ACTIVITY_TIMER;
+  AUTOMOBILE_AVAILABILITY AVAILABILITY;
 
   void parse(string Line);
 

@@ -1,3 +1,12 @@
+V 1.918_230429
+  - FOR TESTING ONLY.
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+  - Changed fledcore to eliminate night lights not being rendered off 
+      when switching to day mode.
+  - Lights Off button will turn off lights and not just stop animations.
+  - Changes made to some gadgets.
+
 V 1.917_230426
   - FOR TESTING ONLY.
   - Continued building Auto library.

@@ -445,6 +445,29 @@ bool BOOL_WITH_OVERRIDE::overridden()
   return OVERRIDDEN;
 }
 
+void BOOL_BOUNCE::set(bool Value)
+{
+  VALUE = Value;
+  CHANGED = true;
+}
+
+bool BOOL_BOUNCE::value()
+{
+  return VALUE;
+}
+
+bool BOOL_BOUNCE::bounce()
+{
+  if (CHANGED == true)
+  {
+    CHANGED = false;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 
 // ---------------------------------------------------------------------------------------
 // Min Max Time Classes
@@ -772,5 +795,16 @@ int get_2_pos_of_int(int Number)
 {
   return (Number % 100 - Number % 10) / 10;
 }
+
+bool get_bit_value(int baseline, int bit_set_compare)
+{
+  bool ret_bit_on = false;
+
+  ret_bit_on = (baseline & bit_set_compare) == bit_set_compare;
+
+  return ret_bit_on;
+}
+
+
 
 #endif

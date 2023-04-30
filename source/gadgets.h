@@ -935,6 +935,8 @@ class BAR_PROPERTIES
   bool PRINT_MIN = false;   // Print Min value on right of guage.
   bool PRINT_MAX = false;   // Print Max value on right of guage.
 
+  bool BRACKET_END_CAPS = false;  // Print brackets on both ends of bar.
+
   bool COLORS_ON = false;
 };
 

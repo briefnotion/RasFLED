@@ -235,6 +235,11 @@ void AUTOMOBILE_INDICATORS::store_lights(int Lights)
   }
 }
 
+void AUTOMOBILE_INDICATORS::store_lights_high_beam(int Data_1)
+{
+  LIGHTS_HIGH_BEAM_ON = get_bit_value(Data_1, 32);
+}
+
 void AUTOMOBILE_INDICATORS::store_parking_brake(int Parking_Brake)
 {
   // Parse Parking Brake
@@ -292,6 +297,11 @@ int AUTOMOBILE_INDICATORS::val_lights_pos()
 string AUTOMOBILE_INDICATORS::lights()
 {
   return LIGHTS_DESC;
+}
+
+bool AUTOMOBILE_INDICATORS::val_lights_high_beam_on()
+{
+  return LIGHTS_HIGH_BEAM_ON;
 }
 
 bool AUTOMOBILE_INDICATORS::val_parking_brake()
@@ -626,7 +636,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear >= 10 && Gear <= 96 && Gear_Alt != 81)
+  else if (Gear >= 10 && Gear <= 96 && !get_bit_value(Gear_Alt, 64))
   {
     // Drive
     SHORT_DESC = "Drive";
@@ -636,7 +646,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = true;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear >= 10 && Gear <= 96 && Gear_Alt == 81)
+  else if (Gear >= 10 && Gear <= 96 && get_bit_value(Gear_Alt, 64))
   {
     // Low
     SHORT_DESC = "Low";
@@ -725,17 +735,22 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
   if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
   {
     // Calculate Wheelspeed Offset or Differance.
-    if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
+    if (Status.SPEED.SPEED_TRANS.val_mph() > 53 && Status.SPEED.SPEED_TRANS.val_mph() <58 && 
+        Status.STEERING.val_steering_wheel_angle() < 2) 
+        // Only get values at certain speeds and while driing straight.
     {
-      LF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-      RF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-      LB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-      RB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-      
-      LF_WHEEL_SPEED_OFFSET.store(LF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
-      RF_WHEEL_SPEED_OFFSET.store(RF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
-      LB_WHEEL_SPEED_OFFSET.store(LB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
-      RB_WHEEL_SPEED_OFFSET.store(RB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);  
+      if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
+      {
+        LF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+        RF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+        LB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+        RB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
+        
+        LF_WHEEL_SPEED_OFFSET.store(LF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+        RF_WHEEL_SPEED_OFFSET.store(RF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+        LB_WHEEL_SPEED_OFFSET.store(LB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+        RB_WHEEL_SPEED_OFFSET.store(RB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);  
+      }
     }
 
     // Reading Acceleration from tire speed may be more accurate.
@@ -1076,17 +1091,33 @@ void AUTOMOBILE::parse(string Line)
   }
 }
 
-bool AUTOMOBILE::active()
-{
-  return ACTIVE;
-}
-
-void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
+void AUTOMOBILE_AVAILABILITY::check_for_live_data(unsigned long tmeFrame_Time)
 {
   if (ACTIVITY_TIMER.ping_down(tmeFrame_Time) == false)
   {
     ACTIVE = false;
   }
+}
+
+void AUTOMOBILE_AVAILABILITY::set_active(unsigned long tmeFrame_Time)
+{
+  ACTIVITY_TIMER.ping_up(tmeFrame_Time, 500);
+  ACTIVE = true;
+}
+
+bool AUTOMOBILE_AVAILABILITY::is_active()
+{
+  return ACTIVE;
+}
+
+bool AUTOMOBILE::active()
+{
+  return AVAILABILITY.is_active();
+}
+
+void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
+{
+  AVAILABILITY.check_for_live_data(tmeFrame_Time);
 
   if (Com_Port.READ_FROM_COMM.size() > 0)
   {
@@ -1103,8 +1134,8 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
         //  Compute on all data but can be processor intensive.
         //compute_high();
 
-        ACTIVITY_TIMER.ping_up(tmeFrame_Time, 500);
-        ACTIVE = true;
+        AVAILABILITY.set_active(tmeFrame_Time);
+
       }
     }
 
@@ -1115,53 +1146,56 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
 
 void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
 {
-  // Steering Wheel Angle
-  STATUS.STEERING.store_steering_wheel_angle((DATA.AD_10.DATA[6] *256) + DATA.AD_10.DATA[7], 
-                                              DATA.AD_10.DATA[2]);
+  if (AVAILABILITY.is_active() == true)
+  {  
+    // Steering Wheel Angle
+    STATUS.STEERING.store_steering_wheel_angle((DATA.AD_10.DATA[6] *256) + DATA.AD_10.DATA[7], 
+                                                DATA.AD_10.DATA[2]);
 
-  // Speed
-  STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time);
+    // Speed
+    STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time);
 
-  STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1], tmeFrame_Time);
-  STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3], tmeFrame_Time);
-  STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5], tmeFrame_Time);
-  STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7], tmeFrame_Time);
+    STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1], tmeFrame_Time);
+    STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3], tmeFrame_Time);
+    STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5], tmeFrame_Time);
+    STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7], tmeFrame_Time);
 
-  STATUS.SPEED.store_dash(DATA.AD_130.DATA[6], DATA.AD_130.DATA[7], tmeFrame_Time);
+    STATUS.SPEED.store_dash(DATA.AD_130.DATA[6], DATA.AD_130.DATA[7], tmeFrame_Time);
 
-  // Transmission Gear Position
-  STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
-  STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_F0.DATA[2]);
+    // Transmission Gear Position
+    STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
+    STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_F0.DATA[2]);
 
-  // RPM
-  STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
-  STATUS.RPM.store_2((DATA.AD_90.DATA[2] *256) + DATA.AD_90.DATA[3]);
+    // RPM
+    STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
+    STATUS.RPM.store_2((DATA.AD_90.DATA[2] *256) + DATA.AD_90.DATA[3]);
 
-  // BRAKE PRESSURE
-  STATUS.POWER.store((DATA.AD_80.DATA[5] *256) + DATA.AD_80.DATA[6]);
+    // BRAKE PRESSURE
+    STATUS.POWER.store((DATA.AD_80.DATA[5] *256) + DATA.AD_80.DATA[6]);
 
-  // INDICATORS int Lights, int Parking_Brake, int Ignition
-  STATUS.INDICATORS.store_lights(DATA.AD_C8.DATA[7]);
-  STATUS.INDICATORS.store_parking_brake(DATA.AD_C8.DATA[3]);
-  //STATUS.INDICATORS.store_ignition(DATA.AD_C8.DATA[1]);
-  STATUS.INDICATORS.store_cruise_control(DATA.AD_200.DATA[6], DATA.AD_200.DATA[7], .312);
+    // INDICATORS int Lights, int Parking_Brake, int Ignition
+    STATUS.INDICATORS.store_lights(DATA.AD_C8.DATA[7]);
+    STATUS.INDICATORS.store_lights_high_beam(DATA.AD_C8.DATA[0]);
+    STATUS.INDICATORS.store_parking_brake(DATA.AD_C8.DATA[3]);
+    //STATUS.INDICATORS.store_ignition(DATA.AD_C8.DATA[1]);
+    STATUS.INDICATORS.store_cruise_control(DATA.AD_200.DATA[6], DATA.AD_200.DATA[7], .312);
 
-  // FUEL
-  STATUS.FUEL.store_consumed(DATA.AD_200.DATA[7]);
-  STATUS.FUEL.store_percentage(DATA.AD_C0.DATA[7]);
-  STATUS.FUEL.store_level(DATA.AD_380.DATA[7]);
+    // FUEL
+    STATUS.FUEL.store_consumed(DATA.AD_200.DATA[7]);
+    STATUS.FUEL.store_percentage(DATA.AD_C0.DATA[7]);
+    STATUS.FUEL.store_level(DATA.AD_380.DATA[7]);
 
-  // DOORS 3B 3F
-  STATUS.DOORS.store(DATA.AD_360.DATA[2]);
+    // DOORS 3B 3F
+    STATUS.DOORS.store(DATA.AD_360.DATA[2]);
 
-  // Guages
-  STATUS.GUAGES.store_coolant(DATA.AD_100.DATA[3]);
-  
-  // Low level Compute not requiring calculation on all data.
-  //  Fast but not fully acurate.
-  //  Currently call just before the data is displayed.
-  CALCULATED.compute_low(STATUS, tmeFrame_Time);
-
+    // Guages
+    STATUS.GUAGES.store_coolant(DATA.AD_100.DATA[3]);
+    
+    // Low level Compute not requiring calculation on all data.
+    //  Fast but not fully acurate.
+    //  Currently call just before the data is displayed.
+    CALCULATED.compute_low(STATUS, tmeFrame_Time);
+  }
 }
 
 #endif

@@ -570,7 +570,7 @@ void Console::processmouseinput(system_data &sdSysData)
       else if(name == "LIGHTSOFF")
       // Turn Lights On or Off
       {
-        if(sdSysData.Lights_On == true)
+        if(sdSysData.Lights_On.value() == true)
         {
           keywatch.cmdInString(" lightsoff");
         }

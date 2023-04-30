@@ -1578,12 +1578,14 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
 
     mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%s", label.c_str());
 
-    // Print Bar Start "[""
-    mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE, "[");
-    
-    // Print Bar End "]""
-    mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + PROP.BAR_SIZE +2 , "]");
-
+    if (PROP.BRACKET_END_CAPS == true)
+    {  
+      // Print Bar Start "[""
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE, "[");
+      
+      // Print Bar End "]""
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + PROP.BAR_SIZE +2 , "]");
+    }
 
     // Create empty bar
     bar = bar.append(PROP.BAR_SIZE +1, ' ');

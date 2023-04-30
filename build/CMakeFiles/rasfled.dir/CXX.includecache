@@ -134,6 +134,10 @@ string
 future
 -
 
+/home/pi/source/RasFLED/source/comport.cpp
+comport.h
+/home/pi/source/RasFLED/source/comport.h
+
 /home/pi/source/RasFLED/source/comport.h
 stdio.h
 -
@@ -516,6 +520,10 @@ interface.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
 
+/home/pi/source/RasFLED/source/player.cpp
+player.h
+/home/pi/source/RasFLED/source/player.h
+
 /home/pi/source/RasFLED/source/player.h
 fstream
 -
@@ -612,6 +620,10 @@ gadgets_automobile.h
 radio_channel_coordinator.h
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 
+/home/pi/source/RasFLED/source/stringthings.cpp
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
+
 /home/pi/source/RasFLED/source/stringthings.h
 string
 -
@@ -619,6 +631,8 @@ deque
 -
 ncurses.h
 -
+helper.h
+/home/pi/source/RasFLED/source/helper.h
 
 /home/pi/source/RasFLED/source/symbols.h
 stdio.h

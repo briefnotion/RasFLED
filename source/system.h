@@ -120,7 +120,7 @@ class system_data
   HARDWARE_STATUS hsHardware_Status;
 
   // Lights on or off
-  bool Lights_On = true;
+  BOOL_BOUNCE Lights_On;
 
   // Day Mode Active
   bool Day_On = false;
