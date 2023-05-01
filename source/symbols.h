@@ -64,7 +64,22 @@ class AUTOMOTIVE_SYMBOLS
   string CAR16 = " || /#####\\ ||\n"   ;  // 14
   string CAR17 = "  \\/#######\\/\n" ;  // 15
   string CAR18 = "    ======="      ;  // 16
-                
+
+
+  // Car Lights Off
+  //  1 :           
+  //  2 :           ___
+
+  string CAR_LIGHTS_OFF_01 = "\n"        ;  //  1
+  string CAR_LIGHTS_OFF_02 = "     ___\n";  //  2
+
+  // Car Lights On
+	//  1 :			\     X     /	
+	//  2 :      \   /_\   /
+
+  string CAR_LIGHTS_ON_01 = "\\     X     /\n";  //  1
+  string CAR_LIGHTS_ON_02 = " \\   /_\\   /"   ;  //  2
+
 
   // Car Doors Open
   //   :          ___
@@ -138,6 +153,14 @@ class AUTOMOTIVE_SYMBOLS
   string CAR_BODY_BUILT = "";
   bool CAR_BODY_MADE = false;
 
+  // Car Lights Off
+  string CAR_LIGHTS_OFF_BUILT = "";
+  bool CAR_LIGHTS_OFF_MADE = false;
+
+  // Car Lights On
+  string CAR_LIGHTS_ON_BUILT = "";
+  bool CAR_LIGHTS_ON_MADE = false;
+
   // Car Left Front Closed
   string CAR_LEFT_FRONT_CLOSED_BUILT = "";
   bool CAR_LEFT_FRONT_CLOSED_MADE = false;
@@ -165,6 +188,8 @@ class AUTOMOTIVE_SYMBOLS
   public:
 
   string car_body();
+  string car_lights_off();
+  string car_lights_on();
   string car_door_left_front_closed();
   string car_door_right_front_closed();
   string car_door_left_back_closed();

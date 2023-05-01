@@ -40,6 +40,16 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   SYMBOL_CAR_BODY.PROP.JUSTIFICATION_LEFT = true;
   SYMBOL_CAR_BODY.set_text(CAR_SYMBOLS.car_body());
 
+  
+  SYMBOL_CAR_LIGHTS.PROP.POSX = 8;
+  SYMBOL_CAR_LIGHTS.PROP.POSY = 1;
+  SYMBOL_CAR_LIGHTS.PROP.SIZEX = 13;
+  SYMBOL_CAR_LIGHTS.PROP.SIZEY = 2;
+  SYMBOL_CAR_LIGHTS.PROP.COLORS_ON = true;
+  //SYMBOL_CAR_LIGHTS.set_color(COLOR_BLACK, COLOR_WHITE);
+  SYMBOL_CAR_LIGHTS.PROP.JUSTIFICATION_LEFT = true;
+  SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_off());
+
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.POSX = 3;
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.POSY = 2 + 6;
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.SIZEX = 6;
@@ -220,6 +230,36 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
 {
   TRUTH_CATCH door_changed;
 
+  // Update Lights Information
+  if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_on(), LIGHTS_VAL) == true)
+  {
+    if (LIGHTS_VAL == true)
+    {
+      SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_on());
+    }
+    else
+    {
+      SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_off());
+    }
+  }
+
+  // Set Color of Lights
+  if (LIGHTS_VAL == true)
+  {
+    if (sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_high_beam_on() == true)
+    {
+      SYMBOL_CAR_LIGHTS.set_color(COLOR_BLUE, COLOR_WHITE);
+    }
+    else
+    {
+      SYMBOL_CAR_LIGHTS.set_color(COLOR_WHITE, COLOR_BLACK);
+    }
+  }
+  else
+  {
+    SYMBOL_CAR_LIGHTS.set_color(COLOR_BLACK, COLOR_WHITE);
+  }
+
   // Update Door Information
 
   // Get value
@@ -229,7 +269,6 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value, RIGHT_FRONT_DOOR_VAL));
 
   if (door_changed.has_truth() == true)
-  //if (true == true)
   {
     // Set value of all doors regardless which changed.
 
@@ -307,7 +346,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   //-----------
   // Status
 
-  LIGHTS_STATUS.set_text("LIGHTS: " + sdSysData.CAR_INFO.STATUS.INDICATORS.lights(), tmeCurrentMillis);
+  LIGHTS_STATUS.set_text("LIGHTS: " + sdSysData.CAR_INFO.STATUS.INDICATORS.lights_switch(), tmeCurrentMillis);
   if (sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_high_beam_on() == false)
   {
     LIGHTS_STATUS.set_color(COLOR_BLACK, COLOR_WHITE);
@@ -346,6 +385,8 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   //-----------
   // Car Doors
   SYMBOL_CAR_BODY.draw(GADGET_PANEL, Refresh);
+
+  SYMBOL_CAR_LIGHTS.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
 
   SYMBOL_CAR_DOOR_LEFT_FRONT.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
   SYMBOL_CAR_DOOR_RIGHT_FRONT.draw(GADGET_PANEL, Refresh, tmeFrame_Time);

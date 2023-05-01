@@ -667,7 +667,7 @@ int loop()
     // Read light switchs and set day on or day off modes.
     sdSystem.Day_On_With_Override.set(sdSystem.CAR_INFO.active() == true && 
                                 sdSystem.CAR_INFO.STATUS.INDICATORS.light_switch_available() == true,
-                                sdSystem.CAR_INFO.STATUS.INDICATORS.val_lights() == false, sdSystem.Day_On);
+                                sdSystem.CAR_INFO.STATUS.INDICATORS.val_light_switch() == false, sdSystem.Day_On);
 
     // ---------------------------------------------------------------------------------------
     // --- Check and Execute Timed Events That Are Ready ---

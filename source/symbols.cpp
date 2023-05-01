@@ -30,6 +30,28 @@ string AUTOMOTIVE_SYMBOLS::car_body()
   return CAR_BODY_BUILT;
 }
 
+string AUTOMOTIVE_SYMBOLS::car_lights_off()
+{
+  if (CAR_LIGHTS_OFF_MADE == false)
+  {
+    CAR_LIGHTS_OFF_BUILT = CAR_LIGHTS_OFF_01 + CAR_LIGHTS_OFF_02;
+    CAR_LIGHTS_OFF_MADE = true;
+  }
+
+  return CAR_LIGHTS_OFF_BUILT;
+}
+
+string AUTOMOTIVE_SYMBOLS::car_lights_on()
+{
+  if (CAR_LIGHTS_ON_MADE == false)
+  {
+    CAR_LIGHTS_ON_BUILT = CAR_LIGHTS_ON_01 + CAR_LIGHTS_ON_02;
+    CAR_LIGHTS_ON_MADE = true;
+  }
+
+  return CAR_LIGHTS_ON_BUILT;
+}
+
 string AUTOMOTIVE_SYMBOLS::car_door_left_front_closed()
 {
   if (CAR_LEFT_FRONT_CLOSED_MADE == false)

@@ -62,13 +62,16 @@ class AUTOMOBILE_OVERVIEW_GADGET
 
   //-----------
   Text_Field_Multi_Line SYMBOL_CAR_BODY;
+  Text_Field_Multi_Line SYMBOL_CAR_LIGHTS;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_FRONT;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_RIGHT_FRONT;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_BACK;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_RIGHT_BACK;
 
   //-----------
-  // Door Values
+  // Values
+  bool LIGHTS_VAL = true;
+
   bool LEFT_FRONT_DOOR_VAL = true;
   bool RIGHT_FRONT_DOOR_VAL = true;
   bool LEFT_BACK_DOOR_VAL = true;

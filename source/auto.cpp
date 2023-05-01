@@ -205,31 +205,31 @@ void AUTOMOBILE_INDICATORS::store_lights(int Lights)
   // Parse Lights
   if (Lights == 0)
   {
-    LIGHTS = false;
+    LIGHT_SWITCH = false;
     LIGHTS_POS = 0;
     LIGHTS_DESC = "OFF";
   }
   else if (Lights == 1)
   {
-    LIGHTS = true;
+    LIGHT_SWITCH = true;
     LIGHTS_POS = 1;
     LIGHTS_DESC = "PARKING";
   }
   else if (Lights == 2)
   {
-    LIGHTS = true;
+    LIGHT_SWITCH = true;
     LIGHTS_POS = 2;
     LIGHTS_DESC = "ON";
   }
   else if (Lights == 3)
   {
-    LIGHTS = true;
+    LIGHT_SWITCH = true;
     LIGHTS_POS = 3;
     LIGHTS_DESC = "AUTO";
   }
   else
   {
-    LIGHTS = false;
+    LIGHT_SWITCH = false;
     LIGHTS_POS = Lights;
     LIGHTS_DESC = "UNKNOWN";
   }
@@ -240,25 +240,27 @@ void AUTOMOBILE_INDICATORS::store_lights_high_beam(int Data_1)
   LIGHTS_HIGH_BEAM_ON = get_bit_value(Data_1, 32);
 }
 
-void AUTOMOBILE_INDICATORS::store_parking_brake(int Parking_Brake)
+void AUTOMOBILE_INDICATORS::store_on(int Light_Bits)
 {
-  // Parse Parking Brake
-  // B0 or B1 - OFF
-  // F0 or F1 - On
-  if (Parking_Brake == 176 || Parking_Brake == 177)
+
+  // Lights Actually On      1st bit
+  //  c8 [3] 	b1 lights on	10110001
+	//          b0 lights off 10110000
+  LIGHTS_ON = get_bit_value(Light_Bits, 1);
+
+  // Parse Parking Brake      7th bit
+  // B0 or B1 - OFF 10110000
+  // F0 or F1 - On  11110000
+  // bit
+  if (get_bit_value(Light_Bits, 64))
   {
     PARKING_BRAKE = false;
     PARKING_BRAKE_DESC = "PARKING BRAKE OFF";
   }
-  else if (Parking_Brake == 240 || Parking_Brake == 241)
+  else
   {
     PARKING_BRAKE = true;
     PARKING_BRAKE_DESC = "PARKING BRAKE ON";
-  }
-  else
-  {
-    PARKING_BRAKE = false;
-    PARKING_BRAKE_DESC = "PARKING BRAKE UNKNOWN";
   }
 }
 
@@ -284,9 +286,9 @@ void AUTOMOBILE_INDICATORS::store_cruise_control(int Data_1, int Data_2, float M
   }
 }
 
-bool AUTOMOBILE_INDICATORS::val_lights()
+bool AUTOMOBILE_INDICATORS::val_light_switch()
 {
-  return LIGHTS;
+  return LIGHT_SWITCH;
 }
 
 int AUTOMOBILE_INDICATORS::val_lights_pos()
@@ -294,7 +296,7 @@ int AUTOMOBILE_INDICATORS::val_lights_pos()
   return LIGHTS_POS;
 }
 
-string AUTOMOBILE_INDICATORS::lights()
+string AUTOMOBILE_INDICATORS::lights_switch()
 {
   return LIGHTS_DESC;
 }
@@ -302,6 +304,11 @@ string AUTOMOBILE_INDICATORS::lights()
 bool AUTOMOBILE_INDICATORS::val_lights_high_beam_on()
 {
   return LIGHTS_HIGH_BEAM_ON;
+}
+
+bool AUTOMOBILE_INDICATORS::val_lights_on()
+{
+  return LIGHTS_ON;
 }
 
 bool AUTOMOBILE_INDICATORS::val_parking_brake()
@@ -606,7 +613,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
   01 Park
   */
 
-  if (Gear == 1)
+  if (Gear == 0 && Gear_Alt == 0)
   {
     // Park
     SHORT_DESC = "Park";
@@ -626,7 +633,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear == 0)
+  else if (Gear == 0 && Gear_Alt == 32)
   {
     // Reverse
     SHORT_DESC = "Neutral";
@@ -735,9 +742,10 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
   if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
   {
     // Calculate Wheelspeed Offset or Differance.
-    if (Status.SPEED.SPEED_TRANS.val_mph() > 53 && Status.SPEED.SPEED_TRANS.val_mph() <58 && 
+    if (Status.SPEED.SPEED_TRANS.val_mph() > 43 && Status.SPEED.SPEED_TRANS.val_mph() < 48 && 
         Status.STEERING.val_steering_wheel_angle() < 2) 
-        // Only get values at certain speeds and while driing straight.
+        // Only get values at certain speeds and while drivng straight.
+        // Centering speed at 45 because I can drive for hours and not get over 50mph.
     {
       if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
       {
@@ -1164,7 +1172,7 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
 
     // Transmission Gear Position
     STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
-    STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_F0.DATA[2]);
+    STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2]);
 
     // RPM
     STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
@@ -1175,8 +1183,8 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
 
     // INDICATORS int Lights, int Parking_Brake, int Ignition
     STATUS.INDICATORS.store_lights(DATA.AD_C8.DATA[7]);
-    STATUS.INDICATORS.store_lights_high_beam(DATA.AD_C8.DATA[0]);
-    STATUS.INDICATORS.store_parking_brake(DATA.AD_C8.DATA[3]);
+    STATUS.INDICATORS.store_lights_high_beam(DATA.AD_360.DATA[0]);
+    STATUS.INDICATORS.store_on(DATA.AD_C8.DATA[3]);
     //STATUS.INDICATORS.store_ignition(DATA.AD_C8.DATA[1]);
     STATUS.INDICATORS.store_cruise_control(DATA.AD_200.DATA[6], DATA.AD_200.DATA[7], .312);
 

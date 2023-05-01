@@ -236,9 +236,10 @@ class AUTOMOBILE_FUEL
 class AUTOMOBILE_INDICATORS
 {
   private:
-  bool LIGHTS = false;
+  bool LIGHTS_ON = false;
   bool LIGHTS_HIGH_BEAM_ON;
   int LIGHTS_POS = 0;
+  bool LIGHT_SWITCH = false;
   string LIGHTS_DESC = "";
 
   bool PARKING_BRAKE = false;
@@ -256,14 +257,15 @@ class AUTOMOBILE_INDICATORS
 
   void store_lights(int Lights);
   void store_lights_high_beam(int Data_1);
-  void store_parking_brake(int Parking_Brake);
+  void store_on(int Parking_Brake);
   void store_ignition(int Ignition);
   void store_cruise_control(int Data_1, int Data_2, float Multiplier);
 
-  bool val_lights();
+  bool val_light_switch();
   int val_lights_pos();
-  string lights();
+  string lights_switch();
   bool val_lights_high_beam_on();
+  bool val_lights_on();
 
   bool val_parking_brake();
   string parking_brake();
