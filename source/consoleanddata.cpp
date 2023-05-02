@@ -70,11 +70,13 @@ void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data 
 
 void Console::update_automobile_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
 {
+  sdSysData.CAR_INFO.translate(tmeCurrentMillis);
+
   if(sdSysData.CAR_INFO.CHANGED == true)
-  {
-    sdSysData.CAR_INFO.translate(tmeCurrentMillis);
+  {  
     Screen.AUTOMOBILE_OVERVIEW_PANEL.update(sdSysData, tmeCurrentMillis);
     Screen.AUTOMOBILE_PANEL.update(sdSysData, tmeCurrentMillis);
+    sdSysData.CAR_INFO.CHANGED = false;
   }
 }
 

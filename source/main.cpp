@@ -627,7 +627,7 @@ int loop()
       // Read information from car system. If not available, then get door info 
       //  from original system as redundancy.
 
-      if (sdSystem.CAR_INFO.active() == true && sdSystem.CAR_INFO.STATUS.DOORS.door_switch_available() == true)
+      if (sdSystem.CAR_INFO.active() == true && sdSystem.CAR_INFO.STATUS.DOORS.available() == true)
       {
         // Not sure how to tie this in with the load configuration file yet.
         sdSystem.CONFIG.vSWITCH_PIN_MAP[0].value = sdSystem.CAR_INFO.STATUS.DOORS.lb_door_open();
@@ -644,9 +644,17 @@ int loop()
       else
       // Redundant system in case auto door switchs arent avail.
       {
+        TRUTH_CATCH ret_changed;
         for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
         {
           sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value = digitalRead(sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).pin);
+          ret_changed.catch_truth(sdSystem.CAR_INFO.STATUS.DOORS.store_from_alt_source(x, sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value));
+
+          if (ret_changed.has_truth() == true)
+          {
+            sdSystem.CAR_INFO.STATUS.DOORS.set_source_availability(true);
+            sdSystem.CAR_INFO.CHANGED = true;
+          }
         }
       }
 
@@ -657,7 +665,19 @@ int loop()
         sdSystem.CONFIG.vSWITCH_PIN_MAP.at(0).value = cons.keywatch.getTF('1');
         sdSystem.CONFIG.vSWITCH_PIN_MAP.at(1).value = cons.keywatch.getTF('2');
         sdSystem.CONFIG.vSWITCH_PIN_MAP.at(2).value = cons.keywatch.getTF('3');
-        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(3).value = cons.keywatch.getTF('4');
+        sdSystem.CONFIG.vSWITCH_PIN_MAP.at(3).value = cons.keywatch.getTF('4');        
+        
+        TRUTH_CATCH ret_changed;
+        for(int x=0; x<sdSystem.CONFIG.iNUM_SWITCHES; x++)
+        {
+          ret_changed.catch_truth(sdSystem.CAR_INFO.STATUS.DOORS.store_from_alt_source(x, sdSystem.CONFIG.vSWITCH_PIN_MAP.at(x).value));
+        }
+
+        if (ret_changed.has_truth() == true)
+        {
+          sdSystem.CAR_INFO.STATUS.DOORS.set_source_availability(true);
+          sdSystem.CAR_INFO.CHANGED = true;
+        }
       }
 
       // Check the doors and start or end all animations
@@ -666,7 +686,7 @@ int loop()
 
     // Read light switchs and set day on or day off modes.
     sdSystem.Day_On_With_Override.set(sdSystem.CAR_INFO.active() == true && 
-                                sdSystem.CAR_INFO.STATUS.INDICATORS.light_switch_available() == true,
+                                sdSystem.CAR_INFO.STATUS.INDICATORS.available() == true,
                                 sdSystem.CAR_INFO.STATUS.INDICATORS.val_light_switch() == false, sdSystem.Day_On);
 
     // ---------------------------------------------------------------------------------------
@@ -891,7 +911,7 @@ int loop()
         // ADS-B - Update all ADS-B gadgets with new data.
         cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
 
-        // Automobile - Update all ADS-B gadgets with new data.
+        // Automobile - Update all automobile gadgets
         cons.update_automobile_gadgets(tmeCurrentMillis, sdSystem);
 
         // Update Switches to Alert system.

@@ -25,13 +25,15 @@
 
 using namespace std;
 
+bool check_availability(bool Coded_Availability, bool Source_Availabilty);
+
 class AUTOMOBILE_DATA_LINE
 {
   public:
 
-  string ORIG = "";
+  string ORIG = "X";
 
-  int ID = 0;
+  int ID = -1;
 
   int ID_DATA[2];
   int DATA[8];
@@ -138,14 +140,14 @@ class VELOCITY
 {
   private:
 
-  float KMPH = 0;
-  float MPH = 0;
-  float METERS_PER_SECOND = 0;
+  float KMPH = -1;
+  float MPH = -1;
+  float METERS_PER_SECOND = -1;
 
-  string KMPH_DISP;
-  string MPH_DISP;
+  string KMPH_DISP = "X";
+  string MPH_DISP = "X";
 
-  unsigned long TIME_STAMP; // Miliseconds.  Fairly loose timings.
+  unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
 
   public:
 
@@ -164,6 +166,9 @@ class AUTOMOBILE_DOORS
 {
   private:
 
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
   bool LF_DOOR_OPEN = false;
   bool RF_DOOR_OPEN = false;
   bool LB_DOOR_OPEN = false;
@@ -175,11 +180,14 @@ class AUTOMOBILE_DOORS
 
   bool HOOD_DOOR_OPEN = false;
 
-  bool AVAILABLE = true;
-
   public:
 
+  void set_source_availability(bool Available);
+  bool available();
+
   void store(int Data);
+  bool store_from_alt_source(int Door, bool Value);
+
   bool lf_door_open();
   bool rf_door_open();
   bool lb_door_open();
@@ -187,17 +195,22 @@ class AUTOMOBILE_DOORS
   bool hatchback_door_open();
   //bool moonroof_door_open();
   bool hood_door_open();
-
-  bool door_switch_available();
 };
 
 class AUTOMOBILE_GUAGES
 {
   private:
-  int COOLANT = 0;
-  string COLLANT_DISP = "";
+
+  bool CODED_AVAILABILITY = false;
+  bool SOURCE_AVAILABILITY = false;
+
+  int COOLANT = -1;
+  string COLLANT_DISP = "X";
 
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store_coolant(int Value);
   int val_coolant();
@@ -208,16 +221,23 @@ class AUTOMOBILE_GUAGES
 class AUTOMOBILE_FUEL
 {
   private:
-  float CONSUMED = 0;
-  string CONSUMED_DISP = "";
 
-  float PERCENTAGE = 0;
-  string PERCENTAGE_DISP = "";
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
 
-  float LEVEL = 0;
-  string LEVEL_DISP = "";
+  float CONSUMED = -1;
+  string CONSUMED_DISP = "X";
+
+  float PERCENTAGE = -1;
+  string PERCENTAGE_DISP = "X";
+
+  float LEVEL = -1;
+  string LEVEL_DISP = "X";
 
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store_consumed(int Consumed);
   void store_percentage(int Percentage);
@@ -236,24 +256,29 @@ class AUTOMOBILE_FUEL
 class AUTOMOBILE_INDICATORS
 {
   private:
+
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
   bool LIGHTS_ON = false;
   bool LIGHTS_HIGH_BEAM_ON;
-  int LIGHTS_POS = 0;
+  int LIGHTS_POS = -1;
   bool LIGHT_SWITCH = false;
-  string LIGHTS_DESC = "";
+  string LIGHTS_DESC = "X";
 
   bool PARKING_BRAKE = false;
-  string PARKING_BRAKE_DESC = "";
+  string PARKING_BRAKE_DESC = "X";
 
   bool IGNITION = false;
-  string IGNITION_DESC = "";
-
-  bool AVAILABLE = true;
+  string IGNITION_DESC = "X";
 
   bool CRUISE_CONTROL = false;
-  float CRUISE_CONTROL_SPEED = 0;
+  float CRUISE_CONTROL_SPEED = -1;
 
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store_lights(int Lights);
   void store_lights_high_beam(int Data_1);
@@ -273,8 +298,6 @@ class AUTOMOBILE_INDICATORS
   bool ignition();
   string val_ignition();
 
-  bool light_switch_available();
-
   bool cruise_control();
   float cruise_control_speed();
 };
@@ -282,11 +305,18 @@ class AUTOMOBILE_INDICATORS
 class AUTOMOBILE_POWER
 {
   private:
+
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
   int VAL_LOAD;
 
   string LOAD;
 
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store(int Load);
   int val_load();
@@ -296,13 +326,20 @@ class AUTOMOBILE_POWER
 class AUTOMOBILE_RPM
 {
   private:
-  int VAL_RPM;
-  string RPM;
 
-  int VAL_RPM_2;  //  unknown
-  string RPM_2;   //  unknown
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
+  int VAL_RPM = -1;
+  string RPM = "X";
+
+  int VAL_RPM_2 = -1;  //  unknown
+  string RPM_2 = "X";   //  unknown
 
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store(int Rpm);
   int val_rpm();
@@ -317,18 +354,24 @@ class AUTOMOBILE_STEERING
 {
   private:
 
-  float PREVIOUS_STEERING_WHEEL_ANGLE = 0;
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
 
-  int REPORTED_STEERING_WHEEL_ANGLE = 0;
+  float PREVIOUS_STEERING_WHEEL_ANGLE = -1;
+
+  int REPORTED_STEERING_WHEEL_ANGLE = -1;
   int CLOCKWISE = -1;
   bool LEFT_OF_CENTER = false;
 
-  float VAL_STEERING_WHEEL_ANGLE;
-  string STEERING_WHEEL_ANGLE;
-  string DIRECTION = "XX";
-  string LEFT_OF_CENTER_DISP = "XX";
+  float VAL_STEERING_WHEEL_ANGLE = -1;
+  string STEERING_WHEEL_ANGLE = "X";
+  string DIRECTION = "X";
+  string LEFT_OF_CENTER_DISP = "X";
 
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store_steering_wheel_angle(int Angle, int Direction);
   float val_steering_wheel_angle();
@@ -343,6 +386,9 @@ class AUTOMOBILE_VELOCITY
 {
   private:
 
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
   float MULTIPLIER = 1;
 
   public:
@@ -356,6 +402,9 @@ class AUTOMOBILE_VELOCITY
   VELOCITY SPEED_LB_TIRE;
   VELOCITY SPEED_RB_TIRE;
 
+  void set_source_availability(bool Available);
+  bool available();
+
   void store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time);
   void store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time);
   void store_LF(int mps, unsigned long tmeFrame_Time);
@@ -368,24 +417,35 @@ class AUTOMOBILE_VELOCITY
 
 class AUTOMOBILE_TEMPATURE
 {
+  private:
+
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
   public:
 
-  float CELSIUS = 0;
-  float FAHRENHEIT = 0;
+  float AUTOMOBILE_TEMPATURE = -1;
+  float FAHRENHEIT = -1;
+
+  void set_source_availability(bool Available);
+  bool available();
 };
 
 class AUTOMOBILE_TRANSMISSION_GEAR
 {
   private:
+
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
   
   // Transmission Info
-  int REPORTED = 0;
-  string SHORT_DESC = "";
-  string LONG_DESC = "";
+  int REPORTED = -1;
+  string SHORT_DESC = "X";
+  string LONG_DESC = "X";
 
   // Transmission Gear Selection
-  int GEAR_SELECTION_REPORTED = 0;
-  string GEAR_SELECTION_LONG_DESC = "";
+  int GEAR_SELECTION_REPORTED = -1;
+  string GEAR_SELECTION_LONG_DESC = "X";
   bool GEAR_SELECTION_PARK = false;
   bool GEAR_SELECTION_REVERSE = false;
   bool GEAR_SELECTION_NEUTRAL = false;
@@ -393,6 +453,9 @@ class AUTOMOBILE_TRANSMISSION_GEAR
   bool GEAR_SELECTION_LOW = false;
   
   public:
+
+  void set_source_availability(bool Available);
+  bool available();
 
   void store(int gear);
   int reported();
@@ -469,9 +532,9 @@ class AUTOMOBILE_AVAILABILITY
 
   public:
 
-  void check_for_live_data(unsigned long tmeFrame_Time);
+  bool check_for_live_data(unsigned long tmeFrame_Time);
 
-  void set_active(unsigned long tmeFrame_Time);
+  bool set_active(AUTOMOBILE_TRANSLATED_DATA &Status, bool Available, unsigned long tmeFrame_Time);
 
   bool is_active();
 

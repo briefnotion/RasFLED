@@ -48,7 +48,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   SYMBOL_CAR_LIGHTS.PROP.COLORS_ON = true;
   //SYMBOL_CAR_LIGHTS.set_color(COLOR_BLACK, COLOR_WHITE);
   SYMBOL_CAR_LIGHTS.PROP.JUSTIFICATION_LEFT = true;
-  SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_off());
+  //SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_off());
 
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.POSX = 3;
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.POSY = 2 + 6;
@@ -204,8 +204,8 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   LIGHTS_STATUS.PROP.POSY = 21;
   LIGHTS_STATUS.PROP.SIZEX = 20;
   LIGHTS_STATUS.PROP.COLORS_ON = true;
-  LIGHTS_STATUS.PROP.BCOLOR = COLOR_BLACK;
-  LIGHTS_STATUS.PROP.COLOR = COLOR_WHITE;
+  //LIGHTS_STATUS.PROP.BCOLOR = COLOR_BLACK;
+  //LIGHTS_STATUS.PROP.COLOR = COLOR_WHITE;
   LIGHTS_STATUS.PROP.UPDATE_INDICATION = true;
   LIGHTS_STATUS.PROP.JUSTIFICATION_LEFT = true;
   
@@ -213,8 +213,8 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   FUEL_LEVEL.PROP.POSY = 22;
   FUEL_LEVEL.PROP.SIZEX = 20;
   FUEL_LEVEL.PROP.COLORS_ON = true;
-  FUEL_LEVEL.PROP.BCOLOR = COLOR_BLACK;
-  FUEL_LEVEL.PROP.COLOR = COLOR_WHITE;
+  //FUEL_LEVEL.PROP.BCOLOR = COLOR_BLACK;
+  //FUEL_LEVEL.PROP.COLOR = COLOR_WHITE;
   FUEL_LEVEL.PROP.JUSTIFICATION_LEFT = true;
   
   CRUIS_CONTROL.PROP.POSX = 3;
@@ -263,10 +263,10 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   // Update Door Information
 
   // Get value
-  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(0).value, LEFT_BACK_DOOR_VAL));
-  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(1).value, LEFT_FRONT_DOOR_VAL));
-  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(2).value, RIGHT_BACK_DOOR_VAL));
-  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CONFIG.vSWITCH_PIN_MAP.at(3).value, RIGHT_FRONT_DOOR_VAL));
+  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.DOORS.lb_door_open(), LEFT_BACK_DOOR_VAL));
+  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.DOORS.lf_door_open(), LEFT_FRONT_DOOR_VAL));
+  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.DOORS.rb_door_open(), RIGHT_BACK_DOOR_VAL));
+  door_changed.catch_truth(set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.DOORS.rf_door_open(), RIGHT_FRONT_DOOR_VAL));
 
   if (door_changed.has_truth() == true)
   {
@@ -372,6 +372,10 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   {
     FUEL_LEVEL.set_color(COLOR_RED, COLOR_WHITE);
   }
+
+  //-----------
+
+  CHANGED = true;
 }
 
 bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
@@ -1008,123 +1012,115 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   AD_UNKNOWN.set_text(sdSysData.CAR_INFO.DATA.AD_UNKNOWN.ORIG);
 
-  if (sdSysData.CAR_INFO.active() == true)
+  //-----------
+  // Large Velocity
+  if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() >= 10)
   {
-    //-----------
-    // Large Velocity
-    if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() >= 10)
-    {
-      LARGE_SPEED_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
-    }
-    else
-    {
-      LARGE_SPEED_10.set_text(NUMBERS_6X5.space(), tmeFrame_Time);
-    }
-
-    LARGE_SPEED_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
-
-    if (sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control() == true)
-    {
-      if (is_within(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph(), 
-                    sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control_speed() - .5,
-                    sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control_speed() + .5) == true)
-      {
-        LARGE_SPEED_1.set_color(COLOR_GREEN, COLOR_BLACK);
-        LARGE_SPEED_10.set_color(COLOR_GREEN, COLOR_BLACK);
-      }
-      else
-      {
-        LARGE_SPEED_1.set_color(COLOR_YELLOW, COLOR_BLACK);
-        LARGE_SPEED_10.set_color(COLOR_YELLOW, COLOR_BLACK);
-      }
-    }
-    else
-    {
-      LARGE_SPEED_1.set_color(COLOR_WHITE, COLOR_BLACK);
-      LARGE_SPEED_10.set_color(COLOR_WHITE, COLOR_BLACK);
-    }
-
-    //-----------
-    // Large ACCELERATION
-    LARGE_ACCELERATION_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
-    LARGE_ACCELERATION_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
-
-    if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -.3)
-    {
-      LARGE_ACCELERATION_DESC.set_color(COLOR_WHITE, COLOR_BLUE);
-    }
-    else
-    {
-      LARGE_ACCELERATION_DESC.set_color(COLOR_YELLOW, COLOR_BLACK);
-    }
-
-    if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -5 && sdSysData.CAR_INFO.CALCULATED.acceleration() <= 3)
-    {
-      LARGE_ACCELERATION_10.set_color(COLOR_WHITE, COLOR_BLACK);
-      LARGE_ACCELERATION_1.set_color(COLOR_WHITE, COLOR_BLACK);
-      LARGE_ACCELERATION_MIN.set_color(COLOR_WHITE, COLOR_BLACK);
-      LARGE_ACCELERATION_MAX.set_color(COLOR_WHITE, COLOR_BLACK);
-    }
-    else
-    {
-      LARGE_ACCELERATION_10.set_color(COLOR_YELLOW, COLOR_BLACK);
-      LARGE_ACCELERATION_1.set_color(COLOR_YELLOW, COLOR_BLACK);
-      LARGE_ACCELERATION_MIN.set_color(COLOR_YELLOW, COLOR_BLACK);
-      LARGE_ACCELERATION_MAX.set_color(COLOR_YELLOW, COLOR_BLACK);
-    }
-
-    LARGE_ACCELERATION_MIN.set_text(to_string_round_to_nth(abs(sdSysData.CAR_INFO.CALCULATED.ACCELERATION_MIN_MAX_HISTORY.min_float()), 1));
-    LARGE_ACCELERATION_MAX.set_text(to_string_round_to_nth(sdSysData.CAR_INFO.CALCULATED.ACCELERATION_MIN_MAX_HISTORY.max_float(), 1));
-    
-    //-----------
-    // Large GEAR
-    
-    LARGE_GEAR_1.set_text(NUMBERS_6X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeFrame_Time);
-
-    //-----------
-
-    ACCELERATION.set_text(to_string_round_to_nth(abs(sdSysData.CAR_INFO.CALCULATED.acceleration()), 2));
-
-    //-----------
-
-    SPEEDO.update(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph(), tmeFrame_Time);
-    TACHO.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeFrame_Time);
-
-    //-----------
-
-    STEERING_WHEEL.update(sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle(), tmeFrame_Time);
-    STEERING_WHEEL_ANGLE.set_text(sdSysData.CAR_INFO.STATUS.STEERING.left_of_center() + " " + 
-                                    sdSysData.CAR_INFO.STATUS.STEERING.turning_direction() + " " + 
-                                    sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
-    //-----------
-
-    DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, sdSysData.CAR_INFO.DATA.AD_130.DATA[6], sdSysData.CAR_INFO.DATA.AD_130.DATA[7], "67", tmeFrame_Time);
-
-    DATA_SET_02.update(sdSysData.CAR_INFO.DATA.AD_D0, sdSysData.CAR_INFO.DATA.AD_D0.DATA[6], sdSysData.CAR_INFO.DATA.AD_D0.DATA[7], 
-                        "[1] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_D0.DATA[1]), tmeFrame_Time);
-
-    DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, sdSysData.CAR_INFO.DATA.AD_200.DATA[6], sdSysData.CAR_INFO.DATA.AD_200.DATA[3], to_string(sdSysData.CAR_INFO.DATA.AD_200.DATA[7] / 3), tmeFrame_Time);
-
-    DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "67", tmeFrame_Time);
-
-    DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_C8, sdSysData.CAR_INFO.DATA.AD_C8.DATA[1], sdSysData.CAR_INFO.DATA.AD_C8.DATA[2], "12", tmeFrame_Time);
-
-    DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_400, sdSysData.CAR_INFO.DATA.AD_400.DATA[6], sdSysData.CAR_INFO.DATA.AD_400.DATA[7], 
-                       "[0] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_400.DATA[0]), tmeFrame_Time);
-    
-    DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_360, sdSysData.CAR_INFO.DATA.AD_360.DATA[6], sdSysData.CAR_INFO.DATA.AD_360.DATA[7], "67", tmeFrame_Time);
-
-    DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_100, sdSysData.CAR_INFO.DATA.AD_100.DATA[5], sdSysData.CAR_INFO.DATA.AD_100.DATA[6], "56", tmeFrame_Time);
-
-    //-----------
+    LARGE_SPEED_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
   }
   else
   {
-    LARGE_SPEED_1.set_text(NUMBERS_6X5.number(-1), tmeFrame_Time);
-    LARGE_SPEED_10.set_text(NUMBERS_6X5.number(-1), tmeFrame_Time);
+    LARGE_SPEED_10.set_text(NUMBERS_6X5.space(), tmeFrame_Time);
   }
 
-  sdSysData.CAR_INFO.CHANGED = false;
+  LARGE_SPEED_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
+
+  if (sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control() == true)
+  {
+    if (is_within(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph(), 
+                  sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control_speed() - .5,
+                  sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control_speed() + .5) == true)
+    {
+      LARGE_SPEED_1.set_color(COLOR_GREEN, COLOR_BLACK);
+      LARGE_SPEED_10.set_color(COLOR_GREEN, COLOR_BLACK);
+    }
+    else
+    {
+      LARGE_SPEED_1.set_color(COLOR_YELLOW, COLOR_BLACK);
+      LARGE_SPEED_10.set_color(COLOR_YELLOW, COLOR_BLACK);
+    }
+  }
+  else
+  {
+    LARGE_SPEED_1.set_color(COLOR_WHITE, COLOR_BLACK);
+    LARGE_SPEED_10.set_color(COLOR_WHITE, COLOR_BLACK);
+  }
+
+  //-----------
+  // Large ACCELERATION
+  LARGE_ACCELERATION_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
+  LARGE_ACCELERATION_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
+
+  if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -.3)
+  {
+    LARGE_ACCELERATION_DESC.set_color(COLOR_WHITE, COLOR_BLUE);
+  }
+  else
+  {
+    LARGE_ACCELERATION_DESC.set_color(COLOR_YELLOW, COLOR_BLACK);
+  }
+
+  if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -5 && sdSysData.CAR_INFO.CALCULATED.acceleration() <= 3)
+  {
+    LARGE_ACCELERATION_10.set_color(COLOR_WHITE, COLOR_BLACK);
+    LARGE_ACCELERATION_1.set_color(COLOR_WHITE, COLOR_BLACK);
+    LARGE_ACCELERATION_MIN.set_color(COLOR_WHITE, COLOR_BLACK);
+    LARGE_ACCELERATION_MAX.set_color(COLOR_WHITE, COLOR_BLACK);
+  }
+  else
+  {
+    LARGE_ACCELERATION_10.set_color(COLOR_YELLOW, COLOR_BLACK);
+    LARGE_ACCELERATION_1.set_color(COLOR_YELLOW, COLOR_BLACK);
+    LARGE_ACCELERATION_MIN.set_color(COLOR_YELLOW, COLOR_BLACK);
+    LARGE_ACCELERATION_MAX.set_color(COLOR_YELLOW, COLOR_BLACK);
+  }
+
+  LARGE_ACCELERATION_MIN.set_text(to_string_round_to_nth(abs(sdSysData.CAR_INFO.CALCULATED.ACCELERATION_MIN_MAX_HISTORY.min_float()), 1));
+  LARGE_ACCELERATION_MAX.set_text(to_string_round_to_nth(sdSysData.CAR_INFO.CALCULATED.ACCELERATION_MIN_MAX_HISTORY.max_float(), 1));
+  
+  //-----------
+  // Large GEAR
+  
+  LARGE_GEAR_1.set_text(NUMBERS_6X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeFrame_Time);
+
+  //-----------
+
+  ACCELERATION.set_text(to_string_round_to_nth(abs(sdSysData.CAR_INFO.CALCULATED.acceleration()), 2));
+
+  //-----------
+
+  SPEEDO.update(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph(), tmeFrame_Time);
+  TACHO.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeFrame_Time);
+
+  //-----------
+
+  STEERING_WHEEL.update(sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle(), tmeFrame_Time);
+  STEERING_WHEEL_ANGLE.set_text(sdSysData.CAR_INFO.STATUS.STEERING.left_of_center() + " " + 
+                                  sdSysData.CAR_INFO.STATUS.STEERING.turning_direction() + " " + 
+                                  sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
+  //-----------
+
+  DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, sdSysData.CAR_INFO.DATA.AD_130.DATA[6], sdSysData.CAR_INFO.DATA.AD_130.DATA[7], "67", tmeFrame_Time);
+
+  DATA_SET_02.update(sdSysData.CAR_INFO.DATA.AD_D0, sdSysData.CAR_INFO.DATA.AD_D0.DATA[6], sdSysData.CAR_INFO.DATA.AD_D0.DATA[7], 
+                      "[1] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_D0.DATA[1]), tmeFrame_Time);
+
+  DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, sdSysData.CAR_INFO.DATA.AD_200.DATA[6], sdSysData.CAR_INFO.DATA.AD_200.DATA[3], to_string(sdSysData.CAR_INFO.DATA.AD_200.DATA[7] / 3), tmeFrame_Time);
+
+  DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "67", tmeFrame_Time);
+
+  DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_C8, sdSysData.CAR_INFO.DATA.AD_C8.DATA[1], sdSysData.CAR_INFO.DATA.AD_C8.DATA[2], 
+                      "[3]" + to_string_binary(sdSysData.CAR_INFO.DATA.AD_C8.DATA[3]), tmeFrame_Time);
+
+  DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_400, sdSysData.CAR_INFO.DATA.AD_400.DATA[6], sdSysData.CAR_INFO.DATA.AD_400.DATA[7], 
+                      "[0] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_400.DATA[0]), tmeFrame_Time);
+  
+  DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_360, sdSysData.CAR_INFO.DATA.AD_360.DATA[6], sdSysData.CAR_INFO.DATA.AD_360.DATA[7], "67", tmeFrame_Time);
+
+  DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_100, sdSysData.CAR_INFO.DATA.AD_100.DATA[5], sdSysData.CAR_INFO.DATA.AD_100.DATA[6], "56", tmeFrame_Time);
+
+  //-----------
+
   CHANGED = true;
 }
 

@@ -16,6 +16,20 @@
 
 //-----------
 
+bool check_availability(bool Coded_Availability, bool Source_Availabilty)
+{
+  if (Coded_Availability == true && Source_Availabilty == true)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+//-----------
+
 void VELOCITY::store(float kmph, unsigned long tmeFrame_Time)
 {
   KMPH = kmph;  
@@ -74,6 +88,16 @@ unsigned long VELOCITY::time_stamp()
 
 //-----------
 
+void AUTOMOBILE_DOORS::set_source_availability(bool Available)
+{
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_DOORS::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
+}
+
 void AUTOMOBILE_DOORS::store(int Data)
 {
   // AD_360 also contains info on the engine running status  
@@ -89,6 +113,28 @@ void AUTOMOBILE_DOORS::store(int Data)
 
   //1[2]
   //MOONROOF_DOOR_OPEN = get_bit_value(Data, 8);
+}
+
+bool AUTOMOBILE_DOORS::store_from_alt_source(int Door, bool Value)
+{
+  TRUTH_CATCH ret_changed;
+  if (Door == 0)
+  {
+    ret_changed.catch_truth(set_bool_with_change_notify(Value, LB_DOOR_OPEN));
+  }
+  else if (Door == 1)
+  {
+    ret_changed.catch_truth(set_bool_with_change_notify(Value, LF_DOOR_OPEN));
+  }
+  else if (Door == 2)
+  {
+    ret_changed.catch_truth(set_bool_with_change_notify(Value, RB_DOOR_OPEN));
+  }
+  else if (Door == 3)
+  {
+    ret_changed.catch_truth(set_bool_with_change_notify(Value, RF_DOOR_OPEN));
+  }
+  return ret_changed.has_truth();
 }
 
 bool AUTOMOBILE_DOORS::lf_door_open()
@@ -128,9 +174,22 @@ bool AUTOMOBILE_DOORS::hood_door_open()
   return HOOD_DOOR_OPEN;
 }
 
-bool AUTOMOBILE_DOORS::door_switch_available()
+//-----------
+
+void AUTOMOBILE_GUAGES::set_source_availability(bool Available)
 {
-  return AVAILABLE;
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    COOLANT = -1;
+    COLLANT_DISP = "X";
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_GUAGES::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_GUAGES::store_coolant(int Value)
@@ -147,6 +206,30 @@ int AUTOMOBILE_GUAGES::val_coolant()
 string AUTOMOBILE_GUAGES::coolant()
 {
   return COLLANT_DISP;
+}
+
+//-----------
+
+void AUTOMOBILE_FUEL::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    CONSUMED = -1;
+    CONSUMED_DISP = "X";
+
+    PERCENTAGE = -1;
+    PERCENTAGE_DISP = "X";
+
+    LEVEL = -1;
+    LEVEL_DISP = "X";
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_FUEL::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_FUEL::store_consumed(int Consumed)
@@ -198,6 +281,30 @@ float AUTOMOBILE_FUEL::val_level()
 string AUTOMOBILE_FUEL::level()
 {
   return LEVEL_DISP;
+}
+
+//-----------
+
+void AUTOMOBILE_INDICATORS::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    LIGHTS_POS = -1;
+    LIGHTS_DESC = "X";
+
+    PARKING_BRAKE_DESC = "X";
+
+    IGNITION_DESC = "X";
+
+    CRUISE_CONTROL_SPEED = -1;
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_INDICATORS::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_INDICATORS::store_lights(int Lights)
@@ -331,11 +438,6 @@ string AUTOMOBILE_INDICATORS::val_ignition()
   return IGNITION_DESC;
 }
 
-bool AUTOMOBILE_INDICATORS::light_switch_available()
-{
-  return AVAILABLE;
-}
-
 bool AUTOMOBILE_INDICATORS::cruise_control()
 {
   return CRUISE_CONTROL;
@@ -344,6 +446,24 @@ bool AUTOMOBILE_INDICATORS::cruise_control()
 float AUTOMOBILE_INDICATORS::cruise_control_speed()
 {
   return CRUISE_CONTROL_SPEED;
+}
+
+//-----------
+
+void AUTOMOBILE_POWER::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    VAL_LOAD = -1;
+    LOAD = "X";
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_POWER::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_POWER::store(int Load)
@@ -362,6 +482,27 @@ int AUTOMOBILE_POWER::val_load()
 string AUTOMOBILE_POWER::load()
 {
   return LOAD;
+}
+
+//-----------
+
+void AUTOMOBILE_RPM::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    VAL_RPM = -1;
+    RPM = "X";
+
+    VAL_RPM_2 = -1;
+    RPM_2 = "X";
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_RPM::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_RPM::store(int Rpm)
@@ -398,6 +539,28 @@ int AUTOMOBILE_RPM::val_rpm_2()
 string AUTOMOBILE_RPM::rpm_2()
 {
   return RPM_2;
+}
+
+//-----------
+
+void AUTOMOBILE_STEERING::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    PREVIOUS_STEERING_WHEEL_ANGLE = -1;
+    REPORTED_STEERING_WHEEL_ANGLE = -1;
+    VAL_STEERING_WHEEL_ANGLE = -1;
+    STEERING_WHEEL_ANGLE = "X";
+    DIRECTION = "X";
+    LEFT_OF_CENTER_DISP = "X";
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_STEERING::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_STEERING::store_steering_wheel_angle(int Angle, int Direction)
@@ -489,6 +652,28 @@ string AUTOMOBILE_STEERING::left_of_center()
   return LEFT_OF_CENTER_DISP;
 }
 
+//-----------
+
+void AUTOMOBILE_VELOCITY::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    SPEED_TRANS.store(-1, 0);
+    SPEED_DASH.store(-1, 0);
+    SPEED_LF_TIRE.store(-1, 0);
+    SPEED_RF_TIRE.store(-1, 0);
+    SPEED_LB_TIRE.store(-1, 0);
+    SPEED_RB_TIRE.store(-1, 0);
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_VELOCITY::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
+}
+
 // Multiplier source unknown.  not calculating correctly.
 // Possibly wrong spec tire size.  How the car knows is beyond me.
 void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time)
@@ -528,6 +713,51 @@ void AUTOMOBILE_VELOCITY::store_RB(int mps, unsigned long tmeFrame_Time)
 float AUTOMOBILE_VELOCITY::multiplier()
 {
   return MULTIPLIER;
+}
+
+//-----------
+
+void AUTOMOBILE_TEMPATURE::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    AUTOMOBILE_TEMPATURE = -1;
+    FAHRENHEIT = -1;
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_TEMPATURE::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
+}
+
+//-----------
+
+void AUTOMOBILE_TRANSMISSION_GEAR::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    REPORTED = -1;
+    SHORT_DESC = "X";
+    LONG_DESC = "X";
+
+    GEAR_SELECTION_REPORTED = -1;
+    GEAR_SELECTION_LONG_DESC = "X";
+    GEAR_SELECTION_PARK = false;
+    GEAR_SELECTION_REVERSE = false;
+    GEAR_SELECTION_NEUTRAL = false;
+    GEAR_SELECTION_DRIVE = false;
+    GEAR_SELECTION_LOW = false;
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_TRANSMISSION_GEAR::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
 }
 
 void AUTOMOBILE_TRANSMISSION_GEAR::store(int gear)
@@ -1099,18 +1329,72 @@ void AUTOMOBILE::parse(string Line)
   }
 }
 
-void AUTOMOBILE_AVAILABILITY::check_for_live_data(unsigned long tmeFrame_Time)
+bool AUTOMOBILE_AVAILABILITY::check_for_live_data(unsigned long tmeFrame_Time)
 {
   if (ACTIVITY_TIMER.ping_down(tmeFrame_Time) == false)
   {
-    ACTIVE = false;
+    return false;
+  }
+  else
+  {
+    return true;
   }
 }
 
-void AUTOMOBILE_AVAILABILITY::set_active(unsigned long tmeFrame_Time)
+bool AUTOMOBILE_AVAILABILITY::set_active(AUTOMOBILE_TRANSLATED_DATA &Status, bool Available, unsigned long tmeFrame_Time)
 {
-  ACTIVITY_TIMER.ping_up(tmeFrame_Time, 500);
-  ACTIVE = true;
+  bool ret_changed = false;
+
+  if (Available == false)
+  {
+    // Data not available, but was before.
+    if (ACTIVE == true)
+    {
+      // turn everything off
+      Status.STEERING.set_source_availability(false);
+      Status.GEAR.set_source_availability(false);
+      Status.SPEED.set_source_availability(false);
+      Status.COOLANT_TEMP.set_source_availability(false);
+      Status.RPM.set_source_availability(false);
+      Status.POWER.set_source_availability(false);
+      Status.INDICATORS.set_source_availability(false);
+      Status.FUEL.set_source_availability(false);
+      Status.DOORS.set_source_availability(false);
+      Status.GUAGES.set_source_availability(false);
+
+      ACTIVE = false;
+      ret_changed = true;
+    }
+  }
+  else
+  {
+    // Data available.
+    
+    // Restart the timeout timer
+
+    ACTIVITY_TIMER.ping_up(tmeFrame_Time, 500);
+
+    // Data available, but wasnt before.
+    if (ACTIVE == false)
+    {
+      // turn everything on
+      Status.STEERING.set_source_availability(true);
+      Status.GEAR.set_source_availability(true);
+      Status.SPEED.set_source_availability(true);
+      Status.COOLANT_TEMP.set_source_availability(true);
+      Status.RPM.set_source_availability(true);
+      Status.POWER.set_source_availability(true);
+      Status.INDICATORS.set_source_availability(true);
+      Status.FUEL.set_source_availability(true);
+      Status.DOORS.set_source_availability(true);
+      Status.GUAGES.set_source_availability(true);
+
+      ACTIVE = true;
+      ret_changed = true;
+    }    
+  }
+  
+  return ret_changed;
 }
 
 bool AUTOMOBILE_AVAILABILITY::is_active()
@@ -1125,7 +1409,13 @@ bool AUTOMOBILE::active()
 
 void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
 {
-  AVAILABILITY.check_for_live_data(tmeFrame_Time);
+  if (AVAILABILITY.check_for_live_data(tmeFrame_Time) == false)
+  {
+   if (AVAILABILITY.set_active(STATUS, false, tmeFrame_Time) == true)
+   {
+    CHANGED = true;
+   }
+  }
 
   if (Com_Port.READ_FROM_COMM.size() > 0)
   {
@@ -1142,12 +1432,11 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
         //  Compute on all data but can be processor intensive.
         //compute_high();
 
-        AVAILABILITY.set_active(tmeFrame_Time);
-
+        AVAILABILITY.set_active(STATUS, true, tmeFrame_Time);
+        CHANGED = true;
       }
     }
 
-    CHANGED = true;
     Com_Port.READ_FROM_COMM.clear();
   }
 }
