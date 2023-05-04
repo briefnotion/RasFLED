@@ -31,7 +31,7 @@ class AUTOMOBILE_DATA_LINE
 {
   public:
 
-  string ORIG = "X";
+  string ORIG = "";
 
   int ID = -1;
 
@@ -261,6 +261,8 @@ class AUTOMOBILE_INDICATORS
   bool SOURCE_AVAILABILITY = false;
 
   bool LIGHTS_ON = false;
+  bool LIGHTS_HEADLIGHTS_ON = false;
+  bool LIGHTS_PARKING_ON = false;
   bool LIGHTS_HIGH_BEAM_ON;
   int LIGHTS_POS = -1;
   bool LIGHT_SWITCH = false;
@@ -277,6 +279,9 @@ class AUTOMOBILE_INDICATORS
 
   public:
 
+  void process();
+  //  To be called at caculate to set headlight and paring status.
+
   void set_source_availability(bool Available);
   bool available();
 
@@ -290,7 +295,8 @@ class AUTOMOBILE_INDICATORS
   int val_lights_pos();
   string lights_switch();
   bool val_lights_high_beam_on();
-  bool val_lights_on();
+  bool val_lights_headlights_on();
+  bool val_lights_parking_on();
 
   bool val_parking_brake();
   string parking_brake();
@@ -488,6 +494,36 @@ class AUTOMOBILE_TRANSLATED_DATA
   AUTOMOBILE_GUAGES GUAGES;
 };
 
+class TIRE_TTL
+{  
+  // Hardcoding Tire Life Span
+  // +0.03 m/s to -0.15 mi/hr, difference of .18 mi/hr, 0 is transmission registered normal tire size.
+  // +0.01341 m/s to -0.06705 mi/hr, difference of .18 mi/hr, 0 is transmission registered normal tire size.
+
+  private:
+
+  MIN_MAX_TIME WHEEL_SPEED_OFFSET_MEAN;
+  VELOCITY WHEEL_SPEED_OFFSET;
+
+  float LIFE_PERCENTAGE = 0;
+
+  // values in meteres per second
+  float V_MIDDLE_OFFSET = 0.01341;
+  float V_HIGH = 0.08;
+
+  public:
+
+  void first_run();
+
+  void calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time);
+
+  int val_life_percentage();
+
+  string life_percentage();
+
+  VELOCITY wheel_speed_offset();
+};
+
 class AUTOMOBILE_CALCULATED
 {
   private:
@@ -500,22 +536,17 @@ class AUTOMOBILE_CALCULATED
 
   public:
 
-  VELOCITY LF_WHEEL_SPEED_OFFSET;
-  VELOCITY RF_WHEEL_SPEED_OFFSET;
-  VELOCITY LB_WHEEL_SPEED_OFFSET;
-  VELOCITY RB_WHEEL_SPEED_OFFSET;
-
-  MIN_MAX_TIME LF_WHEEL_SPEED_OFFSET_MEAN;
-  MIN_MAX_TIME RF_WHEEL_SPEED_OFFSET_MEAN;
-  MIN_MAX_TIME LB_WHEEL_SPEED_OFFSET_MEAN;
-  MIN_MAX_TIME RB_WHEEL_SPEED_OFFSET_MEAN;
+  TIRE_TTL LF_TTL;
+  TIRE_TTL RF_TTL;
+  TIRE_TTL LB_TTL;
+  TIRE_TTL RB_TTL;
 
   VELOCITY PREVIOUS_VELOCITY;
   
   MIN_MAX_TIME ACCELERATION_MIN_MAX_HISTORY;
   MIN_MAX_TIME ACCELERATION_QUICK_MEAN_HISTORY;
 
-  void compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time);
+  void compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsigned long tmeFrame_Time);
   // Low level Compute not requiring calculation on all data.
   //  Fast but not fully acurate.
   //  Currently call just before the data is displayed.

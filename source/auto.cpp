@@ -285,6 +285,29 @@ string AUTOMOBILE_FUEL::level()
 
 //-----------
 
+void AUTOMOBILE_INDICATORS::process()
+{
+  // Condition Headlights On
+  if (LIGHTS_HIGH_BEAM_ON == true || LIGHTS_POS == 2 || (LIGHTS_POS == 3 && LIGHTS_ON == true))
+  {
+    LIGHTS_HEADLIGHTS_ON = true;
+  }
+  else
+  {
+    LIGHTS_HEADLIGHTS_ON = false;
+  }
+
+  // Condition Parking Lights On
+  if (LIGHTS_POS == 1 || LIGHTS_POS == 2 || (LIGHTS_POS == 3 && LIGHTS_ON == true))
+  {
+    LIGHTS_PARKING_ON = true;
+  }
+  else
+  {
+    LIGHTS_PARKING_ON = false;
+  }
+}
+
 void AUTOMOBILE_INDICATORS::set_source_availability(bool Available)
 {
   if (SOURCE_AVAILABILITY == true && Available == false)
@@ -349,7 +372,6 @@ void AUTOMOBILE_INDICATORS::store_lights_high_beam(int Data_1)
 
 void AUTOMOBILE_INDICATORS::store_on(int Light_Bits)
 {
-
   // Lights Actually On      1st bit
   //  c8 [3] 	b1 lights on	10110001
 	//          b0 lights off 10110000
@@ -359,7 +381,7 @@ void AUTOMOBILE_INDICATORS::store_on(int Light_Bits)
   // B0 or B1 - OFF 10110000
   // F0 or F1 - On  11110000
   // bit
-  if (get_bit_value(Light_Bits, 64))
+  if (get_bit_value(Light_Bits, 64) == false)
   {
     PARKING_BRAKE = false;
     PARKING_BRAKE_DESC = "PARKING BRAKE OFF";
@@ -413,9 +435,14 @@ bool AUTOMOBILE_INDICATORS::val_lights_high_beam_on()
   return LIGHTS_HIGH_BEAM_ON;
 }
 
-bool AUTOMOBILE_INDICATORS::val_lights_on()
+bool AUTOMOBILE_INDICATORS::val_lights_headlights_on()
 {
-  return LIGHTS_ON;
+  return LIGHTS_HEADLIGHTS_ON;
+}
+
+bool AUTOMOBILE_INDICATORS::val_lights_parking_on()
+{
+  return LIGHTS_PARKING_ON;
 }
 
 bool AUTOMOBILE_INDICATORS::val_parking_brake()
@@ -942,22 +969,49 @@ bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_low()
 
 //-----------
 
-void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsigned long tmeFrame_Time)
+void TIRE_TTL::first_run()
 {
+  WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
+  WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+}
+
+void TIRE_TTL::calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time)
+{
+  WHEEL_SPEED_OFFSET_MEAN.put_value(Transmission_Speed.val_kmph() - Tire_Speed.val_kmph(), tmeFrame_Time);
+  WHEEL_SPEED_OFFSET.store(WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+
+  LIFE_PERCENTAGE = ((V_HIGH - V_MIDDLE_OFFSET - WHEEL_SPEED_OFFSET.val_meters_per_second()) / V_HIGH);
+}
+
+int TIRE_TTL::val_life_percentage()
+{
+  return LIFE_PERCENTAGE;
+}
+
+string TIRE_TTL::life_percentage()
+{
+  return to_string((int)(LIFE_PERCENTAGE * 100)) + "%%";
+}
+
+VELOCITY TIRE_TTL::wheel_speed_offset()
+{
+  return WHEEL_SPEED_OFFSET;
+}
+
+//-----------
+
+void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsigned long tmeFrame_Time)
+{
+  // Set Lights
+  Status.INDICATORS.process();
+
   // No init process. Set first run variables
   if (FIRST_RUN == true)
   {
-    LF_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
-    LF_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
-
-    RF_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
-    RF_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
-
-    LB_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
-    LB_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
-
-    RB_WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
-    RB_WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+    LF_TTL.first_run();
+    RF_TTL.first_run();
+    LB_TTL.first_run();
+    RB_TTL.first_run();
 
     ACCELERATION_MIN_MAX_HISTORY.PROP.SLICES = 6;
     ACCELERATION_MIN_MAX_HISTORY.PROP.TIME_SPAN = 30000;
@@ -979,15 +1033,10 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA Status, unsig
     {
       if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
       {
-        LF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-        RF_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RF_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-        LB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_LB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-        RB_WHEEL_SPEED_OFFSET_MEAN.put_value(Status.SPEED.SPEED_RB_TIRE.val_kmph() - Status.SPEED.SPEED_TRANS.val_kmph(), tmeFrame_Time);
-        
-        LF_WHEEL_SPEED_OFFSET.store(LF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
-        RF_WHEEL_SPEED_OFFSET.store(RF_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
-        LB_WHEEL_SPEED_OFFSET.store(LB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
-        RB_WHEEL_SPEED_OFFSET.store(RB_WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);  
+        LF_TTL.calculate(Status.SPEED.SPEED_LF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+        RF_TTL.calculate(Status.SPEED.SPEED_RF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+        LB_TTL.calculate(Status.SPEED.SPEED_LB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+        RB_TTL.calculate(Status.SPEED.SPEED_RB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
       }
     }
 

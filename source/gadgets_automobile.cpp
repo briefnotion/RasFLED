@@ -31,6 +31,8 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
 
   GADGET_PANEL.create();
 
+  //-----------
+  // Car Body
   SYMBOL_CAR_BODY.PROP.POSX = 7;
   SYMBOL_CAR_BODY.PROP.POSY = 2;
   SYMBOL_CAR_BODY.PROP.SIZEX = 22;
@@ -40,7 +42,8 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   SYMBOL_CAR_BODY.PROP.JUSTIFICATION_LEFT = true;
   SYMBOL_CAR_BODY.set_text(CAR_SYMBOLS.car_body());
 
-  
+  //-----------
+  // Car Lights
   SYMBOL_CAR_LIGHTS.PROP.POSX = 8;
   SYMBOL_CAR_LIGHTS.PROP.POSY = 1;
   SYMBOL_CAR_LIGHTS.PROP.SIZEX = 13;
@@ -50,6 +53,60 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   SYMBOL_CAR_LIGHTS.PROP.JUSTIFICATION_LEFT = true;
   //SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_off());
 
+  //-----------
+  // Car Parking Lights
+  PARKING_LIGHT_LF.PROP.POSX = 8;
+  PARKING_LIGHT_LF.PROP.POSY = 3;
+  PARKING_LIGHT_LF.PROP.SIZEX = 2;
+  PARKING_LIGHT_LF.PROP.COLORS_ON = true;
+  PARKING_LIGHT_LF.PROP.JUSTIFICATION_LEFT = true;
+  PARKING_LIGHT_LF.set_text("  ");
+
+  PARKING_LIGHT_RF.PROP.POSX = 19;
+  PARKING_LIGHT_RF.PROP.POSY = 3;
+  PARKING_LIGHT_RF.PROP.SIZEX = 2;
+  PARKING_LIGHT_RF.PROP.COLORS_ON = true;
+  PARKING_LIGHT_RF.PROP.JUSTIFICATION_LEFT = true;
+  PARKING_LIGHT_RF.set_text("  ");
+
+  PARKING_LIGHT_LB.PROP.POSX = 8;
+  PARKING_LIGHT_LB.PROP.POSY = 19;
+  PARKING_LIGHT_LB.PROP.SIZEX = 2;
+  PARKING_LIGHT_LB.PROP.COLORS_ON = true;
+  PARKING_LIGHT_LB.PROP.JUSTIFICATION_LEFT = true;
+  PARKING_LIGHT_LB.set_text("  ");
+
+  PARKING_LIGHT_RB.PROP.POSX = 19;
+  PARKING_LIGHT_RB.PROP.POSY = 19;
+  PARKING_LIGHT_RB.PROP.SIZEX = 2;
+  PARKING_LIGHT_RB.PROP.COLORS_ON = true;
+  PARKING_LIGHT_RB.PROP.JUSTIFICATION_LEFT = true;
+  PARKING_LIGHT_RB.set_text("  ");
+
+  //-----------
+  // Parking Break
+  PARKING_BREAK_LEFT.PROP.POSX = 7;
+  PARKING_BREAK_LEFT.PROP.POSY = 17;
+  PARKING_BREAK_LEFT.PROP.SIZEX = 1;
+  PARKING_BREAK_LEFT.PROP.SIZEY = 3;
+  PARKING_BREAK_LEFT.PROP.COLORS_ON = true;
+  PARKING_BREAK_LEFT.PROP.UPDATE_INDICATION = true;
+  //PARKING_BREAK_LEFT.set_color(COLOR_RED, COLOR_WHITE);
+  PARKING_BREAK_LEFT.PROP.JUSTIFICATION_LEFT = true;
+  //PARKING_BREAK_LEFT.set_text("B\nR\nK");
+  
+  PARKING_BREAK_RIGHT.PROP.POSX = 21;
+  PARKING_BREAK_RIGHT.PROP.POSY = 17;
+  PARKING_BREAK_RIGHT.PROP.SIZEX = 1;
+  PARKING_BREAK_RIGHT.PROP.SIZEY = 3;
+  PARKING_BREAK_RIGHT.PROP.COLORS_ON = true;
+  PARKING_BREAK_RIGHT.PROP.UPDATE_INDICATION = true;
+  //PARKING_BREAK_RIGHT.set_color(COLOR_RED, COLOR_WHITE);
+  PARKING_BREAK_RIGHT.PROP.JUSTIFICATION_LEFT = true;
+  //PARKING_BREAK_RIGHT.set_text("B\nR\nK");
+
+  //-----------
+  // Car Doors
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.POSX = 3;
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.POSY = 2 + 6;
   SYMBOL_CAR_DOOR_LEFT_FRONT.PROP.SIZEX = 6;
@@ -135,7 +192,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
 
   //-----------
   // Individual Tire Speeds
-  LF_SPEED.PROP.POSX = 3;
+  LF_SPEED.PROP.POSX = 1;
   LF_SPEED.PROP.POSY = 5;
   LF_SPEED.PROP.SIZEX = 5;
   LF_SPEED.PROP.COLORS_ON = true;
@@ -143,7 +200,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   LF_SPEED.PROP.COLOR = COLOR_WHITE;
   LF_SPEED.PROP.JUSTIFICATION_LEFT = true;
 
-  RF_SPEED.PROP.POSX = 22;
+  RF_SPEED.PROP.POSX = 24;
   RF_SPEED.PROP.POSY = 5;
   RF_SPEED.PROP.SIZEX = 5;
   RF_SPEED.PROP.COLORS_ON = true;
@@ -151,7 +208,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   RF_SPEED.PROP.COLOR = COLOR_WHITE;
   RF_SPEED.PROP.JUSTIFICATION_LEFT = true;
 
-  LB_SPEED.PROP.POSX = 3;
+  LB_SPEED.PROP.POSX = 1;
   LB_SPEED.PROP.POSY = 17;
   LB_SPEED.PROP.SIZEX = 5;
   LB_SPEED.PROP.COLORS_ON = true;
@@ -159,7 +216,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   LB_SPEED.PROP.COLOR = COLOR_WHITE;
   LB_SPEED.PROP.JUSTIFICATION_LEFT = true;
 
-  RB_SPEED.PROP.POSX = 22;
+  RB_SPEED.PROP.POSX = 24;
   RB_SPEED.PROP.POSY = 17;
   RB_SPEED.PROP.SIZEX = 5;
   RB_SPEED.PROP.COLORS_ON = true;
@@ -167,7 +224,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   RB_SPEED.PROP.COLOR = COLOR_WHITE;
   RB_SPEED.PROP.JUSTIFICATION_LEFT = true;
 
-  LF_SPEED_OFFSET.PROP.POSX = 3;
+  LF_SPEED_OFFSET.PROP.POSX = 1;
   LF_SPEED_OFFSET.PROP.POSY = 6;
   LF_SPEED_OFFSET.PROP.SIZEX = 5;
   LF_SPEED_OFFSET.PROP.COLORS_ON = true;
@@ -175,7 +232,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   LF_SPEED_OFFSET.PROP.COLOR = COLOR_WHITE;
   LF_SPEED_OFFSET.PROP.JUSTIFICATION_LEFT = true;
 
-  RF_SPEED_OFFSET.PROP.POSX = 22;
+  RF_SPEED_OFFSET.PROP.POSX = 24;
   RF_SPEED_OFFSET.PROP.POSY = 6;
   RF_SPEED_OFFSET.PROP.SIZEX = 5;
   RF_SPEED_OFFSET.PROP.COLORS_ON = true;
@@ -183,7 +240,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   RF_SPEED_OFFSET.PROP.COLOR = COLOR_WHITE;
   RF_SPEED_OFFSET.PROP.JUSTIFICATION_LEFT = true;
 
-  LB_SPEED_OFFSET.PROP.POSX = 3;
+  LB_SPEED_OFFSET.PROP.POSX = 1;
   LB_SPEED_OFFSET.PROP.POSY = 18;
   LB_SPEED_OFFSET.PROP.SIZEX = 5;
   LB_SPEED_OFFSET.PROP.COLORS_ON = true;
@@ -191,7 +248,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   LB_SPEED_OFFSET.PROP.COLOR = COLOR_WHITE;
   LB_SPEED_OFFSET.PROP.JUSTIFICATION_LEFT = true;
 
-  RB_SPEED_OFFSET.PROP.POSX = 22;
+  RB_SPEED_OFFSET.PROP.POSX = 24;
   RB_SPEED_OFFSET.PROP.POSY = 18;
   RB_SPEED_OFFSET.PROP.SIZEX = 5;
   RB_SPEED_OFFSET.PROP.COLORS_ON = true;
@@ -230,10 +287,10 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
 {
   TRUTH_CATCH door_changed;
 
-  // Update Lights Information
-  if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_on(), LIGHTS_VAL) == true)
+  // Update Headlight Indicators
+  if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_headlights_on(), LIGHTS_HEADLIGHT_VAL) == true)
   {
-    if (LIGHTS_VAL == true)
+    if (LIGHTS_HEADLIGHT_VAL == true)
     {
       SYMBOL_CAR_LIGHTS.set_text(CAR_SYMBOLS.car_lights_on());
     }
@@ -243,8 +300,8 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
     }
   }
 
-  // Set Color of Lights
-  if (LIGHTS_VAL == true)
+  // Set Color of Head Lights
+  if (LIGHTS_HEADLIGHT_VAL == true)
   {
     if (sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_high_beam_on() == true)
     {
@@ -258,6 +315,44 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   else
   {
     SYMBOL_CAR_LIGHTS.set_color(COLOR_BLACK, COLOR_WHITE);
+  }
+
+  // Update Parking Lights Indicators
+  if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_parking_on(), LIGHTS_PARKING_LIGHTS_VAL) == true)
+  {
+    if (LIGHTS_PARKING_LIGHTS_VAL == true)
+    {
+      PARKING_LIGHT_LF.set_color(COLOR_YELLOW, COLOR_WHITE);
+      PARKING_LIGHT_RF.set_color(COLOR_YELLOW, COLOR_WHITE);
+      PARKING_LIGHT_LB.set_color(COLOR_RED, COLOR_WHITE);
+      PARKING_LIGHT_RB.set_color(COLOR_RED, COLOR_WHITE);
+    }
+    else
+    {
+      PARKING_LIGHT_LF.set_color(COLOR_BLACK, COLOR_WHITE);
+      PARKING_LIGHT_RF.set_color(COLOR_BLACK, COLOR_WHITE);
+      PARKING_LIGHT_LB.set_color(COLOR_BLACK, COLOR_WHITE);
+      PARKING_LIGHT_RB.set_color(COLOR_BLACK, COLOR_WHITE);
+    }
+  }
+
+  // Update Parking Brake Indicators
+  if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.INDICATORS.val_parking_brake(), PARKING_BREAK_VAL) == true)
+  {
+    if (PARKING_BREAK_VAL == true)
+    {
+      PARKING_BREAK_LEFT.set_color(COLOR_RED, COLOR_WHITE);
+      PARKING_BREAK_RIGHT.set_color(COLOR_RED, COLOR_WHITE);
+      PARKING_BREAK_LEFT.set_text("B\nR\nK");
+      PARKING_BREAK_RIGHT.set_text("B\nR\nK");
+    }
+    else
+    {
+      PARKING_BREAK_LEFT.set_color(COLOR_BLACK, COLOR_WHITE);
+      PARKING_BREAK_RIGHT.set_color(COLOR_BLACK, COLOR_WHITE);
+      PARKING_BREAK_LEFT.set_text(" \n \n ");
+      PARKING_BREAK_RIGHT.set_text(" \n \n ");
+    }
   }
 
   // Update Door Information
@@ -333,15 +428,15 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   //-----------
   // Individual Tire Speeds
 
-  LF_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_LF_TIRE.mph());
-  RF_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_RF_TIRE.mph());
-  LB_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_LB_TIRE.mph());
-  RB_SPEED.set_text(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_RB_TIRE.mph());
+  LF_SPEED.set_text(sdSysData.CAR_INFO.CALCULATED.LF_TTL.life_percentage());
+  RF_SPEED.set_text(sdSysData.CAR_INFO.CALCULATED.RF_TTL.life_percentage());
+  LB_SPEED.set_text(sdSysData.CAR_INFO.CALCULATED.LB_TTL.life_percentage());
+  RB_SPEED.set_text(sdSysData.CAR_INFO.CALCULATED.RB_TTL.life_percentage());
 
-  LF_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.LF_WHEEL_SPEED_OFFSET.mph());
-  RF_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.RF_WHEEL_SPEED_OFFSET.mph());
-  LB_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.LB_WHEEL_SPEED_OFFSET.mph());
-  RB_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.RB_WHEEL_SPEED_OFFSET.mph());
+  LF_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.LF_TTL.wheel_speed_offset().mph());
+  RF_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.RF_TTL.wheel_speed_offset().mph());
+  LB_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.LB_TTL.wheel_speed_offset().mph());
+  RB_SPEED_OFFSET.set_text(sdSysData.CAR_INFO.CALCULATED.RB_TTL.wheel_speed_offset().mph());
   
   //-----------
   // Status
@@ -387,15 +482,29 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   }
 
   //-----------
-  // Car Doors
+  // Car Body
   SYMBOL_CAR_BODY.draw(GADGET_PANEL, Refresh);
 
+  //-----------
+  // Car Lights
   SYMBOL_CAR_LIGHTS.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
 
+  PARKING_LIGHT_LF.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+  PARKING_LIGHT_RF.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+  PARKING_LIGHT_LB.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+  PARKING_LIGHT_RB.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+
+  //-----------
+  // Car Doors
   SYMBOL_CAR_DOOR_LEFT_FRONT.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
   SYMBOL_CAR_DOOR_RIGHT_FRONT.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
   SYMBOL_CAR_DOOR_LEFT_BACK.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
   SYMBOL_CAR_DOOR_RIGHT_BACK.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+
+  //-----------
+  // Parking Break
+  PARKING_BREAK_LEFT.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
+  PARKING_BREAK_RIGHT.draw(GADGET_PANEL, Refresh, tmeFrame_Time);
 
   //-----------
   // Gear Selection
@@ -650,7 +759,7 @@ void DUEL_BAR_GUAGE_GADGET::create()
   DATA_BAR_A.PROP.POSX = PROP.POSX + 0;
   DATA_BAR_A.PROP.BAR_SIZE = 18;
   DATA_BAR_A.PROP.GUAGE_BAR = true;
-  DATA_BAR_A.PROP.MAX_VALUE = 100;
+  DATA_BAR_A.PROP.MAX_VALUE = PROP.BAR_A_MAX_VALUE;
   DATA_BAR_A.PROP.MIN_VALUE = 0;
   DATA_BAR_A.PROP.MIN_MAX = true;
   DATA_BAR_A.PROP.MIN_MAX_FILLER = true;
@@ -677,7 +786,7 @@ void DUEL_BAR_GUAGE_GADGET::create()
   DATA_BAR_B.PROP.POSX = PROP.POSX + 0;
   DATA_BAR_B.PROP.BAR_SIZE = 18;
   DATA_BAR_B.PROP.GUAGE_BAR = true;
-  DATA_BAR_B.PROP.MAX_VALUE = 100;
+  DATA_BAR_B.PROP.MAX_VALUE = PROP.BAR_B_MAX_VALUE;
   DATA_BAR_B.PROP.MIN_VALUE = 0;
   DATA_BAR_B.PROP.MIN_MAX = true;
   DATA_BAR_B.PROP.MIN_MAX_FILLER = true;
@@ -700,8 +809,7 @@ void DUEL_BAR_GUAGE_GADGET::create()
   SCALE.PROP.COLOR = COLOR_BLACK;
   SCALE.PROP.JUSTIFICATION_LEFT = true;
   SCALE.PROP.UPDATE_INDICATION = false;
-  SCALE.set_text(".:.|.:.|.o.|.:.|.:.");
-  //SCALE.set_text("0.1.2.3.4.5.6.7.8.9.");
+  SCALE.set_text(PROP.SCALE_BAR);
 
   VALUE.PROP.POSX = PROP.POSX + 5;
   VALUE.PROP.POSY = PROP.POSY + 1;
@@ -905,6 +1013,7 @@ void AUTOMOBILE_GADGET::create()
   SPEEDO.PROP.POSX = 13 + 0;
   SPEEDO.PROP.POSY = 1;
   SPEEDO.PROP.DESCRIPTION = "VELOCITY (mi/hr)";
+  SPEEDO.PROP.SCALE_BAR = ".:.2.:.4.o.6.:.8.:.";
   SPEEDO.create();
 
   //-----------
@@ -913,6 +1022,8 @@ void AUTOMOBILE_GADGET::create()
   TACHO.PROP.POSY = 1;
   TACHO.PROP.DESCRIPTION = "TACH (x100)";
   TACHO.PROP.SCALE = 100;
+  TACHO.PROP.SCALE_BAR = "...1...2.o.3...4...";
+  TACHO.PROP.BAR_A_MAX_VALUE = 50;
   TACHO.create();
 
   //-----------
@@ -1110,7 +1221,7 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "67", tmeFrame_Time);
 
   DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_C8, sdSysData.CAR_INFO.DATA.AD_C8.DATA[1], sdSysData.CAR_INFO.DATA.AD_C8.DATA[2], 
-                      "[3]" + to_string_binary(sdSysData.CAR_INFO.DATA.AD_C8.DATA[3]), tmeFrame_Time);
+                      "[3] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_C8.DATA[3]), tmeFrame_Time);
 
   DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_400, sdSysData.CAR_INFO.DATA.AD_400.DATA[6], sdSysData.CAR_INFO.DATA.AD_400.DATA[7], 
                       "[0] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_400.DATA[0]), tmeFrame_Time);

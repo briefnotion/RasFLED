@@ -62,7 +62,17 @@ class AUTOMOBILE_OVERVIEW_GADGET
 
   //-----------
   Text_Field_Multi_Line SYMBOL_CAR_BODY;
+
   Text_Field_Multi_Line SYMBOL_CAR_LIGHTS;
+
+  Text_Field PARKING_LIGHT_LF;
+  Text_Field PARKING_LIGHT_RF;
+  Text_Field PARKING_LIGHT_LB;
+  Text_Field PARKING_LIGHT_RB;
+
+  Text_Field_Multi_Line PARKING_BREAK_LEFT;
+  Text_Field_Multi_Line PARKING_BREAK_RIGHT;
+
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_FRONT;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_RIGHT_FRONT;
   Text_Field_Multi_Line SYMBOL_CAR_DOOR_LEFT_BACK;
@@ -70,7 +80,10 @@ class AUTOMOBILE_OVERVIEW_GADGET
 
   //-----------
   // Values
-  bool LIGHTS_VAL = true;
+  bool LIGHTS_HEADLIGHT_VAL = true;
+  bool LIGHTS_PARKING_LIGHTS_VAL = true;
+
+  bool PARKING_BREAK_VAL = true;
 
   bool LEFT_FRONT_DOOR_VAL = true;
   bool RIGHT_FRONT_DOOR_VAL = true;
@@ -192,6 +205,11 @@ class DUEL_BAR_GUAGE_GADGET_PROPERTIES
   int POSX = 0;
   int SIZEY = 5;
   int SIZEX = 21;
+
+  string SCALE_BAR = ".:.|.:.|.o.|.:.|.:.";
+  
+  int BAR_A_MAX_VALUE = 100;
+  int BAR_B_MAX_VALUE = 100;
 
   int SCALE = 1;
 
