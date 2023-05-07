@@ -310,6 +310,9 @@ class MIN_MAX_TIME_SLICE
   void store_value(float Value);
   // Store value and updates min max.
 
+  int samples();
+  // Number of samples in slice.
+
   float mean();
   // Returns mean value of stored data points.
 
@@ -334,6 +337,9 @@ class MIN_MAX_TIME_PROPERTIES
                                       // Measured in ms.  1000 = 1 sec.
   float DIRECTION_NUTRAL_RANGE = 0;   // Average value change over number of 
                                       //  slice to register difference.
+
+  bool SAMPLE_LIMITED_SPANS = false;
+  int SAMPLE_LIMIT = 50;
 };
 
 // ---------------------------------------------------------------------------------------

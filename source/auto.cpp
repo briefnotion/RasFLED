@@ -243,7 +243,7 @@ void AUTOMOBILE_FUEL::store_percentage(int Percentage)
 {
   PERCENTAGE = ((float)Percentage * 100) / 256 ;
 
-  PERCENTAGE_DISP = to_string_round_to_nth(PERCENTAGE, 1) + " %";
+  PERCENTAGE_DISP = to_string_round_to_nth(PERCENTAGE, 1) + " %%";
 }
 
 void AUTOMOBILE_FUEL::store_level(int Level)
@@ -971,8 +971,9 @@ bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_low()
 
 void TIRE_TTL::first_run()
 {
-  WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 6;
-  WHEEL_SPEED_OFFSET_MEAN.PROP.TIME_SPAN = 30000;
+  WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 5;
+  WHEEL_SPEED_OFFSET_MEAN.PROP.SAMPLE_LIMIT = 20;
+  WHEEL_SPEED_OFFSET_MEAN.PROP.SAMPLE_LIMITED_SPANS = true;
 }
 
 void TIRE_TTL::calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time)
@@ -1007,7 +1008,12 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
 
   // No init process. Set first run variables
   if (FIRST_RUN == true)
-  {
+  { 
+    UNFILTHERED_LF_TTL.first_run();
+    UNFILTHERED_RF_TTL.first_run();
+    UNFILTHERED_LB_TTL.first_run();
+    UNFILTHERED_RB_TTL.first_run();
+
     LF_TTL.first_run();
     RF_TTL.first_run();
     LB_TTL.first_run();
@@ -1025,21 +1031,6 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
   // Calculate Acceleration and Wheel Speed offsets.
   if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
   {
-    // Calculate Wheelspeed Offset or Differance.
-    if (Status.SPEED.SPEED_TRANS.val_mph() > 43 && Status.SPEED.SPEED_TRANS.val_mph() < 48 && 
-        Status.STEERING.val_steering_wheel_angle() < 2) 
-        // Only get values at certain speeds and while drivng straight.
-        // Centering speed at 45 because I can drive for hours and not get over 50mph.
-    {
-      if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
-      {
-        LF_TTL.calculate(Status.SPEED.SPEED_LF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
-        RF_TTL.calculate(Status.SPEED.SPEED_RF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
-        LB_TTL.calculate(Status.SPEED.SPEED_LB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
-        RB_TTL.calculate(Status.SPEED.SPEED_RB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
-      }
-    }
-
     // Reading Acceleration from tire speed may be more accurate.
     float ACCELERATION = 1000 * (Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
                         (Status.SPEED.SPEED_LB_TIRE.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
@@ -1050,6 +1041,31 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
 
     PREVIOUS_VELOCITY_FOR_ACC = Status.SPEED.SPEED_LB_TIRE;
     ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
+
+    // Calculate Wheelspeed Offset or Differance.
+
+    // Unfilthered
+    if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
+    {
+      UNFILTHERED_LF_TTL.calculate(Status.SPEED.SPEED_LF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+      UNFILTHERED_RF_TTL.calculate(Status.SPEED.SPEED_RF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+      UNFILTHERED_LB_TTL.calculate(Status.SPEED.SPEED_LB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+      UNFILTHERED_RB_TTL.calculate(Status.SPEED.SPEED_RB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+
+      if (Status.SPEED.SPEED_TRANS.val_mph() > 43 && Status.SPEED.SPEED_TRANS.val_mph() < 48 && 
+          Status.STEERING.val_steering_wheel_angle() < 2 && 
+          ACCELERATION_QUICK_MEAN_HISTORY.mean_float() > -.2 && 
+          ACCELERATION_QUICK_MEAN_HISTORY.mean_float() < .2 ) 
+          // Only get values at certain speeds and while drivng straight.
+          // Centering speed at 45 because I can drive for hours and not get over 50mph 
+          //  and Acceleration < +- .2.
+      {
+        LF_TTL.calculate(Status.SPEED.SPEED_LF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+        RF_TTL.calculate(Status.SPEED.SPEED_RF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+        LB_TTL.calculate(Status.SPEED.SPEED_LB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+        RB_TTL.calculate(Status.SPEED.SPEED_RB_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
+      }
+    }
   }
 }
 

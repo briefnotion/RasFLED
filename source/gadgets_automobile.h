@@ -100,15 +100,15 @@ class AUTOMOBILE_OVERVIEW_GADGET
 
   //-----------
   // Tire Test
-  Text_Field LF_SPEED;
-  Text_Field RF_SPEED;
-  Text_Field LB_SPEED;
-  Text_Field RB_SPEED;
+  Text_Field LF_UNFILTERED_TTL;
+  Text_Field RF_UNFILTERED_TTL;
+  Text_Field LB_UNFILTERED_TTL;
+  Text_Field RB_UNFILTERED_TTL;
 
-  Text_Field LF_SPEED_OFFSET;
-  Text_Field RF_SPEED_OFFSET;
-  Text_Field LB_SPEED_OFFSET;
-  Text_Field RB_SPEED_OFFSET;
+  Text_Field LF_TTL;
+  Text_Field RF_TTL;
+  Text_Field LB_TTL;
+  Text_Field RB_TTL;
 
   //-----------
   Text_Field LIGHTS_STATUS;

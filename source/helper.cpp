@@ -496,6 +496,11 @@ void MIN_MAX_TIME_SLICE::store_value(float Value)
   }
 }
 
+int MIN_MAX_TIME_SLICE::samples()
+{
+  return SAMPLES;
+}
+
 float MIN_MAX_TIME_SLICE::mean()
 {
   if (SAMPLES > 0)
@@ -531,9 +536,36 @@ void MIN_MAX_TIME::create()
 
 void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
 {
-  if (tmeFrame_Time > TIME_SLICE_CREATED_FRAME_TIME + SLICE_TIME)
+  if (PROP.SAMPLE_LIMITED_SPANS == false)
   {
-    if (TIME_SLICES.size() >= PROP.SLICES)
+    if (tmeFrame_Time > TIME_SLICE_CREATED_FRAME_TIME + SLICE_TIME)
+    {
+      if (TIME_SLICES.size() >= PROP.SLICES)
+      {
+        TIME_SLICES.pop_front();
+        MIN_MAX_TIME_SLICE new_time_slice;
+        create();
+        TIME_SLICES.push_back(new_time_slice);
+      }
+      else if (TIME_SLICES.size() < PROP.SLICES)
+      {
+        MIN_MAX_TIME_SLICE new_time_slice;
+        create();
+        TIME_SLICES.push_back(new_time_slice);
+      }
+
+      TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;
+    }
+  }
+  else
+  {
+    if (TIME_SLICES.size() == 0)
+    {
+      MIN_MAX_TIME_SLICE new_time_slice;
+      create();
+      TIME_SLICES.push_back(new_time_slice);
+    }
+    else if (TIME_SLICES.back().samples() > PROP.SAMPLE_LIMIT)
     {
       TIME_SLICES.pop_front();
       MIN_MAX_TIME_SLICE new_time_slice;
@@ -547,7 +579,7 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
       TIME_SLICES.push_back(new_time_slice);
     }
 
-    TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;
+    TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
   }
 
   if (PROP.SLICES > 0)
