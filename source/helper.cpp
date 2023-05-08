@@ -527,7 +527,7 @@ float MIN_MAX_TIME_SLICE::max()
 
 void MIN_MAX_TIME::create()
 {
-  if (PROP.SLICES > 0)
+  if (PROP.SLICES > 0 && (PROP.TIME_SPAN > 0  || PROP.SAMPLE_LIMITED_SPANS == true))
   {
     SLICE_TIME = PROP.TIME_SPAN / PROP.SLICES;
     ENABLED = true;

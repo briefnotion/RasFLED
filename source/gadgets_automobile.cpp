@@ -911,7 +911,7 @@ void AUTOMOBILE_GADGET::create()
   LARGE_SPEED_DESC.PROP.UPDATE_INDICATION = false;
   LARGE_SPEED_DESC.set_color(COLOR_WHITE, COLOR_BLUE);
   LARGE_SPEED_DESC.PROP.JUSTIFICATION_LEFT = true;
-  LARGE_SPEED_DESC.set_text(" \nV\nE\nL");
+  LARGE_SPEED_DESC.set_text("v\n \nM\np\nH");
 
   LARGE_SPEED_10.PROP.POSX = 1;
   LARGE_SPEED_10.PROP.POSY = 1;
@@ -941,7 +941,7 @@ void AUTOMOBILE_GADGET::create()
   LARGE_ACCELERATION_DESC.PROP.UPDATE_INDICATION = false;
   LARGE_ACCELERATION_DESC.set_color(COLOR_WHITE, COLOR_BLUE);
   LARGE_ACCELERATION_DESC.PROP.JUSTIFICATION_LEFT = true;
-  LARGE_ACCELERATION_DESC.set_text(" \nA\nC\nC");
+  LARGE_ACCELERATION_DESC.set_text(" \nm\n/\ns\n2");
 
   LARGE_ACCELERATION_10.PROP.POSX = 1 + 0;
   LARGE_ACCELERATION_10.PROP.POSY = 6;
@@ -1013,7 +1013,7 @@ void AUTOMOBILE_GADGET::create()
   // Speedometer
   SPEEDO.PROP.POSX = 13 + 0;
   SPEEDO.PROP.POSY = 1;
-  SPEEDO.PROP.DESCRIPTION = "VELOCITY (mi/hr)";
+  SPEEDO.PROP.DESCRIPTION = "VELOCITY (Mph)";
   SPEEDO.PROP.SCALE_BAR = ".:.2.:.4.o.6.:.8.:.";
   SPEEDO.create();
 
@@ -1026,6 +1026,14 @@ void AUTOMOBILE_GADGET::create()
   TACHO.PROP.SCALE_BAR = "...1...2.o.3...4...";
   TACHO.PROP.BAR_A_MAX_VALUE = 50;
   TACHO.create();
+
+  //-----------
+  // Acceleration
+  POWERO.PROP.POSX = 13 + 21;
+  POWERO.PROP.POSY = 6;
+  POWERO.PROP.DESCRIPTION = "ORQ";
+  POWERO.PROP.SCALE = 100;
+  POWERO.create();
 
   //-----------
 
@@ -1053,7 +1061,7 @@ void AUTOMOBILE_GADGET::create()
   STEERING_WHEEL.PROP.POSX = 0 + 0;
   STEERING_WHEEL.PROP.BAR_SIZE = 49 + 6 + 4;
   STEERING_WHEEL.PROP.GUAGE_BAR = true;
-  STEERING_WHEEL.PROP.MAX_VALUE = 180;
+  STEERING_WHEEL.PROP.MAX_VALUE = 360;
   STEERING_WHEEL.PROP.MIN_VALUE = 0;
   STEERING_WHEEL.PROP.MIN_MAX = true;
   STEERING_WHEEL.PROP.MIN_MAX_FILLER = true;
@@ -1203,10 +1211,19 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   SPEEDO.update(sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph(), tmeFrame_Time);
   TACHO.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeFrame_Time);
+  POWERO.update(sdSysData.CAR_INFO.STATUS.POWER.val_load() * 30, tmeFrame_Time);
 
   //-----------
 
-  STEERING_WHEEL.update(sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle(), tmeFrame_Time);
+  if (sdSysData.CAR_INFO.STATUS.STEERING.val_left_of_center() == true)
+  {
+    STEERING_WHEEL.update( -1 * (sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle()) + 180, tmeFrame_Time);
+  }
+  else 
+  {
+    STEERING_WHEEL.update(sdSysData.CAR_INFO.STATUS.STEERING.val_steering_wheel_angle() + 180, tmeFrame_Time);
+  }
+  
   STEERING_WHEEL_ANGLE.set_text(sdSysData.CAR_INFO.STATUS.STEERING.left_of_center() + " " + 
                                   sdSysData.CAR_INFO.STATUS.STEERING.turning_direction() + " " + 
                                   sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
@@ -1271,6 +1288,7 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   SPEEDO.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   TACHO.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  POWERO.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
 
   //-----------
 
