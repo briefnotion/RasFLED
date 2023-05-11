@@ -534,6 +534,16 @@ void MIN_MAX_TIME::create()
   }
 }
 
+int MIN_MAX_TIME::slice_size()
+{
+  return TIME_SLICES.size();
+}
+
+int MIN_MAX_TIME::slice_size_max()
+{
+  return PROP.SLICES;
+}
+
 void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
 {
   if (PROP.SAMPLE_LIMITED_SPANS == false)
@@ -554,7 +564,7 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
         TIME_SLICES.push_back(new_time_slice);
       }
 
-      TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;
+      TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
     }
   }
   else
@@ -562,24 +572,27 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
     if (TIME_SLICES.size() == 0)
     {
       MIN_MAX_TIME_SLICE new_time_slice;
-      create();
       TIME_SLICES.push_back(new_time_slice);
+      ENABLED = true;
+      
+      TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
     }
     else if (TIME_SLICES.back().samples() > PROP.SAMPLE_LIMIT)
     {
-      TIME_SLICES.pop_front();
-      MIN_MAX_TIME_SLICE new_time_slice;
-      create();
-      TIME_SLICES.push_back(new_time_slice);
+      if (TIME_SLICES.size() < PROP.SLICES)
+      {
+        MIN_MAX_TIME_SLICE new_time_slice;
+        TIME_SLICES.push_back(new_time_slice);
+      }
+      else
+      {
+        TIME_SLICES.pop_front();
+        MIN_MAX_TIME_SLICE new_time_slice;
+        TIME_SLICES.push_back(new_time_slice);
+      }
+      
+      TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
     }
-    else if (TIME_SLICES.size() < PROP.SLICES)
-    {
-      MIN_MAX_TIME_SLICE new_time_slice;
-      create();
-      TIME_SLICES.push_back(new_time_slice);
-    }
-
-    TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
   }
 
   if (PROP.SLICES > 0)

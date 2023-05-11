@@ -508,14 +508,27 @@ class TIRE_TTL
   float LIFE_PERCENTAGE = 0;
 
   // values in meteres per second
-  float V_MIDDLE_OFFSET = 0.01341;
-  float V_HIGH = 0.08;
+  //float V_MIDDLE_OFFSET = 0.01341;
+  //float V_HIGH = 0.08;
+
+  // .18 Mph 0.08 mps 100%
+  // .03 Mph 0.01341 mps
+
+  float V_MIDDLE_OFFSET = 0.018;    // 100%
+  float V_HIGH = 0.067;             // 0%
+
+  // V_MIDDLE_OFFSET  .03 Mph 0.01341 mps
+  // V_HIGH           .18 Mph 0.08 mps 100%
 
   public:
 
   void first_run();
 
   void calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time);
+
+  int slice_size();
+
+  int slice_size_max();
 
   int val_life_percentage();
 

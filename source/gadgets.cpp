@@ -410,6 +410,165 @@ void Text_Field::draw(PANEL &Panel, bool Refresh)
   draw(Panel, Refresh, 0);
 }
 
+// -------------------------------------------------------------------------------------
+//  Text_Field Classes
+
+bool Char_Graph::changed()
+// Returns true if any of the properties have changed.
+{
+  return CHANGED;
+}
+
+void Char_Graph::redraw()
+{
+  CHANGED = true;
+}
+
+void Char_Graph::set_value(float Value, int Min, int Max, long tmeFrame_Time)
+{
+  if (VALUE != Value || PROP.MIN != Min || PROP.MAX != Max)
+  {
+    VALUE = Value;
+    PROP.MIN = Min;
+    PROP.MAX = Max;
+    
+    CHANGED = true;
+      
+    if (PROP.UPDATE_INDICATION == true)
+    {
+      UPDATE_INDICATION_TIMER.ping_up(tmeFrame_Time, INDICATED_BLINK_TIME);
+    }
+  }
+}
+
+void Char_Graph::set_value(float Value, long tmeFrame_Time)
+{
+  set_value(Value, PROP.MIN, PROP.MAX, 0);
+}
+
+void Char_Graph::set_value(float Value)
+{
+  set_value(Value, PROP.MIN, PROP.MAX, 0);
+}
+
+void Char_Graph::clear()
+{
+  VALUE = 0;
+  CHANGED = true;
+}
+
+void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+{
+  if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
+  {
+    Refresh = true;
+  }
+
+  if (CHANGED == true || Refresh == true)
+  {
+    // Calculate
+    int BColor = COLOR_BLACK;
+    int Color = COLOR_WHITE;
+
+    char scale = 'X';
+
+    int pos = (int)(100 * ((VALUE - PROP.MIN) / (PROP.MAX - PROP.MIN)));
+
+    int upper = pos % 33;
+    int lower = pos % 33;
+
+
+    // Character
+
+    //    .,:;|o   
+
+    if (lower == 0)
+    {
+      scale = ' ';
+    }
+    else if (lower >= 0 && lower < 7)
+    {
+      scale = '.';
+    }
+    else if (lower >= 7 && lower < 13)
+    {
+      scale = ',';
+    }
+    else if (lower >= 13 && lower < 20)
+    {
+      scale = ':';
+    }
+    else if (lower >= 20 && lower < 26)
+    {
+      scale = ';';
+    }
+    else if (lower >= 26)
+    {
+      scale = '|';
+    }
+
+    // Color
+
+    if (pos >= 0 && pos < 33)
+    {
+      BColor = COLOR_RED;
+      Color = COLOR_WHITE;
+    }
+    else if (pos >= 33 && pos < 66)
+    {
+      BColor = COLOR_YELLOW;
+      Color = COLOR_BLACK;
+    }
+    else if (pos >= 66 && pos < 100)
+    {
+      BColor = COLOR_GREEN;
+      Color = COLOR_WHITE;
+    }
+    else if (pos >= 100)
+    {
+      BColor = COLOR_GREEN;
+      Color = COLOR_WHITE;
+      scale == 'o';
+    }
+
+    // Draw
+
+    wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(BColor, Color)));
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+    }
+
+    // Check for Text Modification
+    mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%c", scale);  //print line. 
+
+    // Check for Blink
+    if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.ping_down(tmeFrame_Time) == true)
+    {
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_WHITE, COLOR_BLACK)));
+    }
+
+    wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(BColor, Color)));
+
+    //Debug -- displays dedraw count and other variables.
+    if (true == DEBUG_COUNTER)
+    {
+      Counter++;
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%d ", Counter);
+    }
+
+    CHANGED = false;
+
+    Panel.changed_on();
+  }
+}
+  
+void Char_Graph::draw(PANEL &Panel, bool Refresh)
+{
+  draw(Panel, Refresh, 0);
+}
 
 // -------------------------------------------------------------------------------------
 //  Text_Field_Multi_Line Classes

@@ -984,6 +984,16 @@ void TIRE_TTL::calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsig
   LIFE_PERCENTAGE = ((V_HIGH - V_MIDDLE_OFFSET - WHEEL_SPEED_OFFSET.val_meters_per_second()) / V_HIGH);
 }
 
+int TIRE_TTL::slice_size()
+{
+  return WHEEL_SPEED_OFFSET_MEAN.slice_size();
+}
+
+int TIRE_TTL::slice_size_max()
+{
+  return WHEEL_SPEED_OFFSET_MEAN.slice_size_max();
+}
+
 int TIRE_TTL::val_life_percentage()
 {
   return LIFE_PERCENTAGE;
@@ -991,7 +1001,7 @@ int TIRE_TTL::val_life_percentage()
 
 string TIRE_TTL::life_percentage()
 {
-  return to_string((int)(LIFE_PERCENTAGE * 100)) + "%%";
+  return to_string((int)(LIFE_PERCENTAGE * 100)) + "%% ";
 }
 
 VELOCITY TIRE_TTL::wheel_speed_offset()

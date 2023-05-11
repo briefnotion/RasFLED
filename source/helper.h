@@ -371,6 +371,12 @@ class MIN_MAX_TIME
   // Stores value in time slice
   //  Creates new slice if slice time has passed.
 
+  int slice_size();
+  // Return count of slices in use.
+
+  int slice_size_max();
+  // Return count of slices in use.
+
   float min_float();
   // Returns Min value of variable over time slice
   //  as float value.

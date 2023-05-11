@@ -99,16 +99,32 @@ class AUTOMOBILE_OVERVIEW_GADGET
   Text_Field GEAR_SELECTION_LOW;
 
   //-----------
-  // Tire Test
+  // Tire TTL
+
+  Text_Field LF_TTL_OFFSET;
+  Text_Field RF_TTL_OFFSET;
+  Text_Field LB_TTL_OFFSET;
+  Text_Field RB_TTL_OFFSET;
+
   Text_Field LF_UNFILTERED_TTL;
   Text_Field RF_UNFILTERED_TTL;
   Text_Field LB_UNFILTERED_TTL;
   Text_Field RB_UNFILTERED_TTL;
 
+  Char_Graph LF_UNFILTERED_TTL_DATA_FILL;
+  Char_Graph RF_UNFILTERED_TTL_DATA_FILL;
+  Char_Graph LB_UNFILTERED_TTL_DATA_FILL;
+  Char_Graph RB_UNFILTERED_TTL_DATA_FILL;
+
   Text_Field LF_TTL;
   Text_Field RF_TTL;
   Text_Field LB_TTL;
   Text_Field RB_TTL;
+
+  Char_Graph LF_TTL_DATA_FILL;
+  Char_Graph RF_TTL_DATA_FILL;
+  Char_Graph LB_TTL_DATA_FILL;
+  Char_Graph RB_TTL_DATA_FILL;
 
   //-----------
   Text_Field LIGHTS_STATUS;

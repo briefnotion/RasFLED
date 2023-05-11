@@ -330,6 +330,88 @@ class Text_Field
 };
 
 // -------------------------------------------------------------------------------------
+//  Text_Field Classes
+
+class Char_Graph_Properties
+// Properties (duh)
+{
+  private:
+
+  public: 
+  
+  int POSY = 0;
+  int POSX = 0;
+
+  int MIN = 0;
+  int MAX = 100;
+
+  const int SIZEY = 1;
+  const int SIZEX = 1;
+
+  bool UPDATE_INDICATION = false;
+};
+
+class Char_Graph
+// Single Character Chart
+// Complexity scales with properties.
+// Set PROP (properties) before calling draw routine.
+// Warning:
+//  Some properties can be changed directly but will not 
+//    trigger the redraw or work correctly. 
+//  To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
+{
+  private:
+  TIMED_PING UPDATE_INDICATION_TIMER;
+
+  bool CHANGED = false;
+
+  int INDICATED_BLINK_TIME = 250;
+
+  float VALUE = 0;
+  float MIN = 0;
+  float MAX = 0;
+
+  // DEBUG_COUNTER
+  int Counter = 0;
+
+  public:
+  Char_Graph_Properties PROP;
+
+  bool changed();
+  // Return true is screen will be redrawn on next draw.
+  // Return false if no changes made.
+
+  void redraw();
+  // Set to true to force redraw.
+
+  void set_value(float Value, int Min, int Max, long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
+  //  tmeFrame_Time is needed for timed animations
+
+  void set_value(float Value, long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
+  //  tmeFrame_Time is needed for timed animations
+
+  void set_value(float Value);
+  // Set Value. Updates on screen at next draw
+  //  No Timed Animations
+  
+  void clear();
+  // Clear values
+
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  // Draw all changes to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
+
+  void draw(PANEL &Panel, bool Refresh);
+  // Draw all changes to Panel.
+  //  Set Refresh to true to force redraw.
+  //  Animations will be ignored without time reference
+};
+
+// -------------------------------------------------------------------------------------
 //  Text_Field_Multi_Line Classes
 
 class Text_Field_Multi_Line_Properties
