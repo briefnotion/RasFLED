@@ -106,7 +106,7 @@ string right_justify(int size, string text)
   }
   else
   {
-    return_string = return_string.append(size - text.size() ,' ') + text;
+    return_string = return_string.append(size - text.size() , ' ') + text;
   }
 
   return return_string;
@@ -118,18 +118,8 @@ string left_justify(int size, string text)
 {
   string return_string = "";
 
-  if (text.size() > size)
-  {
-    return_string = text.erase(size +1) , text.size() - (size +1);
-  }
-  else if (text.size() == size)
-  {
-    return_string = text;
-  }
-  else
-  {
-    return_string = text.append(size - text.size() ,' ');
-  }
+  text.resize(size, ' ');
+  return_string = text;
 
   return return_string;
 }
@@ -157,10 +147,10 @@ string center_justify(int size, string text)
   return return_string;
 }
 
-//const std::string WHITESPACE = " \n\r\t\f\v";
  
 string left_trim(const string &Text)
 {
+  //const std::string WHITESPACE = " \n\r\t\f\v";
   size_t start = Text.find_first_not_of(" \n\r\t\f\v");
   return (start == string::npos) ? "" : Text.substr(start);
 }

@@ -212,7 +212,7 @@ bool PANEL::draw(bool Refresh)
   bool CYBR::draw(unsigned long tmeFrame_Time)
   {
     wattron(CYBR_PANEL.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
-    mvwprintw(CYBR_PANEL.winPANEL, 0, 0, "%d",tmeFrame_Time/100);
+    mvwprintw(CYBR_PANEL.winPANEL, 0, 0, "%d", tmeFrame_Time/100);
     wattroff(CYBR_PANEL.winPANEL, COLOR_PAIR(CRT_get_color_pair(COLOR_RED, COLOR_WHITE)));
 
     mvwprintw(CYBR_PANEL.winPANEL, CYBR_YLn, 0, "  ");
@@ -356,22 +356,22 @@ void Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
       // Print Center Justified
       if (PROP.JUSTIFICATION_CENTER == true)
       {
-        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, center_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%s", center_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
       // Print Right Justified
       else if (PROP.JUSTIFICATION_RIGHT == true)
       {
-        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, right_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%s", right_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
       // Print Left Justified or full field.
       else if (PROP.JUSTIFICATION_LEFT == true)
       {
-        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, left_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
+        mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%s", left_justify(PROP.SIZEX, PROP.LABEL).c_str());  //print line.  
       }
     }
     else  // Print Simple Text
     {
-      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, PROP.LABEL.c_str());  //print line. 
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX, "%s", PROP.LABEL.c_str());  //print line. 
     }
 
     // Check for Blink
@@ -1647,7 +1647,7 @@ void BAR::print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, i
   
   if (lenght > 0)
   {
-    fill_bar.append(lenght, ':');
+    fill_bar.resize(lenght, ':');
     mvwprintw(winWindow, Ypos, Xpos + start, "%s", fill_bar.c_str());    
   }
 }

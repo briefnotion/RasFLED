@@ -243,7 +243,7 @@ void AUTOMOBILE_FUEL::store_percentage(int Percentage)
 {
   PERCENTAGE = ((float)Percentage * 100) / 256 ;
 
-  PERCENTAGE_DISP = to_string_round_to_nth(PERCENTAGE, 1) + " %%";
+  PERCENTAGE_DISP = to_string_round_to_nth(PERCENTAGE, 1) + " %";
 }
 
 void AUTOMOBILE_FUEL::store_level(int Level)
@@ -996,12 +996,12 @@ int TIRE_TTL::slice_size_max()
 
 int TIRE_TTL::val_life_percentage()
 {
-  return LIFE_PERCENTAGE;
+  return (int)(LIFE_PERCENTAGE * 100);
 }
 
 string TIRE_TTL::life_percentage()
 {
-  return to_string((int)(LIFE_PERCENTAGE * 100)) + "%% ";
+  return to_string((int)(LIFE_PERCENTAGE * 100)) + "% ";
 }
 
 VELOCITY TIRE_TTL::wheel_speed_offset()

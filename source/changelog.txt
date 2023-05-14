@@ -1,3 +1,8 @@
+V 1.925_230512
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+  - Small change to animations.
+
 V 1.924_230510
   - Continued building Auto library.
   - Continued building Automobile_Gadgets Library.

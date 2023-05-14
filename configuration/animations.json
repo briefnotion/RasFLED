@@ -1310,7 +1310,7 @@
         {
           "Comment_1" : "Door Handle", 
           "Label" : "TEMP",
-          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 18000, "Speed_Of_LED_Walk" : 150, 
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 60000, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "32,16,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
@@ -1320,7 +1320,7 @@
         {
           "Comment_1" : "Door Handle", 
           "Label" : "TEMP",
-          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 18000, "Speed_Of_LED_Walk" : 150, 
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 60000, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "32,16,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
