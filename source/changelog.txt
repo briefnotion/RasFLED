@@ -1,4 +1,10 @@
-V 1.925_230512
+V 1.926_230515
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+  - Created automobile_handler.cpp t start bringing car status to animations.
+  - Changes made to animations.
+  
+  V 1.925_230512
   - Continued building Auto library.
   - Continued building Automobile_Gadgets Library.
   - Small change to animations.

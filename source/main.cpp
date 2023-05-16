@@ -480,6 +480,11 @@ int loop()
   }
 
   // ---------------------------------------------------------------------------------------
+  // Automobile Handler
+
+  AUTOMOBILE_HANDLER automobile_handler;
+
+  // ---------------------------------------------------------------------------------------
   // The Player
   fstream fsPlayer;
   bool sucess = false;
@@ -966,6 +971,9 @@ int loop()
 
     // Process info from comm port int automobile system.
     sdSystem.CAR_INFO.process(sdSystem.COMMS, tmeCurrentMillis);
+
+    // Process Automobile Lights
+    automobile_handler.update_events(sdSystem, animations, tmeCurrentMillis);
 
     // ________________________
 

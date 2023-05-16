@@ -110,6 +110,7 @@
 #include "hardware_module_door.h"
 #include "interface.h"
 #include "animations_handler.h"
+#include "automobile_handler.h"
 
 // ***************************************************************************************
 // FUNCTION AND PROCEDURES

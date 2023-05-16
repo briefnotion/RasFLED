@@ -72,6 +72,24 @@
 
       ],
 
+      "test1_test Gear Park" :
+      [
+        {
+          "Label" : "PC", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_PARK_OFF - Simple"
+        }
+      ],
+
+      "test1" :
+      [
+        {
+          "Label" : "PC", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "test2"
+        }
+      ],
+
       "test2" :
       [
         {
@@ -114,7 +132,7 @@
         }
       ],
 
-      "test1" :
+      "test3" :
       [
         {
           "Comment" : "This is a comment.",
@@ -161,23 +179,6 @@
           "Start_Delay_Time" : 20000, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "turnoff3"
-        },
-        { 
-          "Label" : "AnEvSchedule", 
-          "Start_Delay_Time" : 20000, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Pyrrhic", "String_Var_2" : "test2"
-        }
-      ],
-
-      "test" :
-      [
-        {
-          "Comment" : "Test animation called by ' animt'."
-        },
-        {
-          "Label" : "test", 
-          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Pyrrhic", "String_Var_2" : "test1"
         }
       ],
 
@@ -351,6 +352,62 @@
           "Label" : "LDCO", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "LDCO"
+        }
+      ],
+
+      "Automobile - Gear Select_Park_On" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_PARK",
+          "Comment_2" : "Animation to run on gear select. Park.",
+          "Comment_3" : "Gear Selector placed in Park."
+        },
+        {
+          "Label" : "LDCO", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_PARK_ON - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Park_Off" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_PARK",
+          "Comment_2" : "Animation to run on gear select. Park.",
+          "Comment_3" : "Gear Selector removed from Park."
+        },
+        {
+          "Label" : "LDCO", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_PARK_OFF - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Reverse_On" : 
+      [
+        {
+          "Comment_1" : "Labels: REVERSE",
+          "Comment_2" : "Animation to run on gear select. REVERSE.",
+          "Comment_3" : "Gear Selector placed in REVERSE."
+        },
+        {
+          "Label" : "LDCO", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_REVERSE_ON - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Reverse_Off" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_REVERSE",
+          "Comment_2" : "Animation to run on gear select. REVERSE.",
+          "Comment_3" : "Gear Selector removed from REVERSE."
+        },
+        {
+          "Label" : "LDCO", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_REVERSE_OFF - Simple"
         }
       ],
 
@@ -724,9 +781,76 @@
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         }
+      ],
+
+      "AUGEAR_PARK_ON - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_PARK",
+          "Comment_2" : "Animation to run on gear select. Park.",
+          "Comment_3" : "Gear Selector placed in Park."
+        },
+        {
+          "Label" : "AUGEAR_PARK",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 5, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "0,32,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|5", 
+          "Clear_On_End" : false, "Off_During_Day" : false
+        }
+      ],
+
+      "AUGEAR_PARK_OFF - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_PARK",
+          "Comment_2" : "Animation to run on gear select. Park.",
+          "Comment_3" : "Gear Selector removed from Park."
+        },
+        {
+          "Label" : "AUGEAR_PARK",  
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_PARK"
+        }
+      ],
+
+      "AUGEAR_REVERSE_ON - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_REVERSE",
+          "Comment_2" : "Animation to run on gear select. REVERSE.",
+          "Comment_3" : "Gear Selector placed in REVERSE."
+        },
+        {
+          "Label" : "AUGEAR_REVERSE",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 5, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "32,0,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|5", 
+          "Clear_On_End" : false, "Off_During_Day" : false
+        }
+      ],
+
+      "AUGEAR_REVERSE_OFF - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_REVERSE",
+          "Comment_2" : "Animation to run on gear select. REVERSE.",
+          "Comment_3" : "Gear Selector removed from REVERSE."
+        },
+        {
+          "Label" : "AUGEAR_REVERSE",  
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_REVERSE"
+        }
       ]
     }
-  ],
+  ],      
+
 
 
 
@@ -842,19 +966,19 @@
         {
           "Label" : "FLASH",
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 200, "Speed_Of_LED_Walk" : 0, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "64,64,64",
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "48,48,48",
           "Clear_On_End" : false
         },
         {
           "Label" : "FLASH",
           "Start_Delay_Time" : 300, "Duration_Of_Brighness" : 200, "Speed_Of_LED_Walk" : 0, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "64,64,64",
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "48,48,48",
           "Clear_On_End" : false
         },
         {
           "Label" : "FLASH",
           "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 200, "Speed_Of_LED_Walk" : 0, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "64,64,64",
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", "Dest_1" : "48,48,48",
           "Clear_On_End" : false
         },
         {
@@ -1220,24 +1344,9 @@
           "Repeat" : true, "Clear_On_End" : false, "Invert_Color" : true, "Off_During_Day" : true
         },
         {
-          "Comment_1" : "Door Handle", 
-          "Label" : "ADOE",
-          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 150, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
-          "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
-          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|40", "LED_End_Pos" : "from_bot|42", 
-          "Clear_On_End" : false, "Off_During_Day" : true
-        },
-        {
-          "Comment_1" : "Door Handle", 
-          "Label" : "ADOE",
-          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 150, 
-          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
-          "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
-          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|39", "LED_End_Pos" : "from_bot|37", 
-          "Clear_On_End" : false, "Off_During_Day" : true
+          "Label" : "ADOE", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Pyrrhic", "String_Var_2" : "DOOR_HANDLE_LIGHT"
         }
       ],
 
@@ -1308,6 +1417,18 @@
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "ADOE"
         },
         {
+          "Label" : "LDCE", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Pyrrhic", "String_Var_2" : "DOOR_HANDLE_RUNNING"
+        }
+      ],
+
+      "DOOR_HANDLE_RUNNING" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
           "Comment_1" : "Door Handle", 
           "Label" : "TEMP",
           "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 60000, "Speed_Of_LED_Walk" : 150, 
@@ -1326,6 +1447,33 @@
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
           "LED_Start_Pos" : "from_bot|39", "LED_End_Pos" : "from_bot|37", 
           "Clear_On_End" : true, "Off_During_Day" : true
+        }
+      ],
+
+      "DOOR_HANDLE_LIGHT" : 
+      [
+        {
+          "Run_On_LED_LED_Strip_Name" : "Door"
+        },
+        {
+          "Comment_1" : "Door Handle", 
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|40", "LED_End_Pos" : "from_bot|42", 
+          "Clear_On_End" : false, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Door Handle", 
+          "Label" : "ADOE",
+          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 150, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "0,128,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_bot|39", "LED_End_Pos" : "from_bot|37", 
+          "Clear_On_End" : false, "Off_During_Day" : true
         }
       ]
     }

@@ -381,7 +381,7 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
 
       if (check_command(cons," animt", "Event System 2 Test Animation"))
       {
-        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "test");
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "test1");
       }
       
       // Program Exit

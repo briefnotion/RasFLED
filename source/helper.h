@@ -438,6 +438,9 @@ bool is_within(int Value, int Number_1, int Number_2);
 //  is less than or greater than Number 2.
 
 bool set_bool_with_change_notify(bool Set_Value, bool &Bool_Variable);
+// Set or copy Set_Value to Bool_Variable
+// Returns true if value changed
+// Returns false if value was the same.
 
 int get_1_pos_of_int(int Number);
 

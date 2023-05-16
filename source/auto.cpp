@@ -404,14 +404,15 @@ void AUTOMOBILE_INDICATORS::store_ignition(int Ignition)
 
 void AUTOMOBILE_INDICATORS::store_cruise_control(int Data_1, int Data_2, float Multiplier)
 {
-  if (Data_1 == 194)  // c2 (194) on
+  if (Data_1 == 194 || Data_1 == 210)  // c2 (194) or d2 (210) on
   {
     CRUISE_CONTROL = true;
     CRUISE_CONTROL_SPEED = Data_2 * Multiplier;
   }
-  else                //  c0 (192) off
+  else                //  c0 (192) or d0 (208) off
   {
     CRUISE_CONTROL = false;
+    CRUISE_CONTROL_SPEED = Data_2 * Multiplier;
   }
 }
 

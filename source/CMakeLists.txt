@@ -51,6 +51,7 @@ add_executable(
   gadgets_radio.cpp
   gadgets_alerts.cpp
   gadgets_automobile.cpp
+  automobile_handler.cpp
   interface.cpp
   player.cpp
   radio_channel_coordinator.cpp
