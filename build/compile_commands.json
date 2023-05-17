@@ -111,6 +111,11 @@
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/automobile_handler.cpp.o -c /home/pi/source/RasFLED/source/automobile_handler.cpp",
+  "file": "/home/pi/source/RasFLED/source/automobile_handler.cpp"
+},
+{
+  "directory": "/home/pi/source/RasFLED/build",
   "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/interface.cpp.o -c /home/pi/source/RasFLED/source/interface.cpp",
   "file": "/home/pi/source/RasFLED/source/interface.cpp"
 },

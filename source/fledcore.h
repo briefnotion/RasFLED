@@ -61,6 +61,7 @@ class timed_event_data
 // Varibles to control the timed_event.
 {
   public:
+  // standard attributes defined by json
   std::string strIdent = "";
   unsigned long tmeSTARTTIME = 0;
   int intDURATION = 0;
@@ -80,6 +81,9 @@ class timed_event_data
   string String_Var_1 = "";
   string String_Var_2 = "";
   int Assigned_Group = -1;
+
+  // active modify attributes
+  float brightness = 1;   // factor of color.
 
   bool booCOMPLETE = true;
 
@@ -108,6 +112,8 @@ class timed_event
            CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
            int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd,
            bool booOffDuringDay, string String_Var_1, string String_Var_2, int Assigned_Group);
+
+  void set_timed_event(timed_event_data newteDATA);
 
   // -------------------------------------------------------------------------------------
   // Clear events in channel

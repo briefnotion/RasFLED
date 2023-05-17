@@ -1,3 +1,8 @@
+V 1.927_230516
+  - Changes made to animations_handler
+  - Continued building car status to animations.
+  - Changes made to animations.
+
 V 1.926_230515
   - Continued building Auto library.
   - Continued building Automobile_Gadgets Library.

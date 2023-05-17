@@ -51,52 +51,9 @@ void timed_event::create(int intLedCount)
   intLEDCOUNT = intLedCount;
 }
 
-void timed_event::set(std::string strIdentity, unsigned long tmeCurrentTime,
-          int tmeStartInTime, int intDuration, int intSpeed, 
-          char  bytAnimation, char  bytLEDAnimation, bool booInvertColor, 
-          CRGB crgbStart1, CRGB crgbDest1, CRGB crgbStart2, CRGB crgbDest2, 
-          int intStartPos, int intEndPos, bool booRepeat, bool booClearOnEnd,
-          bool booOffDuringDay, string String_Var_1, string String_Var_2, int Assigned_Group)
-
-// Prepare an animation to start at a specific time.
+void timed_event::set_timed_event(timed_event_data newteDATA)
 {
-
-  bool booCreated = false;
-
-  unsigned long tmeStartTime = tmeCurrentTime + tmeStartInTime;
-
-  timed_event_data newteDATA;
-
-  newteDATA.strIdent = strIdentity;
-  newteDATA.tmeSTARTTIME = tmeStartTime;
-  newteDATA.intDURATION = intDuration;
-  newteDATA.intSPEED = intSpeed;
-  newteDATA.bytANIMATION = bytAnimation;
-  newteDATA.bytLEDANIMATION = bytLEDAnimation;
-
-  newteDATA.booINVERTCOLOR = booInvertColor;
-
-  newteDATA.crgbCOLORSTART1 = crgbStart1;
-  newteDATA.crgbCOLORSTART2 = crgbStart2;
-  newteDATA.crgbCOLORDEST1 = crgbDest1;
-  newteDATA.crgbCOLORDEST2 = crgbDest2;
-
-  newteDATA.intSTARTPOS = intStartPos;
-  newteDATA.intENDPOS = intEndPos;
-  newteDATA.booREPEAT = booRepeat;
-  newteDATA.booCLEARONEND = booClearOnEnd;
-  newteDATA.booOFFDURINGDAY = booOffDuringDay;
-
-  newteDATA.String_Var_1 = String_Var_1;
-  newteDATA.String_Var_2 = String_Var_2;
-
-  newteDATA.Assigned_Group = Assigned_Group;
-
-  newteDATA.booCOMPLETE = false;
-
   teDATA.push_back(newteDATA);
-
-  booCreated = true;
 }
 
 // -------------------------------------------------------------------------------------

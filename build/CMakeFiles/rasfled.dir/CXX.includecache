@@ -126,6 +126,18 @@ helper.h
 comport.h
 /home/pi/source/RasFLED/source/comport.h
 
+/home/pi/source/RasFLED/source/automobile_handler.cpp
+automobile_handler.h
+/home/pi/source/RasFLED/source/automobile_handler.h
+
+/home/pi/source/RasFLED/source/automobile_handler.h
+stdio.h
+-
+auto.h
+/home/pi/source/RasFLED/source/auto.h
+animations_handler.h
+/home/pi/source/RasFLED/source/animations_handler.h
+
 /home/pi/source/RasFLED/source/commands.h
 stdio.h
 -
@@ -519,6 +531,8 @@ interface.h
 /home/pi/source/RasFLED/source/interface.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+automobile_handler.h
+/home/pi/source/RasFLED/source/automobile_handler.h
 
 /home/pi/source/RasFLED/source/player.cpp
 player.h

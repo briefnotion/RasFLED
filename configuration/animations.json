@@ -86,7 +86,7 @@
         {
           "Label" : "PC", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
-          "String_Var_1" : "Car", "String_Var_2" : "test2"
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_PARK_ON - Simple"
         }
       ],
 
@@ -345,11 +345,11 @@
       "All Doors Closed - Overhead" : 
       [
         {
-          "Comment_1" : "Labels: LDCO",
+          "Comment_1" : "Labels: AUGEAR_PARK",
           "Comment_2" : "Animation runs on all closed doors overhead when all doors are closed."
         },
         {
-          "Label" : "LDCO", 
+          "Label" : "AUGEAR_PARK", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Pyrrhic", "String_Var_2" : "LDCO"
         }
@@ -363,7 +363,7 @@
           "Comment_3" : "Gear Selector placed in Park."
         },
         {
-          "Label" : "LDCO", 
+          "Label" : "AUGEAR_PARK", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_PARK_ON - Simple"
         }
@@ -372,26 +372,54 @@
       "Automobile - Gear Select_Park_Off" : 
       [
         {
-          "Comment_1" : "Labels: AUGEAR_PARK",
+          "Comment_1" : "Labels: AUGEAR_PARK_OFF",
           "Comment_2" : "Animation to run on gear select. Park.",
           "Comment_3" : "Gear Selector removed from Park."
         },
         {
-          "Label" : "LDCO", 
+          "Label" : "AUGEAR_PARK_OFF", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_PARK_OFF - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Neutral_On" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_NEUTRAL",
+          "Comment_2" : "Animation to run on gear select. Neutral.",
+          "Comment_3" : "Gear Selector placed in Neutral."
+        },
+        {
+          "Label" : "AUGEAR_NEUTRAL", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_NEUTRAL_ON - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Neutral_Off" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_NEUTRAL",
+          "Comment_2" : "Animation to run on gear select. Neutral.",
+          "Comment_3" : "Gear Selector removed from Neutral."
+        },
+        {
+          "Label" : "AUGEAR_NEUTRAL", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_NEUTRAL_OFF - Simple"
         }
       ],
 
       "Automobile - Gear Select_Reverse_On" : 
       [
         {
-          "Comment_1" : "Labels: REVERSE",
+          "Comment_1" : "Labels: AUGEAR_REVERSE",
           "Comment_2" : "Animation to run on gear select. REVERSE.",
           "Comment_3" : "Gear Selector placed in REVERSE."
         },
         {
-          "Label" : "LDCO", 
+          "Label" : "AUGEAR_REVERSE", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_REVERSE_ON - Simple"
         }
@@ -405,9 +433,37 @@
           "Comment_3" : "Gear Selector removed from REVERSE."
         },
         {
-          "Label" : "LDCO", 
+          "Label" : "AUGEAR_REVERSE", 
           "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
           "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_REVERSE_OFF - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Drive_On" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_DRIVE",
+          "Comment_2" : "Animation to run on gear select. DRIVE.",
+          "Comment_3" : "Gear Selector placed in DRIVE."
+        },
+        {
+          "Label" : "AUGEAR_DRIVE", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_DRIVE_ON - Simple"
+        }
+      ],
+
+      "Automobile - Gear Select_Drive_Off" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_DRIVE",
+          "Comment_2" : "Animation to run on gear select. DRIVE.",
+          "Comment_3" : "Gear Selector removed from DRIVE."
+        },
+        {
+          "Label" : "AUGEAR_DRIVE", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Car", "String_Var_2" : "AUGEAR_DRIVE_OFF - Simple"
         }
       ],
 
@@ -792,11 +848,11 @@
         },
         {
           "Label" : "AUGEAR_PARK",
-          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 5, "Speed_Of_LED_Walk" : 150, 
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "0,32,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|5", 
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10", 
           "Clear_On_End" : false, "Off_During_Day" : false
         }
       ],
@@ -816,6 +872,39 @@
         }
       ],
 
+      "AUGEAR_NEUTRAL_ON - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_NEUTRAL",
+          "Comment_2" : "Animation to run on gear select. NEUTRAL.",
+          "Comment_3" : "Gear Selector placed in NEUTRAL."
+        },
+        {
+          "Label" : "AUGEAR_NEUTRAL",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150,  
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "16,16,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10", 
+          "Clear_On_End" : false, "Off_During_Day" : false
+        }
+      ],
+
+      "AUGEAR_NEUTRAL_OFF - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_NEUTRAL",
+          "Comment_2" : "Animation to run on gear select. NEUTRAL.",
+          "Comment_3" : "Gear Selector removed from NEUTRAL."
+        },
+        {
+          "Label" : "AUGEAR_NEUTRAL",  
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_NEUTRAL"
+        }
+      ],
+
       "AUGEAR_REVERSE_ON - Simple" : 
       [
         {
@@ -825,11 +914,11 @@
         },
         {
           "Label" : "AUGEAR_REVERSE",
-          "Start_Delay_Time" : 1500, "Duration_Of_Brighness" : 5, "Speed_Of_LED_Walk" : 150, 
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150,  
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
-          "Start_1" : "0,0,0", "Dest_1" : "32,0,0", 
+          "Start_1" : "0,0,0", "Dest_1" : "0,0,32", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|5", 
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10", 
           "Clear_On_End" : false, "Off_During_Day" : false
         }
       ],
@@ -846,6 +935,39 @@
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_REVERSE"
+        }
+      ],
+
+      "AUGEAR_DRIVE_ON - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_DRIVE",
+          "Comment_2" : "Animation to run on gear select. DRIVE.",
+          "Comment_3" : "Gear Selector placed in DRIVE."
+        },
+        {
+          "Label" : "AUGEAR_DRIVE",
+          "Start_Delay_Time" : 500, "Duration_Of_Brighness" : 2000, "Speed_Of_LED_Walk" : 150,  
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
+          "Start_1" : "0,0,0", "Dest_1" : "32,0,0", 
+          "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10", 
+          "Clear_On_End" : false, "Off_During_Day" : false
+        }
+      ],
+
+      "AUGEAR_DRIVE_OFF - Simple" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_DRIVE",
+          "Comment_2" : "Animation to run on gear select. DRIVE.",
+          "Comment_3" : "Gear Selector removed from DRIVE."
+        },
+        {
+          "Label" : "AUGEAR_DRIVE",  
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_DRIVE"
         }
       ]
     }

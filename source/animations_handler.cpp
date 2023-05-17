@@ -533,38 +533,41 @@ void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tme
               {
                 // Determine the event channel to receive the event.
                 channel = sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip].intCHANNEL;
+               
+                timed_event_data new_timed_event;
 
-                string Label = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Label;
-                int Start_Delay_Time = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_Delay_Time;
-                int Duration_Of_Brighness = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Duration_Of_Brighness;
-                int Speed_Of_LED_Walk = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Speed_Of_LED_Walk;
-                int Animation_Walk_Type = determine_strip_animation(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Animation_Walk_Type);
-                int Animation_Of_LED = determine_led_animation(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Animation_Of_LED);          
-                bool Invert_Color = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Invert_Color;
-                CRGB Start_1 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_1);
-                CRGB Dest_1 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_1);
-                CRGB Start_2 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_2);
-                CRGB Dest_2 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_2);
-                int LED_Start_Pos = determine_led_pos(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].LED_Start_Pos, 
+                new_timed_event.strIdent = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Label;
+                new_timed_event.tmeSTARTTIME = tmeCurrentTime + LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_Delay_Time;
+                new_timed_event.intDURATION = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Duration_Of_Brighness;
+                new_timed_event.intSPEED = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Speed_Of_LED_Walk;
+                new_timed_event.bytANIMATION = determine_strip_animation(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Animation_Walk_Type);
+                new_timed_event.bytLEDANIMATION = determine_led_animation(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Animation_Of_LED);          
+                new_timed_event.booINVERTCOLOR = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Invert_Color;
+
+                new_timed_event.crgbCOLORSTART1 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_1);
+                new_timed_event.crgbCOLORDEST1 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_1);
+                new_timed_event.crgbCOLORSTART2 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Start_2);
+                new_timed_event.crgbCOLORDEST2 = determine_led_color(sdSysData, LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Dest_2);
+                
+                new_timed_event.intSTARTPOS = determine_led_pos(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].LED_Start_Pos, 
                                                       sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip]);
-                int LED_End_Pos = determine_led_pos(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].LED_End_Pos, 
+                new_timed_event.intENDPOS = determine_led_pos(LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].LED_End_Pos, 
                                                     sdSysData.CONFIG.LED_MAIN[system].vLED_GROUPS[group].vLED_STRIPS[strip]);
-                bool Repeat = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Repeat;
-                bool Clear_On_End = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Clear_On_End;
-                bool Off_During_Day = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Off_During_Day;
-                string String_Var_1 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_1;
-                string String_Var_2 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_2;
+                
+                new_timed_event.booREPEAT = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Repeat;
+                new_timed_event.booCLEARONEND = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Clear_On_End;
+                new_timed_event.booOFFDURINGDAY = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Off_During_Day;
+                
+                new_timed_event.String_Var_1 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_1;
+                new_timed_event.String_Var_2 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_2;
+                new_timed_event.Assigned_Group = On_Group;
 
-                int Assigned_Group = On_Group;
+                new_timed_event.booCOMPLETE = false;
 
                 // Only set the event if Animation_Walk_Type and Animation_Of_LED is not -1
-                if(Animation_Walk_Type > -1)
+                if(new_timed_event.bytANIMATION > -1)
                 {
-                  EVENTS[channel].set(Label, tmeCurrentTime, Start_Delay_Time, Duration_Of_Brighness, Speed_Of_LED_Walk, 
-                                      Animation_Walk_Type, Animation_Of_LED, Invert_Color, 
-                                      Start_1, Dest_1, Start_2, Dest_2, 
-                                      LED_Start_Pos, LED_End_Pos, Repeat, Clear_On_End, Off_During_Day, 
-                                      String_Var_1, String_Var_2, Assigned_Group);
+                  EVENTS[channel].set_timed_event(new_timed_event);
                 }
               }  
             }
@@ -608,6 +611,11 @@ void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tme
                       string String_Var_1, string String_Var_2)
 {
   call_animation(sdSysData,  tmeCurrentTime,  Collection_Name, Animation_Name, -1, String_Var_1, String_Var_2);
+}
+
+void modify_running_animation_brightness(string Event_Identification, float Brightness)
+{
+  
 }
 
 void ANIMATION_HANDLER::process_events(system_data &sdSysData, unsigned long tmeCurrentTime)

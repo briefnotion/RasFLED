@@ -28,7 +28,10 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
     {
       // if automobile is no longer available, make sure all related lights are off.
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Park_Off");
-      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Revrese_Off");
+      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Neutral_Off");
+      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Reverse_Off");
+      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+      LIGHT_DRIVE_ON = false;
     }
   }
 
@@ -37,36 +40,94 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
 
     // Gear Selection
 
-    // Park
+    // Changing Gear to Park
     if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_park(), GEAR_PARK) == true)
     {
       if (GEAR_PARK == true)
       {
-        // Call animation to turn on park color.
+        // Call animation to turn on Park color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Park_On");
       }
       else
       {
-        // Call animation to turn off park color.
+        // Call animation to turn off Park color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Park_Off");        
       }
     }
+    
+    // Changing Gear to Neutral
+    if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_neutral(), GEAR_NEUTRAL) == true)
+    {
+      if (GEAR_NEUTRAL == true)
+      {
+        // Call animation to turn on Neutral color.
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Neutral_On");
+      }
+      else
+      {
+        // Call animation to turn off Neutral color.
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Neutral_Off");        
+      }
+    }
 
-    // Revrese
+    // Changing Gear to Reverse
     if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_reverse(), GEAR_REVERSE) == true)
     {
       if (GEAR_REVERSE == true)
       {
-        // Call animation to turn on park color.
+        // Call animation to turn on Reverse color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Reverse_On");
       }
       else
       {
-        // Call animation to turn off park color.
+        // Call animation to turn off Reverse color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Reverse_Off");        
       }
     }
 
+    // Changing Gear to Drive
+    if (set_bool_with_change_notify(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_drive() || 
+                                    sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_low(), GEAR_DRIVE) == true)
+    {
+      if (GEAR_DRIVE == true)
+      {
+        // Call animation to turn on Drive color.
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_On");
+        LIGHT_DRIVE_ON = true;
+      }
+      else
+      {
+        // Call animation to turn off Drive color.
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+        LIGHT_DRIVE_ON = false;      
+      }
+    }
+
+    // While Driving
+
+    if (GEAR_DRIVE == true)
+    {
+      // Call animation to turn on Drive color.
+
+      // Turn off light if over speed
+      if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > 5)
+      {
+        if (LIGHT_DRIVE_ON == true)
+        {
+          Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+          LIGHT_DRIVE_ON = false;
+        }
+      }
+      else if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < 4)
+      // Turn on light if under speed
+      {
+        if (LIGHT_DRIVE_ON == false)
+        {
+          Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_On");
+          LIGHT_DRIVE_ON = true;
+        }
+      }
+    }
   }
 }
 
