@@ -20,6 +20,7 @@
 #include "animations_definitions.h"
 #include "animations_storage.h"
 #include "fledcore.h"
+#include "LEDstuff.h"
 
 #include "consoleanddata.h"
 
@@ -152,8 +153,17 @@ class ANIMATION_HANDLER
   //  String_Var_1    - For passing data, like collection name, to other events, via the json settings
   //  String_Var_2    - For passing data, like animation name, to other events, via the json settings
 
-  void modify_running_animation_brightness(string Event_Identification, float Brightness);
-  // Search through active animations with Identity and change brightness attribute.
+  void mod_run_anim_color_start_1(string Label, CRGB Color);
+  // Search through active animations with Identity and change.
+
+  void mod_run_anim_color_start_2(string Label, CRGB Color);
+  // Search through active animations with Identity and change.
+  
+  void mod_run_anim_color_dest_1(string Label, CRGB Color);
+  // Search through active animations with Identity and change.
+  
+  void mod_run_anim_color_dest_2(string Label, CRGB Color);
+  // Search through active animations with Identity and change.
 
   void process_events(system_data &sdSysData, unsigned long tmeCurrentTime);
   // Processes

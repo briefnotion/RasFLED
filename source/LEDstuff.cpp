@@ -72,6 +72,16 @@ CRGB CRGB::StringtoCRGB(string strCRGB)
   return CRGB(r,g,b);
 }
 
+CRGB CRGB::brightness(float Multiplier)
+{
+  CRGB ret_crgb;
+
+  ret_crgb.r = (int)((float)r * Multiplier);
+  ret_crgb.g = (int)((float)g * Multiplier);
+  ret_crgb.b = (int)((float)b * Multiplier);
+
+  return ret_crgb;
+}
 
 
 // -------------------------------------------------------------------------------------

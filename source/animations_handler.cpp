@@ -618,6 +618,63 @@ void modify_running_animation_brightness(string Event_Identification, float Brig
   
 }
 
+void ANIMATION_HANDLER::mod_run_anim_color_start_1(string Label, CRGB Color)
+{
+  for (int channel = 0; channel < EVENTS.size(); channel++)
+  {
+    for (int event = 0; event < EVENTS[channel].teDATA.size(); event++)
+    {
+      if (EVENTS[channel].teDATA[event].strIdent == Label)
+      {
+        EVENTS[channel].teDATA[event].crgbCOLORSTART1 = Color;
+      }
+    }
+  }
+}
+
+void ANIMATION_HANDLER::mod_run_anim_color_start_2(string Label, CRGB Color)
+{
+  for (int channel = 0; channel < EVENTS.size(); channel++)
+  {
+    for (int event = 0; event < EVENTS[channel].teDATA.size(); event++)
+    {
+      if (EVENTS[channel].teDATA[event].strIdent == Label)
+      {
+        EVENTS[channel].teDATA[event].crgbCOLORSTART2 = Color;
+      }
+    }
+  }
+}
+
+void ANIMATION_HANDLER::mod_run_anim_color_dest_1(string Label, CRGB Color)
+{
+  for (int channel = 0; channel < EVENTS.size(); channel++)
+  {
+    for (int event = 0; event < EVENTS[channel].teDATA.size(); event++)
+    {
+      if (EVENTS[channel].teDATA[event].strIdent == Label)
+      {
+        EVENTS[channel].teDATA[event].crgbCOLORDEST1 = Color;
+      }
+    }
+  }
+}
+
+void ANIMATION_HANDLER::mod_run_anim_color_dest_2(string Label, CRGB Color)
+{
+  for (int channel = 0; channel < EVENTS.size(); channel++)
+  {
+    for (int event = 0; event < EVENTS[channel].teDATA.size(); event++)
+    {
+      if (EVENTS[channel].teDATA[event].strIdent == Label)
+      {
+        EVENTS[channel].teDATA[event].crgbCOLORDEST2 = Color;
+      }
+    }
+  }
+  
+}
+
 void ANIMATION_HANDLER::process_events(system_data &sdSysData, unsigned long tmeCurrentTime)
 {
   for (int channel = 0; channel < EVENTS.size(); channel++)

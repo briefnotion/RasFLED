@@ -20,7 +20,6 @@ using namespace std;
 
 void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER &Animations, unsigned long tmeCurrentTime)
 {
-
   // Check for changes in the automobile availability
   if ((set_bool_with_change_notify(sdSysData.CAR_INFO.active(), AUTO_ACTIVE) == true))
   {
@@ -109,8 +108,14 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
     {
       // Call animation to turn on Drive color.
 
+      float multiplier = 0;
+      float multiplier_caution = 0;
+
+      const int activate_speed = 10;
+      const int caution_speed = 5;
+
       // Turn off light if over speed
-      if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > 5)
+      if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > activate_speed + 4)
       {
         if (LIGHT_DRIVE_ON == true)
         {
@@ -118,7 +123,7 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
           LIGHT_DRIVE_ON = false;
         }
       }
-      else if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < 4)
+      else if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < activate_speed + 2)
       // Turn on light if under speed
       {
         if (LIGHT_DRIVE_ON == false)
@@ -126,6 +131,33 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
           Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_On");
           LIGHT_DRIVE_ON = true;
         }
+
+        // Multiplier
+        if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < activate_speed)
+        {
+          multiplier = 1 - sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() / activate_speed;
+        }
+        else 
+        {
+          multiplier = 0;
+        }
+        
+        // Caution Multiplier
+        if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < caution_speed)
+        {
+          multiplier_caution = 1 - sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() / caution_speed;
+        }
+        else 
+        {
+          multiplier_caution = 0;
+        }
+
+        CRGB drive_color = CRGB(32, (int)(16 * multiplier_caution), 0);
+
+        // Adjust atttributes
+        Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_O", drive_color.brightness(multiplier));
+        Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_D", drive_color.brightness(multiplier));
+
       }
     }
   }

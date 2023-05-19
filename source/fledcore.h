@@ -82,9 +82,6 @@ class timed_event_data
   string String_Var_2 = "";
   int Assigned_Group = -1;
 
-  // active modify attributes
-  float brightness = 1;   // factor of color.
-
   bool booCOMPLETE = true;
 
 

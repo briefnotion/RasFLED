@@ -47,6 +47,9 @@ public:
   string CRGBtoString();
 
   CRGB StringtoCRGB(string strCRGB);
+  
+  CRGB brightness(float Multiplier);
+
 };
 
 class bigCRGB

@@ -14,19 +14,10 @@
 
 // Standard Header Files
 #include <stdio.h>
-//#include <ncurses.h>
-//#include <string>
-//#include <deque>
 
 #include "auto.h"
 #include "animations_handler.h"
-//#include "stringthings.h"
-//#include "system.h"
-//#include "gadgets.h"
-//#include "helper_ncurses.h"
-//#include "auto.h"
-//#include "helper.h"
-//#include "symbols.h"
+#include "LEDstuff.h"
 
 using namespace std;
 

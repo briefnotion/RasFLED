@@ -63,6 +63,8 @@ animations_storage.h
 /home/pi/source/RasFLED/source/animations_storage.h
 fledcore.h
 /home/pi/source/RasFLED/source/fledcore.h
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
@@ -137,6 +139,8 @@ auto.h
 /home/pi/source/RasFLED/source/auto.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
 
 /home/pi/source/RasFLED/source/commands.h
 stdio.h
