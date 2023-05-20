@@ -1,3 +1,10 @@
+V 1.929_230519
+  - Changes made to animations_handler
+  - Continued building car status to animations.
+  - Changes made to animations.
+  - Started process of removing Radio Tab and Screen, because its too much 
+      of a mess that doesn't work correctly.
+
 V 1.928_230518
   - Changes made to animations_handler
   - Continued building car status to animations.

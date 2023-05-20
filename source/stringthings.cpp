@@ -386,23 +386,23 @@ int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Bl
   // 1 - Range Level
   // Magenta  Red  Yellow  Green  Blue  Cyan
 
-  if (abs(Value) <= Magenta)
+  if (Value <= Magenta)
   {
     return COLOR_MAGENTA;
   }
-  else if(abs(Value) <= Red)
+  else if(Value <= Red)
   {
     return COLOR_RED;
   }
-  else if(abs(Value) <= Yellow)
+  else if(Value <= Yellow)
   {
     return COLOR_YELLOW;
   }
-  else if(abs(Value) <= Green)
+  else if(Value <= Green)
   {
     return COLOR_GREEN;
   }
-  else if(abs(Value) <= Blue)
+  else if(Value <= Blue)
   {
     return COLOR_BLUE;
   }
@@ -420,23 +420,23 @@ int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Bl
   // 2 - Scale Level
   // Green  Yellow  Red  Magenta  Blue  Cyan
   
-  if (abs(Value) <= Green)
+  if (Value <= Green)
   {
     return COLOR_GREEN;
   }
-  else if(abs(Value) <= Yellow)
+  else if(Value <= Yellow)
   {
     return COLOR_YELLOW;
   }
-  else if(abs(Value) <= Red)
+  else if(Value <= Red)
   {
     return COLOR_RED;
   }
-  else if(abs(Value) <= Magenta)
+  else if(Value <= Magenta)
   {
     return COLOR_MAGENTA;
   }
-  else if(abs(Value) <= Blue)
+  else if(Value <= Blue)
   {
     return COLOR_BLUE;
   }

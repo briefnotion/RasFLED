@@ -570,7 +570,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     if (PROP.AIRCRAFT_DATA.ALTITUDE.conversion_success()==true)
     {
       // Aircraft Altitude data ok
-      tmp_text_color_correction(color_range(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value(), 50, 500, 3000, 12000, 40000),
+      tmp_text_color_correction(color_range(abs(PROP.AIRCRAFT_DATA.ALTITUDE.get_int_value()), 50, 500, 3000, 12000, 40000),
                                             tmp_bcolor, tmp_color);
 
       ALTITUDE_IND.set_color(tmp_bcolor, tmp_color);
@@ -618,7 +618,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Vertical Rate and Vertical Rate Indicator
     if (PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.conversion_success()==true)
     {
-      tmp_text_color_correction(color_scale(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value(), 2, 4, 6, 8, 10),
+      tmp_text_color_correction(color_scale(abs(PROP.AIRCRAFT_DATA.D_FLIGHT_ANGLE.get_float_value()), 2, 4, 6, 8, 10),
                                       tmp_bcolor, tmp_color);
 
 
@@ -636,7 +636,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
     // Aircraft Speed and Speed Indicator
     if (PROP.AIRCRAFT_DATA.SPEED.conversion_success()==true)
     {
-      tmp_text_color_correction(color_range(PROP.AIRCRAFT_DATA.SPEED.get_float_value(), 60, 80, 100, 160, 600),
+      tmp_text_color_correction(color_range(abs(PROP.AIRCRAFT_DATA.SPEED.get_float_value()), 60, 80, 100, 160, 600),
                                             tmp_bcolor, tmp_color);
 
       SPEED_IND.set_color(tmp_bcolor, tmp_color);
@@ -701,7 +701,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       if (  PROP.AIRCRAFT_DATA.SEEN_POS.conversion_success()==true &&
             PROP.AIRCRAFT_DATA.POSITION.GLOBAL_POSITION_FOUND == true)
       {
-        tmp_text_color_correction(color_scale(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value(), 5, 45, 65, 0, 0),
+        tmp_text_color_correction(color_scale(abs(PROP.AIRCRAFT_DATA.SEEN_POS.get_float_value()), 5, 45, 65, 0, 0),
                                               tmp_bcolor, tmp_color);
 
         COORD_TTL_IND.set_color(tmp_bcolor, tmp_color);
@@ -715,7 +715,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       // Aircraft Data TTL
       if (PROP.AIRCRAFT_DATA.SEEN.conversion_success()==true)
       {
-        tmp_text_color_correction(color_scale(PROP.AIRCRAFT_DATA.SEEN.get_float_value(), 70, 170, 290, 0, 0),
+        tmp_text_color_correction(color_scale(abs(PROP.AIRCRAFT_DATA.SEEN.get_float_value()), 70, 170, 290, 0, 0),
                                               tmp_bcolor, tmp_color);
 
         DATA_TTL_IND.set_color(tmp_bcolor, tmp_color);
@@ -725,7 +725,7 @@ bool ADSB_Channel::draw(bool Refresh, unsigned long tmeFrame_Time)
       // Aircraft RSSI Strength
       if (PROP.AIRCRAFT_DATA.RSSI.conversion_success()==true)
       {
-        tmp_text_color_correction(color_scale(PROP.AIRCRAFT_DATA.RSSI.get_float_value(), 18, 30, 32, 34, 36),
+        tmp_text_color_correction(color_scale(abs(PROP.AIRCRAFT_DATA.RSSI.get_float_value()), 18, 30, 32, 34, 36),
                                               tmp_bcolor, tmp_color);
 
         SIG_STR_IND.set_color(tmp_bcolor, tmp_color);

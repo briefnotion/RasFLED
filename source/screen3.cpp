@@ -1282,7 +1282,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
     bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 3 +4);
     bzTabs.create_button();
-
+    
     bzTabs.NEW_BUTTON_PROP.ID = 6;
     bzTabs.NEW_BUTTON_PROP.NAME = "TAB_ADS_B_SCREEN";
     bzTabs.NEW_BUTTON_PROP.LABEL = "ADS-B";
@@ -1321,6 +1321,10 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
     // Set Y Split
     YSplit = YSplit + YTabSize;
+
+    //
+    bzTabs.set_enabled("Radio", false);
+    bzTabs.set_hidden("Radio", true);
   }
 
   // probably does something for the tty terminal.  probably should have 
