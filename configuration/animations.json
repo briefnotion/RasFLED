@@ -489,6 +489,18 @@
         }
       ],
 
+      "Automobile - Velocity_Off" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_VELOCITY"
+        },
+        {
+          "Label" : "AUGEAR_VELOCITY", 
+          "Start_Delay_Time" : 100, "Animation_Walk_Type" : "AnEvSchedule",
+          "String_Var_1" : "Pyrrhic", "String_Var_2" : "AUGEAR_VELOCITY_OFF"
+        }
+      ],
+
 
 
       "This Door Opened - Exterior" : 
@@ -1739,7 +1751,7 @@
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "0,32,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10", 
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|20", 
           "Clear_On_End" : false, "Off_During_Day" : false
         },
         {
@@ -1748,7 +1760,7 @@
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 100, "Speed_Of_LED_Walk" : 25, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
           "Dest_1" : "30,30,30",
-          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10",  
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|20",  
           "Repeat" : false, "Clear_On_End" : true, "Off_During_Day" : true
         }
       ],
@@ -1767,7 +1779,7 @@
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiFadeDith", 
           "Start_1" : "0,0,0", "Dest_1" : "0,32,0", 
           "Start_2" : "0,0,0", "Dest_2" : "0,0,0",
-          "LED_Start_Pos" : "from_bot|0", "LED_End_Pos" : "from_bot|10", 
+          "LED_Start_Pos" : "from_bot|0", "LED_End_Pos" : "from_bot|20", 
           "Clear_On_End" : false, "Off_During_Day" : false
         },
         {
@@ -1776,7 +1788,7 @@
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 100, "Speed_Of_LED_Walk" : 25, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
           "Dest_1" : "30,30,30",
-          "LED_Start_Pos" : "from_bot|0", "LED_End_Pos" : "from_bot|10",  
+          "LED_Start_Pos" : "from_bot|0", "LED_End_Pos" : "from_bot|20",  
           "Repeat" : false, "Clear_On_End" : true, "Off_During_Day" : true
         }
       ],
@@ -1976,11 +1988,41 @@
         {
           "Comment_1" : "Pusle walk bright spot",
           "Label" : "TEMP",
-          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 100, "Speed_Of_LED_Walk" : 25, 
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 1000, "Speed_Of_LED_Walk" : 25, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
           "Dest_1" : "5,5,5",
           "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10",  
           "Repeat" : false, "Clear_On_End" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Speed test",
+          "Label" : "AUGEAR_VELOCITY_O",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "15,0,0",
+          "LED_Start_Pos" : "from_end|0", "LED_End_Pos" : "from_2/3|0",  
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : false, 
+          "Velocity" : true
+        },
+        {
+          "Comment_1" : "Speed test",
+          "Label" : "AUGEAR_VELOCITY_O",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "15,0,0",
+          "LED_Start_Pos" : "from_2/3|0", "LED_End_Pos" : "from_1/3|0",  
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : false, 
+          "Velocity" : true
+        },
+        {
+          "Comment_1" : "Speed test",
+          "Label" : "AUGEAR_VELOCITY_O",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "15,0,0",
+          "LED_Start_Pos" : "from_1/3|0", "LED_End_Pos" : "from_start|0",  
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : false, 
+          "Velocity" : true
         }
       ],
 
@@ -2009,6 +2051,36 @@
           "Dest_1" : "30,30,30",
           "LED_Start_Pos" : "from_bot|0", "LED_End_Pos" : "from_bot|10", 
           "Repeat" : false, "Clear_On_End" : true, "Off_During_Day" : true
+        },
+        {
+          "Comment_1" : "Speed test",
+          "Label" : "AUGEAR_VELOCITY_D",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "15,0,0",
+          "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_2/3|0",  
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : false, 
+          "Velocity" : true
+        },
+        {
+          "Comment_1" : "Speed test",
+          "Label" : "AUGEAR_VELOCITY_D",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "15,0,0",
+          "LED_Start_Pos" : "from_2/3|0", "LED_End_Pos" : "from_1/3|0",  
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : false, 
+          "Velocity" : true
+        },
+        {
+          "Comment_1" : "Speed test",
+          "Label" : "AUGEAR_VELOCITY_D",
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 250, "Speed_Of_LED_Walk" : 50, 
+          "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
+          "Dest_1" : "15,0,0",
+          "LED_Start_Pos" : "from_1/3|0", "LED_End_Pos" : "from_bot|0",  
+          "Repeat" : true, "Clear_On_End" : false, "Off_During_Day" : false, 
+          "Velocity" : true
         }
       ],
 
@@ -2030,6 +2102,25 @@
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
           "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
           "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_DRIVE_D"
+        }
+      ],
+
+      "AUGEAR_VELOCITY_OFF" : 
+      [
+        {
+          "Comment_1" : "Labels: AUGEAR_VELOCITY"
+        },
+        {
+          "Label" : "AUGEAR_VELOCITY",  
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_VELOCITY_D"
+        },
+        {
+          "Label" : "AUGEAR_VELOCITY",  
+          "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 2000, 
+          "Animation_Walk_Type" : "AnEvSetToEnd", "Dest_1" : "0,0,0",
+          "Repeat" : true, "Clear_On_End" : true, "String_Var_1" : "AUGEAR_VELOCITY_O"
         }
       ]
     }

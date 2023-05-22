@@ -38,6 +38,11 @@ void timed_event_data::PostCheck(unsigned long tmeCurrent)
       booCOMPLETE = false;
       tmeSTARTTIME = tmeCurrent;  // Using current time here because we want
       //  to keep the frames the same.
+
+      if (VELOCITY == true)
+      {
+        PREV_TIME_STAMP = tmeCurrent;
+      }
     }
   }
 }
@@ -462,6 +467,33 @@ bool timed_event::execute2(Console &cons, system_data &sdSysData, stupid_random 
 
       if (teDATA[event].booCOMPLETE == false)
       {
+
+        //Make adjustment if Event is a Velocity
+        if (teDATA[event].VELOCITY == true)
+        {
+          
+          if ( teDATA[event].PREV_TIME_STAMP == 0)
+          {
+             teDATA[event].PREV_TIME_STAMP = tmeCurrentTime;
+          }
+          else
+          {
+            int duration = tmeCurrentTime - teDATA[event].PREV_TIME_STAMP;
+
+            teDATA[event].tmeSTARTTIME = teDATA[event].tmeSTARTTIME + duration - (int)((float)duration * teDATA[event].VELOCITY_VALUE);
+
+            // to test at 1 Miph.
+            //teDATA[event].tmeSTARTTIME = teDATA[event].tmeSTARTTIME + duration - (int)((float)duration * 1);
+
+            if (teDATA[event].tmeSTARTTIME > 4294967295 - 3600000)
+            {
+              teDATA[event].tmeSTARTTIME = 0;
+            }
+            
+            teDATA[event].PREV_TIME_STAMP = tmeCurrentTime;
+          }
+        }
+
         // OK, so an event is schedule, but is it ready to start?
         if (tmeCurrentTime >= teDATA[event].tmeSTARTTIME)
         {

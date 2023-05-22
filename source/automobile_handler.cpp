@@ -30,6 +30,7 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Neutral_Off");
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Reverse_Off");
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off");
       LIGHT_DRIVE_ON = false;
     }
   }
@@ -98,6 +99,7 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
       {
         // Call animation to turn off Drive color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off"); 
         LIGHT_DRIVE_ON = false;      
       }
     }
@@ -120,6 +122,7 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
         if (LIGHT_DRIVE_ON == true)
         {
           Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+          Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off");
           LIGHT_DRIVE_ON = false;
         }
       }
@@ -153,10 +156,19 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
         }
 
         CRGB drive_color = CRGB(32, (int)(16 * multiplier_caution), 0);
+        CRGB velocity_color = CRGB((int)(16 * multiplier_caution), 0, 0);
 
         // Adjust atttributes
+        // Gear
         Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_O", drive_color.brightness(multiplier));
         Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_D", drive_color.brightness(multiplier));
+
+        // Velocity
+        Animations.mod_run_anim_color_dest_1("AUGEAR_VELOCITY_D", velocity_color.brightness(multiplier));
+        Animations.mod_run_anim_color_dest_1("AUGEAR_VELOCITY_O", velocity_color.brightness(multiplier));
+
+        Animations.mod_run_anim_velocity("AUGEAR_VELOCITY_D", sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph());
+        Animations.mod_run_anim_velocity("AUGEAR_VELOCITY_O", sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph());
 
       }
     }

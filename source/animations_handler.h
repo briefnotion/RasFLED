@@ -164,6 +164,9 @@ class ANIMATION_HANDLER
   
   void mod_run_anim_color_dest_2(string Label, CRGB Color);
   // Search through active animations with Identity and change.
+  
+  void mod_run_anim_velocity(string Label, float Velocity);
+  // Search through active animations with Identity and change.
 
   void process_events(system_data &sdSysData, unsigned long tmeCurrentTime);
   // Processes

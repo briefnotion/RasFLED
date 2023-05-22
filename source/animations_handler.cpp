@@ -172,6 +172,12 @@ void ANIMATION_HANDLER::EvSetToEnd(int Channel_Num, int Event_Num, unsigned long
           // Check the event we are stopping to make sure its not the event calling the SetToEnd.
           if (Event_Num != eventscan)
           {
+            // If the event is a velocity, set its speed to an outragous number to guarantee it gets 
+            //  to the end without any more draws
+            if (EVENTS[Channel_Num].teDATA[eventscan].VELOCITY == true)
+            {
+              EVENTS[Channel_Num].teDATA[eventscan].VELOCITY_VALUE = 100;
+            }
 
             // End Animations
 
@@ -560,6 +566,9 @@ void ANIMATION_HANDLER::call_animation(system_data &sdSysData, unsigned long tme
                 
                 new_timed_event.String_Var_1 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_1;
                 new_timed_event.String_Var_2 = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].String_Var_2;
+
+                new_timed_event.VELOCITY = LIBRARY.COLLECTION[collection_pos].ANIMATIONS[animation_pos].EVENTS[event].Velocity;
+
                 new_timed_event.Assigned_Group = On_Group;
 
                 new_timed_event.booCOMPLETE = false;
@@ -672,7 +681,20 @@ void ANIMATION_HANDLER::mod_run_anim_color_dest_2(string Label, CRGB Color)
       }
     }
   }
-  
+}
+
+void ANIMATION_HANDLER::mod_run_anim_velocity(string Label, float Velocity)
+{
+  for (int channel = 0; channel < EVENTS.size(); channel++)
+  {
+    for (int event = 0; event < EVENTS[channel].teDATA.size(); event++)
+    {
+      if (EVENTS[channel].teDATA[event].strIdent == Label)
+      {
+        EVENTS[channel].teDATA[event].VELOCITY_VALUE = Velocity;
+      }
+    }
+  }
 }
 
 void ANIMATION_HANDLER::process_events(system_data &sdSysData, unsigned long tmeCurrentTime)

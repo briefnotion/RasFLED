@@ -78,6 +78,8 @@ bool ANIMATIONS_STORAGE::load_collections(string Directory, string Filename)
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Off_During_Day", tmp_event.Off_During_Day);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("String_Var_1", tmp_event.String_Var_1);
             animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("String_Var_2", tmp_event.String_Var_2);
+
+            animations_json.ROOT.DATA[collection].DATA[0].DATA[animation].DATA[event].DATA[item].get_if_is("Velocity", tmp_event.Velocity);
           }
         
           tmp_animation.EVENTS.push_back(tmp_event);

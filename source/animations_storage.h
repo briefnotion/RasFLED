@@ -50,6 +50,9 @@ class ANIMATIONS_EVENT
   bool Off_During_Day = false;
   string String_Var_1 = "";
   string String_Var_2 = "";
+
+  // Velocity
+  bool Velocity = false;
   
   //  Extra carry over info
   int Assigned_Group = -1;

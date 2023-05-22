@@ -82,6 +82,11 @@ class timed_event_data
   string String_Var_2 = "";
   int Assigned_Group = -1;
 
+  // Velocity
+  bool VELOCITY = false;
+  float VELOCITY_VALUE = 0;
+  unsigned long PREV_TIME_STAMP = 0;
+
   bool booCOMPLETE = true;
 
 
