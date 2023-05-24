@@ -20,6 +20,9 @@ using namespace std;
 
 void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER &Animations, unsigned long tmeCurrentTime)
 {
+  // -------------------------------------------------------------------------------------
+  // Automobile Data Switched to Not Available
+
   // Check for changes in the automobile availability
   if ((set_bool_with_change_notify(sdSysData.CAR_INFO.active(), AUTO_ACTIVE) == true))
   {
@@ -31,13 +34,21 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Reverse_Off");
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
       Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off");
-      LIGHT_DRIVE_ON = false;
+      Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Door Handle Running Off");
+
+      GEAR_PARK = false;
+      GEAR_NEUTRAL = false;
+      GEAR_REVERSE = false;
+      GEAR_DRIVE = false;
+      LIGHT_VELOCITY_ON = false;
+      LIGHT_DOOR_HANDLE_ON = false;
     }
   }
 
+  // -------------------------------------------------------------------------------------
+  // Automobile Data Available
   if (sdSysData.CAR_INFO.active() == true)
   {
-
     // Gear Selection
 
     // Changing Gear to Park
@@ -93,48 +104,75 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
       {
         // Call animation to turn on Drive color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_On");
-        LIGHT_DRIVE_ON = true;
       }
       else
       {
         // Call animation to turn off Drive color.
         Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
-        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off"); 
-        LIGHT_DRIVE_ON = false;      
       }
     }
 
+    // -------------------------------------------------------------------------------------
     // While Driving
+    float multiplier = 0;
+    float multiplier_caution = 0;
 
-    if (GEAR_DRIVE == true)
+    const int activate_speed = 10;
+    const int caution_speed = 5;
+
+    // Turn off lights if speed over set value.
+    if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > activate_speed + 6)
     {
-      // Call animation to turn on Drive color.
-
-      float multiplier = 0;
-      float multiplier_caution = 0;
-
-      const int activate_speed = 10;
-      const int caution_speed = 5;
-
-      // Turn off light if over speed
-      if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > activate_speed + 4)
+      if (LIGHT_DOOR_HANDLE_ON == true)
       {
-        if (LIGHT_DRIVE_ON == true)
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Door Handle Running Off");
+        LIGHT_DOOR_HANDLE_ON = false;
+      }
+
+      if (LIGHT_DRIVE_ON == true)
+      {
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+        LIGHT_DRIVE_ON = false;
+      }
+
+      if (LIGHT_VELOCITY_ON == true)
+      {
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off");
+        LIGHT_VELOCITY_ON = false;
+      }
+    }
+
+    // -------------------------------------------------------------------------------------
+    // Turn on lights if speed under set value.
+    else if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < activate_speed + 4)
+    {
+      if (LIGHT_DOOR_HANDLE_ON == false)
+      {
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Door Handle Running On");
+        LIGHT_DOOR_HANDLE_ON = true;
+      }
+
+      if (LIGHT_DRIVE_ON == false)
+      {
+        Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_On");
+        LIGHT_DRIVE_ON = true;
+      }
+
+      if (set_bool_with_change_notify((GEAR_DRIVE == true || GEAR_NEUTRAL == true), LIGHT_VELOCITY_ON) == true)
+      {
+        if (LIGHT_VELOCITY_ON == true)
         {
-          Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_Off");
+          Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_On");
+        }
+        else
+        {
           Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Velocity_Off");
-          LIGHT_DRIVE_ON = false;
         }
       }
-      else if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < activate_speed + 2)
-      // Turn on light if under speed
-      {
-        if (LIGHT_DRIVE_ON == false)
-        {
-          Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "Automobile - Gear Select_Drive_On");
-          LIGHT_DRIVE_ON = true;
-        }
 
+      // Set colors if Velocity lights are on.  They could be off if in reverse or park.
+      if (LIGHT_VELOCITY_ON == true)
+      {
         // Multiplier
         if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < activate_speed)
         {
@@ -156,9 +194,9 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
         }
 
         CRGB drive_color = CRGB(32, (int)(16 * multiplier_caution), 0);
-        CRGB velocity_color = CRGB((int)(16 * multiplier_caution), 0, 0);
+        CRGB velocity_color = CRGB(8, 0, 0);
 
-        // Adjust atttributes
+        // Adjust light colors and atttributes
         // Gear
         Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_O", drive_color.brightness(multiplier));
         Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_D", drive_color.brightness(multiplier));
@@ -169,7 +207,6 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
 
         Animations.mod_run_anim_velocity("AUGEAR_VELOCITY_D", sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph());
         Animations.mod_run_anim_velocity("AUGEAR_VELOCITY_O", sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph());
-
       }
     }
   }

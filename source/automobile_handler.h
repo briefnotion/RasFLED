@@ -31,12 +31,14 @@ class AUTOMOBILE_HANDLER
 
   bool AUTO_ACTIVE = false;
 
-  bool GEAR_PARK = true;
-  bool GEAR_NEUTRAL = true;
-  bool GEAR_REVERSE = true;
-  
-  bool GEAR_DRIVE = true;
-  bool LIGHT_DRIVE_ON = true;
+  bool GEAR_PARK = false;
+  bool GEAR_NEUTRAL = false;
+  bool GEAR_REVERSE = false;
+  bool GEAR_DRIVE = false;
+
+  bool LIGHT_DRIVE_ON = false;
+  bool LIGHT_VELOCITY_ON = false;
+  bool LIGHT_DOOR_HANDLE_ON = false;
 
   public:
 
