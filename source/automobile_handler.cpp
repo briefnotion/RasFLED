@@ -18,6 +18,15 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 
+void AUTOMOBILE_HANDLER::alert(system_data &sdSysData, ANIMATION_HANDLER &Animations, unsigned long tmeCurrentTime)
+{
+  if (ALERT_TIMER.ping_down(tmeCurrentTime) == false)
+  {
+    Animations.call_animation(sdSysData, tmeCurrentTime, "Car", "FLASH");
+    ALERT_TIMER.ping_up(tmeCurrentTime, 10000);
+  }
+}
+
 void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER &Animations, unsigned long tmeCurrentTime)
 {
   // -------------------------------------------------------------------------------------
@@ -120,6 +129,33 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
     const int activate_speed = 10;
     const int caution_speed = 5;
 
+    // -------------------------------------------------------------------------------------
+    // Alerts at non stops at low speed
+    
+    // Alert if door is open
+    if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > 0 && 
+        sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() < 5)
+    {
+      if (sdSysData.CAR_INFO.STATUS.DOORS.hatchback_door_open() == true ||
+          sdSysData.CAR_INFO.STATUS.DOORS.hood_door_open() == true ||
+          sdSysData.CAR_INFO.STATUS.DOORS.lb_door_open() == true ||
+          sdSysData.CAR_INFO.STATUS.DOORS.lf_door_open() == true ||
+          sdSysData.CAR_INFO.STATUS.DOORS.rb_door_open() == true ||
+          sdSysData.CAR_INFO.STATUS.DOORS.rf_door_open() == true)
+      {
+        alert(sdSysData, Animations, tmeCurrentTime);
+      }
+
+      // Alert if only parking lights are on
+      if (sdSysData.CAR_INFO.STATUS.INDICATORS.val_lights_pos() == 1)
+      {
+          alert(sdSysData, Animations, tmeCurrentTime);
+      }
+    }
+
+    // -------------------------------------------------------------------------------------
+    // Lights
+    
     // Turn off lights if speed over set value.
     if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() > activate_speed + 6)
     {
@@ -195,6 +231,7 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
 
         CRGB drive_color = CRGB(32, (int)(16 * multiplier_caution), 0);
         CRGB velocity_color = CRGB(8, 0, 0);
+        CRGB drive_pulse_color = CRGB(30, 30, 30);
 
         // Adjust light colors and atttributes
         // Gear
@@ -207,6 +244,10 @@ void AUTOMOBILE_HANDLER::update_events(system_data &sdSysData, ANIMATION_HANDLER
 
         Animations.mod_run_anim_velocity("AUGEAR_VELOCITY_D", sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph());
         Animations.mod_run_anim_velocity("AUGEAR_VELOCITY_O", sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph());
+
+        // Keep?
+        Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_PULSE", drive_pulse_color.brightness(multiplier));
+        Animations.mod_run_anim_color_dest_1("AUGEAR_DRIVE_PULSE", drive_pulse_color.brightness(multiplier));
       }
     }
   }

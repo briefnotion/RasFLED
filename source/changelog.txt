@@ -1,3 +1,8 @@
+V 1.932_230525
+  - Changes made to animations_handler
+  - Continued building car status to animations.
+  - Changes made to animations.
+
 V 1.931_230523
   - Changes made to animations_handler
   - Continued building car status to animations.

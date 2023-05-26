@@ -18,6 +18,7 @@
 #include "auto.h"
 #include "animations_handler.h"
 #include "LEDstuff.h"
+#include "fled_time.h"
 
 using namespace std;
 
@@ -39,6 +40,11 @@ class AUTOMOBILE_HANDLER
   bool LIGHT_DRIVE_ON = false;
   bool LIGHT_VELOCITY_ON = false;
   bool LIGHT_DOOR_HANDLE_ON = false;
+
+  TIMED_PING ALERT_TIMER;   // Restrict multiple sequential alerts
+
+  void alert(system_data &sdSysData, ANIMATION_HANDLER &Animations, unsigned long tmeCurrentTime);
+  // Flash lights
 
   public:
 

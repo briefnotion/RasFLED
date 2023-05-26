@@ -133,10 +133,12 @@ class TIMED_PING
   // Retruns enabled;
 
   void ping_up(unsigned long current_time, int delay);
+  // Like, sending a ping signal out.
   // Start the timer for the event that needs to be triggered.
   // If already running, resets the trigger time.
 
   bool ping_down(unsigned long current_time);
+  // Like, did the sent signal get back yet.
   // Check for the event triggered time.
   // Returns true if interval time has not passed, and ping is enabled.
   //  Disables after returning false.

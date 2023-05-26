@@ -2027,10 +2027,10 @@
         },
         {
           "Comment_1" : "Pusle walk bright spot",
-          "Label" : "TEMP",
+          "Label" : "AUGEAR_DRIVE_PULSE",
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 100, "Speed_Of_LED_Walk" : 25, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
-          "Dest_1" : "5,5,5",
+          "Dest_1" : "30,30,30",
           "LED_Start_Pos" : "from_top|0", "LED_End_Pos" : "from_top|10",  
           "Repeat" : false, "Clear_On_End" : true, "Off_During_Day" : true
         }
@@ -2055,7 +2055,7 @@
         },
         {
           "Comment_1" : "Pusle walk bright spot",
-          "Label" : "TEMP",
+          "Label" : "AUGEAR_DRIVE_PULSE",
           "Start_Delay_Time" : 100, "Duration_Of_Brighness" : 100, "Speed_Of_LED_Walk" : 25, 
           "Animation_Walk_Type" : "AnEvSweep", "Animation_Of_LED" : "AnPiPulse", 
           "Dest_1" : "30,30,30",

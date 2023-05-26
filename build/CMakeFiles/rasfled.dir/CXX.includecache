@@ -141,6 +141,8 @@ animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
 LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
+fled_time.h
+/home/pi/source/RasFLED/source/fled_time.h
 
 /home/pi/source/RasFLED/source/commands.h
 stdio.h
