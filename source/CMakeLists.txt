@@ -31,7 +31,6 @@ add_executable(
   api_rtlairband.h
   alert_system.cpp
   LEDstuff.cpp
-  api_shared_memory.cpp
   commands.cpp
   comport.cpp
   auto.cpp

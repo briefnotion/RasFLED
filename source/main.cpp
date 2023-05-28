@@ -244,11 +244,6 @@ int loop()
 //  maybe a way to get some of this stuff out, subroutine, much of these routines. 
 {
   using namespace std;
-
-  // Prepare Shared Memory Space.
-  boost::interprocess::shared_memory_object shdmem{boost::interprocess::open_or_create, "Airband", boost::interprocess::read_write};
-  shdmem.truncate(1024);
-  boost::interprocess::mapped_region region_scan{shdmem, boost::interprocess::read_write};
   
   // ---------------------------------------------------------------------------------------
   // Is_Ready varibles for main loop.
@@ -284,9 +279,6 @@ int loop()
   // Switch Lights On
   sdSystem.Lights_On.set(true);
   
-  // Open Shared memory regions to manager
-  sdSystem.API_CHANNEL.open(region_scan);
-
   // Initialize wiring pi
   int intRet = wiringPiSetup(); 
 
@@ -858,10 +850,6 @@ int loop()
     // all the lights, we will take the latter clock cycles to get keybord input and update 
     // console with status and so on.
 
-    // Get store information from APIs.
-    //cons.printwait(to_string(sdSystem.get_API_info(region_scan)));
-    sdSystem.get_API_info(region_scan);
-
     // Is Keyboard or Mouse read ready -----------------
     if (input_from_user.is_ready(tmeCurrentMillis) == true)
     {
@@ -909,9 +897,6 @@ int loop()
         sdSystem.store_door_switch_states();
 
         store_event_counts(sdSystem, animations);
-
-        // Radio - Update all radio gadgets with new data.
-        cons.update_freqency_gadgets(sdSystem);
 
         // ADS-B - Update all ADS-B gadgets with new data.
         cons.update_ADS_B_gadgets(tmeCurrentMillis, sdSystem);
@@ -1046,25 +1031,6 @@ int loop()
     }
     thread_output_running = false;
   }
-
-  // Remove Shared Memory (if not active)
-  sdSystem.API_CHANNEL.close(region_scan);
-
-  /*
-  if (sdSystem.API_CHANNEL.get_binds(region_scan) == 0) // FIXME Reenable at some point.
-  {
-    cons.printi("Closing API.");
-    boost::interprocess::shared_memory_object::remove("Airband");
-  }
-  else
-  {
-    cons.printi("Leaving API.");
-  }
-  */
-
-  // Force removal becauese rtl_airband side not created
-  boost::interprocess::shared_memory_object::remove("Airband");
-
   
   // Shutdown RPI.
   shutdown();

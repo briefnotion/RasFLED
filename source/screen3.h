@@ -213,43 +213,7 @@ class Screen3
 
   public:
   AUTOMOBILE_GADGET AUTOMOBILE_PANEL;
-
-  private:
-
-  // Radio Screen Variables --------------------
-  int YRadioPos = -1;
-  int XRadioPos = 0;
-  int YRadioSize = -1;
-  int XRadioSize = -1;
-
-  int YBRadioSize = 4; // Radio Button Standard Sizes
-  int XBRadioSize = 8;
-
-  int YGadChannelSize = 4;  // Frequency Gadges Size
-  int XGadChannelSize = 40;
-  int YGadChannelPos = 0;  // Frequency Gadges Start Position
-  int XGadChannelPos = 8;
-
-  WINDOW * winRadio;
-  Title_Bar tiRadio;
-
-  public:
-  // Radio Frequency Gadgets for Radio Screen
-  Button_Zone_Manager bzRadio;
-
-  int Radio_Channel_Count = 50;   // Remove this limit in future if needed.
-  int Radio_Channel_Max_Display_Count = -1;
-  deque<Radio_Channel> Radio_Channels;
-
-  private:
-  // Radio Status
-  int YRadioStatusPos = -1;
-  int XRadioStatusPos = 0;
-  int YRadioStatusSize = 1;
-  int XRadioStatusSize = -1;
-
-  WINDOW * winRadioStatus;
-
+  
   private:
   // ADS_B Screen Variables --------------------
 

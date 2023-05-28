@@ -1,3 +1,6 @@
+V 1.933_230528
+  - Removed Radio Screen and most of its supporting code.
+
 V 1.932_230525
   - Changes made to animations_handler
   - Continued building car status to animations.

@@ -22,7 +22,6 @@
 #include "commands.h"
 #include "hardware_status.h"
 
-#include "api_shared_memory.h"
 #include "api_rtlairband.h"
 #include "radio_channel_coordinator.h"
 #include "aircraft_coordinator.h"
@@ -136,7 +135,6 @@ class system_data
 
   // Radio Variables
   API_SQUELCH_DESTINATION RECEIVED_SQUELCH;
-  API_CHANNEL_MEM API_CHANNEL;
   RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
 
@@ -149,8 +147,6 @@ class system_data
   AUTOMOBILE CAR_INFO;
 
   // -------------------------------------------------------------------------------------
-
-  int get_API_info(boost::interprocess::mapped_region &region_scan);
 
   void init();
 
@@ -302,8 +298,6 @@ class ScreenStatus
   SECTION_STATUS Window_Console;
   SECTION_STATUS Window_Automobile_Screen;
   SECTION_STATUS Window_Player;
-  SECTION_STATUS Window_Radio_Buttons;
-  SECTION_STATUS Window_Radio;
   SECTION_STATUS Window_ADS_B_Buttons;
   SECTION_STATUS Window_ADS_B_Screen;
   SECTION_STATUS Window_Log_Screen;

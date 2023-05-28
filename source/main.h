@@ -93,11 +93,6 @@
 
 #include "ws2811.h"
 
-// Boost libraries
-#include <boost/interprocess/shared_memory_object.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-
-
 // RASFled related header files
 #include "definitions.h"
 #include "helper.h"

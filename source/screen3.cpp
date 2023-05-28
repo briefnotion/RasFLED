@@ -277,12 +277,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   // Build any Gadgets that will be called.
 
   // Prep Status Screen Text Box.
-
-
-
-
-
-
   // Countdown Screen
   
   // Countdown Timer
@@ -386,32 +380,6 @@ void Screen3::set(system_data &sdSysData, ScreenStatus &ScrStat)
   Cycle_Time.PROP.PRINT_MAX = true;
   Cycle_Time.PROP.COLORS_ON = true;
   
-  // Prep Gadgets for Radio screen. 
-
-  // Radio Channel Frequency gadgets Properties for Multi Screen.
-  Radio_Channel tmp_radio_channel;  // Leaving defaults
-  //Radio_Channel_Properties tmp_radio_channel_props;  // Leaving defaults
-
-  // Create Radio Channel Frequency gadgets.
-  for (int x = 0; x < Radio_Channel_Count; x++)
-  {
-    Radio_Channels.push_back(tmp_radio_channel);
-    Radio_Channels[x].create(x, "FREQ", "Frequency", -1, COLOR_BLUE, COLOR_BLACK);
-  }
-
-  // Radio Channel Frequency gadgets Properties for Multi Screen.
-  Radio_Channel tmp_many_radio_channel;
-  Radio_Channel_Properties tmp_many_radio_channel_props;
-
-  tmp_many_radio_channel_props.SHOW_FREQUENCY = false;
-  tmp_many_radio_channel_props.BAR_SIZE = 15;
-  tmp_many_radio_channel_props.SHOW_MIN_MAX = false;
-  tmp_many_radio_channel_props.SHOW_SIGNAL = true;
-  tmp_many_radio_channel_props.SIGNAL_LABEL = "  sig: ";
-  tmp_many_radio_channel_props.SHOW_NOISE = false;
-
-  tmp_many_radio_channel.PROP = tmp_many_radio_channel_props;
-
   // Draw screen the entire screen.  reset is also 
   //  called when the screen is resized.  
   reset(sdSysData, ScrStat);
@@ -837,183 +805,12 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
   }
 
   // ---------------------------------------------------------------------------------------
-  // Color Radio Buttons Panel
-  if (ScrStat.Window_Radio_Buttons.value() == true)
-  {
-    // Recreate XSplit Size
-    //XSplit = XSplit - XCPickerSize * 2;
-
-    // Calculate Size and Position
-    YRadioPos = YSplit + YRadioStatusSize;
-    XRadioPos = 0;
-
-    // Prep Radio Buttons
-
-    bzRadio.clear();
-
-    bzRadio.NEW_BUTTON_PROP.VALUE = 0;
-    bzRadio.NEW_BUTTON_PROP.TYPE = 0;
-    bzRadio.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
-    bzRadio.NEW_BUTTON_PROP.SIZEY = YBRadioSize;
-    bzRadio.NEW_BUTTON_PROP.SIZEX = XBRadioSize;
-    bzRadio.NEW_BUTTON_PROP.BORDER.RIGHT = '|';
-
-    //bzRadio.move_resize(0, YRadioPos + (YBRadioSize *0), XRadioPos, YBRadioSize, XBRadioSize);
-    //bzRadio.create_button(0, "RADIOOFF", "%OFF", 0, 0, CRT_get_color_pair(COLOR_RED, COLOR_WHITE), 0);
-    bzRadio.NEW_BUTTON_PROP.ID = 0;
-    bzRadio.NEW_BUTTON_PROP.NAME = "RADIOOFF";
-    bzRadio.NEW_BUTTON_PROP.LABEL = "\nOFF";
-    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_RED;
-    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *0);
-    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
-    bzRadio.create_button();
-    
-    
-    //bzRadio.move_resize(1, YRadioPos + (YBRadioSize *1), XRadioPos, YBRadioSize, XBRadioSize);
-    //bzRadio.create_button(1, "LAFS", "AIR%LAF%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.NEW_BUTTON_PROP.ID = 1;
-    bzRadio.NEW_BUTTON_PROP.NAME = "LAFS";
-    bzRadio.NEW_BUTTON_PROP.LABEL = "AIR\nLAF\nSCAN";
-    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_BLUE;
-    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *1);
-    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
-    bzRadio.create_button();
-
-    //bzRadio.move_resize(2, YRadioPos + (YBRadioSize *2), XRadioPos, YBRadioSize, XBRadioSize);
-    //bzRadio.create_button(2, "CBS", "%CB%SCAN", 0, 0, CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE), 0);
-    bzRadio.NEW_BUTTON_PROP.ID = 2;
-    bzRadio.NEW_BUTTON_PROP.NAME = "CBS";
-    bzRadio.NEW_BUTTON_PROP.LABEL = "\nCB\nSCAN";
-    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_BLUE;
-    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *2);
-    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
-    bzRadio.create_button();
-
-    //bzRadio.move_resize(3, YRadioPos + (YBRadioSize *3), XRadioPos, YBRadioSize, XBRadioSize);
-    //bzRadio.create_button(3, "NOAA", "%NOAA", 0, 0, CRT_get_color_pair(COLOR_GREEN, COLOR_WHITE), 0);
-    bzRadio.NEW_BUTTON_PROP.ID = 3;
-    bzRadio.NEW_BUTTON_PROP.NAME = "NOAA";
-    bzRadio.NEW_BUTTON_PROP.LABEL = "\nNOAA";
-    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_GREEN;
-    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *3);
-    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
-    bzRadio.create_button();
-
-    //bzRadio.move_resize(4, YRadioPos + (YBRadioSize *4), XRadioPos, YBRadioSize, XBRadioSize);
-    //bzRadio.create_button(4, "EMERGENCY", "%EMER%GENCY", 0, 0, CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE), 0);
-    bzRadio.NEW_BUTTON_PROP.ID = 4;
-    bzRadio.NEW_BUTTON_PROP.NAME = "EMERGENCY";
-    bzRadio.NEW_BUTTON_PROP.LABEL = "\nEMER\nGENCY";
-    bzRadio.NEW_BUTTON_PROP.BCOLOR = COLOR_YELLOW;
-    bzRadio.NEW_BUTTON_PROP.POSY = YRadioPos + (YBRadioSize *4);
-    bzRadio.NEW_BUTTON_PROP.POSX = XRadioPos;
-    bzRadio.create_button();
-  }
-
-  // ---------------------------------------------------------------------------------------
-  // Radio Panel
-  if (ScrStat.Window_Radio.value() == true)
-  // Main Radio Screen
-  {
-    // Radio Status Window
-    // Calculate Size and Position
-    YRadioStatusPos = YSplit;
-    XRadioStatusPos = XRadioStatusPos;
-    YRadioStatusSize = YRadioStatusSize;
-    XRadioStatusSize =  XSplit;
-
-    // Build Window
-    winRadioStatus = newwin(YRadioStatusSize, XRadioStatusSize, YRadioStatusPos, XRadioStatusPos);
-
-    // Set Y Split
-    YSplit = YSplit + YRadioStatusSize;
-
-    // Create Screen
-    wrefresh(winRadioStatus);
-
-    // Radio Title Bar
-    tiRadio.PROP.POSY = YRadioStatusPos;
-    tiRadio.PROP.POSX = XRadioStatusPos;
-    tiRadio.PROP.SIZEY = YRadioStatusSize;
-    tiRadio.PROP.SIZEX = XRadioStatusSize;
-    tiRadio.PROP.SIZE = TitleSize;
-
-    tiRadio.PROP.BCOLOR = COLOR_BLACK;
-    tiRadio.PROP.COLOR = COLOR_WHITE;
-
-    // Set window color
-    wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
-  }
-
-  // ---------------------------------------------------------------------------------------
-  // Radio Panel
-  if (ScrStat.Window_Radio.value() == true)
-  {
-    // Radio Window
-    // Calculate Size and Position
-    YRadioPos = YSplit;
-    XRadioPos = XRadioPos;
-    YRadioSize = YMax - YSplit - YTabSize;
-    XRadioSize =  XSplit;
-
-    YSplit = YSplit + YRadioStatusSize;
-
-    // Build Window
-    winRadio = newwin(YRadioSize, XRadioSize, YRadioPos, XRadioPos);
-
-    // Set Y Split
-    YSplit = YSplit + YRadioSize;
-
-    // Radio Window Border
-    wborder(winRadio,' ',' ',' ',' ',' ',' ',' ',' ') ;
-
-    // Create Screen
-    wrefresh(winRadio);
-
-    // Radio Title Bar
-    tiRadio.PROP.LABEL = "RADIO";
-    tiRadio.create();
-
-    // Set window color
-    wbkgd(winRadio, COLOR_PAIR(0));
-
-    // the bottom line of the Radio.
-    strBotLine = "";
-    strBotLine = strBotLine.append(XRadioSize-1, '_');  // meh!
-
-    // Display Channels
-    // Try to not fill, and not exceed, the screen with Radio Gadgets.
-    int in_max_col = (XRadioSize - XGadChannelPos) / XGadChannelSize;
-    int in_max_row = YRadioSize / YGadChannelSize ;
-    int pos = 0;
-    Radio_Channel_Max_Display_Count = 0;
-
-    for(int x=0; x<in_max_col && pos < Radio_Channel_Count; x++)  // Colum
-    {
-      for(int y=0; y<in_max_row && pos < Radio_Channel_Count; y++) // Row
-      {
-        Radio_Channels[pos].move_resize(YRadioPos + YGadChannelPos + (YGadChannelSize *y), 
-                                              1 + XRadioPos + XGadChannelPos + (XGadChannelSize *x), 
-                                              YGadChannelSize, XGadChannelSize);
-        pos++;
-        Radio_Channel_Max_Display_Count++;
-      }
-    }
-
-    // Turn off remaining Gadgets
-    for(int rem_pos = Radio_Channel_Max_Display_Count; rem_pos < Radio_Channel_Count; rem_pos++)
-    {
-      Radio_Channels[rem_pos].PROP.TYPE = -1;
-    }
-  }
-
-  // ---------------------------------------------------------------------------------------
   if (ScrStat.Window_Log_Screen.value() == true)
   {
     // Radio Window
     // Calculate Size and Position
     YLog_ScreenPos = YSplit;
-    XLog_ScreenPos = XRadioPos;
+    XLog_ScreenPos = XLog_ScreenPos;
     YLog_ScreenSize = YMax - YSplit - YTabSize;
     XLog_ScreenSize =  XSplit;
 
@@ -1266,7 +1063,7 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.NAME = "TABPLAYER";
     bzTabs.NEW_BUTTON_PROP.LABEL = "Player";
     bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
-    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 1);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 1 +1);
     bzTabs.create_button();
 
     bzTabs.NEW_BUTTON_PROP.ID = 2;
@@ -1276,18 +1073,11 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 2 +2);
     bzTabs.create_button();
 
-    bzTabs.NEW_BUTTON_PROP.ID = 3;
-    bzTabs.NEW_BUTTON_PROP.NAME = "TABRADIO";
-    bzTabs.NEW_BUTTON_PROP.LABEL = "Radio";
-    bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
-    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 3 +4);
-    bzTabs.create_button();
-    
     bzTabs.NEW_BUTTON_PROP.ID = 6;
     bzTabs.NEW_BUTTON_PROP.NAME = "TAB_ADS_B_SCREEN";
     bzTabs.NEW_BUTTON_PROP.LABEL = "ADS-B";
     bzTabs.NEW_BUTTON_PROP.POSY = YTabPos + (YTabSize *0);
-    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 4 +4);
+    bzTabs.NEW_BUTTON_PROP.POSX = XTabPos + (XTabSize * 3 +3);
     bzTabs.create_button();
 
     bzTabs.NEW_BUTTON_PROP.ID = 8;
@@ -1307,8 +1097,6 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
     bzTabs.NEW_BUTTON_PROP.COLOR = COLOR_WHITE;
     
     bzTabs.create_button();
-    //bzTabs.set_enabled(10, false);
-
 
     if (id_of_val_1 > -1)
     {
@@ -1321,10 +1109,6 @@ void Screen3::reset(system_data &sdSysData, ScreenStatus &ScrStat)
 
     // Set Y Split
     YSplit = YSplit + YTabSize;
-
-    //
-    bzTabs.set_enabled("Radio", false);
-    bzTabs.set_hidden("Radio", true);
   }
 
   // probably does something for the tty terminal.  probably should have 
@@ -1396,20 +1180,6 @@ void Screen3::output_status(system_data &sdSysData, Keys &keywatch, ScreenStatus
   // Display Timer Indicator
   TIMER.set_inverse(sdSysData.cdTIMER.is_active());
   TIMER.set_text(" TIMER ");
-  
-  // Display Radio Indicator
-  /*
-  if(true)
-  {
-    wattron(winStatus, A_REVERSE);
-    mvwprintw(winStatus, 0, 53, " RADIO ");
-    wattroff(winStatus, A_REVERSE);
-  }
-  else
-  {
-    mvwprintw(winStatus, 0, 53, "       "); 
-  }
-  */
 
   // Display ADS-B Indicaor
   AUTO.set_inverse(sdSysData.CAR_INFO.active());
@@ -1804,34 +1574,6 @@ string Screen3::buffer()
   return strBuffer;
 }
 
-  // ---------------------------------------------------------------------------------------
-void Screen3::radio_status(system_data &sdSysData, ScreenStatus &ScrStat)
-// Shows the Radio Status Window
-{
-  // Print Status
-  if(ScrStat.Needs_Refresh == true || sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED == true)
-  {
-    if (sdSysData.RADIO_COORD.DEVICE_STATUS.ACTIVE == false)
-    {
-      wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_YELLOW, COLOR_WHITE)));
-    }
-    else
-    {
-      wbkgd(winRadioStatus, COLOR_PAIR(CRT_get_color_pair(COLOR_BLUE, COLOR_WHITE)));
-    }
-
-    mvwprintw(winRadioStatus, 0, 10, "Gain: %.1f", sdSysData.RADIO_COORD.DEVICE_STATUS.GAIN);
-
-    wrefresh(winRadioStatus);
-    
-    // Print Title Bar
-    tiRadio.draw(true);
-
-    // Changes to Radio Coord cleared.
-    sdSysData.RADIO_COORD.DEVICE_STATUS.CHANGED = false;
-  }
-}
-
 // ---------------------------------------------------------------------------------------
 void Screen3::automobile_screen(system_data &sdSysData, ScreenStatus &ScrStat)
 // Shows the Player Window
@@ -1839,23 +1581,6 @@ void Screen3::automobile_screen(system_data &sdSysData, ScreenStatus &ScrStat)
   AUTOMOBILE_OVERVIEW_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   AUTOMOBILE_PANEL.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
   tiAUTOMOBILE_Screen.draw(ScrStat.Needs_Refresh == true);
-}
-
-// ---------------------------------------------------------------------------------------
-void Screen3::radio(system_data &sdSysData, ScreenStatus &ScrStat)
-// Shows the Player Window
-{
-  // Print Status
-  radio_status(sdSysData, ScrStat);
-
-  // Print Radio Information
-  bzRadio.draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-
-  // Print Channel Gadgets
-  for(int pos = 0; pos < Radio_Channel_Max_Display_Count; pos++)
-  {
-    Radio_Channels[pos].draw(ScrStat.Needs_Refresh, sdSysData.tmeCURRENT_FRAME_TIME);
-  }
 }
 
 // ---------------------------------------------------------------------------------------
@@ -1951,13 +1676,7 @@ void Screen3::output(system_data &sdSysData, Keys &keywatch, ScreenStatus &ScrSt
   {
     automobile_screen(sdSysData, ScrStat);
   }
-
-  // Draw Radio window.
-  if (ScrStat.Window_Radio.value() == true)
-  {
-    radio(sdSysData, ScrStat);
-  }
-
+  
   // Draw Log Screen window.
   if (ScrStat.Window_ADS_B_Screen.value() == true)
   {

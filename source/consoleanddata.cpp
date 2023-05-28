@@ -43,23 +43,6 @@ void Console::update_freqency_gadgets_QF(system_data &sdSysData, int pos, Radio_
   }
 }
 
-void Console::update_freqency_gadgets(system_data &sdSysData)
-// Update all radio gadgets with new frequency information.
-{
-  //if (ScrStat.Window_Radio == true)
-  {
-    for(int pos = 0; pos < sdSysData.RADIO_COORD.size(); pos++)
-    {
-      if(pos < Screen.Radio_Channels.size())
-      {
-        update_freqency_gadgets_QF(sdSysData, pos, Screen.Radio_Channels[pos]);
-      }
-      sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED = false;
-      sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED = false;
-    }
-  }
-}
-
 void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
 {
   if(sdSysData.AIRCRAFT_COORD.DATA.CHANGED == true || Screen.ADSB_Grid.PROP.NEEDS_REFRESH_DATA == true)
@@ -274,9 +257,6 @@ void Console::tab_open_console(system_data &sdSysData)
 
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
 
-  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh);
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
@@ -295,9 +275,6 @@ void Console::tab_open_player(system_data &sdSysData)
   ScrStat.Window_Player.on(ScrStat.Needs_Refresh);         // Player
 
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
-
-  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -318,9 +295,6 @@ void Console::tab_open_automobile(system_data &sdSysData)
   
   ScrStat.Window_Automobile_Screen.on(ScrStat.Needs_Refresh);  // Automobile
 
-  ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
@@ -339,9 +313,6 @@ void Console::tab_open_radio(system_data &sdSysData)
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
   
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
-
-  ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
-  ScrStat.Window_Radio.on(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -362,9 +333,6 @@ void Console::tab_open_many_radio(system_data &sdSysData)
 
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
 
-  ScrStat.Window_Radio_Buttons.on(ScrStat.Needs_Refresh);  // Radio
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
@@ -383,9 +351,6 @@ void Console::tab_open_ads_b_screen(system_data &sdSysData)
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
-
-  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.on(ScrStat.Needs_Refresh);   // ADS_B
   ScrStat.Window_ADS_B_Screen.on(ScrStat.Needs_Refresh);
@@ -406,9 +371,6 @@ void Console::tab_open_log_screen(system_data &sdSysData)
 
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
 
-  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
-
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
 
@@ -427,9 +389,6 @@ void Console::tab_open_alerts(system_data &sdSysData)
   ScrStat.Window_Player.off(ScrStat.Needs_Refresh);        // Player
 
   ScrStat.Window_Automobile_Screen.off(ScrStat.Needs_Refresh);  // Automobile
-
-  ScrStat.Window_Radio_Buttons.off(ScrStat.Needs_Refresh); // Radio
-  ScrStat.Window_Radio.off(ScrStat.Needs_Refresh);
 
   ScrStat.Window_ADS_B_Buttons.off(ScrStat.Needs_Refresh);  // ADS_B
   ScrStat.Window_ADS_B_Screen.off(ScrStat.Needs_Refresh);
@@ -724,80 +683,6 @@ void Console::processmouseinput(system_data &sdSysData)
         keywatch.cmdIn('w');
         ScrStat.Window_CPicker.off(ScrStat.Needs_Refresh);
         Screen.buttons_menu_home(sdSysData);
-      }
-    }
-
-    // -----------------------------------
-    if(ScrStat.Window_Radio.value() == true)
-    {
-      if (Screen.bzRadio.check_click(mouse.x_clicked(),mouse.y_clicked()) == true)
-      // Check for any clicked buttons or if it was just empty space.
-      //  If anything was clicked, the list in the bzRadio will be updated.
-      {
-        string name = Screen.bzRadio.get_clicked_name();
-      
-        //Color Picker Window
-        if(name == "AIRSTOP")
-        // Turn Off Radio via kill command
-        {
-          keywatch.cmdInString(" airstop");
-        }
-        else if(name == "LAFS")
-        // Lafayette Scan Script
-        {
-          keywatch.cmdInString(" lafs");
-        }
-        else if(name == "LAFM")
-        // Lafayette Multi Script
-        {
-          keywatch.cmdInString(" lafm");
-        }
-        else if(name == "CBS")
-        // CB Scan Script
-        {
-          keywatch.cmdInString(" cbs");
-        }
-        else if(name == "RADIOOFF")
-        // 
-        {
-          keywatch.cmdInString(" radoff");
-        }
-        else if(name == "NOAA")
-        // 
-        {
-          keywatch.cmdInString(" rnoaa");
-        }
-        else if(name == "EMERGENCY")
-        // 
-        {
-          keywatch.cmdInString(" remergenc");
-        }
-      }
-    }
-
-    // -----------------------------------
-    // Check Gadgets for Clicked
-    if(ScrStat.Window_Radio.value() == true)
-    // Check the Radio_Frequencies Radio_Channel Gadgets
-    {
-      string name = "empty";
-      for(int pos = 0; pos < Screen.Radio_Channel_Count; pos++)
-      {
-        if(Screen.Radio_Channels[pos].check_click(mouse.x_clicked(),mouse.y_clicked(), name) == true)
-        {
-          if(name == "HOLD")
-          {
-            keywatch.cmdInString(" rh" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0)))))); //Gotta have the .0
-          }
-          else if(name == "SKIP")
-          {
-            keywatch.cmdInString(" rs" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
-          }
-          else if(name == "CLEAR")
-          {
-            keywatch.cmdInString(" rc" + (linemerge_right_justify(6, "000000", to_string(((int)round(Screen.Radio_Channels[pos].PROP.VALUE.FREQUENCY.FREQUENCY / 1000.0))))));
-          }
-        }
       }
     }
 

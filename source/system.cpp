@@ -45,21 +45,6 @@ bool SECTION_STATUS::value()
 
 // -------------------------------------------------------------------------------------
 
-int system_data::get_API_info(boost::interprocess::mapped_region &region_scan)
-{
-  API_COMMAND command_from_radio;
-  int return_int = -1;
-  
-  //if (API_CHANNEL.PAUSE == false && API_CHANNEL.get_binds(region_scan) > 1)
-  {
-    return_int = API_CHANNEL.rasfled_receive(region_scan, RECEIVED_SQUELCH, RADIO_COORD.COMMAND_TO_RADIO, command_from_radio);
-    RADIO_COORD.process_command_received(command_from_radio);
-    RADIO_COORD.process(RECEIVED_SQUELCH);
-  }
-
-  return return_int;
-}
-
 void system_data::init()
 {
   for(int x=0; x<CONFIG.iNUM_SWITCHES; x++)
