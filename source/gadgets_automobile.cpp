@@ -1204,22 +1204,22 @@ void AUTOMOBILE_GADGET::create()
   
   DATA_SET_05.PROP.POSX = 0 + 0;
   DATA_SET_05.PROP.POSY = 21;
-  DATA_SET_05.PROP.DESCRIPTION = "Lamp";
+  DATA_SET_05.PROP.DESCRIPTION = "Test 1";
   DATA_SET_05.create();
   
   DATA_SET_06.PROP.POSX = 0 + 14;
   DATA_SET_06.PROP.POSY = 21;
-  DATA_SET_06.PROP.DESCRIPTION = "Temp";
+  DATA_SET_06.PROP.DESCRIPTION = "Test 2";
   DATA_SET_06.create();
   
   DATA_SET_07.PROP.POSX = 0 + 28;
   DATA_SET_07.PROP.POSY = 21;
-  DATA_SET_07.PROP.DESCRIPTION = "Beam";
+  DATA_SET_07.PROP.DESCRIPTION = "Test 3";
   DATA_SET_07.create();
   
   DATA_SET_08.PROP.POSX = 0 + 42;
   DATA_SET_08.PROP.POSY = 21;
-  DATA_SET_08.PROP.DESCRIPTION = "EngT";
+  DATA_SET_08.PROP.DESCRIPTION = "Test 4";
   DATA_SET_08.create();
 }
 
@@ -1328,24 +1328,36 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
                                   sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
   //-----------
 
-  DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, sdSysData.CAR_INFO.DATA.AD_130.DATA[6], sdSysData.CAR_INFO.DATA.AD_130.DATA[7], "67", tmeFrame_Time);
+  DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, sdSysData.CAR_INFO.DATA.AD_130.DATA[6], sdSysData.CAR_INFO.DATA.AD_130.DATA[7], "", tmeFrame_Time);
 
   DATA_SET_02.update(sdSysData.CAR_INFO.DATA.AD_D0, sdSysData.CAR_INFO.DATA.AD_D0.DATA[6], sdSysData.CAR_INFO.DATA.AD_D0.DATA[7], 
                       "[1] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_D0.DATA[1]), tmeFrame_Time);
 
   DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, sdSysData.CAR_INFO.DATA.AD_200.DATA[6], sdSysData.CAR_INFO.DATA.AD_200.DATA[3], to_string(sdSysData.CAR_INFO.DATA.AD_200.DATA[7] / 3), tmeFrame_Time);
 
-  DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "67", tmeFrame_Time);
+  DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "", tmeFrame_Time);
 
-  DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_C8, sdSysData.CAR_INFO.DATA.AD_C8.DATA[1], sdSysData.CAR_INFO.DATA.AD_C8.DATA[2], 
-                      "[3] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_C8.DATA[3]), tmeFrame_Time);
+  // Test
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 1 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  {
+    DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
+  }
 
-  DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_400, sdSysData.CAR_INFO.DATA.AD_400.DATA[6], sdSysData.CAR_INFO.DATA.AD_400.DATA[7], 
-                      "[0] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_400.DATA[0]), tmeFrame_Time);
-  
-  DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_360, sdSysData.CAR_INFO.DATA.AD_360.DATA[6], sdSysData.CAR_INFO.DATA.AD_360.DATA[7], "67", tmeFrame_Time);
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 2 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  {
+    DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
+  }
 
-  DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_100, sdSysData.CAR_INFO.DATA.AD_100.DATA[5], sdSysData.CAR_INFO.DATA.AD_100.DATA[6], "56", tmeFrame_Time);
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  {
+    DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
+  }
+
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 4 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  {
+    DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
+  }
+  // Test
 
   //-----------
 
