@@ -26,7 +26,7 @@ using namespace std;
 
 void COMPORT::write_to_comm(string Command)
 {
-  Command = Command + "\r";
+  Command = Command + "\n";
   
   // WARNING:
   // Method #2: Allocate memory on stack and copy the contents of the
@@ -42,7 +42,7 @@ void COMPORT::write_to_comm(string Command)
   do {
       n_written = write( USB, &cmd[spot], 1 );
       spot += n_written;
-  } while (cmd[spot-1] != '\r' && n_written > 0);
+  } while (cmd[spot-1] != '\n' && n_written > 0);
 }
 
 bool COMPORT::read_from_comm()
@@ -59,13 +59,16 @@ bool COMPORT::read_from_comm()
   char response[1024];
   memset(response, '\0', sizeof response);
 
+// Need Rewrite ---
   do 
   {
     n = read( USB, &buf, 1 );
     sprintf( &response[spot], "%c", buf );
     spot += n;
   } while( buf != '\r' && n > 0 && spot < sizeof response);
-  
+
+// Need Rewrite ---
+
   //READ_FROM_COMM.push_back("size: " + to_string(spot));
 
   if (n < 0)
@@ -296,6 +299,7 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
   if (ACTIVE == true)
   {
     if (WRITE_TO_COMM.size() > 0)
+    // Sending data to comm port.
     {
       if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0 && PROPS.RECEIVE_TEST_DATA == false)
       {
@@ -304,12 +308,17 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
         WRITE_TO_COMM.pop_front();
       }
 
+      // put data into send to comm port queue
       write_to_comm(WRITE_TO_COMM.front());
       WRITE_TO_COMM.pop_front();
     }
 
+    // ---
+
     if(PROPS.RECEIVE_TEST_DATA == false)
     {
+      // get data from comm port
+      // exit loop when no data available.
       while (data_received == true)
       {
         data_received = read_from_comm();
@@ -323,8 +332,8 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
     else
     {
       // send test data
-      for (int count = 0; count < 6; count++)
-      {
+      for (int count = 0; count < 1; count++)   // Count is the number of messages
+      {                                         //  sent per cycle.
         if (TEST_DATA.size() > 0)
         {
           READ_FROM_COMM.push_back(TEST_DATA.front());

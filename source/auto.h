@@ -582,8 +582,10 @@ class AUTOMOBILE_AVAILABILITY
   public:
 
   bool check_for_live_data(unsigned long tmeFrame_Time);
+  // returns true if data live.
 
   bool set_active(AUTOMOBILE_TRANSLATED_DATA &Status, bool Available, unsigned long tmeFrame_Time);
+  // returns true if active status changed
 
   bool is_active();
 

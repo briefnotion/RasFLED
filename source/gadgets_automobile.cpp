@@ -1338,22 +1338,22 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "", tmeFrame_Time);
 
   // Test
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 1 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 0x41)
   {
     DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
   }
 
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 2 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  if (sdSysData.CAR_INFO.DATA.AD_208.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_208.DATA[1] == 0x41)
   {
-    DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
+    DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_208, sdSysData.CAR_INFO.DATA.AD_208.DATA[5], sdSysData.CAR_INFO.DATA.AD_208.DATA[6], "", tmeFrame_Time);
   }
 
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 0x41)
   {
     DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
   }
 
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 4 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 41)
+  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 0x41)
   {
     DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
   }

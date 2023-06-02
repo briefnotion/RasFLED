@@ -1,3 +1,6 @@
+V 1.935_230602
+  - Continued building Automobile_Gadgets Library.
+
 V 1.934_230601
   - Continued building Automobile_Gadgets Library.
 
