@@ -88,6 +88,37 @@ unsigned long VELOCITY::time_stamp()
 
 //-----------
 
+void TEMPERATURE::store_c(int Ac, int Bc)
+{
+  C  = ((Ac * 256 + Bc) / 10) - 40;
+}
+
+float TEMPERATURE::val_c()
+{
+  return C;
+}
+
+/*
+float TEMPERATURE::val_f()
+{
+  return -1;
+}
+*/
+
+string TEMPERATURE::c()
+{
+  return to_string_round_to_nth(C, 1) + "c";
+}
+
+/*
+string TEMPERATURE::f()
+{
+  return "(O)";
+}
+*/
+
+//-----------
+
 void AUTOMOBILE_DOORS::set_source_availability(bool Available)
 {
   SOURCE_AVAILABILITY = Available;
@@ -749,8 +780,7 @@ void AUTOMOBILE_TEMPATURE::set_source_availability(bool Available)
 {
   if (SOURCE_AVAILABILITY == true && Available == false)
   {
-    AUTOMOBILE_TEMPATURE = -1;
-    FAHRENHEIT = -1;
+    // clear fields?
   }
   
   SOURCE_AVAILABILITY = Available;
@@ -1087,13 +1117,20 @@ float AUTOMOBILE_CALCULATED::acceleration()
 
 //-----------
 
-void AUTOMOBILE::parse(string Line)
+bool AUTOMOBILE::parse(string Line, int &PID_Recieved)
 {
+  bool ret_message_recieved = false;
+  
   string left = "";
   int pos = 0;
 
   int upper = 0;
   int lower = 0;
+
+  int time_byte_0 = 0;
+  int time_byte_1 = 0;
+  int time_byte_2 = 0;
+  int time_byte_3 = 0;
 
   FALSE_CATCH valid;
 
@@ -1116,9 +1153,19 @@ void AUTOMOBILE::parse(string Line)
   valid.catch_false(string_hex_to_int(Line.substr(24, 2), data.DATA[6]));
   valid.catch_false(string_hex_to_int(Line.substr(27, 2), data.DATA[7]));
 
+  if (Line.size() == 38)
+  {
+    valid.catch_false(string_hex_to_int(Line.substr(30, 2), time_byte_0));
+    valid.catch_false(string_hex_to_int(Line.substr(32, 2), time_byte_1));
+    valid.catch_false(string_hex_to_int(Line.substr(34, 2), time_byte_2));
+    valid.catch_false(string_hex_to_int(Line.substr(36, 2), time_byte_3));
+
+    data.TIMESTAMP = (time_byte_3 * (256 ^3)) + (time_byte_2 * (256 ^2)) + 
+                      (time_byte_1 * 256) + time_byte_0;
+  }
+
   if (valid.has_false() == false)
   {
-
     data.ID = upper *256 + lower;
 
     // Put value in pos
@@ -1406,15 +1453,41 @@ void AUTOMOBILE::parse(string Line)
     {
       DATA.AD_5E2 = data;
     }
-    else if(data.ID == 65535)
+
+    // Message Recieved Lines
+    else if(data.ID == 2024)
     {
-      DATA.AD_FFFF = data;
+      DATA.AD_7E8 = data;
+      PID_Recieved = data.ID;
+      ret_message_recieved = true;
     }
+    else if(data.ID == 2025)
+    {
+      DATA.AD_7E9 = data;
+      PID_Recieved = data.ID;
+      ret_message_recieved = true;
+    }
+    else if(data.ID == 2026)
+    {
+      DATA.AD_7EA = data;
+      PID_Recieved = data.ID;
+      ret_message_recieved = true;
+    }
+    else if(data.ID == 2027)
+    {
+      DATA.AD_7EB = data;
+      PID_Recieved = data.ID;
+      ret_message_recieved = true;
+    }
+    
+    // Unknown
     else
     {
       DATA.AD_UNKNOWN = data;
     }
   }
+
+  return ret_message_recieved;
 }
 
 bool AUTOMOBILE_AVAILABILITY::check_for_live_data(unsigned long tmeFrame_Time)
@@ -1442,7 +1515,7 @@ bool AUTOMOBILE_AVAILABILITY::set_active(AUTOMOBILE_TRANSLATED_DATA &Status, boo
       Status.STEERING.set_source_availability(false);
       Status.GEAR.set_source_availability(false);
       Status.SPEED.set_source_availability(false);
-      Status.COOLANT_TEMP.set_source_availability(false);
+      Status.TEMPS.set_source_availability(false);
       Status.RPM.set_source_availability(false);
       Status.POWER.set_source_availability(false);
       Status.INDICATORS.set_source_availability(false);
@@ -1469,7 +1542,7 @@ bool AUTOMOBILE_AVAILABILITY::set_active(AUTOMOBILE_TRANSLATED_DATA &Status, boo
       Status.STEERING.set_source_availability(true);
       Status.GEAR.set_source_availability(true);
       Status.SPEED.set_source_availability(true);
-      Status.COOLANT_TEMP.set_source_availability(true);
+      Status.TEMPS.set_source_availability(true);
       Status.RPM.set_source_availability(true);
       Status.POWER.set_source_availability(true);
       Status.INDICATORS.set_source_availability(true);
@@ -1490,6 +1563,16 @@ bool AUTOMOBILE_AVAILABILITY::is_active()
   return ACTIVE;
 }
 
+void AUTOMOBILE::add_to_pid_send_list(string Requested_PID)
+{
+  REQUESTED_PID_SEND_LIST.push_back(Requested_PID);
+}
+
+string AUTOMOBILE::requested_pid()
+{
+  return REQUESTED_PID;
+}
+
 bool AUTOMOBILE::active()
 {
   return AVAILABILITY.is_active();
@@ -1497,6 +1580,8 @@ bool AUTOMOBILE::active()
 
 void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
 {
+  int pid_recieved = 0;
+
   if (AVAILABILITY.check_for_live_data(tmeFrame_Time) == false)
   {
    if (AVAILABILITY.set_active(STATUS, false, tmeFrame_Time) == true)
@@ -1505,16 +1590,78 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
    }
   }
 
-  if (Com_Port.READ_FROM_COMM.size() > 0)
+  if (Com_Port.recieve_size() > 0)
   {
-    for (int pos = 0; pos < Com_Port.READ_FROM_COMM.size(); pos++)
+    while (Com_Port.recieve_size() > 0)
     {
-      string input = trim(Com_Port.READ_FROM_COMM[pos]);
-      if(input.size() == 29)
+      string input = trim(Com_Port.recieve());
+      if(input.size() == 29 || input.size() == 38)
       {
         message_count++;
-        
-        parse(input);
+
+        if (parse(input, pid_recieved) == true)
+        {
+          AUTOMOBILE_DATA_LINE message;
+
+          // Check to see what was requested and put data in correct 
+          //  spot.
+
+          if (pid_recieved == 0x7E8)
+          {
+            message = DATA.AD_7E8;
+          }
+          else if (pid_recieved == 0x7E9)
+          {
+            message = DATA.AD_7E9;
+          }
+          else if (pid_recieved == 0x7EA)
+          {
+            message = DATA.AD_7EA;
+          }
+          else if (pid_recieved == 0x7EB)
+          {
+            message = DATA.AD_7EB;
+          }
+
+          // Check message to make sure its in correct format
+          if (message.DATA[0] == 0x03 && message.DATA[1] == 0x41)
+          {
+            // Dont send another request until wait delay is up
+            REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+
+            // Speed
+
+            // Temp
+            if (REQUESTED_PID == "05")  // Engine coolant temperature
+            {
+              STATUS.TEMPS.COOLANT.store_c(message.DATA[2], message.DATA[3]);
+            }
+
+            if (REQUESTED_PID == "0F")  // Intake air temperature
+            {
+              STATUS.TEMPS.AIR_INTKE.store_c(message.DATA[2], message.DATA[3]);
+            }
+            
+            if (REQUESTED_PID == "46")  // Ambient air temperature
+            {
+              STATUS.TEMPS.AMBIANT_AIR.store_c(message.DATA[2], message.DATA[3]);
+            }
+            
+            if (REQUESTED_PID == "5C")  // Engine oil temperature
+            {
+              STATUS.TEMPS.OIL.store_c(message.DATA[2], message.DATA[3]);
+            }
+            
+            if (REQUESTED_PID == "6B")  // Exhaust gas recirculation temperature
+            {
+              STATUS.TEMPS.EXHAUST_GAS.store_c(message.DATA[2], message.DATA[3]);
+            }
+
+            // RPM
+
+
+          }
+        }
 
         // High level Compute requiring calculation on all data.
         //  Compute on all data but can be processor intensive.
@@ -1524,8 +1671,24 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
         CHANGED = true;
       }
     }
+  }
 
-    Com_Port.READ_FROM_COMM.clear();
+  // Send pid to get values
+  if (REQUESTED_PID_TIMER_WAIT.ping_down(tmeFrame_Time) == false && active() == true)
+  {
+    // Dont send another request until wait timeout is up.
+    REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_TIMEOUT_DELAY);
+
+    REQUESTED_PID_SEND_LIST_POSITION ++;
+
+    if (REQUESTED_PID_SEND_LIST_POSITION < 0 || REQUESTED_PID_SEND_LIST_POSITION > REQUESTED_PID_SEND_LIST.size() -1)
+    {
+      REQUESTED_PID_SEND_LIST_POSITION = 0;
+    }
+    
+    REQUESTED_PID = REQUESTED_PID_SEND_LIST[REQUESTED_PID_SEND_LIST_POSITION];
+
+    Com_Port.send(REQUESTED_PID);    
   }
 }
 

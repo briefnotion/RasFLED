@@ -991,14 +991,21 @@ void AUTOMOBILE_GADGET::create()
   AUTOMOBILE_PANEL.create();
 
   //-----------
+  MESSAGES.PROP.POSY = 0;
+  MESSAGES.PROP.POSX = 0;
+  MESSAGES.PROP.SIZEX = 9;
+  MESSAGES.PROP.COLORS_ON = true;
+  MESSAGES.PROP.BCOLOR = COLOR_BLACK;
+  MESSAGES.PROP.COLOR = COLOR_WHITE;
+  MESSAGES.PROP.JUSTIFICATION_LEFT = true;
 
   AD_UNKNOWN.PROP.POSY = 0;
-  AD_UNKNOWN.PROP.POSX = 30;
-  AD_UNKNOWN.PROP.SIZEX = 30;
+  AD_UNKNOWN.PROP.POSX = 9;
+  AD_UNKNOWN.PROP.SIZEX = 38;
   AD_UNKNOWN.PROP.COLORS_ON = true;
   AD_UNKNOWN.PROP.BCOLOR = COLOR_BLACK;
   AD_UNKNOWN.PROP.COLOR = COLOR_WHITE;
-  AD_UNKNOWN.PROP.JUSTIFICATION_LEFT = true;
+  AD_UNKNOWN.PROP.JUSTIFICATION_RIGHT = true;
 
   //-----------
   // Large Velocity
@@ -1181,7 +1188,138 @@ void AUTOMOBILE_GADGET::create()
   STEERING_WHEEL_ANGLE.PROP.JUSTIFICATION_RIGHT = true;
 
   //-----------
+
+  ST_0_0.PROP.POSX = 0 + 0;
+  ST_0_0.PROP.POSY = 14;
+  ST_0_0.PROP.SIZEX = 18;
+  ST_0_0.PROP.COLORS_ON = true;
+  ST_0_0.PROP.BCOLOR = COLOR_WHITE;
+  ST_0_0.PROP.COLOR = COLOR_BLACK;
+  ST_0_0.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_0.set_text("Temperature");
+
+  ST_0_1.PROP.POSX = 0 + 0;
+  ST_0_1.PROP.POSY = 15;
+  ST_0_1.PROP.SIZEX = 9;
+  ST_0_1.PROP.COLORS_ON = true;
+  ST_0_1.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_1.PROP.COLOR = COLOR_WHITE;
+  ST_0_1.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_1.set_text(" Ambiant:");
+
+  ST_0_2.PROP.POSX = 0 + 0;
+  ST_0_2.PROP.POSY = 16;
+  ST_0_2.PROP.SIZEX = 9;
+  ST_0_2.PROP.COLORS_ON = true;
+  ST_0_2.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_2.PROP.COLOR = COLOR_WHITE;
+  ST_0_2.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_2.set_text("  Intake:");
+
+  ST_0_3.PROP.POSX = 0 + 0;
+  ST_0_3.PROP.POSY = 17;
+  ST_0_3.PROP.SIZEX = 9;
+  ST_0_3.PROP.COLORS_ON = true;
+  ST_0_3.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_3.PROP.COLOR = COLOR_WHITE;
+  ST_0_3.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_3.set_text(" Coolant:");
+
+  ST_0_4.PROP.POSX = 0 + 0;
+  ST_0_4.PROP.POSY = 18;
+  ST_0_4.PROP.SIZEX = 9;
+  ST_0_4.PROP.COLORS_ON = true;
+  ST_0_4.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_4.PROP.COLOR = COLOR_WHITE;
+  ST_0_4.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_4.set_text("     Oil:");
+
+  ST_0_5.PROP.POSX = 0 + 0;
+  ST_0_5.PROP.POSY = 19;
+  ST_0_5.PROP.SIZEX = 9;
+  ST_0_5.PROP.COLORS_ON = true;
+  ST_0_5.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_5.PROP.COLOR = COLOR_WHITE;
+  ST_0_5.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_5.set_text("  Exhast:");
+
+  ST_0_6.PROP.POSX = 0 + 0;
+  ST_0_6.PROP.POSY = 20;
+  ST_0_6.PROP.SIZEX = 9;
+  ST_0_6.PROP.COLORS_ON = true;
+  ST_0_6.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_6.PROP.COLOR = COLOR_WHITE;
+  ST_0_6.PROP.JUSTIFICATION_LEFT = true;
+  //ST_0_6.set_text("ABCDEFGH:");
+
+  //-----------
   
+  //ST_1_0.PROP.POSX = 12 + 0;
+  //ST_1_0.PROP.POSY = 14;
+  //ST_1_0.PROP.SIZEX = 4;
+  //ST_1_0.PROP.COLORS_ON = true;
+  //ST_1_0.PROP.BCOLOR = COLOR_WHITE;
+  //ST_1_0.PROP.COLOR = COLOR_BLACK;
+  //ST_1_0.PROP.JUSTIFICATION_LEFT = true;
+  //ST_1_0.set_text("");
+
+  ST_1_1.PROP.POSX = 10 + 0;
+  ST_1_1.PROP.POSY = 15;
+  ST_1_1.PROP.SIZEX = 6;
+  ST_1_1.PROP.COLORS_ON = true;
+  ST_1_1.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_1.PROP.COLOR = COLOR_WHITE;
+  ST_1_1.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_1.set_text("XX");
+
+  ST_1_2.PROP.POSX = 10 + 0;
+  ST_1_2.PROP.POSY = 16;
+  ST_1_2.PROP.SIZEX = 6;
+  ST_1_2.PROP.COLORS_ON = true;
+  ST_1_2.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_2.PROP.COLOR = COLOR_WHITE;
+  ST_1_2.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_2.set_text("XX");
+
+  ST_1_3.PROP.POSX = 10 + 0;
+  ST_1_3.PROP.POSY = 17;
+  ST_1_3.PROP.SIZEX = 6;
+  ST_1_3.PROP.COLORS_ON = true;
+  ST_1_3.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_3.PROP.COLOR = COLOR_WHITE;
+  ST_1_3.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_3.set_text("XX");
+
+  ST_1_4.PROP.POSX = 10 + 0;
+  ST_1_4.PROP.POSY = 18;
+  ST_1_4.PROP.SIZEX = 6;
+  ST_1_4.PROP.COLORS_ON = true;
+  ST_1_4.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_4.PROP.COLOR = COLOR_WHITE;
+  ST_1_4.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_4.set_text("XX");
+
+  ST_1_5.PROP.POSX = 10 + 0;
+  ST_1_5.PROP.POSY = 19;
+  ST_1_5.PROP.SIZEX = 6;
+  ST_1_5.PROP.COLORS_ON = true;
+  ST_1_5.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_5.PROP.COLOR = COLOR_WHITE;
+  ST_1_5.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_5.set_text("XX");
+
+  ST_1_6.PROP.POSX = 10 + 0;
+  ST_1_6.PROP.POSY = 20;
+  ST_1_6.PROP.SIZEX = 6;
+  ST_1_6.PROP.COLORS_ON = true;
+  ST_1_6.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_6.PROP.COLOR = COLOR_WHITE;
+  ST_1_6.PROP.JUSTIFICATION_LEFT = true;
+  //ST_1_6.set_text("ABCDEFGH:");
+
+  //-----------
+  
+  /*
   DATA_SET_01.PROP.POSX = 0 + 0;
   DATA_SET_01.PROP.POSY = 14;
   DATA_SET_01.PROP.DESCRIPTION = "Speed";
@@ -1191,35 +1329,32 @@ void AUTOMOBILE_GADGET::create()
   DATA_SET_02.PROP.POSY = 14;
   DATA_SET_02.PROP.DESCRIPTION = "Gear";
   DATA_SET_02.create();
+  */
   
   DATA_SET_03.PROP.POSX = 0 + 28;
   DATA_SET_03.PROP.POSY = 14;
-  DATA_SET_03.PROP.DESCRIPTION = "Cons";
   DATA_SET_03.create();
   
   DATA_SET_04.PROP.POSX = 0 + 42;
   DATA_SET_04.PROP.POSY = 14;
-  DATA_SET_04.PROP.DESCRIPTION = "Fuel";
   DATA_SET_04.create();
   
+  /*
   DATA_SET_05.PROP.POSX = 0 + 0;
   DATA_SET_05.PROP.POSY = 21;
-  DATA_SET_05.PROP.DESCRIPTION = "Test 1";
   DATA_SET_05.create();
   
   DATA_SET_06.PROP.POSX = 0 + 14;
   DATA_SET_06.PROP.POSY = 21;
-  DATA_SET_06.PROP.DESCRIPTION = "Test 2";
   DATA_SET_06.create();
+  */
   
   DATA_SET_07.PROP.POSX = 0 + 28;
   DATA_SET_07.PROP.POSY = 21;
-  DATA_SET_07.PROP.DESCRIPTION = "Test 3";
   DATA_SET_07.create();
   
   DATA_SET_08.PROP.POSX = 0 + 42;
   DATA_SET_08.PROP.POSY = 21;
-  DATA_SET_08.PROP.DESCRIPTION = "Test 4";
   DATA_SET_08.create();
 }
 
@@ -1328,35 +1463,39 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
                                   sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
   //-----------
 
+  ST_1_1.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR.c());
+  ST_1_2.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTKE.c());
+  ST_1_3.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT.c());
+  ST_1_4.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.OIL.c());
+  ST_1_5.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.EXHAUST_GAS.c());
+
+  //-----------
+
+  /*
   DATA_SET_01.update(sdSysData.CAR_INFO.DATA.AD_130, sdSysData.CAR_INFO.DATA.AD_130.DATA[6], sdSysData.CAR_INFO.DATA.AD_130.DATA[7], "", tmeFrame_Time);
 
   DATA_SET_02.update(sdSysData.CAR_INFO.DATA.AD_D0, sdSysData.CAR_INFO.DATA.AD_D0.DATA[6], sdSysData.CAR_INFO.DATA.AD_D0.DATA[7], 
                       "[1] " + to_string_binary(sdSysData.CAR_INFO.DATA.AD_D0.DATA[1]), tmeFrame_Time);
+  */
 
-  DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_200, sdSysData.CAR_INFO.DATA.AD_200.DATA[6], sdSysData.CAR_INFO.DATA.AD_200.DATA[3], to_string(sdSysData.CAR_INFO.DATA.AD_200.DATA[7] / 3), tmeFrame_Time);
+  DATA_SET_03.PROP.DESCRIPTION = "07 E8";
+  DATA_SET_03.update(sdSysData.CAR_INFO.DATA.AD_7E8, sdSysData.CAR_INFO.DATA.AD_7E8.DATA[5], sdSysData.CAR_INFO.DATA.AD_7E8.DATA[6], sdSysData.CAR_INFO.requested_pid(), tmeFrame_Time);
 
-  DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_C0, sdSysData.CAR_INFO.DATA.AD_C0.DATA[6], sdSysData.CAR_INFO.DATA.AD_C0.DATA[7], "", tmeFrame_Time);
+  DATA_SET_04.PROP.DESCRIPTION = "07 E9";
+  DATA_SET_04.update(sdSysData.CAR_INFO.DATA.AD_7E9, sdSysData.CAR_INFO.DATA.AD_7E9.DATA[5], sdSysData.CAR_INFO.DATA.AD_7E9.DATA[6], sdSysData.CAR_INFO.requested_pid(), tmeFrame_Time);
 
-  // Test
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 0x41)
-  {
-    DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
-  }
+  /*
+  DATA_SET_05.update(sdSysData.CAR_INFO.DATA.AD_7E8, sdSysData.CAR_INFO.DATA.AD_7E8.DATA[5], sdSysData.CAR_INFO.DATA.AD_7E8.DATA[6], "", tmeFrame_Time);
 
-  if (sdSysData.CAR_INFO.DATA.AD_208.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_208.DATA[1] == 0x41)
-  {
-    DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_208, sdSysData.CAR_INFO.DATA.AD_208.DATA[5], sdSysData.CAR_INFO.DATA.AD_208.DATA[6], "", tmeFrame_Time);
-  }
+  DATA_SET_06.update(sdSysData.CAR_INFO.DATA.AD_7E9, sdSysData.CAR_INFO.DATA.AD_7E9.DATA[5], sdSysData.CAR_INFO.DATA.AD_7E9.DATA[6], "", tmeFrame_Time);
+  */
 
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 0x41)
-  {
-    DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
-  }
+  DATA_SET_07.PROP.DESCRIPTION = "07 EA";
+  DATA_SET_07.update(sdSysData.CAR_INFO.DATA.AD_7EA, sdSysData.CAR_INFO.DATA.AD_7EA.DATA[5], sdSysData.CAR_INFO.DATA.AD_7EA.DATA[6], sdSysData.CAR_INFO.requested_pid(), tmeFrame_Time);
 
-  if (sdSysData.CAR_INFO.DATA.AD_80.DATA[0] == 0x3 && sdSysData.CAR_INFO.DATA.AD_80.DATA[1] == 0x41)
-  {
-    DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_80, sdSysData.CAR_INFO.DATA.AD_80.DATA[5], sdSysData.CAR_INFO.DATA.AD_80.DATA[6], "", tmeFrame_Time);
-  }
+  DATA_SET_08.PROP.DESCRIPTION = "07 EB";
+  DATA_SET_08.update(sdSysData.CAR_INFO.DATA.AD_7EB, sdSysData.CAR_INFO.DATA.AD_7EB.DATA[5], sdSysData.CAR_INFO.DATA.AD_7EB.DATA[6], sdSysData.CAR_INFO.requested_pid(), tmeFrame_Time);
+
   // Test
 
   //-----------
@@ -1409,12 +1548,30 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   //-----------
 
-  DATA_SET_01.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
-  DATA_SET_02.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_0.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_1.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_2.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_3.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_4.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_5.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_6.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+
+  //ST_1_0.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_1.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_2.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_3.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_4.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_5.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_6.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+
+  //-----------
+
+  //DATA_SET_01.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  //DATA_SET_02.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   DATA_SET_03.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   DATA_SET_04.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
-  DATA_SET_05.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
-  DATA_SET_06.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  //DATA_SET_05.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  //DATA_SET_06.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   DATA_SET_07.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   DATA_SET_08.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
 

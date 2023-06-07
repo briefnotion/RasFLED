@@ -56,7 +56,7 @@ bool COMPORT::read_from_comm()
   int size_of_buffer = 0;
 
   /* Whole response*/
-  char response[1024];
+  char response[64];
   memset(response, '\0', sizeof response);
 
 // Need Rewrite ---
@@ -66,6 +66,7 @@ bool COMPORT::read_from_comm()
     sprintf( &response[spot], "%c", buf );
     spot += n;
   } while( buf != '\r' && n > 0 && spot < sizeof response);
+  //} while( buf != PROPS.ENDING_CHAR && n > 0 && spot < sizeof response);
 
 // Need Rewrite ---
 
@@ -280,6 +281,24 @@ void COMPORT::send(string Text)
   WRITE_TO_COMM.push_back(Text);
 }
 
+string COMPORT::recieve()
+{
+  string ret_string = "";
+
+  if (READ_FROM_COMM.size() > 0)
+  {
+    ret_string = READ_FROM_COMM.front();
+    READ_FROM_COMM.pop_front();
+  }
+
+  return ret_string;  
+}
+
+int COMPORT::recieve_size()
+{
+  return READ_FROM_COMM.size();
+}
+
 void COMPORT::cycle(unsigned long tmeFrame_Time)
 {
   bool data_received = true;
@@ -332,7 +351,7 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
     else
     {
       // send test data
-      for (int count = 0; count < 1; count++)   // Count is the number of messages
+      for (int count = 0; count < 6; count++)   // Count is the number of messages
       {                                         //  sent per cycle.
         if (TEST_DATA.size() > 0)
         {

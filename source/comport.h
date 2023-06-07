@@ -69,6 +69,9 @@ class COMPORT_PROPERTIES
   // Can't be hot enabled.  For testing.
   bool RECEIVE_TEST_DATA = false;
   string TEST_DATA_FILENAME = "";
+
+  // Ending Character
+  char ENDING_CHAR = '\n';  // \r cr, \n lf
 };
 
 class COMPORT
@@ -84,15 +87,15 @@ class COMPORT
 
   deque<string> WRITE_TO_COMM;
   // List of text to be sent to com port on next cycle.
+
+  deque<string> READ_FROM_COMM;  
+  // list of received data from com port
   
   deque<string> TEST_DATA;
 
   public:
 
   COMPORT_PROPERTIES PROPS;
-
-  deque<string> READ_FROM_COMM;
-  // list of received data from com port
 
   private:
 
@@ -121,6 +124,12 @@ class COMPORT
   void send(string Text);
   // Stack send commands to be processed at cycle.
 
+  string recieve();
+  // Get first item in recieve stack to be processed at cycle.
+
+  int recieve_size();
+  // Recieve Stack size.
+ 
   void cycle(unsigned long tmeFrame_Time);
   // Writes and Reads data to comm port to send and
   //  recieve queues.

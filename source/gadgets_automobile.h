@@ -326,12 +326,32 @@ class AUTOMOBILE_GADGET
 
   //-----------
 
-  DATA_SET_GADGET DATA_SET_01;
-  DATA_SET_GADGET DATA_SET_02;
+  Text_Field ST_0_0;
+  Text_Field ST_0_1;
+  Text_Field ST_0_2;
+  Text_Field ST_0_3;
+  Text_Field ST_0_4;
+  Text_Field ST_0_5;
+  Text_Field ST_0_6;
+
+  //Text_Field ST_1_0;
+  Text_Field ST_1_1;
+  Text_Field ST_1_2;
+  Text_Field ST_1_3;
+  Text_Field ST_1_4;
+  Text_Field ST_1_5;
+  Text_Field ST_1_6;
+
+
+
+  //-----------
+
+  //DATA_SET_GADGET DATA_SET_01;
+  //DATA_SET_GADGET DATA_SET_02;
   DATA_SET_GADGET DATA_SET_03;
   DATA_SET_GADGET DATA_SET_04;
-  DATA_SET_GADGET DATA_SET_05;
-  DATA_SET_GADGET DATA_SET_06;
+  //DATA_SET_GADGET DATA_SET_05;
+  //DATA_SET_GADGET DATA_SET_06;
   DATA_SET_GADGET DATA_SET_07;
   DATA_SET_GADGET DATA_SET_08;
 

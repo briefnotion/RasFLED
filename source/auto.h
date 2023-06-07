@@ -37,6 +37,8 @@ class AUTOMOBILE_DATA_LINE
 
   int ID_DATA[2];
   int DATA[8];
+
+  unsigned long TIMESTAMP = 0;
 };
 
 class AUTOMOBILE_DATA
@@ -131,7 +133,12 @@ class AUTOMOBILE_DATA
   AUTOMOBILE_DATA_LINE AD_455;  //  04 55 00 00 00 00 00 00 00 00
   AUTOMOBILE_DATA_LINE AD_581;  //  05 81 81 00 FF FF FF FF FF FF
   AUTOMOBILE_DATA_LINE AD_5E2;  //  05 E2 62 00 FF FF FF FF FF FF
-  AUTOMOBILE_DATA_LINE AD_FFFF;
+
+  // Message Recieved Lines
+  AUTOMOBILE_DATA_LINE AD_7E8;  //* 2025 - 
+  AUTOMOBILE_DATA_LINE AD_7E9;  //* 2025 - 07 E9 03 41 0D 00 00 00 00 00
+  AUTOMOBILE_DATA_LINE AD_7EA;  //* 2025 - 
+  AUTOMOBILE_DATA_LINE AD_7EB;  //* 2025 - 
 
   AUTOMOBILE_DATA_LINE AD_UNKNOWN;
 };
@@ -158,6 +165,25 @@ class VELOCITY
   float val_mph();
   string kmph();
   string mph();
+
+  unsigned long time_stamp();
+};
+
+class TEMPERATURE
+{
+  private:
+
+  float C = -1;
+
+  unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
+
+  public:
+
+  void store_c(int Ac, int Bc);
+  float val_c();
+  //float val_f();
+  string c();
+  //string f();
 
   unsigned long time_stamp();
 };
@@ -430,11 +456,15 @@ class AUTOMOBILE_TEMPATURE
 
   public:
 
-  float AUTOMOBILE_TEMPATURE = -1;
-  float FAHRENHEIT = -1;
+  TEMPERATURE COOLANT;
+  TEMPERATURE AIR_INTKE;
+  TEMPERATURE AMBIANT_AIR;
+  TEMPERATURE OIL;
+  TEMPERATURE EXHAUST_GAS;
 
   void set_source_availability(bool Available);
   bool available();
+
 };
 
 class AUTOMOBILE_TRANSMISSION_GEAR
@@ -485,7 +515,7 @@ class AUTOMOBILE_TRANSLATED_DATA
   AUTOMOBILE_STEERING STEERING;
   AUTOMOBILE_TRANSMISSION_GEAR GEAR;
   AUTOMOBILE_VELOCITY SPEED;
-  AUTOMOBILE_TEMPATURE COOLANT_TEMP;
+  AUTOMOBILE_TEMPATURE TEMPS;
   AUTOMOBILE_RPM RPM;
   AUTOMOBILE_POWER POWER;
   AUTOMOBILE_INDICATORS INDICATORS;
@@ -606,7 +636,18 @@ class AUTOMOBILE
 
   AUTOMOBILE_AVAILABILITY AVAILABILITY;
 
-  void parse(string Line);
+  string REQUESTED_PID = "";
+
+  deque<string> REQUESTED_PID_SEND_LIST;
+  int REQUESTED_PID_SEND_LIST_POSITION = -1;
+
+  TIMED_PING REQUESTED_PID_TIMER_WAIT;
+  int REQUESTED_PID_TIMER_WAIT_DELAY = 250;
+  int REQUESTED_PID_TIMER_TIMEOUT_DELAY = 1000;
+
+  bool parse(string Line, int &PID_Recieved);
+  // Returns true if line is considered a message recieved.
+  //  Message id will be in PID_Recieved
 
   public:
 
@@ -618,6 +659,10 @@ class AUTOMOBILE
   AUTOMOBILE_PROPERTIES PROPS;
 
   int message_count = 0;
+
+  void add_to_pid_send_list(string Requested_PID);
+
+  string requested_pid();
 
   bool active();
 

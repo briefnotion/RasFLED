@@ -321,6 +321,16 @@ int loop()
   sdSystem.COMMS.PROPS.SAVE_LOG_FILENAME = COMMS_SAVE_LOG_FILENAME;
   sdSystem.COMMS.PROPS.RECEIVE_TEST_DATA = COMMS_RECEIVE_TEST_DATA;
   sdSystem.COMMS.PROPS.TEST_DATA_FILENAME = COMMS_TEST_DATA_FILENAME;
+
+  // Prep Automobile Send Messages
+  sdSystem.CAR_INFO.add_to_pid_send_list("05"); // Engine coolant temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("0F"); // Intake air temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("46"); // Ambient air temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("5C"); // Engine oil temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("6B"); // Exhaust gas recirculation temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("42"); // Control module voltage
+  sdSystem.CAR_INFO.add_to_pid_send_list("4F"); // Maximum value for Fuel–Air equivalence ratio, oxygen sensor voltage, oxygen sensor current, and intake manifold absolute pressure
+  sdSystem.CAR_INFO.add_to_pid_send_list("50"); // Maximum value for air flow rate from mass air flow sensor
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console
