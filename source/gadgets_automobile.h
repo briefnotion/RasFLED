@@ -333,6 +333,10 @@ class AUTOMOBILE_GADGET
   Text_Field ST_0_4;
   Text_Field ST_0_5;
   Text_Field ST_0_6;
+  Text_Field ST_0_7;
+  Text_Field ST_0_8;
+  Text_Field ST_0_9;
+  Text_Field ST_0_10;
 
   //Text_Field ST_1_0;
   Text_Field ST_1_1;
@@ -341,6 +345,10 @@ class AUTOMOBILE_GADGET
   Text_Field ST_1_4;
   Text_Field ST_1_5;
   Text_Field ST_1_6;
+  Text_Field ST_1_7;
+  Text_Field ST_1_8;
+  Text_Field ST_1_9;
+  Text_Field ST_1_10;
 
 
 

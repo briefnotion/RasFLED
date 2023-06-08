@@ -25,6 +25,16 @@
 
 using namespace std;
 
+// -------------------------------------------------------------------------------------
+//  Functions
+
+int method_temp_1(int Byte_1);
+
+int method_2_byte_div_1000(int Byte_1, int Byte_2);
+
+// -------------------------------------------------------------------------------------
+//  Classs
+
 bool check_availability(bool Coded_Availability, bool Source_Availabilty);
 
 class AUTOMOBILE_DATA_LINE
@@ -173,17 +183,34 @@ class TEMPERATURE
 {
   private:
 
-  float C = -1;
+  int C = -1;
 
   unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
 
   public:
 
-  void store_c(int Ac, int Bc);
-  float val_c();
+  void store_c(int Celsius);
+  int val_c();
   //float val_f();
   string c();
   //string f();
+
+  unsigned long time_stamp();
+};
+
+class VOLTAGE
+{
+  private:
+
+  float V = -1;
+
+  unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
+
+  public:
+
+  void store_v(int Voltage);
+  float val_v();
+  string v();
 
   unsigned long time_stamp();
 };
@@ -456,15 +483,50 @@ class AUTOMOBILE_TEMPATURE
 
   public:
 
-  TEMPERATURE COOLANT;
-  TEMPERATURE AIR_INTKE;
-  TEMPERATURE AMBIANT_AIR;
-  TEMPERATURE OIL;
-  TEMPERATURE EXHAUST_GAS;
+  TEMPERATURE COOLANT_05;
+  TEMPERATURE COOLANT_67_b;
+  TEMPERATURE COOLANT_67_c;
+  
+  TEMPERATURE AIR_INTAKE_0f;
+  TEMPERATURE AIR_INTAKE_68_a;
+  TEMPERATURE AIR_INTAKE_68_b;
+
+  TEMPERATURE AMBIANT_AIR_46;
+
+  TEMPERATURE OIL_5c;
+  TEMPERATURE EXHAUST_GAS_6b;
+  TEMPERATURE MANIFOLD_SURFACE_84;
 
   void set_source_availability(bool Available);
   bool available();
 
+  void store_coolant_05(int Sensor_Temp);
+  void store_coolant_67(int Sensor_Temp_B, int Sensor_Temp_C);
+
+  void store_air_intake_0f(int Sensor_Temp);
+  void store_air_intake_68(int Sensor_Temp_B, int Sensor_Temp_C);
+
+  void store_ambiant_air_46(int Sensor_Temp);
+  void store_oil_5c(int Sensor_Temp);
+  void store_exhaust_gas_6b(int Sensor_Temp);
+  void store_manifold_surface_84(int Sensor_Temp);
+};
+
+class AUTOMOBILE_ELECTRICAL
+{
+  private:
+
+  bool CODED_AVAILABILITY = true;
+  bool SOURCE_AVAILABILITY = false;
+
+  public:
+
+  VOLTAGE CONTROL_UNIT_42;
+
+  void set_source_availability(bool Available);
+  bool available();
+
+  void store_control_voltage_42(int Sensor_B, int Sensor_C);
 };
 
 class AUTOMOBILE_TRANSMISSION_GEAR
@@ -522,6 +584,7 @@ class AUTOMOBILE_TRANSLATED_DATA
   AUTOMOBILE_FUEL FUEL;
   AUTOMOBILE_DOORS DOORS;
   AUTOMOBILE_GUAGES GUAGES;
+  AUTOMOBILE_ELECTRICAL ELECTRICAL;
 };
 
 class TIRE_TTL

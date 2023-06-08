@@ -14,7 +14,21 @@
 
 #include "auto.h"
 
-//-----------
+// -------------------------------------------------------------------------------------
+//  Functions
+
+int method_temp_1(int Byte_1)
+{
+  return Byte_1 - 40;
+}
+
+int method_2_byte_div_1000(int Byte_1, int Byte_2)
+{
+  return ((Byte_1 * 256) + Byte_2) / 1000;
+}
+
+// -------------------------------------------------------------------------------------
+//  Classs
 
 bool check_availability(bool Coded_Availability, bool Source_Availabilty)
 {
@@ -88,12 +102,12 @@ unsigned long VELOCITY::time_stamp()
 
 //-----------
 
-void TEMPERATURE::store_c(int Ac, int Bc)
+void TEMPERATURE::store_c(int Celsius)
 {
-  C  = ((Ac * 256 + Bc) / 10) - 40;
+  C  = Celsius;
 }
 
-float TEMPERATURE::val_c()
+int TEMPERATURE::val_c()
 {
   return C;
 }
@@ -107,7 +121,7 @@ float TEMPERATURE::val_f()
 
 string TEMPERATURE::c()
 {
-  return to_string_round_to_nth(C, 1) + "c";
+  return to_string(C) + "c";
 }
 
 /*
@@ -116,6 +130,23 @@ string TEMPERATURE::f()
   return "(O)";
 }
 */
+
+//-----------
+
+void VOLTAGE::store_v(int Voltage)
+{
+  V  = Voltage;
+}
+
+float VOLTAGE::val_v()
+{
+  return V;
+}
+
+string VOLTAGE::v()
+{
+  return to_string_round_to_nth(V, 1) + "v";
+}
 
 //-----------
 
@@ -789,6 +820,70 @@ void AUTOMOBILE_TEMPATURE::set_source_availability(bool Available)
 bool AUTOMOBILE_TEMPATURE::available()
 {
   return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
+}
+
+void AUTOMOBILE_TEMPATURE::store_coolant_05(int Sensor_Temp)
+{
+  COOLANT_05.store_c(method_temp_1(Sensor_Temp));
+}
+
+void AUTOMOBILE_TEMPATURE::store_coolant_67(int Sensor_Temp_B, int Sensor_Temp_C)
+{
+  COOLANT_67_b.store_c(method_temp_1(Sensor_Temp_B));
+  COOLANT_67_c.store_c(method_temp_1(Sensor_Temp_C));
+}
+
+void AUTOMOBILE_TEMPATURE::store_air_intake_0f(int Sensor_Temp)
+{
+  AIR_INTAKE_0f.store_c(method_temp_1(Sensor_Temp));
+}
+
+void AUTOMOBILE_TEMPATURE::store_air_intake_68(int Sensor_Temp_B, int Sensor_Temp_C)
+{
+  AIR_INTAKE_68_b.store_c(method_temp_1(Sensor_Temp_B));
+  AIR_INTAKE_68_b.store_c(method_temp_1(Sensor_Temp_C));
+}
+
+void AUTOMOBILE_TEMPATURE::store_ambiant_air_46(int Sensor_Temp)
+{
+  AMBIANT_AIR_46.store_c(method_temp_1(Sensor_Temp));
+}
+
+void AUTOMOBILE_TEMPATURE::store_oil_5c(int Sensor_Temp)
+{
+  OIL_5c.store_c(method_temp_1(Sensor_Temp));
+}
+
+void AUTOMOBILE_TEMPATURE::store_exhaust_gas_6b(int Sensor_Temp)
+{
+  EXHAUST_GAS_6b.store_c(method_temp_1(Sensor_Temp));
+}
+
+void AUTOMOBILE_TEMPATURE::store_manifold_surface_84(int Sensor_Temp)
+{
+  MANIFOLD_SURFACE_84.store_c(method_temp_1(Sensor_Temp));
+}
+
+//-----------
+
+void AUTOMOBILE_ELECTRICAL::set_source_availability(bool Available)
+{
+  if (SOURCE_AVAILABILITY == true && Available == false)
+  {
+    // clear fields?
+  }
+  
+  SOURCE_AVAILABILITY = Available;
+}
+
+bool AUTOMOBILE_ELECTRICAL::available()
+{
+  return check_availability(CODED_AVAILABILITY, SOURCE_AVAILABILITY);
+}
+
+void AUTOMOBILE_ELECTRICAL::store_control_voltage_42(int Sensor_B, int Sensor_C)
+{
+  CONTROL_UNIT_42.store_v(method_2_byte_div_1000(Sensor_B, Sensor_C));
 }
 
 //-----------
@@ -1634,30 +1729,62 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
             // Temp
             if (REQUESTED_PID == "05")  // Engine coolant temperature
             {
-              STATUS.TEMPS.COOLANT.store_c(message.DATA[2], message.DATA[3]);
+              STATUS.TEMPS.store_coolant_05(message.DATA[3]);
+            }
+
+            if (REQUESTED_PID == "67")  // Engine coolant temperature
+            {
+              STATUS.TEMPS.store_coolant_67(message.DATA[3], message.DATA[4]);
             }
 
             if (REQUESTED_PID == "0F")  // Intake air temperature
             {
-              STATUS.TEMPS.AIR_INTKE.store_c(message.DATA[2], message.DATA[3]);
+              STATUS.TEMPS.store_air_intake_0f(message.DATA[3]);
+            }
+
+            if (REQUESTED_PID == "68")  // Intake air temperature
+            {
+              STATUS.TEMPS.store_air_intake_68(message.DATA[3], message.DATA[4]);
             }
             
             if (REQUESTED_PID == "46")  // Ambient air temperature
             {
-              STATUS.TEMPS.AMBIANT_AIR.store_c(message.DATA[2], message.DATA[3]);
+              STATUS.TEMPS.store_ambiant_air_46(message.DATA[3]);
             }
             
             if (REQUESTED_PID == "5C")  // Engine oil temperature
             {
-              STATUS.TEMPS.OIL.store_c(message.DATA[2], message.DATA[3]);
+              STATUS.TEMPS.store_oil_5c(message.DATA[3]);
             }
             
             if (REQUESTED_PID == "6B")  // Exhaust gas recirculation temperature
             {
-              STATUS.TEMPS.EXHAUST_GAS.store_c(message.DATA[2], message.DATA[3]);
+              STATUS.TEMPS.store_exhaust_gas_6b(message.DATA[3]);
+            }
+            
+            if (REQUESTED_PID == "6B")  // Manifold surface temperature
+            {
+              STATUS.TEMPS.store_manifold_surface_84(message.DATA[3]);
             }
 
-            // RPM
+
+
+            // Voltage
+
+            if (REQUESTED_PID == "42")  // Engine coolant temperature
+            {
+              STATUS.ELECTRICAL.store_control_voltage_42(message.DATA[3], message.DATA[4]);
+            }
+
+            // Other
+
+            //if (REQUESTED_PID == "4F")  // Engine coolant temperature
+            //{
+            //  STATUS.ELECTRICAL.store_control_voltage_42(message.DATA[3], message.DATA[4]);
+            //}
+
+
+
 
 
           }

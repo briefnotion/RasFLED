@@ -326,11 +326,13 @@ int loop()
   sdSystem.CAR_INFO.add_to_pid_send_list("05"); // Engine coolant temperature
   sdSystem.CAR_INFO.add_to_pid_send_list("0F"); // Intake air temperature
   sdSystem.CAR_INFO.add_to_pid_send_list("46"); // Ambient air temperature
-  sdSystem.CAR_INFO.add_to_pid_send_list("5C"); // Engine oil temperature
-  sdSystem.CAR_INFO.add_to_pid_send_list("6B"); // Exhaust gas recirculation temperature
+  //sdSystem.CAR_INFO.add_to_pid_send_list("5C"); // Engine oil temperature
+  //sdSystem.CAR_INFO.add_to_pid_send_list("6B"); // Exhaust gas recirculation temperature
   sdSystem.CAR_INFO.add_to_pid_send_list("42"); // Control module voltage
   sdSystem.CAR_INFO.add_to_pid_send_list("4F"); // Maximum value for Fuel–Air equivalence ratio, oxygen sensor voltage, oxygen sensor current, and intake manifold absolute pressure
-  sdSystem.CAR_INFO.add_to_pid_send_list("50"); // Maximum value for air flow rate from mass air flow sensor
+  sdSystem.CAR_INFO.add_to_pid_send_list("67"); // Engine coolant temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("68"); // Intake air temperature sensor
+  sdSystem.CAR_INFO.add_to_pid_send_list("84"); // Manifold surface temperature
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console

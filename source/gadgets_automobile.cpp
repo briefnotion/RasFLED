@@ -1205,7 +1205,7 @@ void AUTOMOBILE_GADGET::create()
   ST_0_1.PROP.BCOLOR = COLOR_BLACK;
   ST_0_1.PROP.COLOR = COLOR_WHITE;
   ST_0_1.PROP.JUSTIFICATION_LEFT = true;
-  ST_0_1.set_text(" Ambiant:");
+  ST_0_1.set_text(" Coolant:");
 
   ST_0_2.PROP.POSX = 0 + 0;
   ST_0_2.PROP.POSY = 16;
@@ -1214,7 +1214,7 @@ void AUTOMOBILE_GADGET::create()
   ST_0_2.PROP.BCOLOR = COLOR_BLACK;
   ST_0_2.PROP.COLOR = COLOR_WHITE;
   ST_0_2.PROP.JUSTIFICATION_LEFT = true;
-  ST_0_2.set_text("  Intake:");
+  ST_0_2.set_text(" Coolant:");
 
   ST_0_3.PROP.POSX = 0 + 0;
   ST_0_3.PROP.POSY = 17;
@@ -1232,7 +1232,7 @@ void AUTOMOBILE_GADGET::create()
   ST_0_4.PROP.BCOLOR = COLOR_BLACK;
   ST_0_4.PROP.COLOR = COLOR_WHITE;
   ST_0_4.PROP.JUSTIFICATION_LEFT = true;
-  ST_0_4.set_text("     Oil:");
+  ST_0_4.set_text("  Intake:");
 
   ST_0_5.PROP.POSX = 0 + 0;
   ST_0_5.PROP.POSY = 19;
@@ -1241,7 +1241,7 @@ void AUTOMOBILE_GADGET::create()
   ST_0_5.PROP.BCOLOR = COLOR_BLACK;
   ST_0_5.PROP.COLOR = COLOR_WHITE;
   ST_0_5.PROP.JUSTIFICATION_LEFT = true;
-  ST_0_5.set_text("  Exhast:");
+  ST_0_5.set_text("  Intake:");
 
   ST_0_6.PROP.POSX = 0 + 0;
   ST_0_6.PROP.POSY = 20;
@@ -1250,7 +1250,43 @@ void AUTOMOBILE_GADGET::create()
   ST_0_6.PROP.BCOLOR = COLOR_BLACK;
   ST_0_6.PROP.COLOR = COLOR_WHITE;
   ST_0_6.PROP.JUSTIFICATION_LEFT = true;
-  //ST_0_6.set_text("ABCDEFGH:");
+  ST_0_6.set_text("  Intake:");
+
+  ST_0_7.PROP.POSX = 0 + 0;
+  ST_0_7.PROP.POSY = 21;
+  ST_0_7.PROP.SIZEX = 9;
+  ST_0_7.PROP.COLORS_ON = true;
+  ST_0_7.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_7.PROP.COLOR = COLOR_WHITE;
+  ST_0_7.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_7.set_text(" Ambiant:");
+
+  ST_0_8.PROP.POSX = 0 + 0;
+  ST_0_8.PROP.POSY = 22;
+  ST_0_8.PROP.SIZEX = 9;
+  ST_0_8.PROP.COLORS_ON = true;
+  ST_0_8.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_8.PROP.COLOR = COLOR_WHITE;
+  ST_0_8.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_8.set_text("Manifold");
+
+  ST_0_9.PROP.POSX = 0 + 0;
+  ST_0_9.PROP.POSY = 23;
+  ST_0_9.PROP.SIZEX = 9;
+  ST_0_9.PROP.COLORS_ON = true;
+  ST_0_9.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_9.PROP.COLOR = COLOR_WHITE;
+  ST_0_9.PROP.JUSTIFICATION_LEFT = true;
+  //ST_0_9.set_text("  Intake:");
+
+  ST_0_10.PROP.POSX = 0 + 0;
+  ST_0_10.PROP.POSY = 24;
+  ST_0_10.PROP.SIZEX = 9;
+  ST_0_10.PROP.COLORS_ON = true;
+  ST_0_10.PROP.BCOLOR = COLOR_BLACK;
+  ST_0_10.PROP.COLOR = COLOR_WHITE;
+  ST_0_10.PROP.JUSTIFICATION_LEFT = true;
+  ST_0_10.set_text(" Voltage:");
 
   //-----------
   
@@ -1315,7 +1351,43 @@ void AUTOMOBILE_GADGET::create()
   ST_1_6.PROP.BCOLOR = COLOR_BLACK;
   ST_1_6.PROP.COLOR = COLOR_WHITE;
   ST_1_6.PROP.JUSTIFICATION_LEFT = true;
-  //ST_1_6.set_text("ABCDEFGH:");
+  ST_1_6.set_text("XX");
+
+  ST_1_7.PROP.POSX = 10 + 0;
+  ST_1_7.PROP.POSY = 21;
+  ST_1_7.PROP.SIZEX = 6;
+  ST_1_7.PROP.COLORS_ON = true;
+  ST_1_7.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_7.PROP.COLOR = COLOR_WHITE;
+  ST_1_7.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_7.set_text("XX");
+
+  ST_1_8.PROP.POSX = 10 + 0;
+  ST_1_8.PROP.POSY = 22;
+  ST_1_8.PROP.SIZEX = 6;
+  ST_1_8.PROP.COLORS_ON = true;
+  ST_1_8.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_8.PROP.COLOR = COLOR_WHITE;
+  ST_1_8.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_8.set_text("XX");
+
+  ST_1_9.PROP.POSX = 10 + 0;
+  ST_1_9.PROP.POSY = 23;
+  ST_1_9.PROP.SIZEX = 6;
+  ST_1_9.PROP.COLORS_ON = true;
+  ST_1_9.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_9.PROP.COLOR = COLOR_WHITE;
+  ST_1_9.PROP.JUSTIFICATION_LEFT = true;
+  //ST_1_9.set_text("XX");
+
+  ST_1_10.PROP.POSX = 10 + 0;
+  ST_1_10.PROP.POSY = 24;
+  ST_1_10.PROP.SIZEX = 6;
+  ST_1_10.PROP.COLORS_ON = true;
+  ST_1_10.PROP.BCOLOR = COLOR_BLACK;
+  ST_1_10.PROP.COLOR = COLOR_WHITE;
+  ST_1_10.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_10.set_text("XX");
 
   //-----------
   
@@ -1463,11 +1535,16 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
                                   sdSysData.CAR_INFO.STATUS.STEERING.steering_wheel_angle());
   //-----------
 
-  ST_1_1.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR.c());
-  ST_1_2.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTKE.c());
-  ST_1_3.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT.c());
-  ST_1_4.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.OIL.c());
-  ST_1_5.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.EXHAUST_GAS.c());
+  ST_1_1.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_05.c());
+  ST_1_2.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_67_b.c());
+  ST_1_3.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_67_c.c());
+  ST_1_4.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_0f.c());
+  ST_1_5.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_68_a.c());
+  ST_1_6.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_68_b.c());
+  ST_1_7.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.c());
+  ST_1_8.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.MANIFOLD_SURFACE_84.c());
+  //ST_1_9.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.EXHAUST_GAS_6b.c());
+  ST_1_10.set_text(sdSysData.CAR_INFO.STATUS.ELECTRICAL.CONTROL_UNIT_42.v());
 
   //-----------
 
@@ -1555,6 +1632,10 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   ST_0_4.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   ST_0_5.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   ST_0_6.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_7.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_8.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_9.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_0_10.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
 
   //ST_1_0.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   ST_1_1.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
@@ -1563,6 +1644,10 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   ST_1_4.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   ST_1_5.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
   ST_1_6.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_7.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_8.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_9.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  ST_1_10.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
 
   //-----------
 
