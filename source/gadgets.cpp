@@ -341,7 +341,14 @@ void Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     // Check for Colored Text
     if (PROP.COLORS_ON == true)
     {
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      if (PROP.AUTO_COLOR == false)
+      {
+        wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      }
+      else
+      {
+        wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, text_color_correction(PROP.BCOLOR))));
+      }
     }
 
     // Check for Blink
@@ -383,7 +390,14 @@ void Text_Field::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     // Check for Colored Text
     if (PROP.COLORS_ON == true)
     {
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      if (PROP.AUTO_COLOR == false)
+      {
+        wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
+      }
+      else
+      {
+        wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, text_color_correction(PROP.BCOLOR))));
+      }
     }
 
     // Check for Reverse Text

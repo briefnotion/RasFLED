@@ -137,6 +137,11 @@ int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Bl
 // eg (12, 5, 10, 15, 20, 25) returns color yellow
 // Non zero or mid level green.
 
+int color_range_reverse(float Value, int Blue, int Green, int Yellow, int Red, int Magenta);
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color yellow
+// Non zero or mid level green.
+
 int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue);
 // Returns color in ranges of 1st to 5th of values
 // eg (12, 5, 10, 15, 20, 25) returns color red

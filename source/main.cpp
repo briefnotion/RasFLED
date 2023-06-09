@@ -328,11 +328,18 @@ int loop()
   sdSystem.CAR_INFO.add_to_pid_send_list("46"); // Ambient air temperature
   //sdSystem.CAR_INFO.add_to_pid_send_list("5C"); // Engine oil temperature
   //sdSystem.CAR_INFO.add_to_pid_send_list("6B"); // Exhaust gas recirculation temperature
-  sdSystem.CAR_INFO.add_to_pid_send_list("42"); // Control module voltage
+  //sdSystem.CAR_INFO.add_to_pid_send_list("42"); // Control module voltage
   sdSystem.CAR_INFO.add_to_pid_send_list("4F"); // Maximum value for Fuel–Air equivalence ratio, oxygen sensor voltage, oxygen sensor current, and intake manifold absolute pressure
-  sdSystem.CAR_INFO.add_to_pid_send_list("67"); // Engine coolant temperature
-  sdSystem.CAR_INFO.add_to_pid_send_list("68"); // Intake air temperature sensor
-  sdSystem.CAR_INFO.add_to_pid_send_list("84"); // Manifold surface temperature
+  //sdSystem.CAR_INFO.add_to_pid_send_list("67"); // Engine coolant temperature
+  //sdSystem.CAR_INFO.add_to_pid_send_list("68"); // Intake air temperature sensor
+  //sdSystem.CAR_INFO.add_to_pid_send_list("84"); // Manifold surface temperature
+  sdSystem.CAR_INFO.add_to_pid_send_list("0A"); // Fuel pressure (gauge pressure)
+  sdSystem.CAR_INFO.add_to_pid_send_list("0B"); // Intake manifold absolute pressure
+  sdSystem.CAR_INFO.add_to_pid_send_list("22"); // Fuel Rail Pressure (relative to manifold vacuum)Fuel Rail Gauge Pressure (diesel, or gasoline direct injection)
+  
+  sdSystem.CAR_INFO.add_to_pid_send_list("33"); // Absolute Barometric Pressure
+  sdSystem.CAR_INFO.add_to_pid_send_list("59"); // Fuel rail absolute pressure
+  sdSystem.CAR_INFO.add_to_pid_send_list("5E"); // Engine fuel rate
   
   // ---------------------------------------------------------------------------------------
   // Initialize the console

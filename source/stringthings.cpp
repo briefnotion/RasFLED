@@ -412,6 +412,40 @@ int color_range(float Value, int Magenta, int Red, int Yellow, int Green, int Bl
   }
 }
 
+int color_range_reverse(float Value, int Blue, int Green, int Yellow, int Red, int Magenta)
+// Returns color in ranges of 1st to 5th of values
+// eg (12, 5, 10, 15, 20, 25) returns color yellow
+// Non zero or mid level green.
+{ 
+  // 1 - Range Level
+  // Magenta  Red  Yellow  Green  Blue  Cyan
+
+  if (Value <= Blue)
+  {
+    return COLOR_BLUE;
+  }
+  else if(Value <= Green)
+  {
+    return COLOR_GREEN;
+  }
+  else if(Value <= Yellow)
+  {
+    return COLOR_YELLOW;
+  }
+  else if(Value <= Red)
+  {
+    return COLOR_RED;
+  }
+  else if(Value <= Magenta)
+  {
+    return COLOR_MAGENTA;
+  }
+  else
+  {
+    return COLOR_CYAN;
+  }
+}
+
 int color_scale(float Value, int Green, int Yellow, int Red, int Magenta, int Blue)
 // Returns color in ranges of 1st to 5th of values
 // eg (12, 5, 10, 15, 20, 25) returns color red

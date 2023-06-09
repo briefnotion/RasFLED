@@ -17,14 +17,14 @@
 // -------------------------------------------------------------------------------------
 //  Functions
 
-int method_temp_1(int Byte_1)
+int method_temp_1(char Byte_1)
 {
   return Byte_1 - 40;
 }
 
-int method_2_byte_div_1000(int Byte_1, int Byte_2)
+float method_2_byte_div_1000(char Byte_1, char Byte_2)
 {
-  return ((Byte_1 * 256) + Byte_2) / 1000;
+  return (((float)Byte_1 * 256) + (float)Byte_2) / 1000;
 }
 
 // -------------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ string TEMPERATURE::f()
 
 //-----------
 
-void VOLTAGE::store_v(int Voltage)
+void VOLTAGE::store_v(float Voltage)
 {
   V  = Voltage;
 }
@@ -1732,63 +1732,55 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
               STATUS.TEMPS.store_coolant_05(message.DATA[3]);
             }
 
-            if (REQUESTED_PID == "67")  // Engine coolant temperature
-            {
-              STATUS.TEMPS.store_coolant_67(message.DATA[3], message.DATA[4]);
-            }
+            //if (REQUESTED_PID == "67")  // Engine coolant temperature
+            //{
+            //  STATUS.TEMPS.store_coolant_67(message.DATA[3], message.DATA[4]);
+            //}
 
             if (REQUESTED_PID == "0F")  // Intake air temperature
             {
               STATUS.TEMPS.store_air_intake_0f(message.DATA[3]);
             }
 
-            if (REQUESTED_PID == "68")  // Intake air temperature
-            {
-              STATUS.TEMPS.store_air_intake_68(message.DATA[3], message.DATA[4]);
-            }
+            //if (REQUESTED_PID == "68")  // Intake air temperature
+            //{
+            //  STATUS.TEMPS.store_air_intake_68(message.DATA[3], message.DATA[4]);
+            //}
             
             if (REQUESTED_PID == "46")  // Ambient air temperature
             {
               STATUS.TEMPS.store_ambiant_air_46(message.DATA[3]);
             }
             
-            if (REQUESTED_PID == "5C")  // Engine oil temperature
-            {
-              STATUS.TEMPS.store_oil_5c(message.DATA[3]);
-            }
+            //if (REQUESTED_PID == "5C")  // Engine oil temperature
+            //{
+            //  STATUS.TEMPS.store_oil_5c(message.DATA[3]);
+            //}
             
-            if (REQUESTED_PID == "6B")  // Exhaust gas recirculation temperature
-            {
-              STATUS.TEMPS.store_exhaust_gas_6b(message.DATA[3]);
-            }
+            //if (REQUESTED_PID == "6B")  // Exhaust gas recirculation temperature
+            //{
+            //  STATUS.TEMPS.store_exhaust_gas_6b(message.DATA[3]);
+            //}
             
-            if (REQUESTED_PID == "6B")  // Manifold surface temperature
-            {
-              STATUS.TEMPS.store_manifold_surface_84(message.DATA[3]);
-            }
+            //if (REQUESTED_PID == "6B")  // Manifold surface temperature
+            //{
+            //  STATUS.TEMPS.store_manifold_surface_84(message.DATA[3]);
+            //}
 
+          }
 
-
+          // Check message to make sure its in correct format
+          if (message.DATA[0] == 0x04 && message.DATA[1] == 0x41)
             // Voltage
+          {
 
-            if (REQUESTED_PID == "42")  // Engine coolant temperature
+            if (REQUESTED_PID == "42")  // Control Unit Voltage
             {
               STATUS.ELECTRICAL.store_control_voltage_42(message.DATA[3], message.DATA[4]);
             }
-
-            // Other
-
-            //if (REQUESTED_PID == "4F")  // Engine coolant temperature
-            //{
-            //  STATUS.ELECTRICAL.store_control_voltage_42(message.DATA[3], message.DATA[4]);
-            //}
-
-
-
-
-
           }
         }
+
 
         // High level Compute requiring calculation on all data.
         //  Compute on all data but can be processor intensive.

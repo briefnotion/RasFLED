@@ -338,7 +338,7 @@ class AUTOMOBILE_GADGET
   Text_Field ST_0_9;
   Text_Field ST_0_10;
 
-  //Text_Field ST_1_0;
+  Text_Field ST_1_0;
   Text_Field ST_1_1;
   Text_Field ST_1_2;
   Text_Field ST_1_3;

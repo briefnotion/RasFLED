@@ -28,9 +28,9 @@ using namespace std;
 // -------------------------------------------------------------------------------------
 //  Functions
 
-int method_temp_1(int Byte_1);
+int method_temp_1(char Byte_1);
 
-int method_2_byte_div_1000(int Byte_1, int Byte_2);
+float method_2_byte_div_1000(char Byte_1, char Byte_2);
 
 // -------------------------------------------------------------------------------------
 //  Classs
@@ -208,7 +208,7 @@ class VOLTAGE
 
   public:
 
-  void store_v(int Voltage);
+  void store_v(float Voltage);
   float val_v();
   string v();
 

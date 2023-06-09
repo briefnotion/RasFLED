@@ -242,6 +242,7 @@ class Text_Field_Properties
   int TYPE = 0;
   int COLOR = 0;
   int BCOLOR = 0;
+  bool AUTO_COLOR = false;
   
   int POSY = 0;
   int POSX = 0;
