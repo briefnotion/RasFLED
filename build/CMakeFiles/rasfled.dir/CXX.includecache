@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/pi/source/RasFLED/source/LEDstuff.cpp
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
+
 /home/pi/source/RasFLED/source/LEDstuff.h
 string
 -
@@ -15,6 +19,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
+
+/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
+aircraft_coordinator.h
+/home/pi/source/RasFLED/source/aircraft_coordinator.h
 
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
@@ -40,6 +48,10 @@ deque
 
 /home/pi/source/RasFLED/source/animations_definitions.h
 
+/home/pi/source/RasFLED/source/animations_handler.cpp
+animations_handler.h
+/home/pi/source/RasFLED/source/animations_handler.h
+
 /home/pi/source/RasFLED/source/animations_handler.h
 string
 -
@@ -55,6 +67,10 @@ LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
+
+/home/pi/source/RasFLED/source/animations_storage.cpp
+animations_storage.h
+/home/pi/source/RasFLED/source/animations_storage.h
 
 /home/pi/source/RasFLED/source/animations_storage.h
 string
@@ -72,6 +88,10 @@ LEDstuff.h
 string
 -
 
+/home/pi/source/RasFLED/source/auto.cpp
+auto.h
+/home/pi/source/RasFLED/source/auto.h
+
 /home/pi/source/RasFLED/source/auto.h
 stdio.h
 -
@@ -87,6 +107,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 comport.h
 /home/pi/source/RasFLED/source/comport.h
+
+/home/pi/source/RasFLED/source/automobile_handler.cpp
+automobile_handler.h
+/home/pi/source/RasFLED/source/automobile_handler.h
 
 /home/pi/source/RasFLED/source/automobile_handler.h
 stdio.h
@@ -107,6 +131,10 @@ string
 -
 future
 -
+
+/home/pi/source/RasFLED/source/comport.cpp
+comport.h
+/home/pi/source/RasFLED/source/comport.h
 
 /home/pi/source/RasFLED/source/comport.h
 stdio.h
@@ -144,6 +172,10 @@ hardware_status.h
 LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 
+/home/pi/source/RasFLED/source/configuration_storage.cpp
+configuration_storage.h
+/home/pi/source/RasFLED/source/configuration_storage.h
+
 /home/pi/source/RasFLED/source/configuration_storage.h
 deque
 -
@@ -153,6 +185,10 @@ consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
+
+/home/pi/source/RasFLED/source/consoleanddata.cpp
+consoleanddata.h
+/home/pi/source/RasFLED/source/consoleanddata.h
 
 /home/pi/source/RasFLED/source/consoleanddata.h
 stdio.h
@@ -194,6 +230,10 @@ chrono
 ctime
 -
 
+/home/pi/source/RasFLED/source/fledcore.cpp
+fledcore.h
+/home/pi/source/RasFLED/source/fledcore.h
+
 /home/pi/source/RasFLED/source/fledcore.h
 animations_definitions.h
 /home/pi/source/RasFLED/source/animations_definitions.h
@@ -203,6 +243,10 @@ LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
+
+/home/pi/source/RasFLED/source/gadgets.cpp
+gadgets.h
+/home/pi/source/RasFLED/source/gadgets.h
 
 /home/pi/source/RasFLED/source/gadgets.h
 stdio.h
@@ -221,6 +265,10 @@ system.h
 /home/pi/source/RasFLED/source/system.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
+
+/home/pi/source/RasFLED/source/gadgets_alerts.cpp
+gadgets_alerts.h
+/home/pi/source/RasFLED/source/gadgets_alerts.h
 
 /home/pi/source/RasFLED/source/gadgets_alerts.h
 stdio.h
@@ -243,6 +291,10 @@ gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
+
+/home/pi/source/RasFLED/source/gadgets_automobile.cpp
+gadgets_automobile.h
+/home/pi/source/RasFLED/source/gadgets_automobile.h
 
 /home/pi/source/RasFLED/source/gadgets_automobile.h
 stdio.h
@@ -270,6 +322,10 @@ helper.h
 symbols.h
 /home/pi/source/RasFLED/source/symbols.h
 
+/home/pi/source/RasFLED/source/gadgets_radio.cpp
+gadgets_radio.h
+/home/pi/source/RasFLED/source/gadgets_radio.h
+
 /home/pi/source/RasFLED/source/gadgets_radio.h
 stdio.h
 -
@@ -294,6 +350,10 @@ api_rtlairband.h
 aircraft_coordinator.h
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 
+/home/pi/source/RasFLED/source/hardware_module_door.cpp
+hardware_module_door.h
+/home/pi/source/RasFLED/source/hardware_module_door.h
+
 /home/pi/source/RasFLED/source/hardware_module_door.h
 string
 -
@@ -303,6 +363,10 @@ consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+
+/home/pi/source/RasFLED/source/hardware_status.cpp
+hardware_status.h
+/home/pi/source/RasFLED/source/hardware_status.h
 
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
@@ -320,6 +384,10 @@ helper.h
 wiringPi.h
 -
 
+/home/pi/source/RasFLED/source/helper.cpp
+helper.h
+/home/pi/source/RasFLED/source/helper.h
+
 /home/pi/source/RasFLED/source/helper.h
 deque
 -
@@ -334,6 +402,10 @@ definitions.h
 ncurses.h
 -
 
+/home/pi/source/RasFLED/source/interface.cpp
+interface.h
+/home/pi/source/RasFLED/source/interface.h
+
 /home/pi/source/RasFLED/source/interface.h
 string
 -
@@ -345,6 +417,10 @@ commands.h
 /home/pi/source/RasFLED/source/commands.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+
+/home/pi/source/RasFLED/source/json_interface.cpp
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
 
 /home/pi/source/RasFLED/source/json_interface.h
 stdio.h
@@ -440,6 +516,10 @@ animations_handler.h
 automobile_handler.h
 /home/pi/source/RasFLED/source/automobile_handler.h
 
+/home/pi/source/RasFLED/source/player.cpp
+player.h
+/home/pi/source/RasFLED/source/player.h
+
 /home/pi/source/RasFLED/source/player.h
 fstream
 -
@@ -451,6 +531,10 @@ deque
 -
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
+
+/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp
+radio_channel_coordinator.h
+/home/pi/source/RasFLED/source/radio_channel_coordinator.h
 
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 deque
@@ -500,6 +584,10 @@ rpihw.h
 pwm.h
 /home/pi/source/RasFLED/source/rpi_ws281x-master/pwm.h
 
+/home/pi/source/RasFLED/source/screen3.cpp
+screen3.h
+/home/pi/source/RasFLED/source/screen3.h
+
 /home/pi/source/RasFLED/source/screen3.h
 stdio.h
 -
@@ -528,6 +616,10 @@ gadgets_automobile.h
 radio_channel_coordinator.h
 /home/pi/source/RasFLED/source/radio_channel_coordinator.h
 
+/home/pi/source/RasFLED/source/stringthings.cpp
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
+
 /home/pi/source/RasFLED/source/stringthings.h
 string
 -
@@ -543,6 +635,10 @@ stdio.h
 -
 string
 -
+
+/home/pi/source/RasFLED/source/system.cpp
+system.h
+/home/pi/source/RasFLED/source/system.h
 
 /home/pi/source/RasFLED/source/system.h
 stdio.h

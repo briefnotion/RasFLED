@@ -48,7 +48,10 @@ class AUTOMOBILE_DATA_LINE
   int ID_DATA[2];
   int DATA[8];
 
-  unsigned long TIMESTAMP = 0;
+  unsigned long TIMESTAMP_MESSAGE_SENT = 0;
+    // Measured in miliseconds
+    // Time sent on sending unit
+    // Not synced with RasFLED clock.
 };
 
 class AUTOMOBILE_DATA
@@ -164,12 +167,18 @@ class VELOCITY
   string KMPH_DISP = "X";
   string MPH_DISP = "X";
 
-  unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
+  unsigned long TIME_STAMP = -1;            // Miliseconds.  Fairly loose timings.
+  unsigned long TIME_STAMP_TIME_SENT = -1;  // Miliseconds.  Should be a more 
+                                            //  accurate timing because set on sending 
+                                            //  device. Latency of serial port send and 
+                                            //  receive and processing is not factored.
+                                            // May also be likely the latency is the same.
+                                            //  May only matter when Serial Comm is congested.
 
   public:
 
-  void store(float kmph, unsigned long tmeFrame_Time);
-  void store_meters_per_second(float mps, unsigned long tmeFrame_Time);
+  void store(float kmph, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_meters_per_second(float mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
   float val_kmph();
   float val_meters_per_second();
   float val_mph();
@@ -177,6 +186,7 @@ class VELOCITY
   string mph();
 
   unsigned long time_stamp();
+  unsigned long time_stamp_time_sent();
 };
 
 class TEMPERATURE
@@ -194,6 +204,26 @@ class TEMPERATURE
   //float val_f();
   string c();
   //string f();
+
+  unsigned long time_stamp();
+};
+
+class PRESSURE
+{
+  private:
+
+  int KPA = -1;
+
+  unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
+
+  public:
+
+  void store_kPa(int Celsius);
+  int val_kPa();
+  string kPa();
+  float val_inHg();
+  string inHg();
+
 
   unsigned long time_stamp();
 };
@@ -464,12 +494,12 @@ class AUTOMOBILE_VELOCITY
   void set_source_availability(bool Available);
   bool available();
 
-  void store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time);
-  void store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time);
-  void store_LF(int mps, unsigned long tmeFrame_Time);
-  void store_RF(int mps, unsigned long tmeFrame_Time);
-  void store_LB(int mps, unsigned long tmeFrame_Time);
-  void store_RB(int mps, unsigned long tmeFrame_Time);
+  void store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_LF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_RF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_LB(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_RB(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
 
   float multiplier();
 };
@@ -497,6 +527,8 @@ class AUTOMOBILE_TEMPATURE
   TEMPERATURE EXHAUST_GAS_6b;
   TEMPERATURE MANIFOLD_SURFACE_84;
 
+  PRESSURE BARO_33;
+
   void set_source_availability(bool Available);
   bool available();
 
@@ -510,6 +542,8 @@ class AUTOMOBILE_TEMPATURE
   void store_oil_5c(int Sensor_Temp);
   void store_exhaust_gas_6b(int Sensor_Temp);
   void store_manifold_surface_84(int Sensor_Temp);
+
+  void store_abs_baro_33(int Baro);
 };
 
 class AUTOMOBILE_ELECTRICAL
@@ -617,7 +651,8 @@ class TIRE_TTL
 
   void first_run();
 
-  void calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time);
+  void calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, 
+                  unsigned long tmeFrame_Time);
 
   int slice_size();
 

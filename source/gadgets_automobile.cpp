@@ -1262,7 +1262,7 @@ void AUTOMOBILE_GADGET::create()
   ST_0_6.PROP.BCOLOR = COLOR_BLACK;
   ST_0_6.PROP.COLOR = COLOR_WHITE;
   ST_0_6.PROP.JUSTIFICATION_LEFT = true;
-  //ST_0_6.set_text("  Intake:");
+  ST_0_6.set_text("    Baro:");
 
   ST_0_7.PROP.POSX = 0 + 0;
   ST_0_7.PROP.POSY = 21;
@@ -1309,6 +1309,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_0.PROP.BCOLOR = COLOR_BLACK;
   ST_1_0.PROP.COLOR = COLOR_WHITE;
   ST_1_0.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_0.PROP.UPDATE_INDICATION = true;
   ST_1_0.PROP.AUTO_COLOR = true;
   ST_1_0.set_text("XX");
 
@@ -1319,6 +1320,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_1.PROP.BCOLOR = COLOR_BLACK;
   ST_1_1.PROP.COLOR = COLOR_WHITE;
   ST_1_1.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_1.PROP.UPDATE_INDICATION = true;
   ST_1_1.PROP.AUTO_COLOR = true;
   ST_1_1.set_text("XX");
 
@@ -1329,6 +1331,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_2.PROP.BCOLOR = COLOR_BLACK;
   ST_1_2.PROP.COLOR = COLOR_WHITE;
   ST_1_2.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_2.PROP.UPDATE_INDICATION = true;
   ST_1_2.PROP.AUTO_COLOR = true;
   ST_1_2.set_text("XX");
 
@@ -1339,6 +1342,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_3.PROP.BCOLOR = COLOR_BLACK;
   ST_1_3.PROP.COLOR = COLOR_WHITE;
   ST_1_3.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_3.PROP.UPDATE_INDICATION = true;
   ST_1_3.PROP.AUTO_COLOR = true;
   //ST_1_3.set_text("XX");
 
@@ -1349,6 +1353,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_4.PROP.BCOLOR = COLOR_BLACK;
   ST_1_4.PROP.COLOR = COLOR_WHITE;
   ST_1_4.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_4.PROP.UPDATE_INDICATION = true;
   ST_1_4.PROP.AUTO_COLOR = true;
   ST_1_4.set_text("XX");
 
@@ -1359,6 +1364,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_5.PROP.BCOLOR = COLOR_BLACK;
   ST_1_5.PROP.COLOR = COLOR_WHITE;
   ST_1_5.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_5.PROP.UPDATE_INDICATION = true;
   ST_1_5.PROP.AUTO_COLOR = true;
   //ST_1_5.set_text("XX");
 
@@ -1369,8 +1375,9 @@ void AUTOMOBILE_GADGET::create()
   ST_1_6.PROP.BCOLOR = COLOR_BLACK;
   ST_1_6.PROP.COLOR = COLOR_WHITE;
   ST_1_6.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_6.PROP.UPDATE_INDICATION = true;
   ST_1_6.PROP.AUTO_COLOR = true;
-  //ST_1_6.set_text("XX");
+  ST_1_6.set_text("XX");
 
   ST_1_7.PROP.POSX = 10 + 0;
   ST_1_7.PROP.POSY = 21;
@@ -1379,6 +1386,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_7.PROP.BCOLOR = COLOR_BLACK;
   ST_1_7.PROP.COLOR = COLOR_WHITE;
   ST_1_7.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_7.PROP.UPDATE_INDICATION = true;
   ST_1_7.PROP.AUTO_COLOR = true;
   //ST_1_7.set_text("XX");
 
@@ -1389,6 +1397,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_8.PROP.BCOLOR = COLOR_BLACK;
   ST_1_8.PROP.COLOR = COLOR_WHITE;
   ST_1_8.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_8.PROP.UPDATE_INDICATION = true;
   ST_1_8.PROP.AUTO_COLOR = true;
   //ST_1_8.set_text("XX");
 
@@ -1399,6 +1408,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_9.PROP.BCOLOR = COLOR_BLACK;
   ST_1_9.PROP.COLOR = COLOR_WHITE;
   ST_1_9.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_9.PROP.UPDATE_INDICATION = true;
   ST_1_9.PROP.AUTO_COLOR = true;
   //ST_1_9.set_text("XX");
 
@@ -1409,6 +1419,7 @@ void AUTOMOBILE_GADGET::create()
   ST_1_10.PROP.BCOLOR = COLOR_BLACK;
   ST_1_10.PROP.COLOR = COLOR_WHITE;
   ST_1_10.PROP.JUSTIFICATION_LEFT = true;
+  ST_1_10.PROP.UPDATE_INDICATION = true;
   ST_1_10.PROP.AUTO_COLOR = true;
   //ST_1_10.set_text("XX");
 
@@ -1559,25 +1570,25 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   //-----------
 
   // Temperature   0, 32, 38, 43, 
-  ST_1_0.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.c());
+  ST_1_0.set_text(" " + sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.c(), tmeFrame_Time);
   ST_1_0.set_color(color_range_reverse(sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.val_c(), 0, 32, 38, 43, 48), COLOR_BLACK);
 
-  ST_1_1.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_0f.c());
+  ST_1_1.set_text(" " + sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_0f.c(), tmeFrame_Time);
   int air_intake_ambiant_diff = sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_0f.val_c() - sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.val_c();
   ST_1_1.set_color(color_range_reverse(air_intake_ambiant_diff, 0, 10, 15, 20, 25), COLOR_BLACK);
 
   // Coolant - 60, 90, 110, 130, 140 
-  ST_1_2.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_05.c());
+  ST_1_2.set_text(" " + sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_05.c(), tmeFrame_Time);
   ST_1_2.set_color(color_range_reverse(sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_05.val_c(), 60, 90, 110, 130, 140), COLOR_BLACK);
 
   //ST_1_3.set_text(sdSysData.CAR_INFO.STATUS.
   
   // Voltage
-  ST_1_4.set_text(sdSysData.CAR_INFO.STATUS.ELECTRICAL.CONTROL_UNIT_42.v());
+  ST_1_4.set_text(" " + sdSysData.CAR_INFO.STATUS.ELECTRICAL.CONTROL_UNIT_42.v(), tmeFrame_Time);
   ST_1_4.set_color(color_range(sdSysData.CAR_INFO.STATUS.ELECTRICAL.CONTROL_UNIT_42.val_v(), 0, 8, 10, 14, 16 ), COLOR_BLACK);
 
   //ST_1_5.set_text(sdSysData.CAR_INFO.STATUS.
-  //ST_1_6.set_text(sdSysData.CAR_INFO.STATUS.
+  ST_1_6.set_text(sdSysData.CAR_INFO.STATUS.TEMPS.BARO_33.inHg(), tmeFrame_Time);
   //ST_1_7.set_text(sdSysData.CAR_INFO.STATUS.
   //ST_1_8.set_text(sdSysData.CAR_INFO.STATUS.
   //ST_1_9.set_text(sdSysData.CAR_INFO.STATUS.

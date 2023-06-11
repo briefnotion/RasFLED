@@ -44,7 +44,7 @@ bool check_availability(bool Coded_Availability, bool Source_Availabilty)
 
 //-----------
 
-void VELOCITY::store(float kmph, unsigned long tmeFrame_Time)
+void VELOCITY::store(float kmph, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
   KMPH = kmph;  
 
@@ -54,10 +54,12 @@ void VELOCITY::store(float kmph, unsigned long tmeFrame_Time)
   KMPH_DISP = to_string_round_to_nth(KMPH, 2);
   MPH_DISP = to_string_round_to_nth(MPH, 2);
 
+  TIME_STAMP_TIME_SENT = tmeFrame_Time_Sent;
+
   TIME_STAMP = tmeFrame_Time;
 }
 
-void VELOCITY::store_meters_per_second(float mps, unsigned long tmeFrame_Time)
+void VELOCITY::store_meters_per_second(float mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
   METERS_PER_SECOND = mps;
 
@@ -66,6 +68,8 @@ void VELOCITY::store_meters_per_second(float mps, unsigned long tmeFrame_Time)
 
   KMPH_DISP = to_string_round_to_nth(KMPH, 2);
   MPH_DISP = to_string_round_to_nth(MPH, 2);
+
+  TIME_STAMP_TIME_SENT = tmeFrame_Time_Sent;
 
   TIME_STAMP = tmeFrame_Time;
 }
@@ -98,6 +102,11 @@ string VELOCITY::mph()
 unsigned long VELOCITY::time_stamp()
 {
   return TIME_STAMP;
+}
+
+unsigned long VELOCITY::time_stamp_time_sent()
+{
+  return TIME_STAMP_TIME_SENT;
 }
 
 //-----------
@@ -133,6 +142,33 @@ string TEMPERATURE::f()
 
 //-----------
 
+void PRESSURE::store_kPa(int kPa)
+{
+  KPA  = kPa;
+}
+
+int PRESSURE::val_kPa()
+{
+  return KPA;
+}
+
+string PRESSURE::kPa()
+{
+  return to_string(KPA) + "kPa";
+}
+
+float PRESSURE::val_inHg()
+{
+  return pressure_translate_kPa_to_inHg((float)KPA);
+}
+
+string PRESSURE::inHg()
+{
+  return to_string_round_to_nth(pressure_translate_kPa_to_inHg((float)KPA), 2) + "inHg";
+}
+
+//-----------
+
 void VOLTAGE::store_v(float Voltage)
 {
   V  = Voltage;
@@ -145,7 +181,7 @@ float VOLTAGE::val_v()
 
 string VOLTAGE::v()
 {
-  return to_string_round_to_nth(V, 1) + "v";
+  return to_string_round_to_nth(V, 1) + " v";
 }
 
 //-----------
@@ -748,12 +784,12 @@ void AUTOMOBILE_VELOCITY::set_source_availability(bool Available)
 {
   if (SOURCE_AVAILABILITY == true && Available == false)
   {
-    SPEED_TRANS.store(-1, 0);
-    SPEED_DASH.store(-1, 0);
-    SPEED_LF_TIRE.store(-1, 0);
-    SPEED_RF_TIRE.store(-1, 0);
-    SPEED_LB_TIRE.store(-1, 0);
-    SPEED_RB_TIRE.store(-1, 0);
+    SPEED_TRANS.store(-1, 0, 0);
+    SPEED_DASH.store(-1, 0, 0);
+    SPEED_LF_TIRE.store(-1, 0, 0);
+    SPEED_RF_TIRE.store(-1, 0, 0);
+    SPEED_LB_TIRE.store(-1, 0, 0);
+    SPEED_RB_TIRE.store(-1, 0, 0);
   }
   
   SOURCE_AVAILABILITY = Available;
@@ -766,38 +802,38 @@ bool AUTOMOBILE_VELOCITY::available()
 
 // Multiplier source unknown.  not calculating correctly.
 // Possibly wrong spec tire size.  How the car knows is beyond me.
-void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time)
+void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
   // Possibly meters per second devided by 3  (Multiplier = 1.2 for kmph conversion )
   //                                          (3.6 kmph = 1 mps                     )
 
   MULTIPLIER = Multiplier;
-  SPEED_TRANS.store((kmph * MULTIPLIER) / 10, tmeFrame_Time);
+  SPEED_TRANS.store((kmph * MULTIPLIER) / 10, tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
-void AUTOMOBILE_VELOCITY::store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time)
+void AUTOMOBILE_VELOCITY::store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
-  SPEED_DASH.store(kmph + (kmph_decimal / 255), tmeFrame_Time);
+  SPEED_DASH.store(kmph + (kmph_decimal / 255), tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
-void AUTOMOBILE_VELOCITY::store_LF(int mps, unsigned long tmeFrame_Time)
+void AUTOMOBILE_VELOCITY::store_LF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
-  SPEED_LF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
+  SPEED_LF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
-void AUTOMOBILE_VELOCITY::store_RF(int mps, unsigned long tmeFrame_Time)
+void AUTOMOBILE_VELOCITY::store_RF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
-  SPEED_RF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
+  SPEED_RF_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
-void AUTOMOBILE_VELOCITY::store_LB(int mps, unsigned long tmeFrame_Time)
+void AUTOMOBILE_VELOCITY::store_LB(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
-  SPEED_LB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
+  SPEED_LB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
-void AUTOMOBILE_VELOCITY::store_RB(int mps, unsigned long tmeFrame_Time)
+void AUTOMOBILE_VELOCITY::store_RB(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
-  SPEED_RB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time);
+  SPEED_RB_TIRE.store(((mps - 32768) * MULTIPLIER) / 100, tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
 float AUTOMOBILE_VELOCITY::multiplier()
@@ -862,6 +898,11 @@ void AUTOMOBILE_TEMPATURE::store_exhaust_gas_6b(int Sensor_Temp)
 void AUTOMOBILE_TEMPATURE::store_manifold_surface_84(int Sensor_Temp)
 {
   MANIFOLD_SURFACE_84.store_c(method_temp_1(Sensor_Temp));
+}
+
+void AUTOMOBILE_TEMPATURE::store_abs_baro_33(int Baro)
+{
+  BARO_33.store_kPa(Baro);
 }
 
 //-----------
@@ -1105,7 +1146,7 @@ void TIRE_TTL::first_run()
 void TIRE_TTL::calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time)
 {
   WHEEL_SPEED_OFFSET_MEAN.put_value(Transmission_Speed.val_kmph() - Tire_Speed.val_kmph(), tmeFrame_Time);
-  WHEEL_SPEED_OFFSET.store(WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time);
+  WHEEL_SPEED_OFFSET.store(WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time, 0);
 
   LIFE_PERCENTAGE = ((V_HIGH - V_MIDDLE_OFFSET - WHEEL_SPEED_OFFSET.val_meters_per_second()) / V_HIGH);
 }
@@ -1165,11 +1206,13 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
   }
  
   // Calculate Acceleration and Wheel Speed offsets.
-  if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
+  if (Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp_time_sent())
+  //if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
   {
     // Reading Acceleration from tire speed may be more accurate.
     float ACCELERATION = 1000 * (Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
-                        (Status.SPEED.SPEED_LB_TIRE.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
+                        //(Status.SPEED.SPEED_LB_TIRE.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
+                        (Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp_time_sent());
 
     ACCELERATION_QUICK_MEAN_HISTORY.put_value(ACCELERATION, tmeFrame_Time);
 
@@ -1181,7 +1224,7 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
     // Calculate Wheelspeed Offset or Differance.
 
     // Unfilthered
-    if (Status.SPEED.SPEED_TRANS.time_stamp() != PREVIOUS_VELOCITY.time_stamp())
+    if (Status.SPEED.SPEED_TRANS.time_stamp_time_sent() != PREVIOUS_VELOCITY.time_stamp_time_sent())
     {
       UNFILTHERED_LF_TTL.calculate(Status.SPEED.SPEED_LF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
       UNFILTHERED_RF_TTL.calculate(Status.SPEED.SPEED_RF_TIRE, Status.SPEED.SPEED_TRANS, tmeFrame_Time);
@@ -1255,8 +1298,8 @@ bool AUTOMOBILE::parse(string Line, int &PID_Recieved)
     valid.catch_false(string_hex_to_int(Line.substr(34, 2), time_byte_2));
     valid.catch_false(string_hex_to_int(Line.substr(36, 2), time_byte_3));
 
-    data.TIMESTAMP = (time_byte_3 * (256 ^3)) + (time_byte_2 * (256 ^2)) + 
-                      (time_byte_1 * 256) + time_byte_0;
+    data.TIMESTAMP_MESSAGE_SENT = (time_byte_0 * (256 ^3)) + (time_byte_1 * (256 ^2)) + 
+                      (time_byte_2 * 256) + time_byte_3;
   }
 
   if (valid.has_false() == false)
@@ -1690,7 +1733,8 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
     while (Com_Port.recieve_size() > 0)
     {
       string input = trim(Com_Port.recieve());
-      if(input.size() == 29 || input.size() == 38)
+      // if(input.size() == 29 || input.size() == 38) //  older v1
+      if(input.size() == 38)  // v3 and v4: 2b pid 8b data 4b time_elapse
       {
         message_count++;
 
@@ -1721,66 +1765,82 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
           // Check message to make sure its in correct format
           if (message.DATA[0] == 0x03 && message.DATA[1] == 0x41)
           {
-            // Dont send another request until wait delay is up
-            REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
-
-            // Speed
-
-            // Temp
-            if (REQUESTED_PID == "05")  // Engine coolant temperature
+            if (message.DATA[2] == 0x05)  // Engine coolant temperature - 07 E8 03 41 05 7A 00 00 00 00 00125F9C
             {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_coolant_05(message.DATA[3]);
             }
 
-            //if (REQUESTED_PID == "67")  // Engine coolant temperature
-            //{
-            //  STATUS.TEMPS.store_coolant_67(message.DATA[3], message.DATA[4]);
-            //}
-
-            if (REQUESTED_PID == "0F")  // Intake air temperature
+            if (message.DATA[2] == 0x67)  // Engine coolant temperature
             {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_coolant_67(message.DATA[3], message.DATA[4]);
+            }
+
+            if (message.DATA[2] == 0x0F)  // Intake air temperature - 07 E8 03 41 0F 4D 00 00 00 00 00127FEE
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_air_intake_0f(message.DATA[3]);
             }
 
-            //if (REQUESTED_PID == "68")  // Intake air temperature
-            //{
-            //  STATUS.TEMPS.store_air_intake_68(message.DATA[3], message.DATA[4]);
-            //}
-            
-            if (REQUESTED_PID == "46")  // Ambient air temperature
+            if (message.DATA[2] == 0x68)  // Intake air temperature
             {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_air_intake_68(message.DATA[3], message.DATA[4]);
+            }
+            
+            if (message.DATA[2] == 0x46)  // Ambient air temperature - 07 E8 03 41 46 4A 00 00 00 00 001264BF
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_ambiant_air_46(message.DATA[3]);
             }
             
-            //if (REQUESTED_PID == "5C")  // Engine oil temperature
-            //{
-            //  STATUS.TEMPS.store_oil_5c(message.DATA[3]);
-            //}
+            if (message.DATA[2] == 0x5C)  // Engine oil temperature
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_oil_5c(message.DATA[3]);
+            }
             
-            //if (REQUESTED_PID == "6B")  // Exhaust gas recirculation temperature
-            //{
-            //  STATUS.TEMPS.store_exhaust_gas_6b(message.DATA[3]);
-            //}
+            if (message.DATA[2] == 0x6B)  // Exhaust gas recirculation temperature
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_exhaust_gas_6b(message.DATA[3]);
+            }
             
-            //if (REQUESTED_PID == "6B")  // Manifold surface temperature
-            //{
-            //  STATUS.TEMPS.store_manifold_surface_84(message.DATA[3]);
-            //}
-
+            if (message.DATA[2] == 0x84)  // Manifold surface temperature
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_manifold_surface_84(message.DATA[3]);
+            }
+            
+            if (message.DATA[2] == 0x33)  // * Absolute Barometric Pressure - 07 E8 03 41 33 64 00 00 00 00 0012CA5C
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_abs_baro_33(message.DATA[3]);
+            }
           }
 
           // Check message to make sure its in correct format
           if (message.DATA[0] == 0x04 && message.DATA[1] == 0x41)
             // Voltage
           {
-
-            if (REQUESTED_PID == "42")  // Control Unit Voltage
+            if (message.DATA[2] == 0x42)  // Control Unit Voltage
             {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.ELECTRICAL.store_control_voltage_42(message.DATA[3], message.DATA[4]);
             }
           }
         }
-
 
         // High level Compute requiring calculation on all data.
         //  Compute on all data but can be processor intensive.
@@ -1820,14 +1880,14 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
                                                 DATA.AD_10.DATA[2]);
 
     // Speed
-    STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time);
+    STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time, DATA.AD_F0.TIMESTAMP_MESSAGE_SENT);
 
-    STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1], tmeFrame_Time);
-    STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3], tmeFrame_Time);
-    STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5], tmeFrame_Time);
-    STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7], tmeFrame_Time);
+    STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
+    STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
+    STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
+    STATUS.SPEED.store_RB((DATA.AD_190.DATA[6] *256) + DATA.AD_190.DATA[7], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
 
-    STATUS.SPEED.store_dash(DATA.AD_130.DATA[6], DATA.AD_130.DATA[7], tmeFrame_Time);
+    STATUS.SPEED.store_dash(DATA.AD_130.DATA[6], DATA.AD_130.DATA[7], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
 
     // Transmission Gear Position
     STATUS.GEAR.store(DATA.AD_F0.DATA[2]);

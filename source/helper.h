@@ -428,6 +428,8 @@ float velocity_translate_kmph_to_meters_per_second(float kmph);
 
 float velocity_translate_meters_per_second_to_kmph(float mps);
 
+float pressure_translate_kPa_to_inHg(float kPa);
+
 int position_of_scale(int size, int scale, int value);
 // Calculate position of value on scale (eg 100%) with size.
 //  Will not return anything larger than size.

@@ -1,3 +1,9 @@
+V 1.939_230610
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+  - Included the Arduino RasCan sketch for anyone wanting to try 
+      to get the program to work with their car.
+
 V 1.938_230609
   - Continued building Auto library.
   - Continued building Automobile_Gadgets Library.
