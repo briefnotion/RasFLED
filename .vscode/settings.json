@@ -25,7 +25,8 @@
     "deque": "cpp",
     "list": "cpp",
     "unordered_map": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "*.tcc": "cpp"
   },
   "cmake.configureOnOpen": true,
   "cmake.sourceDirectory": "/home/pi/source/RasFLED/source"

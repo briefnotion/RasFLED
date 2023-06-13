@@ -1,3 +1,7 @@
+V 1.940_230612
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+
 V 1.939_230610
   - Continued building Auto library.
   - Continued building Automobile_Gadgets Library.

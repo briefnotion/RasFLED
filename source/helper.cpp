@@ -778,7 +778,7 @@ float velocity_translate_meters_per_second_to_kmph(float mps)
 
 float pressure_translate_kPa_to_inHg(float kPa)
 {
-  return kPa * (1 / 3.3863886666667);
+  return kPa * (1 / 3.386389);
 }
 
 int position_of_scale(int size, int scale, int value)

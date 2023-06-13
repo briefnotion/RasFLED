@@ -22,6 +22,16 @@ int method_temp_1(char Byte_1)
   return Byte_1 - 40;
 }
 
+int method_2_byte(char Byte_1, char Byte_2)
+{
+  return ((Byte_1 * 256) + Byte_2);
+}
+
+float method_2_byte_float(char Byte_1, char Byte_2)
+{
+  return (((float)Byte_1 * 256) + (float)Byte_2);
+}
+
 float method_2_byte_div_1000(char Byte_1, char Byte_2)
 {
   return (((float)Byte_1 * 256) + (float)Byte_2) / 1000;
@@ -116,7 +126,12 @@ void TEMPERATURE::store_c(int Celsius)
   C  = Celsius;
 }
 
-int TEMPERATURE::val_c()
+void TEMPERATURE::store_c(float Celsius)
+{
+  C  = Celsius;
+}
+
+float TEMPERATURE::val_c()
 {
   return C;
 }
@@ -130,7 +145,7 @@ float TEMPERATURE::val_f()
 
 string TEMPERATURE::c()
 {
-  return to_string(C) + "c";
+  return to_string((int)C) + "c";
 }
 
 /*
@@ -142,29 +157,71 @@ string TEMPERATURE::f()
 
 //-----------
 
-void PRESSURE::store_kPa(int kPa)
+void TIME::store_seconds(int Seconds)
 {
-  KPA  = kPa;
+  SECONDS = Seconds;
 }
 
-int PRESSURE::val_kPa()
+int TIME::val_seconds()
 {
-  return KPA;
+  return SECONDS;
+}
+
+string TIME::seconds()
+{
+  return to_string(SECONDS) + "s";
+}
+
+//-----------
+
+void PRESSURE::store_kPa(int kPa)
+{
+  PA  = 1000 * kPa;
+}
+
+void PRESSURE::store_kPa(float kPa)
+{
+  PA  = 1000 * kPa;
+}
+
+void PRESSURE::store_Pa(int Pa)
+{
+  PA  = Pa;
+}
+
+void PRESSURE::store_Pa(float Pa)
+{
+  PA  = (float)Pa;
+}
+
+float PRESSURE::val_kPa()
+{
+  return PA / 1000;
 }
 
 string PRESSURE::kPa()
 {
-  return to_string(KPA) + "kPa";
+  return to_string((int)(PA / 1000)) + "kPa";
+}
+
+float PRESSURE::val_Pa()
+{
+  return PA;
+}
+
+string PRESSURE::Pa()
+{
+  return to_string(PA) + "Pa";
 }
 
 float PRESSURE::val_inHg()
 {
-  return pressure_translate_kPa_to_inHg((float)KPA);
+  return pressure_translate_kPa_to_inHg(PA / 1000);
 }
 
 string PRESSURE::inHg()
 {
-  return to_string_round_to_nth(pressure_translate_kPa_to_inHg((float)KPA), 2) + "inHg";
+  return to_string_round_to_nth(pressure_translate_kPa_to_inHg(PA / 1000), 2) + "inHg";
 }
 
 //-----------
@@ -349,6 +406,18 @@ void AUTOMOBILE_FUEL::store_level(int Level)
   LEVEL = ((float)Level) / 20;
 
   LEVEL_DISP = to_string_round_to_nth(LEVEL, 1) + " gal";
+}
+
+void AUTOMOBILE_FUEL::store_fuel_rail_pressure_23(int A, int B)
+{
+  //FUEL_RAIL_PRESSURE.store_kPa(10 * (method_2_byte(A, B)));
+  FUEL_RAIL_PRESSURE.store_kPa((method_2_byte(A, B)));
+}
+
+void AUTOMOBILE_FUEL::store_evap_system_vap_pressure_32(int A, int B)
+{
+  //A and B is two complement signed
+  EVAP_SYSTEM_VAP_PRESSURE.store_Pa((-(unsigned short)(method_2_byte(A, B))) / 4);
 }
 
 float AUTOMOBILE_FUEL::val_consumed()
@@ -905,6 +974,11 @@ void AUTOMOBILE_TEMPATURE::store_abs_baro_33(int Baro)
   BARO_33.store_kPa(Baro);
 }
 
+void AUTOMOBILE_TEMPATURE::store_catalyst_3c(int A, int B)
+{
+  CATALYST_3C.store_c((method_2_byte_float(A, B) /10) - 40);
+}
+
 //-----------
 
 void AUTOMOBILE_ELECTRICAL::set_source_availability(bool Available)
@@ -925,6 +999,11 @@ bool AUTOMOBILE_ELECTRICAL::available()
 void AUTOMOBILE_ELECTRICAL::store_control_voltage_42(int Sensor_B, int Sensor_C)
 {
   CONTROL_UNIT_42.store_v(method_2_byte_div_1000(Sensor_B, Sensor_C));
+}
+
+void AUTOMOBILE_ELECTRICAL::store_run_time_since_start_1f(int Sensor_B, int Sensor_C)
+{
+  RUN_TIME_SINCE_START.store_seconds(method_2_byte_div_1000(Sensor_B, Sensor_C));
 }
 
 //-----------
@@ -1206,19 +1285,23 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
   }
  
   // Calculate Acceleration and Wheel Speed offsets.
-  if (Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp_time_sent())
+  if (Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent() != PREVIOUS_TIME_FOR_ACC)
   //if (Status.SPEED.SPEED_LB_TIRE.time_stamp() != PREVIOUS_VELOCITY_FOR_ACC.time_stamp())
   {
+    float current_velocity = (Status.SPEED.SPEED_LF_TIRE.val_meters_per_second() + Status.SPEED.SPEED_RF_TIRE.val_meters_per_second() +
+                              Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() + Status.SPEED.SPEED_RB_TIRE.val_meters_per_second()) / 4;
+
     // Reading Acceleration from tire speed may be more accurate.
-    float ACCELERATION = 1000 * (Status.SPEED.SPEED_LB_TIRE.val_meters_per_second() - PREVIOUS_VELOCITY_FOR_ACC.val_meters_per_second()) / 
-                        //(Status.SPEED.SPEED_LB_TIRE.time_stamp() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp());
-                        (Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent() - PREVIOUS_VELOCITY_FOR_ACC.time_stamp_time_sent());
+    float ACCELERATION = 1000 * (   (current_velocity - PREVIOUS_VELOCITY_FOR_ACC)  ) / 
+                        (Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent() - PREVIOUS_TIME_FOR_ACC);
 
     ACCELERATION_QUICK_MEAN_HISTORY.put_value(ACCELERATION, tmeFrame_Time);
 
     ACCELERATION_MIN_MAX_HISTORY.put_value(ACCELERATION_QUICK_MEAN_HISTORY.mean_float(), tmeFrame_Time);
 
-    PREVIOUS_VELOCITY_FOR_ACC = Status.SPEED.SPEED_LB_TIRE;
+    PREVIOUS_VELOCITY_FOR_ACC = current_velocity;
+    PREVIOUS_TIME_FOR_ACC = Status.SPEED.SPEED_LB_TIRE.time_stamp_time_sent();
+
     ACCELERATION_TIMER.ping_up(tmeFrame_Time, 250);
 
     // Calculate Wheelspeed Offset or Differance.
@@ -1706,6 +1789,93 @@ void AUTOMOBILE::add_to_pid_send_list(string Requested_PID)
   REQUESTED_PID_SEND_LIST.push_back(Requested_PID);
 }
 
+void AUTOMOBILE::set_default_request_pid_list()
+{
+  // https://en.wikipedia.org/wiki/OBD-II_PIDs
+
+  //add_to_pid_send_list("03"); //  PID_FUEL_STATUS                   0x03  //  * 07 E8 04 41 03 02 00 00 00 00 0001D846
+  //  	Fuel system status
+
+  //add_to_pid_send_list("04"); //  PID_CALC_ENGINE_LOAD              0x04  //  * 07 E9 03 41 04 80 00 00 00 00 0001DC1A
+  //  	Calculated engine load
+  
+  add_to_pid_send_list("05"); //  PID_COOLANT_TEMP                  0x05  //  * 07 E8 03 41 05 6F 00 00 00 00 0003E108
+  //  	Engine coolant temperature
+  
+  //add_to_pid_send_list("06"); //  PID_SHORT_TERM_FUEL_TRIM_1        0x06  //  * 07 E8 03 41 06 7E 00 00 00 00 0002EF49
+  //  Short term fuel trim—Bank 1
+  
+  //add_to_pid_send_list("07"); //  PID_LONG_TERM_FUEL_TRIM_1         0x07  //  * 07 E8 03 41 07 89 00 00 00 00 0003FE53
+  //  	Long term fuel trim—Bank 1
+  
+  //add_to_pid_send_list("0C"); //  PID_ENGIN_PRM                     0x0C  //  * 07 E8 04 41 0C 14 6B 00 00 00 0007338C
+  //  	Engine speed
+  
+  //add_to_pid_send_list("0D"); //  PID_VEHICLE_SPEED                 0x0D  //  * 07 E8 03 41 0D 36 00 00 00 00 000415C3
+  //  Vehicle speed
+  
+  add_to_pid_send_list("0F"); //  PID_INTAKE_AIR_TEMP               0x0F  //  * 07 E8 03 41 0F 4F 00 00 00 00 000419BF
+  //  Intake air temperature
+  
+  //add_to_pid_send_list("10"); //  PID_MASS_AIR_FLOW_RATE            0x10  //  * 07 E8 04 41 10 01 85 00 00 00 00030FBF
+  //  Mass air flow sensor (MAF) air flow rate
+  
+  //add_to_pid_send_list("11"); //  PID_THROTTLE_POSITION             0x11  //  * 07 E8 03 41 11 2A 00 00 00 00 000529D8
+  //  Throttle position
+  
+  //add_to_pid_send_list("1C"); //  PID_OBD_STANDARDS                 0x1C  //  * 07 E9 03 41 1C 09 00 00 00 00 00020C2C
+  //  OBD standards this vehicle conforms to
+  
+  add_to_pid_send_list("1F"); //  PID_RUN_TIME_SINCE_START          0x1F  //  * 07 E8 04 41 1F 00 AA 00 00 00 0002140B
+  //  Run time since engine start
+  
+  //add_to_pid_send_list("21"); //  PID_DISTANCE_TRAVELED_MIL_ON      0x21  //  * 07 E8 04 41 21 00 00 00 00 00 0003272F
+  //  Distance traveled with malfunction indicator lamp (MIL) on
+  
+  add_to_pid_send_list("23"); //  PID_FUEL_RAIL_PRESSURE_GAUGE      0x23  //  * 07 E8 04 41 23 00 E1 00 00 00 00032EEB
+  //  Fuel Rail Gauge Pressure (diesel, or gasoline direct injection)
+  
+  //add_to_pid_send_list("2F"); //  PID_FUEL_TANK_LEVEL               0x2F  //  * 07 E8 03 41 2F 75 00 00 00 00 00054D00
+  //  Fuel Tank Level Input
+  
+  //add_to_pid_send_list("31"); //  PID_DISTANCE_SINCE_CODES_CLEARED  0x31  //  * 07 E8 04 41 31 08 9E 00 00 00 00033AA3
+  //  Distance traveled since codes cleared
+  
+  add_to_pid_send_list("32"); //  PID_EVAP_SYSTEM_VAPOR_PRESSURE    0x32  //  * 07 E8 04 41 32 FF 77 00 00 00 000662D9
+  //  Evap. System Vapor Pressure
+  
+  add_to_pid_send_list("33"); //  PID_BARAMETRIC_PRESSURE           0x33  //  * 07 E9 03 41 33 64 00 00 00 00 0002371D
+  //  Absolute Barometric Pressure
+  
+  add_to_pid_send_list("3C"); //  PID_CATALYST_TEMP_BANK_1_SENSOR_1 0x3C  //  * 07 E8 04 41 3C 19 A3 00 00 00 00066801
+  //  Catalyst Temperature: Bank 1, Sensor 1
+  
+  add_to_pid_send_list("42"); //  PID_CONTROL_VOLTAGE               0x42  //  * 07 E8 04 41 42 36 17 00 00 00 00070902
+  //  Control module voltage
+  
+  //add_to_pid_send_list("43"); //  PID_ABSOLUTE_LOAD                 0x43  //  * 07 E8 04 41 43 00 1C 00 00 00 00046644
+  //  Absolute load value
+  
+  //add_to_pid_send_list("44"); //  PID_COMMANDED_AIR_FUEL_RATIO      0x44  //  * 07 E8 04 41 44 70 A3 00 00 00 00046A22
+  //  Commanded Air-Fuel Equivalence Ratio (lambda,λ)
+  
+  add_to_pid_send_list("46"); //  PID_AMBIENT_AIR_TEMPERATURE       0x46  //  * 07 E8 03 41 46 4C 00 00 00 00 00057D0B
+  //  Ambient air temperature
+  
+  //add_to_pid_send_list("47"); //  PID_ABSOLOUTE_TROTTLE_POSITION_B  0x47  //  * 07 E8 03 41 47 2B 00 00 00 00 00068C53
+  //  Absolute throttle position B
+  
+  //add_to_pid_send_list("49"); //  PID_ACCELERATORE_PEDAL_POSITION_D 0x49  //  * 07 E9 03 41 49 27 00 00 00 00 00026486
+  //  Accelerator pedal position D
+  
+  //add_to_pid_send_list("4A"); //  PID_ACCELERATORE_PEDAL_POSITION_E 0x4A  //  * 07 E8 03 41 4A 14 00 00 00 00 0006980A
+  //  Accelerator pedal position E
+  
+  //add_to_pid_send_list("4C"); //  PID_COMMANDED_THROTTLE_ACTUATOR_E 0x4C  //  * 07 E8 03 41 4C 14 00 00 00 00 00069FE5
+  //  Commanded throttle actuator
+  
+}
+
 string AUTOMOBILE::requested_pid()
 {
   return REQUESTED_PID;
@@ -1833,6 +2003,34 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
           if (message.DATA[0] == 0x04 && message.DATA[1] == 0x41)
             // Voltage
           {
+            if (message.DATA[2] == 0x1F)  // Run time since engine start - 07 E8 04 41 1F 00 AA 00 00 00 0002140B
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.ELECTRICAL.store_run_time_since_start_1f(message.DATA[3], message.DATA[4]);
+            }
+
+            if (message.DATA[2] == 0x23)  // Fuel Rail Gauge Pressure (diesel, or gasoline direct injection) - 07 E8 04 41 23 00 E1 00 00 00 00032EEB
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.FUEL.store_fuel_rail_pressure_23(message.DATA[3], message.DATA[4]);
+            }
+
+            if (message.DATA[2] == 0x3C)  //  Catalyst Temperature: Bank 1, Sensor 1 - 07 E8 04 41 3C 19 A3 00 00 00 00066801
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.TEMPS.store_catalyst_3c(message.DATA[3], message.DATA[4]);
+            }
+
+            if (message.DATA[2] == 0x32)  //  Evap. System Vapor Pressure - 07 E8 04 41 32 FF 77 00 00 00 000662D9
+            {
+              // Dont send another request until wait delay is up
+              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              STATUS.FUEL.store_evap_system_vap_pressure_32(message.DATA[3], message.DATA[4]);
+            }
+
             if (message.DATA[2] == 0x42)  // Control Unit Voltage
             {
               // Dont send another request until wait delay is up

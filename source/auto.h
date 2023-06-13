@@ -30,6 +30,10 @@ using namespace std;
 
 int method_temp_1(char Byte_1);
 
+int method_2_byte(char Byte_1, char Byte_2);
+
+float method_2_byte_float(char Byte_1, char Byte_2);
+
 float method_2_byte_div_1000(char Byte_1, char Byte_2);
 
 // -------------------------------------------------------------------------------------
@@ -193,14 +197,15 @@ class TEMPERATURE
 {
   private:
 
-  int C = -1;
+  float C = -1;
 
   unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
 
   public:
 
   void store_c(int Celsius);
-  int val_c();
+  void store_c(float Celsius);
+  float val_c();
   //float val_f();
   string c();
   //string f();
@@ -208,19 +213,38 @@ class TEMPERATURE
   unsigned long time_stamp();
 };
 
+class TIME
+{
+  private:
+
+  int SECONDS = -1;
+
+  public:
+
+  void store_seconds(int Seconds);
+  int val_seconds();
+  string seconds();
+};
+
 class PRESSURE
 {
   private:
 
-  int KPA = -1;
+  float PA = -1;
 
   unsigned long TIME_STAMP = -1; // Miliseconds.  Fairly loose timings.
 
   public:
 
-  void store_kPa(int Celsius);
-  int val_kPa();
+  void store_kPa(int kPa);
+  void store_kPa(float kPa);
+  void store_Pa(int Pa);
+  void store_Pa(float Pa);
+
+  float val_kPa();
   string kPa();
+  float val_Pa();
+  string Pa();
   float val_inHg();
   string inHg();
 
@@ -319,12 +343,17 @@ class AUTOMOBILE_FUEL
 
   public:
 
+  PRESSURE FUEL_RAIL_PRESSURE;
+  PRESSURE EVAP_SYSTEM_VAP_PRESSURE;
+
   void set_source_availability(bool Available);
   bool available();
 
   void store_consumed(int Consumed);
   void store_percentage(int Percentage);
   void store_level(int Level);
+  void store_fuel_rail_pressure_23(int A, int B);
+  void store_evap_system_vap_pressure_32(int A, int B);
 
   float val_consumed();
   string consumed();
@@ -526,6 +555,8 @@ class AUTOMOBILE_TEMPATURE
   TEMPERATURE OIL_5c;
   TEMPERATURE EXHAUST_GAS_6b;
   TEMPERATURE MANIFOLD_SURFACE_84;
+  
+  TEMPERATURE CATALYST_3C;
 
   PRESSURE BARO_33;
 
@@ -544,6 +575,8 @@ class AUTOMOBILE_TEMPATURE
   void store_manifold_surface_84(int Sensor_Temp);
 
   void store_abs_baro_33(int Baro);
+  
+  void store_catalyst_3c(int A, int B);
 };
 
 class AUTOMOBILE_ELECTRICAL
@@ -556,11 +589,13 @@ class AUTOMOBILE_ELECTRICAL
   public:
 
   VOLTAGE CONTROL_UNIT_42;
+  TIME RUN_TIME_SINCE_START;
 
   void set_source_availability(bool Available);
   bool available();
 
-  void store_control_voltage_42(int Sensor_B, int Sensor_C);
+  void store_control_voltage_42(int Sensor_B, int Sensor_C);  
+  void store_run_time_since_start_1f(int Sensor_B, int Sensor_C);
 };
 
 class AUTOMOBILE_TRANSMISSION_GEAR
@@ -673,7 +708,8 @@ class AUTOMOBILE_CALCULATED
 
   TIMED_PING ACCELERATION_TIMER;
 
-  VELOCITY PREVIOUS_VELOCITY_FOR_ACC;
+  float PREVIOUS_VELOCITY_FOR_ACC;
+  unsigned long PREVIOUS_TIME_FOR_ACC;
 
   public:
 
@@ -759,6 +795,8 @@ class AUTOMOBILE
   int message_count = 0;
 
   void add_to_pid_send_list(string Requested_PID);
+
+  void set_default_request_pid_list();
 
   string requested_pid();
 
