@@ -677,7 +677,7 @@ class TIRE_TTL
   // .03 Mph 0.01341 mps
 
   float V_MIDDLE_OFFSET = 0.018;    // 100%
-  float V_HIGH = 0.067;             // 0%
+  float V_HIGH = 0.080;             // 0%
 
   // V_MIDDLE_OFFSET  .03 Mph 0.01341 mps
   // V_HIGH           .18 Mph 0.08 mps 100%

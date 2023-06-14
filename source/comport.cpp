@@ -49,47 +49,24 @@ bool COMPORT::read_from_comm()
 {
   bool ret_data_read = false;
 
-  int n = 0,
-  spot = 0;
   char buf = '\0';
 
-  int size_of_buffer = 0;
-
-  /* Whole response*/
-  char response[64];
-  memset(response, '\0', sizeof response);
-
-// Need Rewrite ---
-  do 
+  while (read( USB, &buf, 1 ) > 0)
   {
-    n = read( USB, &buf, 1 );
-    sprintf( &response[spot], "%c", buf );
-    spot += n;
-  } while( buf != '\r' && n > 0 && spot < sizeof response);
-  //} while( buf != PROPS.ENDING_CHAR && n > 0 && spot < sizeof response);
-
-// Need Rewrite ---
-
-  //READ_FROM_COMM.push_back("size: " + to_string(spot));
-
-  if (n < 0)
-  {
-    //READ_FROM_COMM.push_back("Error reading: " ); // + strerror(errno) << std::endl;)
-    //READ_FROM_COMM.push_back("error!");
-  }
-  else if (n == 0)
-  {
-    //READ_FROM_COMM.push_back("Read nothing!");
-  }
-  else 
-  {
-    string res = "";
-    res = trim(string(response, spot));
-    
-    if (res.size() > 0)
+    if (buf != PROPS.ENDING_CHAR)
     {
-      READ_FROM_COMM.push_back(res);
-      ret_data_read = true;
+      RESPONSE = RESPONSE + buf;
+    }
+    else
+    {
+      RESPONSE = trim(RESPONSE);
+      if (RESPONSE.size() > 0)
+      {
+        READ_FROM_COMM.push_back(RESPONSE);
+        ret_data_read = true;
+      }
+
+      RESPONSE = "";
     }
   }
 

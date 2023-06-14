@@ -93,6 +93,10 @@ class COMPORT
   
   deque<string> TEST_DATA;
 
+  string RESPONSE = "";
+  // Retain partially received responses for when data is 
+  //  available again.
+
   public:
 
   COMPORT_PROPERTIES PROPS;

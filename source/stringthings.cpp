@@ -16,6 +16,17 @@
 
 using namespace std;
 
+string char_buf_to_string(char Buf[], int Buf_Len)
+{
+  string ret_str(Buf, Buf_Len);
+
+  //char response[64];
+  //string thing = char_buf_to_string(response, 64);
+  //printf ("thing: %c %s \n", response[0], thing.c_str());
+
+  return ret_str;
+}
+
 string line_create(int Size, char Character)
 {
   string line = "";

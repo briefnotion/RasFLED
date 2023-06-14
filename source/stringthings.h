@@ -24,6 +24,8 @@
 
 using namespace std;
 
+string char_buf_to_string(char* Buf, int Buf_Len);
+
 string line_create(int Size, char Character);
 // Returns an character filled line of Size.
 
