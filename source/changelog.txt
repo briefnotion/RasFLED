@@ -1,3 +1,8 @@
+V 1.942_230614
+  - Continued building Auto library.
+  - Continued building Automobile_Gadgets Library.
+  - Removed some old unused code.
+
 V 1.941_230614
   - Tire TTL adjusted in Auto.
   - Changes made to Communications Port.

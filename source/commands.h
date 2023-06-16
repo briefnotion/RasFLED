@@ -33,9 +33,14 @@ class COMMANDS
   string SHUTDOWN_NOW = "sudo shutdown now";
                     //  "sleep 5 && sudo shutdown now &"
 
+  string REBOOT = "sudo reboot";
+                    //  "sleep 5 && sudo shutdown now &"
+
   public:
 
   void shutdown_now();
+
+  void reboot();
 };
 
 

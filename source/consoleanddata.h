@@ -29,7 +29,6 @@
 #include "stringthings.h"
 #include "system.h"
 #include "gadgets.h"
-#include "gadgets_radio.h"
 #include "screen3.h"
 #include "player.h"
 
@@ -66,10 +65,6 @@ class Console
   PLAYER the_player;
 
   TIMED_IS_READY Console_Display;
-
-  void update_freqency_gadgets_QF(system_data &sdSysData, int pos, Radio_Channel &Gad_Freq);
-
-  void update_freqency_gadgets(system_data &sdSysData);
 
   void update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData);
 

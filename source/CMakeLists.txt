@@ -28,7 +28,6 @@ add_executable(
   rasfled
 
   definitions.h
-  api_rtlairband.h
   alert_system.cpp
   LEDstuff.cpp
   commands.cpp
@@ -53,7 +52,6 @@ add_executable(
   automobile_handler.cpp
   interface.cpp
   player.cpp
-  radio_channel_coordinator.cpp
   aircraft_coordinator.cpp
   screen3.cpp
   system.cpp

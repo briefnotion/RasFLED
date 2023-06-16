@@ -194,41 +194,43 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   // Individual Tire Speeds
 
   // Tire TTL - Offset
+  /*
   LF_TTL_OFFSET.PROP.POSX = 0;
   LF_TTL_OFFSET.PROP.POSY = 4;
-  LF_TTL_OFFSET.PROP.SIZEX = 5;
+  LF_TTL_OFFSET.PROP.SIZEX = 7;
   LF_TTL_OFFSET.PROP.COLORS_ON = true;
   LF_TTL_OFFSET.PROP.BCOLOR = COLOR_BLACK;
   LF_TTL_OFFSET.PROP.COLOR = COLOR_WHITE;
-  LF_TTL_OFFSET.PROP.JUSTIFICATION_LEFT = true;
+  LF_TTL_OFFSET.PROP.JUSTIFICATION_RIGHT = true;
   LF_TTL_OFFSET.PROP.AUTO_COLOR = true;
 
   RF_TTL_OFFSET.PROP.POSX = 22;
   RF_TTL_OFFSET.PROP.POSY = 4;
-  RF_TTL_OFFSET.PROP.SIZEX = 5;
+  RF_TTL_OFFSET.PROP.SIZEX = 7;
   RF_TTL_OFFSET.PROP.COLORS_ON = true;
   RF_TTL_OFFSET.PROP.BCOLOR = COLOR_BLACK;
   RF_TTL_OFFSET.PROP.COLOR = COLOR_WHITE;
-  RF_TTL_OFFSET.PROP.JUSTIFICATION_LEFT = true;
+  RF_TTL_OFFSET.PROP.JUSTIFICATION_RIGHT = true;
   RF_TTL_OFFSET.PROP.AUTO_COLOR = true;
 
   LB_TTL_OFFSET.PROP.POSX = 0;
   LB_TTL_OFFSET.PROP.POSY = 17;
-  LB_TTL_OFFSET.PROP.SIZEX = 5;
+  LB_TTL_OFFSET.PROP.SIZEX = 7;
   LB_TTL_OFFSET.PROP.COLORS_ON = true;
   LB_TTL_OFFSET.PROP.BCOLOR = COLOR_BLACK;
   LB_TTL_OFFSET.PROP.COLOR = COLOR_WHITE;
-  LB_TTL_OFFSET.PROP.JUSTIFICATION_LEFT = true;
+  LB_TTL_OFFSET.PROP.JUSTIFICATION_RIGHT = true;
   LB_TTL_OFFSET.PROP.AUTO_COLOR = true;
 
   RB_TTL_OFFSET.PROP.POSX = 22;
   RB_TTL_OFFSET.PROP.POSY = 17;
-  RB_TTL_OFFSET.PROP.SIZEX = 5;
+  RB_TTL_OFFSET.PROP.SIZEX = 7;
   RB_TTL_OFFSET.PROP.COLORS_ON = true;
   RB_TTL_OFFSET.PROP.BCOLOR = COLOR_BLACK;
   RB_TTL_OFFSET.PROP.COLOR = COLOR_WHITE;
-  RB_TTL_OFFSET.PROP.JUSTIFICATION_LEFT = true;
+  RB_TTL_OFFSET.PROP.JUSTIFICATION_RIGHT = true;
   RB_TTL_OFFSET.PROP.AUTO_COLOR = true;
+  */
 
   // Tire TTL - Unfiltered
   LF_UNFILTERED_TTL.PROP.POSX = 2;
@@ -502,33 +504,46 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   //-----------
   // Individual Tire Speeds
   
-  LF_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.wheel_speed_offset().mph());
-  RF_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.wheel_speed_offset().mph());
-  LB_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.wheel_speed_offset().mph());
-  RB_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.wheel_speed_offset().mph());
+  // Speed Diff
+  //LF_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.wheel_speed_offset().mph());
+  //RF_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.wheel_speed_offset().mph());
+  //LB_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.wheel_speed_offset().mph());
+  //RB_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.wheel_speed_offset().mph());
 
-  LF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.life_percentage());
-  LF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
-  RF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.life_percentage());
-  RF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
-  LB_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.life_percentage());
-  LB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
-  RB_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.life_percentage());
-  RB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  //LF_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.instant_differance_percentage());
+  //RF_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.instant_differance_percentage());
+  //LB_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.instant_differance_percentage());
+  //RB_TTL_OFFSET.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.instant_differance_percentage());
+
+  //LF_TTL_OFFSET.set_text(" " + to_string(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.val_instant_differance_percentage()));
+  //RF_TTL_OFFSET.set_text(" " + to_string(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.val_instant_differance_percentage()));
+  //LB_TTL_OFFSET.set_text(" " + to_string(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.val_instant_differance_percentage()));
+  //RB_TTL_OFFSET.set_text(" " + to_string(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.val_instant_differance_percentage()));
+
+  // Unfiltered TTL Percentage
+  LF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.life_percentage_mean());
+  LF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  RF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.life_percentage_mean());
+  RF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  LB_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.life_percentage_mean());
+  LB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  RB_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.life_percentage_mean());
+  RB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
 
   LF_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.slice_size_max(), tmeCurrentMillis);
   RF_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.slice_size_max(), tmeCurrentMillis);
   LB_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.slice_size_max(), tmeCurrentMillis);
   RB_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.slice_size_max(), tmeCurrentMillis);
 
-  LF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LF_TTL.life_percentage());
-  LF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LF_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
-  RF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.RF_TTL.life_percentage());
-  RF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RF_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
-  LB_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LB_TTL.life_percentage());
-  LB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LB_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
-  RB_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.RB_TTL.life_percentage());
-  RB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RB_TTL.val_life_percentage(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  // TTL Percentage
+  LF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LF_TTL.life_percentage_mean());
+  LF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LF_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  RF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.RF_TTL.life_percentage_mean());
+  RF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RF_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  LB_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LB_TTL.life_percentage_mean());
+  LB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LB_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  RB_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.RB_TTL.life_percentage_mean());
+  RB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RB_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
 
   LF_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.LF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.LF_TTL.slice_size_max(), tmeCurrentMillis);
   RF_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.RF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.RF_TTL.slice_size_max(), tmeCurrentMillis);
@@ -613,10 +628,10 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
 
   //-----------
   // Individual Tire Speeds
-  LF_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
-  RF_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
-  LB_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
-  RB_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
+  //LF_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
+  //RF_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
+  //LB_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
+  //RB_TTL_OFFSET.draw(GADGET_PANEL, Refresh);
 
   LF_UNFILTERED_TTL.draw(GADGET_PANEL, Refresh);
   RF_UNFILTERED_TTL.draw(GADGET_PANEL, Refresh);

@@ -505,6 +505,21 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
         cons.keywatch.in(KEYEXIT);
       }
 
+      // Command Line (sudo reboot)
+      if (check_command(cons, " reboot", "Reboot Started"))
+      {
+        command_desc(cons, "Rebooting System.");
+        
+        // Call Shutdown command.
+        command.reboot();
+
+        // Start Power Down Animation
+        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
+
+        // Set system to exit
+        cons.keywatch.in(KEYEXIT);
+      }
+
       // -------------------------------------------------------------------------------------
       // Threadable Commands with from command prompt   
 
@@ -567,50 +582,6 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
 
         // Start Power Down Animation
         process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-      }
-
-      // Radio Shutdown Channel Command
-      if (check_command(cons, " radoff", "Turn Off Radio"))
-      {
-        // Call command.
-        sdSysData.RADIO_COORD.command_send(-1, 0);
-
-        // Start Power Down Animation
-        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-      }
-
-      // Radio Shutdown Channel Command
-      if (check_command(cons, " rclear", "Radio Clear Holds and Skips"))
-      {
-        // Call command.
-        sdSysData.RADIO_COORD.command_send(3, 0);
-
-        // Start Power Down Animation
-        process_power_animation(cons, sdSysData, tmeCurrentTime, Animations, CRGB(25, 0, 0));
-      }
-
-      // Radio Skip Channel Command
-      if (check_command_with_num_param(cons, " rs######", "Radio Skip Channel", 3, 6, parameter))
-      {
-        // Call command.
-        sdSysData.RADIO_COORD.command_send(1, parameter);
-        cons.printi("Skip Channel: " + to_string(parameter)); // eg  rs118500
-      }
-
-      // Radio Hold Channel Command
-      if (check_command_with_num_param(cons, " rh######", "Radio Hold Channel", 3, 6, parameter))
-      {
-        // Call command.
-        sdSysData.RADIO_COORD.command_send(2, parameter);
-        cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
-      }
-
-      // Radio Clear Channel Command
-      if (check_command_with_num_param(cons, " rc######", "Radio Hold Channel", 3, 6, parameter))
-      {
-        // Call command.
-        sdSysData.RADIO_COORD.command_send(4, parameter);
-        cons.printi("Hold Channel: " + to_string(parameter)); // eg  rh122950
       }
 
       /*

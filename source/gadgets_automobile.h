@@ -101,10 +101,10 @@ class AUTOMOBILE_OVERVIEW_GADGET
   //-----------
   // Tire TTL
 
-  Text_Field LF_TTL_OFFSET;
-  Text_Field RF_TTL_OFFSET;
-  Text_Field LB_TTL_OFFSET;
-  Text_Field RB_TTL_OFFSET;
+  //Text_Field LF_TTL_OFFSET;
+  //Text_Field RF_TTL_OFFSET;
+  //Text_Field LB_TTL_OFFSET;
+  //Text_Field RB_TTL_OFFSET;
 
   Text_Field LF_UNFILTERED_TTL;
   Text_Field RF_UNFILTERED_TTL;

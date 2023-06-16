@@ -165,8 +165,13 @@ void Screen3::buttons_menu_system(system_data &sdSysData)
   bzButtons.set_hidden(1, false);
   bzButtons.set_enabled(1, true);
   
-  bzButtons.set_hidden(2, true);
-  bzButtons.set_enabled(2, false);
+  bzButtons.set_name(2, "REBOOT");
+  bzButtons.set_label(2, "\nSYSTEM\nREBOOT");
+  bzButtons.set_value(2, 0);
+  bzButtons.set_type(2, 0);
+  bzButtons.set_color(2, COLOR_RED, COLOR_WHITE);
+  bzButtons.set_hidden(2, false);
+  bzButtons.set_enabled(2, true);
 
   bzButtons.set_name(3, "DEBUG");
   bzButtons.set_label(3, "\nDEBUG");

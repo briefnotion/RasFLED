@@ -22,8 +22,6 @@
 #include "commands.h"
 #include "hardware_status.h"
 
-#include "api_rtlairband.h"
-#include "radio_channel_coordinator.h"
 #include "aircraft_coordinator.h"
 #include "alert_system.h"
 #include "comport.h"
@@ -134,8 +132,6 @@ class system_data
   COMMAND_THREAD Command_Thread;
 
   // Radio Variables
-  API_SQUELCH_DESTINATION RECEIVED_SQUELCH;
-  RADIO_CHANNEL_COORDINATOR RADIO_COORD;
   AIRCRAFT_COORDINATOR AIRCRAFT_COORD;
 
   // Test Mode

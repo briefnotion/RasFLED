@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/pi/source/RasFLED/source/LEDstuff.cpp
+LEDstuff.h
+/home/pi/source/RasFLED/source/LEDstuff.h
+
 /home/pi/source/RasFLED/source/LEDstuff.h
 string
 -
@@ -15,6 +19,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
+
+/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
+aircraft_coordinator.h
+/home/pi/source/RasFLED/source/aircraft_coordinator.h
 
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
@@ -60,6 +68,10 @@ LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
 
+/home/pi/source/RasFLED/source/animations_storage.cpp
+animations_storage.h
+/home/pi/source/RasFLED/source/animations_storage.h
+
 /home/pi/source/RasFLED/source/animations_storage.h
 string
 -
@@ -72,9 +84,9 @@ json_interface.h
 LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 
-/home/pi/source/RasFLED/source/api_rtlairband.h
-string
--
+/home/pi/source/RasFLED/source/auto.cpp
+auto.h
+/home/pi/source/RasFLED/source/auto.h
 
 /home/pi/source/RasFLED/source/auto.h
 stdio.h
@@ -115,6 +127,10 @@ string
 -
 future
 -
+
+/home/pi/source/RasFLED/source/comport.cpp
+comport.h
+/home/pi/source/RasFLED/source/comport.h
 
 /home/pi/source/RasFLED/source/comport.h
 stdio.h
@@ -195,8 +211,6 @@ system.h
 /home/pi/source/RasFLED/source/system.h
 gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
-gadgets_radio.h
-/home/pi/source/RasFLED/source/gadgets_radio.h
 screen3.h
 /home/pi/source/RasFLED/source/screen3.h
 player.h
@@ -325,8 +339,6 @@ gadgets.h
 /home/pi/source/RasFLED/source/gadgets.h
 helper_ncurses.h
 /home/pi/source/RasFLED/source/helper_ncurses.h
-api_rtlairband.h
-/home/pi/source/RasFLED/source/api_rtlairband.h
 aircraft_coordinator.h
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 
@@ -344,6 +356,10 @@ consoleanddata.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
 
+/home/pi/source/RasFLED/source/hardware_status.cpp
+hardware_status.h
+/home/pi/source/RasFLED/source/hardware_status.h
+
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
 -
@@ -359,6 +375,10 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 wiringPi.h
 -
+
+/home/pi/source/RasFLED/source/helper.cpp
+helper.h
+/home/pi/source/RasFLED/source/helper.h
 
 /home/pi/source/RasFLED/source/helper.h
 deque
@@ -389,6 +409,10 @@ commands.h
 /home/pi/source/RasFLED/source/commands.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
+
+/home/pi/source/RasFLED/source/json_interface.cpp
+json_interface.h
+/home/pi/source/RasFLED/source/json_interface.h
 
 /home/pi/source/RasFLED/source/json_interface.h
 stdio.h
@@ -484,6 +508,10 @@ animations_handler.h
 automobile_handler.h
 /home/pi/source/RasFLED/source/automobile_handler.h
 
+/home/pi/source/RasFLED/source/player.cpp
+player.h
+/home/pi/source/RasFLED/source/player.h
+
 /home/pi/source/RasFLED/source/player.h
 fstream
 -
@@ -495,18 +523,6 @@ deque
 -
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
-
-/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp
-radio_channel_coordinator.h
-/home/pi/source/RasFLED/source/radio_channel_coordinator.h
-
-/home/pi/source/RasFLED/source/radio_channel_coordinator.h
-deque
--
-helper.h
-/home/pi/source/RasFLED/source/helper.h
-api_rtlairband.h
-/home/pi/source/RasFLED/source/api_rtlairband.h
 
 /home/pi/source/RasFLED/source/rasapi.h
 fstream
@@ -577,8 +593,10 @@ gadgets_alerts.h
 /home/pi/source/RasFLED/source/gadgets_alerts.h
 gadgets_automobile.h
 /home/pi/source/RasFLED/source/gadgets_automobile.h
-radio_channel_coordinator.h
-/home/pi/source/RasFLED/source/radio_channel_coordinator.h
+
+/home/pi/source/RasFLED/source/stringthings.cpp
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
 
 /home/pi/source/RasFLED/source/stringthings.h
 string
@@ -615,10 +633,6 @@ commands.h
 /home/pi/source/RasFLED/source/commands.h
 hardware_status.h
 /home/pi/source/RasFLED/source/hardware_status.h
-api_rtlairband.h
-/home/pi/source/RasFLED/source/api_rtlairband.h
-radio_channel_coordinator.h
-/home/pi/source/RasFLED/source/radio_channel_coordinator.h
 aircraft_coordinator.h
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 alert_system.h

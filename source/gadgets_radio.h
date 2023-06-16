@@ -24,7 +24,6 @@
 
 #include "gadgets.h"
 #include "helper_ncurses.h"
-#include "api_rtlairband.h"
 
 #include "aircraft_coordinator.h"
 
@@ -287,106 +286,6 @@ class ADSB_Channel_Grid
   //  ADSB_Grid_Panel defines boundaries.
   // Returns true if panel was redrawn.
 };
-
-// -------------------------------------------------------------------------------------
-//  Radio_Channel Classes
-class Radio_Channel_Properties
-// Properties (duh)
-{
-  public: 
-
-  int ID;
-  string NAME = "";
-  string LABEL = "";
-  
-  API_SQUELCH_DESTINATION VALUE;
-
-  int TYPE = -1; // Type -1 = Hidden. Automatic Enabling.
-  int COLOR = 0;
-  int BCOLOR = 0;
-  
-  int POSY = 0;
-  int POSX = 0;
-  int SIZEY = 0;
-  int SIZEX = 0;
-
-  bool SKIP = false;
-  bool HELD = false;
-
-  bool CLICKED = false;
-  bool CHANGED = false;
-
-  bool SHOW_FREQUENCY = true;
-  string FREQUENCY_LABEL = "  FREQ:";
-  
-  int BAR_SIZE = 15;
-  bool SHOW_MIN_MAX = true;
-
-  bool SHOW_SIGNAL = true;
-  string SIGNAL_LABEL = "SIGNAL: ";
-
-  bool SHOW_NOISE = true;
-  string NOISE_LABEL = " NOISE: ";
-};
-
-class Radio_Channel
-//  Gadget display radio channel information with 
-//    primary info.  
-//  Set PROP (properties) before calling create routine.
-//  Warning:
-//    Some properties can be changed directly but will not 
-//      trigger the redraw or work correctly. 
-{
-  private:
-
-  // Gadget window
-  PANEL FREQUENCY_PANEL;
-
-  Button_Zone_Manager bzGadget;
-  int Button_YSize = 3;
-  int Button_XSize = 9;
-
-  // Text Fields
-  Text_Field LABEL_TEXT;
-  Text_Field FREQUENCY_TEXT;
-
-  // Show frequency levels in progress bars
-  BAR BAR_NOISE_LEVEL;
-  BAR BAR_SIGNAL_LEVEL;
-
-  // Timing
-  TIMED_PING LINGER_DIRTY_SIGNAL;
-  TIMED_PING VISIBLE_UPDATE_SIGNAL;
-  int LINGER_TIME = 7000;
-  int VISIBLE_UPATE_TIME = 500;
-
-  // Was gadget redrawn during the previous draw cycle.
-  bool WAS_REDRAWN = false;
-
-  //Debug
-  int Counter = 0;
-
-  public:
-
-  Radio_Channel_Properties PROP;  
-
-  void modify(int id, string name, string label, int value, int type, int color, int bcolor);
-
-  void create(int id, string name, string label, int type, int color, int bcolor);
-
-  void move_resize(int posY, int posX, int sizeY, int sizeX);
-
-  bool changed();
-
-  void update_value(API_SQUELCH_DESTINATION &New_Value, unsigned long tmeFrame_Time);
-
-  bool draw(bool Refresh, unsigned long tmeFrame_Time);
-
-  bool was_redrawn();
-
-  bool check_click(int x_clicked, int y_clicked, string &Name);
-};
-
 
 
 

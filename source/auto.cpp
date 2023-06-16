@@ -1217,37 +1217,55 @@ bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_low()
 
 void TIRE_TTL::first_run()
 {
-  WHEEL_SPEED_OFFSET_MEAN.PROP.SLICES = 20;
-  WHEEL_SPEED_OFFSET_MEAN.PROP.SAMPLE_LIMIT = 100;
-  WHEEL_SPEED_OFFSET_MEAN.PROP.SAMPLE_LIMITED_SPANS = true;
+  WHEEL_SPEED_PECENTAGE_DIFF_MEAN.PROP.SLICES = 20;
+  WHEEL_SPEED_PECENTAGE_DIFF_MEAN.PROP.SAMPLE_LIMIT = 100;
+  WHEEL_SPEED_PECENTAGE_DIFF_MEAN.PROP.SAMPLE_LIMITED_SPANS = true;
 }
 
 void TIRE_TTL::calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, unsigned long tmeFrame_Time)
 {
-  WHEEL_SPEED_OFFSET_MEAN.put_value(Transmission_Speed.val_kmph() - Tire_Speed.val_kmph(), tmeFrame_Time);
-  WHEEL_SPEED_OFFSET.store(WHEEL_SPEED_OFFSET_MEAN.mean_float(), tmeFrame_Time, 0);
+  if( Transmission_Speed.val_meters_per_second() != 0)
+  {
+    DIFFERANCE_PERCENTAGE = Tire_Speed.val_meters_per_second() / Transmission_Speed.val_meters_per_second();
+    LIFE_PERCENTAGE = ((DIFFERANCE_PERCENTAGE *100) - LOW_PERCENTAGE) / (TOP_PERCENTAGE - LOW_PERCENTAGE);
 
-  LIFE_PERCENTAGE = ((V_HIGH - V_MIDDLE_OFFSET - WHEEL_SPEED_OFFSET.val_meters_per_second()) / V_HIGH);
+    WHEEL_SPEED_PECENTAGE_DIFF_MEAN.put_value(LIFE_PERCENTAGE, tmeFrame_Time);
+    WHEEL_SPEED_OFFSET.store_meters_per_second(Tire_Speed.val_meters_per_second() - Transmission_Speed.val_meters_per_second(), tmeFrame_Time, 0);
+  }
+  else
+  {
+    WHEEL_SPEED_OFFSET.store_meters_per_second(0, tmeFrame_Time, 0);
+  }
 }
 
 int TIRE_TTL::slice_size()
 {
-  return WHEEL_SPEED_OFFSET_MEAN.slice_size();
+  return WHEEL_SPEED_PECENTAGE_DIFF_MEAN.slice_size();
 }
 
 int TIRE_TTL::slice_size_max()
 {
-  return WHEEL_SPEED_OFFSET_MEAN.slice_size_max();
+  return WHEEL_SPEED_PECENTAGE_DIFF_MEAN.slice_size_max();
 }
 
-int TIRE_TTL::val_life_percentage()
+float TIRE_TTL::val_instant_differance_percentage()
 {
-  return (int)(LIFE_PERCENTAGE * 100);
+  return 100 - (DIFFERANCE_PERCENTAGE *100);
 }
 
-string TIRE_TTL::life_percentage()
+string TIRE_TTL::instant_differance_percentage()
 {
-  return to_string((int)(LIFE_PERCENTAGE * 100)) + "% ";
+  return to_string_round_to_nth(100 - (DIFFERANCE_PERCENTAGE *100), 2) + "%";
+}
+
+float TIRE_TTL::val_life_percentage_mean()
+{
+  return (WHEEL_SPEED_PECENTAGE_DIFF_MEAN.mean_float() * 100);
+}
+
+string TIRE_TTL::life_percentage_mean()
+{
+  return to_string((int)(WHEEL_SPEED_PECENTAGE_DIFF_MEAN.mean_float() * 100)) + "%";
 }
 
 VELOCITY TIRE_TTL::wheel_speed_offset()

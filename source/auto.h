@@ -664,23 +664,14 @@ class TIRE_TTL
 
   private:
 
-  MIN_MAX_TIME WHEEL_SPEED_OFFSET_MEAN;
+  MIN_MAX_TIME WHEEL_SPEED_PECENTAGE_DIFF_MEAN;
   VELOCITY WHEEL_SPEED_OFFSET;
 
+  float DIFFERANCE_PERCENTAGE = 0;
   float LIFE_PERCENTAGE = 0;
 
-  // values in meteres per second
-  //float V_MIDDLE_OFFSET = 0.01341;
-  //float V_HIGH = 0.08;
-
-  // .18 Mph 0.08 mps 100%
-  // .03 Mph 0.01341 mps
-
-  float V_MIDDLE_OFFSET = 0.018;    // 100%
-  float V_HIGH = 0.080;             // 0%
-
-  // V_MIDDLE_OFFSET  .03 Mph 0.01341 mps
-  // V_HIGH           .18 Mph 0.08 mps 100%
+  float TOP_PERCENTAGE = 100.15;
+  float LOW_PERCENTAGE = 99.5;
 
   public:
 
@@ -693,9 +684,13 @@ class TIRE_TTL
 
   int slice_size_max();
 
-  int val_life_percentage();
+  float val_instant_differance_percentage();
 
-  string life_percentage();
+  string instant_differance_percentage();
+
+  float val_life_percentage_mean();
+
+  string life_percentage_mean();
 
   VELOCITY wheel_speed_offset();
 };

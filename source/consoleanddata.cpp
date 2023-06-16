@@ -25,24 +25,6 @@ using namespace std;
 
 // -------------------------------------------------------------------------------------
 // NCurses Console.  Responsible for all screen and user interfaces.
-
-void Console::update_freqency_gadgets_QF(system_data &sdSysData, int pos, Radio_Channel &Gad_Freq)
-{ 
-  if (sdSysData.RADIO_COORD.CHANNELS[pos].PROP.CHANGED == true)
-  // Update channel property changes from coordinator to gadget.
-  {
-    Gad_Freq.PROP.SKIP = sdSysData.RADIO_COORD.CHANNELS[pos].PROP.SKIP;
-    Gad_Freq.PROP.HELD = sdSysData.RADIO_COORD.CHANNELS[pos].PROP.HELD;
-    Gad_Freq.PROP.CHANGED = true;
-  }
-
-  if (sdSysData.RADIO_COORD.CHANNELS[pos].FREQUENCY.CHANGED == true)
-  // Update channel frequency changes from coordinator to gadget.
-  {
-    Gad_Freq.update_value(sdSysData.RADIO_COORD.CHANNELS[pos], sdSysData.tmeCURRENT_FRAME_TIME);
-  }
-}
-
 void Console::update_ADS_B_gadgets(unsigned long &tmeCurrentMillis, system_data &sdSysData)
 {
   if(sdSysData.AIRCRAFT_COORD.DATA.CHANGED == true || Screen.ADSB_Grid.PROP.NEEDS_REFRESH_DATA == true)
@@ -265,7 +247,6 @@ void Console::tab_open_console(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.pause();
 }
 
 void Console::tab_open_player(system_data &sdSysData)
@@ -284,7 +265,6 @@ void Console::tab_open_player(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.play();
-  sdSysData.RADIO_COORD.pause();
 }
 
 void Console::tab_open_automobile(system_data &sdSysData)
@@ -303,7 +283,6 @@ void Console::tab_open_automobile(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.play();
 }
 
 void Console::tab_open_radio(system_data &sdSysData)
@@ -322,7 +301,6 @@ void Console::tab_open_radio(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.play();
 }
 
 void Console::tab_open_many_radio(system_data &sdSysData)
@@ -341,7 +319,6 @@ void Console::tab_open_many_radio(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.play();
 }
 
 void Console::tab_open_ads_b_screen(system_data &sdSysData)
@@ -360,7 +337,6 @@ void Console::tab_open_ads_b_screen(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.play();
 }
 
 void Console::tab_open_log_screen(system_data &sdSysData)
@@ -379,7 +355,6 @@ void Console::tab_open_log_screen(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.off(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.play();
 }
 
 void Console::tab_open_alerts(system_data &sdSysData)
@@ -398,7 +373,6 @@ void Console::tab_open_alerts(system_data &sdSysData)
   ScrStat.Window_Alerts_Screen.on(ScrStat.Needs_Refresh);   // Alerts
 
   the_player.pause();
-  sdSysData.RADIO_COORD.play();
 }
 
 void Console::tab_handler(string Button_Name, system_data &sdSysData)
@@ -509,6 +483,12 @@ void Console::processmouseinput(system_data &sdSysData)
       // Shutdown the entire system
       {
         keywatch.cmdInString(" comshutd");
+      }
+
+      else if(name == "REBOOT")
+      // Shutdown the entire system
+      {
+        keywatch.cmdInString(" reboot");
       }
 
       else if (name == "DAYNIGHT")

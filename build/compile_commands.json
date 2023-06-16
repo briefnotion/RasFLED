@@ -121,11 +121,6 @@
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/radio_channel_coordinator.cpp.o -c /home/pi/source/RasFLED/source/radio_channel_coordinator.cpp",
-  "file": "/home/pi/source/RasFLED/source/radio_channel_coordinator.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
   "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/aircraft_coordinator.cpp.o -c /home/pi/source/RasFLED/source/aircraft_coordinator.cpp",
   "file": "/home/pi/source/RasFLED/source/aircraft_coordinator.cpp"
 },

@@ -28,6 +28,12 @@ void COMMANDS::shutdown_now()
   system(SHUTDOWN_NOW.c_str());
 }
 
+void COMMANDS::reboot()
+// Shut down the entire system.
+{
+  system(REBOOT.c_str());
+}
+
 bool COMMAND_THREAD::running()
 {
   if(THREAD_RUNNING == true)

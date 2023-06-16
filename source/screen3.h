@@ -26,7 +26,6 @@
 #include "gadgets_radio.h"
 #include "gadgets_alerts.h"
 #include "gadgets_automobile.h"
-#include "radio_channel_coordinator.h"
 
 using namespace std;
 
