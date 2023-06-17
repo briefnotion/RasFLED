@@ -855,6 +855,23 @@ bool get_bit_value(int baseline, int bit_set_compare)
   return ret_bit_on;
 }
 
+int two_byte_complement_signed(unsigned char byte1, unsigned char byte2) 
+{
+  // thank you chat gpt.
+  
+  // Combine the two bytes into a 16-bit value
+  int value = (static_cast<int>(byte2) << 8) | byte1;
+
+  // Check if the value is negative
+  if (value & 0x8000)
+  {
+    // Perform two's complement conversion
+    value = -((value ^ 0xFFFF) + 1);
+  }
+
+  return value;
+}
+
 
 
 #endif

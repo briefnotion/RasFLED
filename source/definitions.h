@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.942"
+#define Revision "00000001.943"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -57,6 +57,8 @@
 #define COMMS_SAVE_LOG_FILENAME       "/home/pi/auto/rascomms.txt"
 #define COMMS_RECEIVE_TEST_DATA       false
 #define COMMS_TEST_DATA_FILENAME      "/home/pi/auto/rascomms.txt"
+
+#define COMMS_FLASH_DATA_RECORDER_ACTIVE  true
 
 // Key Mapping
 #define KEYEXIT           'X'

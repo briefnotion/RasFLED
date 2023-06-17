@@ -14,7 +14,7 @@
 
 // Standard Header Files
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <deque>
 
 #include "fled_time.h"
@@ -671,7 +671,7 @@ class TIRE_TTL
   float LIFE_PERCENTAGE = 0;
 
   float TOP_PERCENTAGE = 100.15;
-  float LOW_PERCENTAGE = 99.5;
+  float LOW_PERCENTAGE = 99.65;
 
   public:
 

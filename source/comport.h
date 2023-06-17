@@ -72,6 +72,10 @@ class COMPORT_PROPERTIES
 
   // Ending Character
   char ENDING_CHAR = '\n';  // \r cr, \n lf
+
+  // Flash Data Recorder
+  bool FLASH_DATA_RECORDER_ACTIVE = false;
+  int FLASH_DATA_SIZE = 2000;
 };
 
 class COMPORT
@@ -96,6 +100,10 @@ class COMPORT
   string RESPONSE = "";
   // Retain partially received responses for when data is 
   //  available again.
+
+  // Flash Data
+  deque<string> FLASH_DATA;
+  bool FLASH_DATA_WRITE = false;
 
   public:
 
@@ -137,6 +145,14 @@ class COMPORT
   void cycle(unsigned long tmeFrame_Time);
   // Writes and Reads data to comm port to send and
   //  recieve queues.
+
+  void write_flash_data();
+  // Sets Flash data to be written on next flash data check.
+
+  void flash_data_check();
+  // Maintains Flash Data size.
+  // Writes Flash Data if FLASH_DATA_WRITE is set to true,
+  //  then sets FLASH_DATA_WRITE to false.
 
   void close_port();
 

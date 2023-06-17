@@ -322,6 +322,8 @@ int loop()
   sdSystem.COMMS.PROPS.RECEIVE_TEST_DATA = COMMS_RECEIVE_TEST_DATA;
   sdSystem.COMMS.PROPS.TEST_DATA_FILENAME = COMMS_TEST_DATA_FILENAME;
 
+  sdSystem.COMMS.PROPS.FLASH_DATA_RECORDER_ACTIVE = COMMS_FLASH_DATA_RECORDER_ACTIVE;
+
   // Prep Automobile Send Messages
   sdSystem.CAR_INFO.set_default_request_pid_list();
 
@@ -962,6 +964,9 @@ int loop()
 
     // Process Automobile Lights
     automobile_handler.update_events(sdSystem, animations, tmeCurrentMillis);
+
+    // Comms flash data check and cleanup.
+    sdSystem.COMMS.flash_data_check();
 
     // ________________________
 

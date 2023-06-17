@@ -351,6 +351,13 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
         }
       }
       
+      // Stop Comm Port
+      if (check_command(cons," stopcomm", "Start Comms Port"))
+      {
+        sdSysData.COMMS.close_port();
+        cons.printwait("Comm Port Stop Command Sent.");
+      }
+      
       if (check_command(cons," commo", "Start Comms Log"))
       {
         sdSysData.COMMS.PROPS.SAVE_TO_LOG = true;
@@ -362,12 +369,10 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
         sdSysData.COMMS.PROPS.SAVE_TO_LOG = false;
         sdSysData.COMMS.send("-- STOPPING COMMS LOG --");
       }
-      
-      // Stop Comm Port
-      if (check_command(cons," stopcomm", "Start Comms Port"))
+
+      if (check_command(cons,"]]", "Store Comms Flash Data"))
       {
-        sdSysData.COMMS.close_port();
-        cons.printwait("Comm Port Stop Command Sent.");
+        sdSysData.COMMS.write_flash_data();
       }
 
       // Test Routine

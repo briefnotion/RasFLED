@@ -91,7 +91,7 @@ auto.h
 /home/pi/source/RasFLED/source/auto.h
 stdio.h
 -
-string.h
+string
 -
 deque
 -
@@ -219,6 +219,8 @@ player.h
 /home/pi/source/RasFLED/source/definitions.h
 
 /home/pi/source/RasFLED/source/fled_time.h
+string
+-
 chrono
 -
 ctime

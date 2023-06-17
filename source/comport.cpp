@@ -63,6 +63,12 @@ bool COMPORT::read_from_comm()
       if (RESPONSE.size() > 0)
       {
         READ_FROM_COMM.push_back(RESPONSE);
+
+        if (PROPS.FLASH_DATA_RECORDER_ACTIVE == true)
+        {
+          FLASH_DATA.push_back(RESPONSE);
+        }
+        
         ret_data_read = true;
       }
 
@@ -294,23 +300,7 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
   // Do not access comm port if it is shut down.
   if (ACTIVE == true)
   {
-    if (WRITE_TO_COMM.size() > 0)
-    // Sending data to comm port.
-    {
-      if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0 && PROPS.RECEIVE_TEST_DATA == false)
-      {
-        WRITE_TO_COMM.push_front("- Send");
-        deque_string_to_file(PROPS.SAVE_LOG_FILENAME, WRITE_TO_COMM, true);
-        WRITE_TO_COMM.pop_front();
-      }
-
-      // put data into send to comm port queue
-      write_to_comm(WRITE_TO_COMM.front());
-      WRITE_TO_COMM.pop_front();
-    }
-
-    // ---
-
+    // Receive data.
     if(PROPS.RECEIVE_TEST_DATA == false)
     {
       // get data from comm port
@@ -336,6 +326,48 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
           TEST_DATA.pop_front();
         }
       }
+    }
+    // ---
+
+    // Send Data
+    if (WRITE_TO_COMM.size() > 0)
+    // Sending data to comm port.
+    {
+      if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0 && PROPS.RECEIVE_TEST_DATA == false)
+      {
+        WRITE_TO_COMM.push_front("- Send");
+        deque_string_to_file(PROPS.SAVE_LOG_FILENAME, WRITE_TO_COMM, true);
+        WRITE_TO_COMM.pop_front();
+      }
+
+      // put data into send to comm port queue
+      write_to_comm(WRITE_TO_COMM.front());
+      WRITE_TO_COMM.pop_front();
+    }
+  }
+}
+
+void COMPORT::write_flash_data()
+{
+  FLASH_DATA_WRITE = true;
+}
+
+void COMPORT::flash_data_check()
+{
+  if (PROPS.FLASH_DATA_RECORDER_ACTIVE == true && FLASH_DATA_WRITE == true)
+  {
+    FLED_TIME_VAR date_and_time;
+
+    // write flash data to disk
+    deque_string_to_file(PROPS.SAVE_LOG_FILENAME + "_flash_" + date_and_time.file_format_system_time() + ".txt", FLASH_DATA, true);
+    FLASH_DATA_WRITE = false;
+  }
+
+  if (FLASH_DATA.size() > PROPS.FLASH_DATA_SIZE + 500)
+  {
+    while (FLASH_DATA.size() > PROPS.FLASH_DATA_SIZE)
+    {
+      FLASH_DATA.pop_front();
     }
   }
 }

@@ -417,7 +417,7 @@ void AUTOMOBILE_FUEL::store_fuel_rail_pressure_23(int A, int B)
 void AUTOMOBILE_FUEL::store_evap_system_vap_pressure_32(int A, int B)
 {
   //A and B is two complement signed
-  EVAP_SYSTEM_VAP_PRESSURE.store_Pa((-(unsigned short)(method_2_byte(A, B))) / 4);
+  EVAP_SYSTEM_VAP_PRESSURE.store_Pa((two_byte_complement_signed(A, B)) / 4);
 }
 
 float AUTOMOBILE_FUEL::val_consumed()
