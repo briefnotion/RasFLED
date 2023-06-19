@@ -153,8 +153,8 @@ errno.h
 -
 termios.h
 -
-fled_time.h
-/home/pi/source/RasFLED/source/fled_time.h
+helper.h
+/home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
 rasapi.h
@@ -219,8 +219,6 @@ player.h
 /home/pi/source/RasFLED/source/definitions.h
 
 /home/pi/source/RasFLED/source/fled_time.h
-string
--
 chrono
 -
 ctime
@@ -389,8 +387,14 @@ string
 -
 math.h
 -
+chrono
+-
 definitions.h
 /home/pi/source/RasFLED/source/definitions.h
+stringthings.h
+/home/pi/source/RasFLED/source/stringthings.h
+fled_time.h
+/home/pi/source/RasFLED/source/fled_time.h
 
 /home/pi/source/RasFLED/source/helper_ncurses.h
 ncurses.h

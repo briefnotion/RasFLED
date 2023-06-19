@@ -15,8 +15,11 @@
 #include <deque>
 #include <string>
 #include <math.h>
+#include <chrono>
 
 #include "definitions.h"
+#include "stringthings.h"
+#include "fled_time.h"
 
 using namespace std;
 
@@ -460,6 +463,12 @@ int two_byte_complement_signed(unsigned char byte1, unsigned char byte2);
 //  2's complement, the dark code we bind,
 //  Params byte1 (LSB), byte2 (MSB), the data we find.
 //  Returns a hacked int, the system undermined.
+
+string file_format_system_time();
+// Unfininished but works
+// Error: off by a month
+//        formatting incorrect
+//        needs to be its own function
 
 
 

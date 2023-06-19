@@ -145,7 +145,7 @@ float TEMPERATURE::val_f()
 
 string TEMPERATURE::c()
 {
-  return to_string((int)C) + "c";
+  return to_string((int)C) + " c";
 }
 
 /*
@@ -169,7 +169,7 @@ int TIME::val_seconds()
 
 string TIME::seconds()
 {
-  return to_string(SECONDS) + "s";
+  return to_string(SECONDS) + " s";
 }
 
 //-----------
@@ -201,7 +201,7 @@ float PRESSURE::val_kPa()
 
 string PRESSURE::kPa()
 {
-  return to_string((int)(PA / 1000)) + "kPa";
+  return to_string((int)(PA / 1000)) + " kPa";
 }
 
 float PRESSURE::val_Pa()
@@ -211,7 +211,7 @@ float PRESSURE::val_Pa()
 
 string PRESSURE::Pa()
 {
-  return to_string(PA) + "Pa";
+  return to_string((int)PA) + " Pa";
 }
 
 float PRESSURE::val_inHg()
@@ -221,7 +221,7 @@ float PRESSURE::val_inHg()
 
 string PRESSURE::inHg()
 {
-  return to_string_round_to_nth(pressure_translate_kPa_to_inHg(PA / 1000), 2) + "inHg";
+  return to_string_round_to_nth(pressure_translate_kPa_to_inHg(PA / 1000), 2) + " inHg";
 }
 
 //-----------
@@ -350,7 +350,7 @@ bool AUTOMOBILE_GUAGES::available()
 void AUTOMOBILE_GUAGES::store_coolant(int Value)
 {
   COOLANT = Value;
-  COLLANT_DISP = to_string(COOLANT) + "c";
+  COLLANT_DISP = to_string(COOLANT) + " c";
 }
 
 int AUTOMOBILE_GUAGES::val_coolant()
@@ -2049,7 +2049,7 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
               STATUS.FUEL.store_evap_system_vap_pressure_32(message.DATA[3], message.DATA[4]);
             }
 
-            if (message.DATA[2] == 0x42)  // Control Unit Voltage
+            if (message.DATA[2] == 0x42)  // Control Unit Voltage - 07 E8 04 41 42 36 2E 00 00 00 0003E73E
             {
               // Dont send another request until wait delay is up
               REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);

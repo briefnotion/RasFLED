@@ -18,8 +18,6 @@
 #define FLED_TIME_H
 
 // Standard Header Files
-#include <string>
-
 #include <chrono>
 #include <ctime>
 
@@ -64,12 +62,6 @@ class FLED_TIME_VAR
   int get_minute();
   
   int get_second();
-
-  string file_format_system_time();
-  // Unfininished but works
-  // Error: off by a month
-  //        formatting incorrect
-  //        needs to be its own function
 };
 
 
@@ -161,7 +153,7 @@ class TIMED_PING
   // Returns false if not changed or not enabled.
 };
 
-
-
+// -------------------------------------------------------------------------------------
+// Functions
 
 #endif

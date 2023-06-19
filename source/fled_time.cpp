@@ -85,7 +85,7 @@ int FLED_TIME_VAR::get_month()
     update_time();
   }
 
-  return (PTM->tm_mon);
+  return (PTM->tm_mon +1);
 }
 
 int FLED_TIME_VAR::get_day()
@@ -126,31 +126,6 @@ int FLED_TIME_VAR::get_second()
   }
 
   return (PTM->tm_sec);
-}
-
-
-string FLED_TIME_VAR::file_format_system_time()
-{
-  string ret_date_time = "";
-
-  std::chrono::time_point<std::chrono::system_clock> tmeNow = std::chrono::system_clock::now();
-  std::chrono::duration<double>  dur = tmeNow.time_since_epoch();
-
-  put_seconds((unsigned long)dur.count());
-
-  ret_date_time =  to_string(get_year()) + 
-                            to_string(get_month()) + 
-                            to_string(get_day()) + 
-                            "_" + 
-                            to_string(get_hour()) + 
-                            "." + 
-                            to_string(get_minute()) + 
-                            "." + 
-                            to_string(get_second()) + 
-                            "." + 
-                            to_string(get_miliseconds());
-
-  return ret_date_time;
 }
 
 // -------------------------------------------------------------------------------------
@@ -373,7 +348,8 @@ bool TIMED_PING::blip_moved(unsigned long current_time)
   }
 }
 
-
+// -------------------------------------------------------------------------------------
+// Functions
 
 
 #endif

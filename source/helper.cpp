@@ -546,12 +546,24 @@ int MIN_MAX_TIME::slice_size_max()
 
 void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
 {
+  // If no slices, create new slice.
+  if (TIME_SLICES.size() == 0)
+  {
+    MIN_MAX_TIME_SLICE new_time_slice;
+    TIME_SLICES.push_back(new_time_slice);
+    ENABLED = true;
+    
+    TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
+  }
+
   if (PROP.SAMPLE_LIMITED_SPANS == false)
   {
+    // Slices are time based, new slice created at when time elapsed.
     if (tmeFrame_Time > TIME_SLICE_CREATED_FRAME_TIME + SLICE_TIME)
     {
       if (TIME_SLICES.size() >= PROP.SLICES)
       {
+        // New slice needed and max num reached. pop top and create new in back.
         TIME_SLICES.pop_front();
         MIN_MAX_TIME_SLICE new_time_slice;
         create();
@@ -559,6 +571,7 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
       }
       else if (TIME_SLICES.size() < PROP.SLICES)
       {
+        // New slice needed and max num not reached. create new in back.
         MIN_MAX_TIME_SLICE new_time_slice;
         create();
         TIME_SLICES.push_back(new_time_slice);
@@ -569,15 +582,8 @@ void MIN_MAX_TIME::put_value(float Value, unsigned long tmeFrame_Time)
   }
   else
   {
-    if (TIME_SLICES.size() == 0)
-    {
-      MIN_MAX_TIME_SLICE new_time_slice;
-      TIME_SLICES.push_back(new_time_slice);
-      ENABLED = true;
-      
-      TIME_SLICE_CREATED_FRAME_TIME = tmeFrame_Time;  
-    }
-    else if (TIME_SLICES.back().samples() > PROP.SAMPLE_LIMIT)
+    // Slices disregard time and instead based on sample size.
+    if (TIME_SLICES.back().samples() > PROP.SAMPLE_LIMIT)
     {
       if (TIME_SLICES.size() < PROP.SLICES)
       {
@@ -860,7 +866,7 @@ int two_byte_complement_signed(unsigned char byte1, unsigned char byte2)
   // thank you chat gpt.
   
   // Combine the two bytes into a 16-bit value
-  int value = (static_cast<int>(byte2) << 8) | byte1;
+  int value = (static_cast<int>(byte1) << 8) | byte2;
 
   // Check if the value is negative
   if (value & 0x8000)
@@ -870,6 +876,29 @@ int two_byte_complement_signed(unsigned char byte1, unsigned char byte2)
   }
 
   return value;
+}
+
+string file_format_system_time()
+{
+  FLED_TIME_VAR time; 
+  string ret_date_time = "";
+
+  std::chrono::time_point<std::chrono::system_clock> tmeNow = std::chrono::system_clock::now();
+  std::chrono::duration<double>  dur = tmeNow.time_since_epoch();
+
+  time.put_seconds((unsigned long)dur.count());
+
+  ret_date_time = linemerge_right_justify(4, "0000", to_string(time.get_year())) + 
+                  linemerge_right_justify(2, "00", to_string(time.get_month())) + 
+                  linemerge_right_justify(2, "00", to_string(time.get_day())) + 
+                  "_" + 
+                  linemerge_right_justify(2, "00", to_string(time.get_hour())) + 
+                  "." + 
+                  linemerge_right_justify(2, "00", to_string(time.get_minute())) + 
+                  "." + 
+                  linemerge_right_justify(2, "00", to_string(time.get_second()));
+
+  return ret_date_time;
 }
 
 

@@ -356,19 +356,14 @@ void COMPORT::flash_data_check()
 {
   if (PROPS.FLASH_DATA_RECORDER_ACTIVE == true && FLASH_DATA_WRITE == true)
   {
-    FLED_TIME_VAR date_and_time;
-
     // write flash data to disk
-    deque_string_to_file(PROPS.SAVE_LOG_FILENAME + "_flash_" + date_and_time.file_format_system_time() + ".txt", FLASH_DATA, true);
+    deque_string_to_file(PROPS.SAVE_LOG_FILENAME + ".flash_" + file_format_system_time() + ".txt", FLASH_DATA, true);
     FLASH_DATA_WRITE = false;
   }
 
   if (FLASH_DATA.size() > PROPS.FLASH_DATA_SIZE + 500)
   {
-    while (FLASH_DATA.size() > PROPS.FLASH_DATA_SIZE)
-    {
-      FLASH_DATA.pop_front();
-    }
+    FLASH_DATA.erase(FLASH_DATA.begin(), FLASH_DATA.begin() + FLASH_DATA.size() - PROPS.FLASH_DATA_SIZE);
   }
 }
 
