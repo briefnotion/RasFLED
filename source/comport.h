@@ -63,7 +63,7 @@ class COMPORT_PROPERTIES
   
   bool XONXOFF = false;
 
-  bool SAVE_TO_LOG = false;
+  // Log File Save Directory and Name
   string SAVE_LOG_FILENAME = "";
 
   // Can't be hot enabled.  For testing.
@@ -84,6 +84,9 @@ class COMPORT
 
   struct termios tty;
   struct termios tty_old;
+
+  bool SAVE_TO_LOG = false;
+  string SAVE_TO_LOG_FILENAME = "";
 
   int USB = 0;
 
@@ -127,6 +130,12 @@ class COMPORT
   //  Queue stacks will remain available.
 
   //bool CHANGED = false;
+
+  void log_file_on();
+  // Starts logging to file
+  
+  void log_file_off();
+  // Stops logging to file
 
   void printout();
 

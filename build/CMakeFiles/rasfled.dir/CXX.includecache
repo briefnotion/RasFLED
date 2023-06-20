@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/source/RasFLED/source/LEDstuff.cpp
-LEDstuff.h
-/home/pi/source/RasFLED/source/LEDstuff.h
-
 /home/pi/source/RasFLED/source/LEDstuff.h
 string
 -
@@ -19,10 +15,6 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 stringthings.h
 /home/pi/source/RasFLED/source/stringthings.h
-
-/home/pi/source/RasFLED/source/aircraft_coordinator.cpp
-aircraft_coordinator.h
-/home/pi/source/RasFLED/source/aircraft_coordinator.h
 
 /home/pi/source/RasFLED/source/aircraft_coordinator.h
 deque
@@ -67,10 +59,6 @@ LEDstuff.h
 /home/pi/source/RasFLED/source/LEDstuff.h
 consoleanddata.h
 /home/pi/source/RasFLED/source/consoleanddata.h
-
-/home/pi/source/RasFLED/source/animations_storage.cpp
-animations_storage.h
-/home/pi/source/RasFLED/source/animations_storage.h
 
 /home/pi/source/RasFLED/source/animations_storage.h
 string
@@ -356,10 +344,6 @@ consoleanddata.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
 
-/home/pi/source/RasFLED/source/hardware_status.cpp
-hardware_status.h
-/home/pi/source/RasFLED/source/hardware_status.h
-
 /home/pi/source/RasFLED/source/hardware_status.h
 stdlib.h
 -
@@ -375,10 +359,6 @@ helper.h
 /home/pi/source/RasFLED/source/helper.h
 wiringPi.h
 -
-
-/home/pi/source/RasFLED/source/helper.cpp
-helper.h
-/home/pi/source/RasFLED/source/helper.h
 
 /home/pi/source/RasFLED/source/helper.h
 deque
@@ -415,10 +395,6 @@ commands.h
 /home/pi/source/RasFLED/source/commands.h
 animations_handler.h
 /home/pi/source/RasFLED/source/animations_handler.h
-
-/home/pi/source/RasFLED/source/json_interface.cpp
-json_interface.h
-/home/pi/source/RasFLED/source/json_interface.h
 
 /home/pi/source/RasFLED/source/json_interface.h
 stdio.h
@@ -514,10 +490,6 @@ animations_handler.h
 automobile_handler.h
 /home/pi/source/RasFLED/source/automobile_handler.h
 
-/home/pi/source/RasFLED/source/player.cpp
-player.h
-/home/pi/source/RasFLED/source/player.h
-
 /home/pi/source/RasFLED/source/player.h
 fstream
 -
@@ -599,10 +571,6 @@ gadgets_alerts.h
 /home/pi/source/RasFLED/source/gadgets_alerts.h
 gadgets_automobile.h
 /home/pi/source/RasFLED/source/gadgets_automobile.h
-
-/home/pi/source/RasFLED/source/stringthings.cpp
-stringthings.h
-/home/pi/source/RasFLED/source/stringthings.h
 
 /home/pi/source/RasFLED/source/stringthings.h
 string

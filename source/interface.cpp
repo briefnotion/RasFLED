@@ -360,13 +360,13 @@ void processcommandlineinput(Console &cons, system_data &sdSysData,
       
       if (check_command(cons," commo", "Start Comms Log"))
       {
-        sdSysData.COMMS.PROPS.SAVE_TO_LOG = true;
+        sdSysData.COMMS.log_file_on();
         sdSysData.COMMS.send("-- STARTING COMMS LOG --");
       }
 
       if (check_command(cons," commf", "Stop Comms Log"))
       {
-        sdSysData.COMMS.PROPS.SAVE_TO_LOG = false;
+        sdSysData.COMMS.log_file_off();
         sdSysData.COMMS.send("-- STOPPING COMMS LOG --");
       }
 

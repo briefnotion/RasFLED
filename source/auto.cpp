@@ -1168,13 +1168,13 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
   }
   else
   {
-    // Unknown
+    // Unknown  - 00 D0 7F 50 35 00 0D 08 0D 08 010F3FCE
     SHORT_DESC = "Unknown";
-    GEAR_SELECTION_PARK = false;
-    GEAR_SELECTION_REVERSE = false;
-    GEAR_SELECTION_NEUTRAL = false;
-    GEAR_SELECTION_DRIVE = false;
-    GEAR_SELECTION_LOW = false;
+    //GEAR_SELECTION_PARK = false;
+    //GEAR_SELECTION_REVERSE = false;
+    //GEAR_SELECTION_NEUTRAL = false;
+    //GEAR_SELECTION_DRIVE = false;
+    //GEAR_SELECTION_LOW = false;
   }
 }
 

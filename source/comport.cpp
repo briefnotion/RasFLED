@@ -79,6 +79,17 @@ bool COMPORT::read_from_comm()
   return ret_data_read;
 }
 
+void COMPORT::log_file_on()
+{
+  SAVE_TO_LOG_FILENAME = PROPS.SAVE_LOG_FILENAME + "_data_" + file_format_system_time() + ".txt";
+  SAVE_TO_LOG = true;
+}
+
+void COMPORT::log_file_off()
+{
+  SAVE_TO_LOG = false;
+}
+
 void COMPORT::printout()
 {
   for (int pos = 0; pos < READ_FROM_COMM.size(); pos++)
@@ -310,9 +321,9 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
         data_received = read_from_comm();
       }
 
-      if (PROPS.SAVE_TO_LOG == true && READ_FROM_COMM.size() >0)
+      if (SAVE_TO_LOG == true && READ_FROM_COMM.size() >0)
       {
-        deque_string_to_file(PROPS.SAVE_LOG_FILENAME, READ_FROM_COMM, true);
+        deque_string_to_file(SAVE_TO_LOG_FILENAME, READ_FROM_COMM, true);
       }
     }
     else
@@ -333,10 +344,10 @@ void COMPORT::cycle(unsigned long tmeFrame_Time)
     if (WRITE_TO_COMM.size() > 0)
     // Sending data to comm port.
     {
-      if (PROPS.SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0 && PROPS.RECEIVE_TEST_DATA == false)
+      if (SAVE_TO_LOG == true && WRITE_TO_COMM.size() >0 && PROPS.RECEIVE_TEST_DATA == false)
       {
         WRITE_TO_COMM.push_front("- Send");
-        deque_string_to_file(PROPS.SAVE_LOG_FILENAME, WRITE_TO_COMM, true);
+        deque_string_to_file(SAVE_TO_LOG_FILENAME, WRITE_TO_COMM, true);
         WRITE_TO_COMM.pop_front();
       }
 
@@ -357,7 +368,7 @@ void COMPORT::flash_data_check()
   if (PROPS.FLASH_DATA_RECORDER_ACTIVE == true && FLASH_DATA_WRITE == true)
   {
     // write flash data to disk
-    deque_string_to_file(PROPS.SAVE_LOG_FILENAME + ".flash_" + file_format_system_time() + ".txt", FLASH_DATA, true);
+    deque_string_to_file(PROPS.SAVE_LOG_FILENAME + "_flash_" + file_format_system_time() + ".txt", FLASH_DATA, true);
     FLASH_DATA_WRITE = false;
   }
 
