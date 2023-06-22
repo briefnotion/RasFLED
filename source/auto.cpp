@@ -1126,7 +1126,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear == 224)
+  else if (Gear == 0xe0 && Gear_Alt == 0x1e)
   {
     // Reverse
     SHORT_DESC = "Reverse";
@@ -1136,7 +1136,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear == 0 && Gear_Alt == 32)
+  else if (Gear == 0 && Gear_Alt > 0)
   {
     // Reverse
     SHORT_DESC = "Neutral";
@@ -1956,63 +1956,63 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
             if (message.DATA[2] == 0x05)  // Engine coolant temperature - 07 E8 03 41 05 7A 00 00 00 00 00125F9C
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_coolant_05(message.DATA[3]);
             }
 
             if (message.DATA[2] == 0x67)  // Engine coolant temperature
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_coolant_67(message.DATA[3], message.DATA[4]);
             }
 
             if (message.DATA[2] == 0x0F)  // Intake air temperature - 07 E8 03 41 0F 4D 00 00 00 00 00127FEE
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_air_intake_0f(message.DATA[3]);
             }
 
             if (message.DATA[2] == 0x68)  // Intake air temperature
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_air_intake_68(message.DATA[3], message.DATA[4]);
             }
             
             if (message.DATA[2] == 0x46)  // Ambient air temperature - 07 E8 03 41 46 4A 00 00 00 00 001264BF
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_ambiant_air_46(message.DATA[3]);
             }
             
             if (message.DATA[2] == 0x5C)  // Engine oil temperature
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_oil_5c(message.DATA[3]);
             }
             
             if (message.DATA[2] == 0x6B)  // Exhaust gas recirculation temperature
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_exhaust_gas_6b(message.DATA[3]);
             }
             
             if (message.DATA[2] == 0x84)  // Manifold surface temperature
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_manifold_surface_84(message.DATA[3]);
             }
             
             if (message.DATA[2] == 0x33)  // * Absolute Barometric Pressure - 07 E8 03 41 33 64 00 00 00 00 0012CA5C
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_abs_baro_33(message.DATA[3]);
             }
           }
@@ -2024,35 +2024,35 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
             if (message.DATA[2] == 0x1F)  // Run time since engine start - 07 E8 04 41 1F 00 AA 00 00 00 0002140B
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.ELECTRICAL.store_run_time_since_start_1f(message.DATA[3], message.DATA[4]);
             }
 
             if (message.DATA[2] == 0x23)  // Fuel Rail Gauge Pressure (diesel, or gasoline direct injection) - 07 E8 04 41 23 00 E1 00 00 00 00032EEB
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.FUEL.store_fuel_rail_pressure_23(message.DATA[3], message.DATA[4]);
             }
 
             if (message.DATA[2] == 0x3C)  //  Catalyst Temperature: Bank 1, Sensor 1 - 07 E8 04 41 3C 19 A3 00 00 00 00066801
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.TEMPS.store_catalyst_3c(message.DATA[3], message.DATA[4]);
             }
 
             if (message.DATA[2] == 0x32)  //  Evap. System Vapor Pressure - 07 E8 04 41 32 FF 77 00 00 00 000662D9
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.FUEL.store_evap_system_vap_pressure_32(message.DATA[3], message.DATA[4]);
             }
 
             if (message.DATA[2] == 0x42)  // Control Unit Voltage - 07 E8 04 41 42 36 2E 00 00 00 0003E73E
             {
               // Dont send another request until wait delay is up
-              REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
+              // REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
               STATUS.ELECTRICAL.store_control_voltage_42(message.DATA[3], message.DATA[4]);
             }
           }
@@ -2072,7 +2072,8 @@ void AUTOMOBILE::process(COMPORT &Com_Port, unsigned long tmeFrame_Time)
   if (REQUESTED_PID_TIMER_WAIT.ping_down(tmeFrame_Time) == false && active() == true)
   {
     // Dont send another request until wait timeout is up.
-    REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_TIMEOUT_DELAY);
+    //REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_TIMEOUT_DELAY);
+    REQUESTED_PID_TIMER_WAIT.ping_up(tmeFrame_Time, REQUESTED_PID_TIMER_WAIT_DELAY);
 
     REQUESTED_PID_SEND_LIST_POSITION ++;
 
@@ -2138,6 +2139,19 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
     //  Fast but not fully acurate.
     //  Currently call just before the data is displayed.
     CALCULATED.compute_low(STATUS, tmeFrame_Time);
+
+    //Capture errors
+    if (STATUS.GEAR.gear_selection_park() == true && STATUS.SPEED.SPEED_TRANS.val_mph() > 10)
+    {
+      ERROR_LOG_MESSAGE.push_back("Velicity over 10 and Gear in Park:");
+      ERROR_LOG_MESSAGE.push_back("  " + DATA.AD_D0.ORIG);
+      ERROR_LOG_MESSAGE.push_back("  " + DATA.AD_F0.ORIG);
+    }
+
+    if (ERROR_LOG_MESSAGE.size() >0)
+    {
+      deque_string_to_file(ERROR_LOG_FILENAME, ERROR_LOG_MESSAGE, true);
+    }
   }
 }
 

@@ -769,12 +769,16 @@ class AUTOMOBILE
 
   string REQUESTED_PID = "";
 
+  // Temp Error Capture Log
+  deque<string> ERROR_LOG_MESSAGE;
+
+  // PID Send List
   deque<string> REQUESTED_PID_SEND_LIST;
   int REQUESTED_PID_SEND_LIST_POSITION = -1;
 
   TIMED_PING REQUESTED_PID_TIMER_WAIT;
-  int REQUESTED_PID_TIMER_WAIT_DELAY = 250;
-  int REQUESTED_PID_TIMER_TIMEOUT_DELAY = 1000;
+  int REQUESTED_PID_TIMER_WAIT_DELAY = 100;
+  //int REQUESTED_PID_TIMER_TIMEOUT_DELAY = 250;
 
   bool parse(string Line, int &PID_Recieved);
   // Returns true if line is considered a message recieved.

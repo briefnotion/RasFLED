@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.945"
+#define Revision "00000001.946"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -42,6 +42,8 @@
 #define FILES_DEAMON_LOG          "/var/log/daemon.log"             // Raspi System Log
 #define FILES_AIRCRAFT_JSON       "/run/dump1090-fa/aircraft.json"  // FlightAware Aircraft JSON File
 //#define FILES_AIRCRAFT_JSON       "/home/pi/flightaware/aircraft.json"  // For testing:  FlightAware Aircraft JSON File 
+
+#define ERROR_LOG_FILENAME       "/home/pi/auto/error_log.txt"
 
 // COMMS Settings
 #define COMMS_PORT        "/dev/serial/by-id/usb-Arduino_LLC_Arduino_Leonardo-if00"

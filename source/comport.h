@@ -75,7 +75,7 @@ class COMPORT_PROPERTIES
 
   // Flash Data Recorder
   bool FLASH_DATA_RECORDER_ACTIVE = false;
-  int FLASH_DATA_SIZE = 2000;
+  int FLASH_DATA_SIZE = 5000;
 };
 
 class COMPORT
