@@ -1464,7 +1464,7 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   LARGE_ACCELERATION_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
   LARGE_ACCELERATION_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
 
-  if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -.3)
+  if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -.1)
   {
     LARGE_ACCELERATION_DESC.set_color(COLOR_WHITE, COLOR_BLUE);
   }

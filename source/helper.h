@@ -313,6 +313,9 @@ class MIN_MAX_TIME_SLICE
   void store_value(float Value);
   // Store value and updates min max.
 
+  float total();
+  // Total Value of all samples
+
   int samples();
   // Number of samples in slice.
 

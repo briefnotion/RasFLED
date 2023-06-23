@@ -542,7 +542,7 @@ void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     {
       BColor = COLOR_GREEN;
       Color = COLOR_WHITE;
-      scale == 'o';
+      scale = 'o';
     }
 
     // Draw

@@ -2108,7 +2108,11 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
 
     // Transmission Gear Position
     STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
-    STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2]);
+
+    if (DATA.AD_D0.DATA[0] != 0)  // filtering out an all zero field - 00 D0 00 00 00 00 00 00 00 00 006E91ED
+    {
+      STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2]);
+    }
 
     // RPM
     STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
@@ -2140,6 +2144,7 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
     //  Currently call just before the data is displayed.
     CALCULATED.compute_low(STATUS, tmeFrame_Time);
 
+    // Move **********************************************************************************
     //Capture errors
     if (STATUS.GEAR.gear_selection_park() == true && STATUS.SPEED.SPEED_TRANS.val_mph() > 10)
     {
@@ -2152,6 +2157,7 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
     {
       deque_string_to_file(ERROR_LOG_FILENAME, ERROR_LOG_MESSAGE, true);
     }
+    // Move **********************************************************************************
   }
 }
 

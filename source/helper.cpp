@@ -496,6 +496,11 @@ void MIN_MAX_TIME_SLICE::store_value(float Value)
   }
 }
 
+float MIN_MAX_TIME_SLICE::total()
+{
+  return VALUE;
+}
+
 int MIN_MAX_TIME_SLICE::samples()
 {
   return SAMPLES;
@@ -675,16 +680,20 @@ float MIN_MAX_TIME::mean_float()
 {
   float mean = 0;
 
+  float total_total = 0;
+  int total_samples = 0;
+
   if (ENABLED == true)
   {
     if (TIME_SLICES.size()> 0)
     {
       for (int x = 0; x < TIME_SLICES.size(); x++)
       {
-        mean = mean + TIME_SLICES[x].mean();
+        total_total = total_total + TIME_SLICES[x].total();
+        total_samples = total_samples + TIME_SLICES[x].samples();
       }
 
-      mean = mean / TIME_SLICES.size();
+      mean = total_total / total_samples;
 
     }
   }
