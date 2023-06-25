@@ -977,17 +977,17 @@ class BAR_PROPERTIES
   string LABEL = "";        // Displayed left of the gadget.
   int LABEL_SIZE = 0;       // Character size of label.
 
-  char INDICATOR_CHARACTER = '|';
+  char INDICATOR_CHARACTER = '|';       // Marker Character
 
-  int COLOR = COLOR_WHITE;
-  int BCOLOR = COLOR_BLACK;
+  int COLOR = COLOR_WHITE;              // Label Text Color
+  int BCOLOR = COLOR_BLACK;             // Label Text Background Color
 
-  int COLOR_BAR = COLOR_GREEN;
-  int COLOR_BAR_BACK = COLOR_BLACK;
+  int COLOR_BAR = COLOR_GREEN;          // Items on Bar Color
+  int COLOR_BAR_BACK = COLOR_BLACK;     // Bar Background Color
 
-  int COLOR_MARKER = COLOR_WHITE;
-  int BCOLOR_MARKER = COLOR_BLACK;
-  int COLOR_MARKER_LIMIT = COLOR_RED;
+  int COLOR_MARKER = COLOR_WHITE;       // Marker Color
+  int BCOLOR_MARKER = COLOR_BLACK;      // Marker Background Color
+  int COLOR_MARKER_LIMIT = COLOR_RED;   // Bar Background Excede Limit Color
 
   int POSY = 0;             // Y start position of gadget in window.
   int POSX = 0;             // X start position of gadget in window.

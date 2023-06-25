@@ -2109,9 +2109,19 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
     // Transmission Gear Position
     STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
 
-    if (DATA.AD_D0.DATA[0] != 0)  // filtering out an all zero field - 00 D0 00 00 00 00 00 00 00 00 006E91ED
+    if (DATA.AD_D0.DATA[0] != 0)  // filtering out an all zero field - street level stupidity:                      00 D0 00 00 00 00 00 00 00 00 006E91ED
+                                  // filtering out partial zero field - college, and professional level stupidity:  00 D0 7F 00 00 00 00 00 00 00 00DD8BCC
+                                  // The car should have never sent those messages while gear selection is in drive, much less while drive 50mph.
+                                  // Indicates TCM Failure.
     {
-      STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2]);
+      if (DATA.AD_D0.DATA[1] == 0 && DATA.AD_D0.DATA[2] == 0 && DATA.AD_F0.DATA[2] != 19)
+      {
+        // do nothing
+      }
+      else
+      {
+        STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2]);
+      }
     }
 
     // RPM

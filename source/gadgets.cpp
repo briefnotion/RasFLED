@@ -1612,9 +1612,9 @@ int BAR::get_marker_pos(int Value)
   int pos = abs((PROP.BAR_SIZE) * Value / PROP.MAX_VALUE);
 
   // Check bounds
-  if (pos > PROP.BAR_SIZE )
+  if (pos > PROP.BAR_SIZE - 1)
   {
-    pos = PROP.BAR_SIZE ;
+    pos = PROP.BAR_SIZE - 1;
   }
 
   return pos;
@@ -1649,16 +1649,29 @@ void BAR::print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, i
   int end = 0;
   int lenght = 0;
 
-  start = get_marker_pos(min);
-  end = get_marker_pos(max);
-
-  if (end > PROP.BAR_SIZE)
+  // Keep within range
+  if (min < PROP.MIN_VALUE)
   {
-    end = PROP.BAR_SIZE;
+    start = 0;
+  }
+  else
+  {
+    start = get_marker_pos(min);
   }
 
-  lenght = end - start;
+  if (max > PROP.MAX_VALUE)
+  {
+    end = PROP.BAR_SIZE - 1;
+  }
+  else
+  {
+    end = get_marker_pos(max);
+  }
+
+  // Calculate Size.
+  lenght = end - start + 1;
   
+  // Draw Bar
   if (lenght > 0)
   {
     fill_bar.resize(lenght, ':');
@@ -1739,7 +1752,7 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
       }
     }
 
-    // Print Label and Bar outsoid.
+    // Print Label and Bar.
     if (PROP.LABEL.size() < PROP.LABEL_SIZE)
     {
       label = label.append(PROP.LABEL_SIZE - PROP.LABEL.size(), ' ') + PROP.LABEL;
@@ -1757,11 +1770,11 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
       mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE, "[");
       
       // Print Bar End "]""
-      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + PROP.BAR_SIZE +2 , "]");
+      mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + PROP.BAR_SIZE +1 , "]");
     }
 
     // Create empty bar
-    bar = bar.append(PROP.BAR_SIZE +1, ' ');
+    bar = bar.append(PROP.BAR_SIZE, ' ');
   
     // Bar Marker Position
     marker_pos = get_marker_pos(PROP.VALUE);
@@ -1786,7 +1799,7 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
     }
 
     // Min Max filler bar.
-    if (PROP.MIN_MAX_FILLER == true && PROP.COLORS_ON == true)
+    if (PROP.MIN_MAX_FILLER == true)
     {
       if (PROP.PROGRESS_BAR == true)
       {
@@ -1799,9 +1812,32 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
         bar_max = MIN_MAX_HISTORY.max();
       }
 
-      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
+      // Change background color to cooperate with marker limit background if color is on
+      if (PROP.COLORS_ON == true)
+      {
+        if (PROP.VALUE > PROP.MAX_VALUE || PROP.VALUE < PROP.MIN_VALUE)
+        {
+          wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_MARKER_LIMIT, PROP.MIN_MAX_FILLER_COLOR)));
+        }
+        else
+        {
+          wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
+        }
+      }
+
       print_min_max_filler(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + 1, bar_min, bar_max);
-      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
+
+      if (PROP.COLORS_ON == true)
+      {
+        if (PROP.VALUE > PROP.MAX_VALUE || PROP.VALUE < PROP.MIN_VALUE)
+        {
+          wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_MARKER_LIMIT, PROP.MIN_MAX_FILLER_COLOR)));
+        }
+        else
+        {
+          wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
+        }
+      }
     }
 
     // Print Min Max Indicators
