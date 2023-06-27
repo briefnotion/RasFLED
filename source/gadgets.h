@@ -350,6 +350,8 @@ class Char_Graph_Properties
   const int SIZEX = 1;
 
   bool UPDATE_INDICATION = false;
+
+  bool ALT_COLORS = false;
 };
 
 class Char_Graph
@@ -1056,6 +1058,94 @@ class BAR
   // Set Value. Updates on screen at next draw
 
   bool draw(PANEL &Panel, bool Refresh);
+  // Draw all changes to Panel. Updates on screen at next draw
+};
+
+// ---------------------------------------------------------------------------------------
+
+
+class CYBR_SLICE
+{
+  public:
+
+  array<char, 256> COLOR_VAL;
+  unsigned long TIMESTAMP = 0;
+  unsigned char UPDATE_COUNT = 0;
+};
+
+class CYBR_BAR_PROPERTIES
+// Bar properties.
+// To change properties properly, call the provided set 
+//    routines or set routines of internal gadgets.
+{
+  public: 
+  
+  char INDICATOR_CHARACTER = '|';       // Marker Character
+
+  int COLOR_BAR_BACK = COLOR_BLACK;     // Bar Background Color
+
+  int COLOR_MARKER = COLOR_WHITE;       // Marker Color
+  int BCOLOR_MARKER = COLOR_BLACK;      // Marker Background Color
+  int COLOR_MARKER_LIMIT = COLOR_RED;   // Bar Background Excede Limit Color
+
+  int POSY = 0;             // Y start position of gadget in window.
+  int POSX = 0;             // X start position of gadget in window.
+
+  int BAR_SIZE = 0;             // Size of bar in gadget.
+
+  int TIME_SPAN = 0;  // Span of time made by slices. In ms.
+
+  // Only Guage Bars
+  //bool GUAGE_BAR = false;
+
+  // MIN MAX Always On
+  bool MIN_MAX = false;    // Gadget will show min max values over time lapse.
+
+  int MAX_VALUE = 0;            // Gadget's Max Value to be displayed.
+  int MIN_VALUE = 0;            // Gadget's Min Value to be displayed. not implemented.
+
+  bool BRACKET_END_CAPS = false;  // Print brackets on both ends of bar.
+};
+
+class CYBR_BAR
+// Display Progress Bar or Guage Bar.
+// Needs to be passed an NCurses window
+// Properties can be set when defined.
+{
+  private:
+
+  int VALUE = 0;
+
+  deque<CYBR_SLICE> SLICE_HISTORY;
+  deque<Char_Graph> SLICE_GRAPH;
+
+  bool CREATED = false;
+
+  bool CHANGED = true;
+
+  int get_marker_pos(int value);
+  // Gadget Internal:
+  //  Determine position of Marker in bar
+
+  void print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value);
+  // Gadget Internal:
+  //  Draw marker in proper position of bar
+
+  //void print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, int max);
+
+  void update_cybr_slice(int Value, unsigned long tmeFrame_Time);
+
+  public:
+
+  CYBR_BAR_PROPERTIES PROP;
+  MIN_MAX_TIME MIN_MAX_HISTORY;
+
+  void create();
+
+  void update(int Value, unsigned long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
+
+  bool draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
   // Draw all changes to Panel. Updates on screen at next draw
 };
 

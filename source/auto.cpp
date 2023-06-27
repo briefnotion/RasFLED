@@ -84,6 +84,21 @@ void VELOCITY::store_meters_per_second(float mps, unsigned long tmeFrame_Time, u
   TIME_STAMP = tmeFrame_Time;
 }
 
+void VELOCITY::store_miles_per_hour(float Miph, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
+{
+  METERS_PER_SECOND = velocity_translate_Miph_to_mps(Miph);
+
+  KMPH = velocity_translate_meters_per_second_to_kmph(METERS_PER_SECOND);  
+  MPH = velocity_translate_kmph_to_mph(KMPH);
+
+  KMPH_DISP = to_string_round_to_nth(KMPH, 2);
+  MPH_DISP = to_string_round_to_nth(MPH, 2);
+
+  TIME_STAMP_TIME_SENT = tmeFrame_Time_Sent;
+
+  TIME_STAMP = tmeFrame_Time;
+}
+
 float VELOCITY::val_kmph()
 {
   return KMPH;
@@ -258,13 +273,16 @@ void AUTOMOBILE_DOORS::store(int Data)
   // AD_360 also contains info on the engine running status  
 
   // RB - Door
-  LF_DOOR_OPEN = !get_bit_value(Data, 1);
-  RF_DOOR_OPEN = !get_bit_value(Data, 2);
-  LB_DOOR_OPEN = !get_bit_value(Data, 4);
-  RB_DOOR_OPEN = !get_bit_value(Data, 8);
+  if (Data > 0)   // One of the other bytes in 03 60 is for validation, but not checking.
+  {
+    LF_DOOR_OPEN = !get_bit_value(Data, 1);
+    RF_DOOR_OPEN = !get_bit_value(Data, 2);
+    LB_DOOR_OPEN = !get_bit_value(Data, 4);
+    RB_DOOR_OPEN = !get_bit_value(Data, 8);
 
-  HATCHBACK_DOOR_OPEN = !get_bit_value(Data, 16);
-  HOOD_DOOR_OPEN = !get_bit_value(Data, 32);
+    HATCHBACK_DOOR_OPEN = !get_bit_value(Data, 16);
+    HOOD_DOOR_OPEN = !get_bit_value(Data, 32);
+  }
 
   //1[2]
   //MOONROOF_DOOR_OPEN = get_bit_value(Data, 8);
@@ -871,18 +889,26 @@ bool AUTOMOBILE_VELOCITY::available()
 
 // Multiplier source unknown.  not calculating correctly.
 // Possibly wrong spec tire size.  How the car knows is beyond me.
-void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
+void AUTOMOBILE_VELOCITY::store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent, 
+                                      float Verify_kmph)
 {
   // Possibly meters per second devided by 3  (Multiplier = 1.2 for kmph conversion )
   //                                          (3.6 kmph = 1 mps                     )
 
   MULTIPLIER = Multiplier;
-  SPEED_TRANS.store((kmph * MULTIPLIER) / 10, tmeFrame_Time, tmeFrame_Time_Sent);
+  float calculated_velocity = (kmph * MULTIPLIER) / 10;
+
+  float compared_velocity_diff = abs(calculated_velocity - Verify_kmph);
+  
+  if (compared_velocity_diff < 3.0)
+  {
+    SPEED_TRANS.store(calculated_velocity, tmeFrame_Time, tmeFrame_Time_Sent);
+  }
 }
 
-void AUTOMOBILE_VELOCITY::store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
+void AUTOMOBILE_VELOCITY::store_dash(int Upper, int Lower, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
 {
-  SPEED_DASH.store(kmph + (kmph_decimal / 255), tmeFrame_Time, tmeFrame_Time_Sent);
+  SPEED_DASH.store((float)Upper + ((float)Lower / 255), tmeFrame_Time, tmeFrame_Time_Sent);
 }
 
 void AUTOMOBILE_VELOCITY::store_LF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent)
@@ -1104,7 +1130,7 @@ string AUTOMOBILE_TRANSMISSION_GEAR::long_desc()
   return LONG_DESC;
 }
 
-void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
+void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, int Transmission_Gear_Reported)
 {
   GEAR_SELECTION_REPORTED = Gear;
 
@@ -1116,7 +1142,10 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
   01 Park
   */
 
-  if (Gear == 0 && Gear_Alt == 0)
+  // Verifying gear selections with transmissin gear position before changing 
+  //  Will drasticly increase latency of reported gear shift lever position.
+
+  if (Gear == 0 && Gear_Alt == 0 && Transmission_Gear_Reported == 19)
   {
     // Park
     SHORT_DESC = "Park";
@@ -1126,7 +1155,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear == 0xe0 && Gear_Alt == 0x1e)
+  else if (Gear == 0xe0 && Gear_Alt == 0x1e && Transmission_Gear_Reported == 0)
   {
     // Reverse
     SHORT_DESC = "Reverse";
@@ -1136,7 +1165,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear == 0 && Gear_Alt > 0)
+  else if (Gear == 0 && Gear_Alt > 0 && Transmission_Gear_Reported == 19)
   {
     // Reverse
     SHORT_DESC = "Neutral";
@@ -1146,7 +1175,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = false;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear >= 10 && Gear <= 96 && !get_bit_value(Gear_Alt, 64))
+  else if (Gear >= 10 && Gear <= 96 && !get_bit_value(Gear_Alt, 64) && Transmission_Gear_Reported > 0 && 
+                                                                        Transmission_Gear_Reported <= 6)
   {
     // Drive
     SHORT_DESC = "Drive";
@@ -1156,7 +1186,7 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt)
     GEAR_SELECTION_DRIVE = true;
     GEAR_SELECTION_LOW = false;
   }
-  else if (Gear >= 10 && Gear <= 96 && get_bit_value(Gear_Alt, 64))
+  else if (Gear >= 10 && Gear <= 96 && get_bit_value(Gear_Alt, 64) && Transmission_Gear_Reported == 1)
   {
     // Low
     SHORT_DESC = "Low";
@@ -2097,8 +2127,6 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
                                                 DATA.AD_10.DATA[2]);
 
     // Speed
-    STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time, DATA.AD_F0.TIMESTAMP_MESSAGE_SENT);
-
     STATUS.SPEED.store_LF((DATA.AD_190.DATA[0] *256) + DATA.AD_190.DATA[1], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
     STATUS.SPEED.store_RF((DATA.AD_190.DATA[2] *256) + DATA.AD_190.DATA[3], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
     STATUS.SPEED.store_LB((DATA.AD_190.DATA[4] *256) + DATA.AD_190.DATA[5], tmeFrame_Time, DATA.AD_190.TIMESTAMP_MESSAGE_SENT);
@@ -2108,21 +2136,6 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
 
     // Transmission Gear Position
     STATUS.GEAR.store(DATA.AD_F0.DATA[2]);
-
-    if (DATA.AD_D0.DATA[0] != 0)  // filtering out an all zero field - street level stupidity:                      00 D0 00 00 00 00 00 00 00 00 006E91ED
-                                  // filtering out partial zero field - college, and professional level stupidity:  00 D0 7F 00 00 00 00 00 00 00 00DD8BCC
-                                  // The car should have never sent those messages while gear selection is in drive, much less while drive 50mph.
-                                  // Indicates TCM Failure.
-    {
-      if (DATA.AD_D0.DATA[1] == 0 && DATA.AD_D0.DATA[2] == 0 && DATA.AD_F0.DATA[2] != 19)
-      {
-        // do nothing
-      }
-      else
-      {
-        STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2]);
-      }
-    }
 
     // RPM
     STATUS.RPM.store((DATA.AD_90.DATA[4] *256) + DATA.AD_90.DATA[5]);
@@ -2143,11 +2156,44 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
     STATUS.FUEL.store_percentage(DATA.AD_C0.DATA[7]);
     STATUS.FUEL.store_level(DATA.AD_380.DATA[7]);
 
-    // DOORS 3B 3F
-    STATUS.DOORS.store(DATA.AD_360.DATA[2]);
-
     // Guages
     STATUS.GUAGES.store_coolant(DATA.AD_100.DATA[3]);
+
+    // --------------------------------------------------------------------------------------
+    //  Fraggin' Stupid Pleb message trap / scrubber.
+
+    //  This fragging code zone is dedicated to filtering out OP Cell phone interference sourced
+    //  from zoned-out roamers (noobs on a warpath or some equally moronic and destructive crap) with cell
+    //  phones and all that drek they're lugging in their chrome-stuffed backpacks.
+    //  Don't know exactly what the hell is gettin' pumped out (burst electro mag interference, or some
+    //  dreary Chinese self-surveillance kit swiped off that shady ali express), but whatever the frag it is,
+    //  it's skyrocketed to the magnitude of causing engine misfires, glitched-out gear shifts,
+    //  door sensor meltdowns, speed miscalculations, and chombatta, even a crash of the Iphone
+    //  music app (only connected to the ride via the fraggin' Bluetooth.) I ain't building no redundant system
+    //  or some glitchy-ass data checker. +90%hitrte
+
+    // filtering out an all zero field - street level stupidity:                      00 D0 00 00 00 00 00 00 00 00 006E91ED
+    // filtering out partial zero field - college, and professional level stupidity:  00 D0 7F 00 00 00 00 00 00 00 00DD8BCC
+    // The car should have never sent those messages while gear selection is in drive, much less while drive 50mph.
+    // Indicates TCM Failure.
+
+    // Gear Lever Selection    
+    STATUS.GEAR.store_gear_selection(DATA.AD_D0.DATA[1], DATA.AD_D0.DATA[2], STATUS.GEAR.reported());
+
+    // Door Open or Closed
+    //  03 60 C0 40 3F 07 00 37 B8 7B 01097D8C
+    //  03 60 C0 40 00 00 00 00 00 00 01097E20 - ZEROED DATA
+    //  03 60 C0 40 3F 07 00 37 B8 7B 01097F4C
+
+    STATUS.DOORS.store(DATA.AD_360.DATA[2]);
+
+    // Transmission Reported Speed
+    STATUS.SPEED.store_trans((DATA.AD_F0.DATA[0] *256) + DATA.AD_F0.DATA[1], 1.13, tmeFrame_Time, 
+                              DATA.AD_F0.TIMESTAMP_MESSAGE_SENT, 
+                              (STATUS.SPEED.SPEED_LB_TIRE.val_kmph() + STATUS.SPEED.SPEED_LB_TIRE.val_kmph() + 
+                              STATUS.SPEED.SPEED_LB_TIRE.val_kmph() + STATUS.SPEED.SPEED_LB_TIRE.val_kmph()) /4);
+
+    // --------------------------------------------------------------------------------------
     
     // Low level Compute not requiring calculation on all data.
     //  Fast but not fully acurate.

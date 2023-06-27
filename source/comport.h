@@ -137,8 +137,6 @@ class COMPORT
   void log_file_off();
   // Stops logging to file
 
-  void printout();
-
   bool create();
   // Prepares communications.
 

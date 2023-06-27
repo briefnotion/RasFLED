@@ -232,7 +232,8 @@ class DUEL_BAR_GUAGE_GADGET
 {
   private:
 
-  BAR DATA_BAR_A;
+  //BAR DATA_BAR_A;
+  CYBR_BAR DATA_BAR_A;
   BAR DATA_BAR_B;
   
   Text_Field SCALE;

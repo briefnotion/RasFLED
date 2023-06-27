@@ -430,6 +430,8 @@ int radio_translate_to_frequency_6(float Frequency);
 
 float velocity_translate_kmph_to_mph(float kmph);
 
+float velocity_translate_Miph_to_mps(float Miph);
+
 float velocity_translate_kmph_to_meters_per_second(float kmph);
 
 float velocity_translate_meters_per_second_to_kmph(float mps);

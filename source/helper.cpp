@@ -781,6 +781,11 @@ float velocity_translate_kmph_to_mph(float kmph)
   return kmph * 0.6213711922;
 }
 
+float velocity_translate_Miph_to_mps(float Miph)
+{
+  return Miph * 0.447;
+}
+
 float velocity_translate_kmph_to_meters_per_second(float kmph)
 {
   return kmph * 0.2777777778;

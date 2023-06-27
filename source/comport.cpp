@@ -26,23 +26,19 @@ using namespace std;
 
 void COMPORT::write_to_comm(string Command)
 {
-  Command = Command + "\n";
-  
-  // WARNING:
-  // Method #2: Allocate memory on stack and copy the contents of the
-  // original string. Keep in mind that once a current function returns,
-  // the memory is invalidated.
-  char *cmd;
-  cmd = (char *)alloca(Command.size() + 1);
-  memcpy(cmd, Command.c_str(), Command.size() + 1);
+  Command = Command + '\n';
 
-  int n_written = 0,
-      spot = 0;
+  int n_written = 0;
+  int pos = 0;
 
-  do {
-      n_written = write( USB, &cmd[spot], 1 );
-      spot += n_written;
-  } while (cmd[spot-1] != '\n' && n_written > 0);
+  char *cmd = new char [Command.size() + 1];
+  strcpy(cmd, Command.c_str());
+
+  while (pos < Command.size())
+  {
+    n_written = write( USB, &cmd[pos], 1 );
+    pos = pos + n_written;
+  }
 }
 
 bool COMPORT::read_from_comm()
@@ -88,14 +84,6 @@ void COMPORT::log_file_on()
 void COMPORT::log_file_off()
 {
   SAVE_TO_LOG = false;
-}
-
-void COMPORT::printout()
-{
-  for (int pos = 0; pos < READ_FROM_COMM.size(); pos++)
-  {
-    printf("pos: %d |%s|\n", pos, READ_FROM_COMM[pos].c_str());
-  }
 }
 
 bool COMPORT::create()

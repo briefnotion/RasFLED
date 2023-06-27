@@ -466,13 +466,13 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
 
   // Unfiltered TTL Percentage
   LF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.life_percentage_mean());
-  LF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  LF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   RF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.life_percentage_mean());
-  RF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  RF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   LB_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.life_percentage_mean());
-  LB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  LB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   RB_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.life_percentage_mean());
-  RB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.val_life_percentage_mean(), 0, 10, 75, 100, 200 ), COLOR_BLACK);
+  RB_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
 
   LF_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.slice_size_max(), tmeCurrentMillis);
   RF_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.slice_size_max(), tmeCurrentMillis);
@@ -481,13 +481,13 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
 
   // TTL Percentage
   LF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LF_TTL.life_percentage_mean());
-  LF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LF_TTL.val_life_percentage_mean(), 0, 20, 75, 100, 200 ), COLOR_BLACK);
+  LF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LF_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   RF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.RF_TTL.life_percentage_mean());
-  RF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RF_TTL.val_life_percentage_mean(), 0, 20, 75, 100, 200 ), COLOR_BLACK);
+  RF_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RF_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   LB_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LB_TTL.life_percentage_mean());
-  LB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LB_TTL.val_life_percentage_mean(), 0, 20, 75, 100, 200 ), COLOR_BLACK);
+  LB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.LB_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   RB_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.RB_TTL.life_percentage_mean());
-  RB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RB_TTL.val_life_percentage_mean(), 0, 20, 75, 100, 200 ), COLOR_BLACK);
+  RB_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.RB_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
 
   LF_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.LF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.LF_TTL.slice_size_max(), tmeCurrentMillis);
   RF_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.RF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.RF_TTL.slice_size_max(), tmeCurrentMillis);
@@ -811,6 +811,7 @@ void DATA_SET_GADGET::draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFram
 void DUEL_BAR_GUAGE_GADGET::create()
 {
   // Bar Guages
+  /*
   DATA_BAR_A.PROP.LABEL = "";
   DATA_BAR_A.PROP.INDICATOR_CHARACTER = '0';
   DATA_BAR_A.PROP.LABEL_SIZE = 0;
@@ -837,6 +838,23 @@ void DUEL_BAR_GUAGE_GADGET::create()
   DATA_BAR_A.PROP.PRINT_VALUE = false;
   DATA_BAR_A.PROP.PRINT_MIN = false;
   DATA_BAR_A.PROP.PRINT_MAX = false;
+  */
+ 
+  DATA_BAR_A.PROP.POSX = PROP.POSX + 0;
+  DATA_BAR_A.PROP.POSY = PROP.POSY + 4;
+  DATA_BAR_A.PROP.BAR_SIZE = 19;
+  DATA_BAR_A.PROP.MIN_VALUE = 0;
+  DATA_BAR_A.PROP.MAX_VALUE = PROP.BAR_A_MAX_VALUE;
+  DATA_BAR_A.PROP.TIME_SPAN = 60000;
+  DATA_BAR_A.PROP.MIN_MAX = true;
+  DATA_BAR_A.MIN_MAX_HISTORY.PROP.SLICES = 20;
+  DATA_BAR_A.MIN_MAX_HISTORY.PROP.TIME_SPAN = 60000;
+  DATA_BAR_A.PROP.INDICATOR_CHARACTER = '0';
+  DATA_BAR_A.PROP.BRACKET_END_CAPS = false;
+  DATA_BAR_A.PROP.COLOR_MARKER = COLOR_BLUE;
+  DATA_BAR_A.PROP.BCOLOR_MARKER = COLOR_WHITE;
+  DATA_BAR_A.PROP.COLOR_BAR_BACK = COLOR_BLUE;
+  DATA_BAR_A.create();
 
   DATA_BAR_B.PROP.LABEL = "";
   DATA_BAR_B.PROP.INDICATOR_CHARACTER = '0';
@@ -930,7 +948,7 @@ void DUEL_BAR_GUAGE_GADGET::update(float Value, unsigned long tmeFrame_Time)
 void DUEL_BAR_GUAGE_GADGET::draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time)
 {
   SCALE.draw(Host_Panel, Refresh);
-  DATA_BAR_A.draw(Host_Panel, Refresh);
+  DATA_BAR_A.draw(Host_Panel, Refresh, tmeFrame_Time);
   DATA_BAR_B.draw(Host_Panel, Refresh);
   VALUE.draw(Host_Panel, Refresh, tmeFrame_Time);
   MIN.draw(Host_Panel, Refresh, tmeFrame_Time);
@@ -1099,7 +1117,7 @@ void AUTOMOBILE_GADGET::create()
   TACHO.create();
 
   //-----------
-  // Acceleration
+  // ORQ
   POWERO.PROP.POSX = 13 + 21;
   POWERO.PROP.POSY = 6;
   POWERO.PROP.DESCRIPTION = "ORQ";

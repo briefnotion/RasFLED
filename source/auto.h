@@ -185,6 +185,7 @@ class VELOCITY
 
   void store(float kmph, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
   void store_meters_per_second(float mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_miles_per_hour(float Miph, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
   float val_kmph();
   float val_meters_per_second();
   float val_mph();
@@ -525,8 +526,9 @@ class AUTOMOBILE_VELOCITY
   void set_source_availability(bool Available);
   bool available();
 
-  void store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
-  void store_dash(int kmph, int kmph_decimal, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
+  void store_trans(int kmph, float Multiplier, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent, 
+                    float Verify_kmph);
+  void store_dash(int Upper, int Lower, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
   void store_LF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
   void store_RF(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
   void store_LB(int mps, unsigned long tmeFrame_Time, unsigned long tmeFrame_Time_Sent);
@@ -631,7 +633,7 @@ class AUTOMOBILE_TRANSMISSION_GEAR
   string short_desc();
   string long_desc();
 
-  void store_gear_selection(int Gear, int Gear_Alt);
+  void store_gear_selection(int Gear, int Gear_Alt, int Transmission_Gear_Reported);
   int gear_selection_reported();
   string gear_selection_long_desc();
   bool gear_selection_park();
