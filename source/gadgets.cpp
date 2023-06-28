@@ -206,7 +206,6 @@ bool PANEL::draw(bool Refresh)
       mvwprintw(CYBR_PANEL.winPANEL, pos, 0, "%x", CYBRValue[pos].COLOR_VAL[col]);
       wattroff(CYBR_PANEL.winPANEL, COLOR_PAIR(col));
     }
-
   }
 
   bool CYBR::draw(unsigned long tmeFrame_Time)
@@ -471,7 +470,7 @@ void Char_Graph::clear()
   CHANGED = true;
 }
 
-void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time, int Zero_Color)
 {
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
@@ -525,7 +524,19 @@ void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 
     if (PROP.ALT_COLORS == false)
     {
-      if (pos >= 0 && pos < 33)
+      if (VALUE == 0)
+      {
+        if (Zero_Color == -1)
+        {
+          BColor = COLOR_RED;
+        }
+        else
+        {
+          BColor = Zero_Color;
+        }
+        Color = COLOR_WHITE;
+      }
+      else if (pos >= 0 && pos < 33)
       {
         BColor = COLOR_RED;
         Color = COLOR_WHITE;
@@ -551,7 +562,15 @@ void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     {
       if (VALUE == 0)
       {
-        BColor = COLOR_BLUE;
+        if (Zero_Color == -1)
+        {
+          BColor = COLOR_BLUE;
+        }
+        else
+        {
+          BColor = Zero_Color;
+        }
+
         Color = COLOR_WHITE;
       }
       else if (pos >= 0 && pos < 33)
@@ -612,9 +631,14 @@ void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
   }
 }
   
+void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+{
+  draw(Panel, Refresh, tmeFrame_Time, -1);
+}
+  
 void Char_Graph::draw(PANEL &Panel, bool Refresh)
 {
-  draw(Panel, Refresh, 0);
+  draw(Panel, Refresh, 0, -1);
 }
 
 // -------------------------------------------------------------------------------------
@@ -1979,47 +2003,54 @@ void CYBR_BAR::print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
   mvwprintw(winWindow, Ypos, Xpos + get_marker_pos(value), "%c", marker);
 }
 
-/*
-void BAR::print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, int max)
-// Draw marker at value on guage.
-//  Draws > if exceeding max of guage size.
-//  Draws < if exceeding min of guage size.
+void CYBR_BAR::make_jecto_dat(unsigned long tmeFrame_Time)
 {
-  string fill_bar = "";
-  int start = 0;
-  int end = 0;
-  int lenght = 0;
+  int dats = 0;
 
-  // Keep within range
-  if (min < PROP.MIN_VALUE)
+  // Count dats
+  for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
   {
-    start = 0;
-  }
-  else
-  {
-    start = get_marker_pos(min);
+    dats = dats + SLICE_HISTORY[slice].UPDATE_COUNT;
   }
 
-  if (max > PROP.MAX_VALUE)
+  // Put dat in jecto
+  for(int dat = 0; dat < 256; dat++)
   {
-    end = PROP.BAR_SIZE - 1;
-  }
-  else
-  {
-    end = get_marker_pos(max);
+    int dat_adds = 0;
+    for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
+    {
+      dat_adds = dat_adds + SLICE_HISTORY[slice].COLOR_VAL[dat];
+    }
+
+    dat_adds = (dat_adds *256) / dats;
+
+    if (dat_adds > 255)
+    {
+      dat_adds = 255;
+    }
+    
+    JECTO_DAT.COLOR_VAL[dat] = (unsigned char)dat_adds;
   }
 
-  // Calculate Size.
-  lenght = end - start + 1;
-  
-  // Draw Bar
-  if (lenght > 0)
+  JECTO_DAT.UPDATE_COUNT = (unsigned char)(255);
+  JECTO_DAT.TIMESTAMP = tmeFrame_Time;
+
+  JECTO_READY = true;
+}
+
+void CYBR_BAR::check_slices(unsigned long tmeFrame_Time)
+{
+  if (JECTO_TIMER.enabled() == false)
   {
-    fill_bar.resize(lenght, ':');
-    mvwprintw(winWindow, Ypos, Xpos + start, "%s", fill_bar.c_str());    
+    JECTO_TIMER.ping_up(tmeFrame_Time, PROP.TIME_SPAN);
+  }
+  else if (JECTO_TIMER.ping_down(tmeFrame_Time) == false)
+  {
+    // Prep Ject
+    make_jecto_dat(tmeFrame_Time);
+    JECTO_TIMER.ping_up(tmeFrame_Time, PROP.TIME_SPAN);
   }
 }
-*/
 
 void CYBR_BAR::update_cybr_slice(int Value, unsigned long tmeFrame_Time)
 {
@@ -2055,9 +2086,10 @@ void CYBR_BAR::update_cybr_slice(int Value, unsigned long tmeFrame_Time)
 
 void CYBR_BAR::create()
 {
-
-
   SLICE_GRAPH.resize(PROP.BAR_SIZE);
+
+  MIN_MAX_HISTORY.PROP.SLICES = 20;
+  MIN_MAX_HISTORY.PROP.TIME_SPAN = PROP.TIME_SPAN;
 
   for (int pos = 0; pos < SLICE_GRAPH.size(); pos++)
   {
@@ -2076,62 +2108,46 @@ void CYBR_BAR::update(int Value, unsigned long tmeFrame_Time)
     VALUE = Value;
     update_cybr_slice(get_marker_pos(VALUE), tmeFrame_Time);
 
-    if (PROP.MIN_MAX == true)
-    {
-      MIN_MAX_HISTORY.put_value(Value, tmeFrame_Time);
-    }
+    MIN_MAX_HISTORY.put_value(Value, tmeFrame_Time);
 
+    // Check Ject
+    check_slices(tmeFrame_Time);
+    
     CHANGED = true;
   }
+}
+
+bool CYBR_BAR::jecto_ready()
+{
+  return JECTO_READY;
+}
+
+CYBR_SLICE CYBR_BAR::jecto()
+{
+  JECTO_READY = false;
+  return JECTO_DAT;
+}
+
+void CYBR_BAR::jecti(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Time)
+{
+  SLICE_HISTORY.push_front(CYBR_Slice);
+  check_slices(tmeFrame_Time);
+
+  // also 
+  if (tmeFrame_Time > SLICE_HISTORY.back().TIMESTAMP + PROP.TIME_SPAN)
+  {
+    SLICE_HISTORY.pop_back();
+  }
+
+  CHANGED = true;
 }
 
 bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 {
   bool ret_redrawn = false;
 
-  string label = "";
-
-  string bar = "";
-  string fill = "";
-  int marker_pos = 0;
-  int bar_min = 0;
-  int bar_max = 0;
-
-  // Color Management Variables
-  int bar_color = 0;
-  int indicaor_background_color = 0;
-
   if (CHANGED == true || Refresh == true)
   {
-
-
-    //wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR, PROP.COLOR)));
-
-
-    // Prepare Colors
-
-    // Alert background color if value is negative
-    if (VALUE >= PROP.MIN_VALUE && VALUE <= PROP.MAX_VALUE)
-    {
-      bar_color = PROP.COLOR_BAR_BACK;
-    }
-    else
-    {
-      bar_color = PROP.COLOR_MARKER_LIMIT;
-    }
-
-    /*
-    // Prepare background colors for indicators
-    if (PROP.MIN_MAX_FILLER == true)
-    {
-      indicaor_background_color = PROP.MIN_MAX_FILLER_BCOLOR;
-    }
-    else
-    {
-      indicaor_background_color = PROP.COLOR_BAR_BACK;
-    }
-    */
-
     if (PROP.BRACKET_END_CAPS == true)
     {  
       // Print Bar Start "[""
@@ -2141,20 +2157,9 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
       mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.BAR_SIZE +1 , "]");
     }
 
-    // Bar Marker Position
-    marker_pos = get_marker_pos(VALUE);
-
-    // Clear Bar Background
-    // Create empty bar
-    /*
-    bar = bar.append(PROP.BAR_SIZE, ' ');
-    wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, COLOR_WHITE)));
-    mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX +1, "%s", bar.c_str());
-    wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_BAR_BACK, COLOR_WHITE)));
-    */
-
     // get update_count of slices
     int update_count = 0;
+    int slice_graph_max_value = 0;
 
     for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
     {
@@ -2164,9 +2169,6 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     // values of slices
     for(int pos = 0; pos < PROP.BAR_SIZE; pos ++)
     {
-      //mvwprintw(Panel.winPANEL, PROP.POSY, PROP.POSX +1 + pos, "%d", TEST_SLICE.COLOR_VAL[pos]);
-      //printf("  %d %d %d \n", pos, TEST_SLICE.COLOR_VAL[pos],  TEST_SLICE_GRAPH.size());
-
       int value = 0;
 
       for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
@@ -2174,61 +2176,35 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
         value = value + SLICE_HISTORY[slice].COLOR_VAL[pos];
       }
 
-      SLICE_GRAPH[pos].set_value(value, 0, update_count, tmeFrame_Time);
-      SLICE_GRAPH[pos].draw(Panel, true, tmeFrame_Time);
-    }
-    
+      if (value > slice_graph_max_value)
+      {
+        slice_graph_max_value = value;
+      }
 
-    /*
-    // Min Max filler bar.
-    if (PROP.MIN_MAX_FILLER == true)
+      SLICE_GRAPH[pos].set_value(value, tmeFrame_Time);
+    }
+
+    for(int pos = 0; pos < PROP.BAR_SIZE; pos ++)
     {
-      if (PROP.PROGRESS_BAR == true)
-      {
-        bar_min = 0;
-        bar_max = PROP.VALUE;
-      }
-      else if (PROP.GUAGE_BAR == true)
-      {
-        bar_min = MIN_MAX_HISTORY.min();
-        bar_max = MIN_MAX_HISTORY.max();
-      }
+      SLICE_GRAPH[pos].PROP.MAX = slice_graph_max_value;
 
-      // Change background color to cooperate with marker limit background if color is on
-      if (PROP.COLORS_ON == true)
+      if (VALUE < PROP.MIN_VALUE || VALUE > PROP.MAX_VALUE)
       {
-        if (PROP.VALUE > PROP.MAX_VALUE || PROP.VALUE < PROP.MIN_VALUE)
-        {
-          wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_MARKER_LIMIT, PROP.MIN_MAX_FILLER_COLOR)));
-        }
-        else
-        {
-          wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
-        }
+        SLICE_GRAPH[pos].draw(Panel, true, tmeFrame_Time, PROP.COLOR_MARKER_LIMIT);
       }
-
-      print_min_max_filler(Panel.winPANEL, PROP.POSY, PROP.POSX + PROP.LABEL_SIZE + 1, bar_min, bar_max);
-
-      if (PROP.COLORS_ON == true)
+      else
       {
-        if (PROP.VALUE > PROP.MAX_VALUE || PROP.VALUE < PROP.MIN_VALUE)
-        {
-          wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.COLOR_MARKER_LIMIT, PROP.MIN_MAX_FILLER_COLOR)));
-        }
-        else
-        {
-          wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(indicaor_background_color, PROP.MIN_MAX_FILLER_COLOR)));
-        }
+        SLICE_GRAPH[pos].draw(Panel, true, tmeFrame_Time, PROP.COLOR_BAR_BACK);
       }
     }
-    */
-
 
     // Print Value Marker
-    wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR_MARKER, PROP.COLOR_MARKER)));
-    print_marker(Panel.winPANEL, PROP.POSY, PROP.POSX + 1, VALUE);
-    wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR_MARKER, PROP.COLOR_MARKER)));
-
+    if (PROP.JECT == false)
+    {
+      wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR_MARKER, PROP.COLOR_MARKER)));
+      print_marker(Panel.winPANEL, PROP.POSY, PROP.POSX + 1, VALUE);
+      wattroff(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(PROP.BCOLOR_MARKER, PROP.COLOR_MARKER)));
+    }
 
     CHANGED = false;
     Panel.changed_on();

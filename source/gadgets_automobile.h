@@ -250,6 +250,10 @@ class DUEL_BAR_GUAGE_GADGET
 
   void create();
 
+  bool jecto_ready();
+
+  CYBR_SLICE jecto();
+
   void update(float Value, unsigned long tmeFrame_Time);
 
   void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
@@ -309,6 +313,11 @@ class AUTOMOBILE_GADGET
   DUEL_BAR_GUAGE_GADGET SPEEDO;
   DUEL_BAR_GUAGE_GADGET TACHO;
   DUEL_BAR_GUAGE_GADGET POWERO;
+
+  CYBR_BAR SPEEDO_WATERF_4M;
+  CYBR_BAR SPEEDO_WATERF_16M;
+  CYBR_BAR SPEEDO_WATERF_64M;
+  CYBR_BAR SPEEDO_WATERF_256M;
 
   //-----------
 

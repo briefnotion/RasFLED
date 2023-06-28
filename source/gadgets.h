@@ -403,6 +403,13 @@ class Char_Graph
   void clear();
   // Clear values
 
+  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time, int Zero_Color);
+  // Draw all changes to Panel. Updates on screen at next draw
+  //  Set Refresh to true to force redraw.
+  //  tmeFrame_Time is needed for timed animations
+  // If Zero_Color -1 then background of a zero value will be default,
+  //  else, background will be color passed.
+
   void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
   // Draw all changes to Panel. Updates on screen at next draw
   //  Set Refresh to true to force redraw.
@@ -1068,9 +1075,9 @@ class CYBR_SLICE
 {
   public:
 
-  array<char, 256> COLOR_VAL;
-  unsigned long TIMESTAMP = 0;
-  unsigned char UPDATE_COUNT = 0;
+  array<char, 256> COLOR_VAL;     // Char sized data array of chars. MAX_s 256
+  unsigned long TIMESTAMP = 0;    // Time data slice created.
+  unsigned char UPDATE_COUNT = 0; // How many times data was updated.
 };
 
 class CYBR_BAR_PROPERTIES
@@ -1088,21 +1095,17 @@ class CYBR_BAR_PROPERTIES
   int BCOLOR_MARKER = COLOR_BLACK;      // Marker Background Color
   int COLOR_MARKER_LIMIT = COLOR_RED;   // Bar Background Excede Limit Color
 
-  int POSY = 0;             // Y start position of gadget in window.
-  int POSX = 0;             // X start position of gadget in window.
+  int POSY = 0;       // Y start position of gadget in window.
+  int POSX = 0;       // X start position of gadget in window.
 
-  int BAR_SIZE = 0;             // Size of bar in gadget.
+  int BAR_SIZE = 0;   // Size of bar in gadget.
 
   int TIME_SPAN = 0;  // Span of time made by slices. In ms.
 
-  // Only Guage Bars
-  //bool GUAGE_BAR = false;
+  int MAX_VALUE = 0;  // Gadget's Max Value to be displayed.
+  int MIN_VALUE = 0;  // Gadget's Min Value to be displayed. not implemented.
 
-  // MIN MAX Always On
-  bool MIN_MAX = false;    // Gadget will show min max values over time lapse.
-
-  int MAX_VALUE = 0;            // Gadget's Max Value to be displayed.
-  int MIN_VALUE = 0;            // Gadget's Min Value to be displayed. not implemented.
+  bool JECT = false;  // Basically, just hides the marker.
 
   bool BRACKET_END_CAPS = false;  // Print brackets on both ends of bar.
 };
@@ -1119,8 +1122,11 @@ class CYBR_BAR
   deque<CYBR_SLICE> SLICE_HISTORY;
   deque<Char_Graph> SLICE_GRAPH;
 
-  bool CREATED = false;
+  bool JECTO_READY = false;
+  TIMED_PING JECTO_TIMER;
+  CYBR_SLICE JECTO_DAT;
 
+  bool CREATED = false;
   bool CHANGED = true;
 
   int get_marker_pos(int value);
@@ -1131,9 +1137,14 @@ class CYBR_BAR
   // Gadget Internal:
   //  Draw marker in proper position of bar
 
-  //void print_min_max_filler(WINDOW *winWindow, int Ypos, int Xpos, int min, int max);
+  void make_jecto_dat(unsigned long tmeFrame_Time);
+  // put the thing together.
+
+  void check_slices(unsigned long tmeFrame_Time);
+  // check the slice history for ejects
 
   void update_cybr_slice(int Value, unsigned long tmeFrame_Time);
+  // Updates most recent slice
 
   public:
 
@@ -1144,6 +1155,15 @@ class CYBR_BAR
 
   void update(int Value, unsigned long tmeFrame_Time);
   // Set Value. Updates on screen at next draw
+
+  bool jecto_ready();
+  // Slice ready if true
+
+  CYBR_SLICE jecto();
+  // get ready Slice
+
+  void jecti(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Time);
+  // Bring in a cyber slice
 
   bool draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
   // Draw all changes to Panel. Updates on screen at next draw
