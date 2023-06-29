@@ -251,6 +251,8 @@ string
 -
 deque
 -
+vector
+-
 fled_time.h
 /home/pi/source/RasFLED/source/fled_time.h
 stringthings.h

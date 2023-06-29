@@ -337,7 +337,7 @@ class MIN_MAX_TIME_PROPERTIES
   public:
 
   int SLICES = 0;                     // Number of slices to retain
-  int TIME_SPAN = 0;                  // TOTAL TIME
+  unsigned long TIME_SPAN = 0;                  // TOTAL TIME
                                       // Elaped time from first to last slice.
                                       //  e.g: 10,000ms over 5 slices = 1 slice per 2 sec
                                       // Measured in ms.  1000 = 1 sec.
@@ -361,7 +361,7 @@ class MIN_MAX_TIME
   private:
 
   bool ENABLED = false;
-  int SLICE_TIME = 0;
+  unsigned long SLICE_TIME = 0;
 
   deque<MIN_MAX_TIME_SLICE> TIME_SLICES;
 

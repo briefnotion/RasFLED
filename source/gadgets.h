@@ -17,6 +17,7 @@
 #include <ncurses.h>
 #include <string>
 #include <deque>
+#include <vector>
 
 #include "fled_time.h"
 #include "stringthings.h"
@@ -1075,9 +1076,9 @@ class CYBR_SLICE
 {
   public:
 
-  array<char, 256> COLOR_VAL;     // Char sized data array of chars. MAX_s 256
+  vector<unsigned int> VAL;     // Char sized data array of chars. MAX_s 256
   unsigned long TIMESTAMP = 0;    // Time data slice created.
-  unsigned char UPDATE_COUNT = 0; // How many times data was updated.
+  unsigned int UPDATE_COUNT = 0; // How many times data was updated.
 };
 
 class CYBR_BAR_PROPERTIES
@@ -1100,7 +1101,7 @@ class CYBR_BAR_PROPERTIES
 
   int BAR_SIZE = 0;   // Size of bar in gadget.
 
-  int TIME_SPAN = 0;  // Span of time made by slices. In ms.
+  unsigned long TIME_SPAN = 0;  // Span of time made by slices. In ms.
 
   int MAX_VALUE = 0;  // Gadget's Max Value to be displayed.
   int MIN_VALUE = 0;  // Gadget's Min Value to be displayed. not implemented.
@@ -1125,6 +1126,7 @@ class CYBR_BAR
   bool JECTO_READY = false;
   TIMED_PING JECTO_TIMER;
   CYBR_SLICE JECTO_DAT;
+  unsigned int MAX_SLICE_COUNT = 20;
 
   bool CREATED = false;
   bool CHANGED = true;
@@ -1137,10 +1139,13 @@ class CYBR_BAR
   // Gadget Internal:
   //  Draw marker in proper position of bar
 
-  void make_jecto_dat(unsigned long tmeFrame_Time);
+  //void make_jecto_dat(unsigned long tmeFrame_Time);
   // put the thing together.
 
-  void check_slices(unsigned long tmeFrame_Time);
+  void check_for_ejects(unsigned long tmeFrame_Time);
+  // put slice into JECTO DAT if old
+
+  //void check_slices(unsigned long tmeFrame_Time);
   // check the slice history for ejects
 
   void update_cybr_slice(int Value, unsigned long tmeFrame_Time);
@@ -1156,14 +1161,14 @@ class CYBR_BAR
   void update(int Value, unsigned long tmeFrame_Time);
   // Set Value. Updates on screen at next draw
 
+  void update_via_slice(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Time);
+  // Bring in a cyber slice
+
   bool jecto_ready();
   // Slice ready if true
 
   CYBR_SLICE jecto();
   // get ready Slice
-
-  void jecti(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Time);
-  // Bring in a cyber slice
 
   bool draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
   // Draw all changes to Panel. Updates on screen at next draw
