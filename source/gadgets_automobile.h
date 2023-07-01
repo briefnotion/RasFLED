@@ -219,10 +219,10 @@ class DUEL_BAR_GUAGE_GADGET_PROPERTIES
 
   string SCALE_BAR = ".:.|.:.|.o.|.:.|.:.";
   
+  int BAR_SIZE = 12;
+
   int BAR_A_MAX_VALUE = 100;
   int BAR_B_MAX_VALUE = 100;
-
-  int SCALE = 1;
 
   string DESCRIPTION = "";
 
@@ -255,6 +255,47 @@ class DUEL_BAR_GUAGE_GADGET
   CYBR_SLICE jecto();
 
   void update(float Value, unsigned long tmeFrame_Time);
+
+  void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
+};
+
+class WATERFALL_HISTO_GADGET_PROPERTIES
+// Properties (duh)
+{
+  public: 
+
+  int POSY = 0;
+  int POSX = 0;
+  int SIZEY = 5;
+  int SIZEX = 21;
+
+  int BAR_SIZE = 12;
+  
+  int MAX_VALUE = 100;
+};
+
+class WATERFALL_HISTO_GADGET
+{
+  private:
+  CYBR_BAR WATERF_A;
+  CYBR_BAR WATERF_B;
+  CYBR_BAR WATERF_C;
+  CYBR_BAR WATERF_D;
+  CYBR_BAR WATERF_E;
+
+  void check_slices(unsigned long tmeFrame_Time);
+
+  public:
+
+  WATERFALL_HISTO_GADGET_PROPERTIES PROP;
+
+  void create();
+
+  bool jecto_ready();
+
+  CYBR_SLICE jecto();
+
+  void update_via_slice(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Time);
 
   void draw(PANEL Host_Panel, bool Refresh, unsigned long tmeFrame_Time);
 };
@@ -295,11 +336,6 @@ class AUTOMOBILE_GADGET
   Text_Field_Multi_Line LARGE_SPEED_1;
   Text_Field_Multi_Line LARGE_SPEED_10;
 
-  //-----------
-  // Large Gear
-  Text_Field_Multi_Line LARGE_GEAR_DESC;
-  Text_Field_Multi_Line LARGE_GEAR_1;
-
   // Large Acceleration
   Text_Field_Multi_Line LARGE_ACCELERATION_DESC;
   Text_Field_Multi_Line LARGE_ACCELERATION_1;
@@ -309,20 +345,15 @@ class AUTOMOBILE_GADGET
   Text_Field LARGE_ACCELERATION_MAX;
 
   //-----------
+  // Large Gear
+  Text_Field_Multi_Line LARGE_GEAR_DESC;
+  Text_Field_Multi_Line LARGE_GEAR_S;
+  Text_Field_Multi_Line LARGE_GEAR_1;
 
-  DUEL_BAR_GUAGE_GADGET SPEEDO;
-  DUEL_BAR_GUAGE_GADGET TACHO;
-  DUEL_BAR_GUAGE_GADGET POWERO;
-
-  CYBR_BAR SPEEDO_WATERF_A;
-  CYBR_BAR SPEEDO_WATERF_B;
-  CYBR_BAR SPEEDO_WATERF_C;
-  CYBR_BAR SPEEDO_WATERF_D;
-  CYBR_BAR SPEEDO_WATERF_E;
-
-  //-----------
-
-  Text_Field ACCELERATION;
+  // Large Acceleration
+  Text_Field_Multi_Line LARGE_TACH_DESC;
+  Text_Field_Multi_Line LARGE_TACH_1;
+  Text_Field_Multi_Line LARGE_TACH_10;
 
   //-----------
 
@@ -332,30 +363,79 @@ class AUTOMOBILE_GADGET
 
   //-----------
 
+  Text_Field TACHOMETER_DESC;
+  CYBR_BAR TACHOMETER;
+  CYBR_BAR TACHOMETER2;
+
+  //-----------
+
+  Text_Field TORQUE_DESC;
+  CYBR_BAR TORQUE;
+
+  //-----------
+
+  DUEL_BAR_GUAGE_GADGET SPEEDO;
+  WATERFALL_HISTO_GADGET SPEEDO_WATERFALL;
+
+  DUEL_BAR_GUAGE_GADGET SUPER_TEMP;
+  WATERFALL_HISTO_GADGET SUPER_TEMP_WATERFALL;
+
+  Text_Field WAT_0_0;
+  Text_Field WAT_0_1;
+  Text_Field WAT_0_2;
+  Text_Field WAT_0_3;
+  Text_Field WAT_0_4;
+  Text_Field WAT_0_5;
+
+  //-----------
+
+  Text_Field ACCELERATION;
+
+  //-----------
+
   Text_Field ST_0_0;
   Text_Field ST_0_1;
   Text_Field ST_0_2;
   Text_Field ST_0_3;
-  Text_Field ST_0_4;
-  Text_Field ST_0_5;
-  Text_Field ST_0_6;
-  Text_Field ST_0_7;
-  Text_Field ST_0_8;
-  Text_Field ST_0_9;
-  Text_Field ST_0_10;
+  //Text_Field ST_0_4;
+  //Text_Field ST_0_5;
+  //Text_Field ST_0_6;
+  //Text_Field ST_0_7;
+  //Text_Field ST_0_8;
+  //Text_Field ST_0_9;
 
   Text_Field ST_1_0;
   Text_Field ST_1_1;
   Text_Field ST_1_2;
   Text_Field ST_1_3;
-  Text_Field ST_1_4;
-  Text_Field ST_1_5;
-  Text_Field ST_1_6;
-  Text_Field ST_1_7;
-  Text_Field ST_1_8;
-  Text_Field ST_1_9;
-  Text_Field ST_1_10;
+  //Text_Field ST_1_4;
+  //Text_Field ST_1_5;
+  //Text_Field ST_1_6;
+  //Text_Field ST_1_7;
+  //Text_Field ST_1_8;
+  //Text_Field ST_1_9;
 
+  Text_Field ST_3_0;
+  Text_Field ST_3_1;
+  //Text_Field ST_3_2;
+  Text_Field ST_3_3;
+  //Text_Field ST_3_4;
+  Text_Field ST_3_5;
+  //Text_Field ST_3_6;
+  //Text_Field ST_3_7;
+  //Text_Field ST_3_8;
+  //Text_Field ST_3_9;
+
+  Text_Field ST_4_0;
+  Text_Field ST_4_1;
+  //Text_Field ST_4_2;
+  Text_Field ST_4_3;
+  //Text_Field ST_4_4;
+  Text_Field ST_4_5;
+  //Text_Field ST_4_6;
+  //Text_Field ST_4_7;
+  //Text_Field ST_4_8;
+  //Text_Field ST_4_9;
 
 
   //-----------

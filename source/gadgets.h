@@ -1106,6 +1106,8 @@ class CYBR_BAR_PROPERTIES
   int MAX_VALUE = 0;  // Gadget's Max Value to be displayed.
   int MIN_VALUE = 0;  // Gadget's Min Value to be displayed. not implemented.
 
+  bool PROGESS_BAR = false;
+
   bool JECT = false;  // Basically, just hides the marker.
 
   bool BRACKET_END_CAPS = false;  // Print brackets on both ends of bar.
@@ -1139,14 +1141,8 @@ class CYBR_BAR
   // Gadget Internal:
   //  Draw marker in proper position of bar
 
-  //void make_jecto_dat(unsigned long tmeFrame_Time);
-  // put the thing together.
-
   void check_for_ejects(unsigned long tmeFrame_Time);
   // put slice into JECTO DAT if old
-
-  //void check_slices(unsigned long tmeFrame_Time);
-  // check the slice history for ejects
 
   void update_cybr_slice(int Value, unsigned long tmeFrame_Time);
   // Updates most recent slice

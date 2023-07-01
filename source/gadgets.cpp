@@ -2003,75 +2003,24 @@ void CYBR_BAR::print_marker(WINDOW *winWindow, int Ypos, int Xpos, int value)
   mvwprintw(winWindow, Ypos, Xpos + get_marker_pos(value), "%c", marker);
 }
 
-/*
-void CYBR_BAR::make_jecto_dat(unsigned long tmeFrame_Time)
-{
-  int dats = 0;
-
-  // Count dats
-  for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
-  {
-    dats = dats + SLICE_HISTORY[slice].UPDATE_COUNT;
-  }
-
-  if (dats > 0)
-  {
-    // Put dat in jecto
-    for(int dat = 0; dat < 256; dat++)
-    {
-      int dat_adds = 0;
-      for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
-      {
-        dat_adds = dat_adds + SLICE_HISTORY[slice].COLOR_VAL[dat];
-      }
-
-      dat_adds = (dat_adds *256) / dats;
-
-      if (dat_adds > 255)
-      {
-        dat_adds = 255;
-      }
-      
-      JECTO_DAT.COLOR_VAL[dat] = (unsigned char)dat_adds;
-    }
-
-    JECTO_DAT.UPDATE_COUNT = (unsigned char)(255);
-    JECTO_DAT.TIMESTAMP = tmeFrame_Time;
-
-    JECTO_READY = true;
-  }
-
-}
-*/
-
 void CYBR_BAR::check_for_ejects(unsigned long tmeFrame_Time)
 {
-  if (tmeFrame_Time > SLICE_HISTORY.back().TIMESTAMP + PROP.TIME_SPAN)
+  if (SLICE_HISTORY.size() > 0)
   {
-    JECTO_DAT = SLICE_HISTORY.back();
-    JECTO_DAT.TIMESTAMP = tmeFrame_Time;
+    if (tmeFrame_Time > SLICE_HISTORY.back().TIMESTAMP + PROP.TIME_SPAN)
+    {
+      JECTO_DAT = SLICE_HISTORY.back();
+      JECTO_DAT.TIMESTAMP = tmeFrame_Time;
 
-    SLICE_HISTORY.pop_back();
+      if (JECTO_DAT.UPDATE_COUNT > 0)
+      {
+        JECTO_READY = true;
+      }
 
-    JECTO_READY = true;
+      SLICE_HISTORY.pop_back();
+    }
   }
 }
-
-/*
-void CYBR_BAR::check_slices(unsigned long tmeFrame_Time)
-{
-  if (JECTO_TIMER.enabled() == false)
-  {
-    JECTO_TIMER.ping_up(tmeFrame_Time, PROP.TIME_SPAN);
-  }
-  else if (JECTO_TIMER.ping_down(tmeFrame_Time) == false)
-  {
-    // Prep Ject
-    make_jecto_dat(tmeFrame_Time);
-    JECTO_TIMER.ping_up(tmeFrame_Time, PROP.TIME_SPAN);
-  }
-}
-*/
 
 void CYBR_BAR::update_cybr_slice(int Value, unsigned long tmeFrame_Time)
 {
@@ -2129,9 +2078,6 @@ void CYBR_BAR::update(int Value, unsigned long tmeFrame_Time)
 
     MIN_MAX_HISTORY.put_value(Value, tmeFrame_Time);
 
-    // Check Ject
-    //check_slices(tmeFrame_Time);
-    
     CHANGED = true;
   }
 }
@@ -2230,9 +2176,9 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
     for(int pos = 0; pos < PROP.BAR_SIZE; pos ++)
     {
       SLICE_GRAPH[pos].PROP.MAX = slice_graph_max_value;
-      //SLICE_GRAPH[pos].PROP.MAX = 100;
 
-      if (VALUE < PROP.MIN_VALUE || VALUE > PROP.MAX_VALUE)
+      if ((VALUE < PROP.MIN_VALUE || VALUE > PROP.MAX_VALUE) || 
+          (PROP.PROGESS_BAR == true && pos < get_marker_pos(VALUE)))
       {
         SLICE_GRAPH[pos].draw(Panel, true, tmeFrame_Time, PROP.COLOR_MARKER_LIMIT);
       }
