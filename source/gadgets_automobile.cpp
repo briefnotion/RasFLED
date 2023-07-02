@@ -1233,6 +1233,25 @@ void AUTOMOBILE_GADGET::create()
   LARGE_TACH_10.set_color(COLOR_WHITE, COLOR_BLACK);
   LARGE_TACH_10.PROP.JUSTIFICATION_LEFT = true;
 
+  TACHOMETER_MIN_MAX.PROP.SLICES = 20;
+  TACHOMETER_MIN_MAX.PROP.TIME_SPAN = 60000;
+
+  TACHOMETER_VALUE.PROP.POSX = 49 + 0;
+  TACHOMETER_VALUE.PROP.POSY = 6 + 4;
+  TACHOMETER_VALUE.PROP.SIZEX = 6;
+  TACHOMETER_VALUE.PROP.COLORS_ON = true;
+  TACHOMETER_VALUE.PROP.BCOLOR = COLOR_WHITE;
+  TACHOMETER_VALUE.PROP.COLOR = COLOR_BLACK;
+  TACHOMETER_VALUE.PROP.JUSTIFICATION_RIGHT = true;
+
+  TACHOMETER_MAX.PROP.POSX = 49 + 6;
+  TACHOMETER_MAX.PROP.POSY = 6 + 4;
+  TACHOMETER_MAX.PROP.SIZEX = 6;
+  TACHOMETER_MAX.PROP.COLORS_ON = true;
+  TACHOMETER_MAX.PROP.BCOLOR = COLOR_WHITE;
+  TACHOMETER_MAX.PROP.COLOR = COLOR_BLACK;
+  TACHOMETER_MAX.PROP.JUSTIFICATION_RIGHT = true;
+
   //-----------
   // Steering Wheel
 
@@ -1244,7 +1263,7 @@ void AUTOMOBILE_GADGET::create()
   STEERING_WHEEL_DESC.PROP.BCOLOR = COLOR_BLACK;
   STEERING_WHEEL_DESC.PROP.COLOR = COLOR_WHITE;
   STEERING_WHEEL_DESC.PROP.JUSTIFICATION_LEFT = true;
-  STEERING_WHEEL_DESC.set_text("Steering Wheel:");
+  STEERING_WHEEL_DESC.set_text("STEERING WHEEL:");
 
   // Steering Wheel Guage
   STEERING_WHEEL.PROP.LABEL = "";
@@ -1274,7 +1293,7 @@ void AUTOMOBILE_GADGET::create()
   // Steering Wheel Angle Text
   STEERING_WHEEL_ANGLE.PROP.POSX = 28;
   STEERING_WHEEL_ANGLE.PROP.POSY = 9;
-  STEERING_WHEEL_ANGLE.PROP.SIZEX = 20;
+  STEERING_WHEEL_ANGLE.PROP.SIZEX = 19;
   STEERING_WHEEL_ANGLE.PROP.COLORS_ON = true;
   STEERING_WHEEL_ANGLE.PROP.BCOLOR = COLOR_BLACK;
   STEERING_WHEEL_ANGLE.PROP.COLOR = COLOR_WHITE;
@@ -1291,8 +1310,7 @@ void AUTOMOBILE_GADGET::create()
   TACHOMETER_DESC.PROP.BCOLOR = COLOR_BLACK;
   TACHOMETER_DESC.PROP.COLOR = COLOR_WHITE;
   TACHOMETER_DESC.PROP.JUSTIFICATION_LEFT = true;
-  TACHOMETER_DESC.set_text("Tachometer: 1..:..|..:..2..:..|..:..3..:..|..:..4..:..|..:..5...");
-
+  TACHOMETER_DESC.set_text("TACH (x100) 1..:..|..:..2..:..|..:..3..:..|..:..4..:..|..:..5...");
   TACHOMETER.PROP.POSX = 0 + 0;
   TACHOMETER.PROP.POSY = 14;
   TACHOMETER.PROP.BAR_SIZE = 49 + 6 + 5;
@@ -1336,7 +1354,34 @@ void AUTOMOBILE_GADGET::create()
   TORQUE_DESC.PROP.BCOLOR = COLOR_BLACK;
   TORQUE_DESC.PROP.COLOR = COLOR_WHITE;
   TORQUE_DESC.PROP.JUSTIFICATION_LEFT = true;
-  TORQUE_DESC.set_text("Torque:");
+  TORQUE_DESC.set_text("TORQUE:");
+
+  TORQUE_MIN.PROP.POSX = 36;
+  TORQUE_MIN.PROP.POSY = 11;
+  TORQUE_MIN.PROP.SIZEX = 5;
+  TORQUE_MIN.PROP.COLORS_ON = true;
+  TORQUE_MIN.PROP.BCOLOR = COLOR_BLACK;
+  TORQUE_MIN.PROP.COLOR = COLOR_WHITE;
+  TORQUE_MIN.PROP.JUSTIFICATION_LEFT = true;
+  TORQUE_MIN.set_text("XX");
+  
+  TORQUE_VAL.PROP.POSX = 46;
+  TORQUE_VAL.PROP.POSY = 11;
+  TORQUE_VAL.PROP.SIZEX = 5;
+  TORQUE_VAL.PROP.COLORS_ON = true;
+  TORQUE_VAL.PROP.BCOLOR = COLOR_BLACK;
+  TORQUE_VAL.PROP.COLOR = COLOR_WHITE;
+  TORQUE_VAL.PROP.JUSTIFICATION_CENTER = true;
+  TORQUE_VAL.set_text("XX");
+  
+  TORQUE_MAX.PROP.POSX = 56;
+  TORQUE_MAX.PROP.POSY = 11;
+  TORQUE_MAX.PROP.SIZEX = 5;
+  TORQUE_MAX.PROP.COLORS_ON = true;
+  TORQUE_MAX.PROP.BCOLOR = COLOR_BLACK;
+  TORQUE_MAX.PROP.COLOR = COLOR_WHITE;
+  TORQUE_MAX.PROP.JUSTIFICATION_RIGHT = true;
+  TORQUE_MAX.set_text("XX");
 
   TORQUE.PROP.POSX = 0 + 0;
   TORQUE.PROP.POSY = 12;
@@ -1369,10 +1414,18 @@ void AUTOMOBILE_GADGET::create()
   SPEEDO.PROP.POSX = 3 + 0;
   SPEEDO.PROP.POSY = 16;
   SPEEDO.PROP.BAR_SIZE = 28;
-  SPEEDO.PROP.BAR_A_MAX_VALUE = 100;
+  SPEEDO.PROP.BAR_A_MAX_VALUE = 80;
   SPEEDO.PROP.BAR_B_MAX_VALUE = 100;
   SPEEDO.PROP.DESCRIPTION = "VELOCITY (Mph)";
-  SPEEDO.PROP.SCALE_BAR = "..|..2..|..4.\\/.6..|..8..|..";
+  
+  //SPEEDO.PROP.SCALE_BAR = "..|..2..|..4.\\/.6..|..8..|..";
+  //SPEEDO.PROP.SCALE_BAR = "..o..o..o..o.\/.o..o..o..o..";
+
+  //SPEEDO.PROP.SCALE_BAR = "...1..\/..3..\/..5..\/..7...";
+  //SPEEDO.PROP.SCALE_BAR = "...|..\/..|..\/..|..\/..|...";
+
+  SPEEDO.PROP.SCALE_BAR = "  .1 .][. 3. !! .5 .][. 7.  ";
+  
   SPEEDO.create();
 
   SPEEDO_WATERFALL.PROP.POSX = 3 + 0;  
@@ -2022,6 +2075,10 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   LARGE_TACH_1.set_text(NUMBERS_6X5.number(get_2_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);
   LARGE_TACH_10.set_text(NUMBERS_6X5.number(get_1_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);
 
+  TACHOMETER_MIN_MAX.put_value(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeFrame_Time);
+  TACHOMETER_VALUE.set_text(to_string(sdSysData.CAR_INFO.STATUS.RPM.val_rpm()), tmeFrame_Time);
+  TACHOMETER_MAX.set_text(to_string(TACHOMETER_MIN_MAX.max()), tmeFrame_Time);
+
   //-----------
 
   ACCELERATION.set_text(to_string_round_to_nth(abs(sdSysData.CAR_INFO.CALCULATED.acceleration()), 2));
@@ -2049,7 +2106,11 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   //-----------
   // Torque
-  TORQUE.update((sdSysData.CAR_INFO.STATUS.POWER.val_load()) / 5, tmeFrame_Time);
+  TORQUE.update((sdSysData.CAR_INFO.STATUS.POWER.val_load()) / 3, tmeFrame_Time);
+  
+  TORQUE_VAL.set_text(to_string(sdSysData.CAR_INFO.STATUS.POWER.val_load() / 3), tmeFrame_Time);
+  TORQUE_MIN.set_text(to_string(TORQUE.MIN_MAX_HISTORY.min()), tmeFrame_Time);
+  TORQUE_MAX.set_text(to_string(TORQUE.MIN_MAX_HISTORY.max()), tmeFrame_Time);
 
   //-----------
   // Speed
@@ -2063,10 +2124,10 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   //-----------
   // Super Temp
 
-  float super_temp = (sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.val_c() +
+  float super_temp = (((sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.val_c() +
                     sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_0f.val_c() + 
                     sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_05.val_c() + 
-                    (sdSysData.CAR_INFO.STATUS.TEMPS.CATALYST_3C.val_c() / 20)) / 4;
+                    (sdSysData.CAR_INFO.STATUS.TEMPS.CATALYST_3C.val_c() / 20)) / 4) - 30) * 3;
 
   SUPER_TEMP.update(super_temp, tmeFrame_Time);
 
@@ -2198,7 +2259,10 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   // Large TACH
   LARGE_TACH_DESC.draw(AUTOMOBILE_PANEL, Refresh);
   LARGE_TACH_1.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
-  LARGE_TACH_10.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  bool was_redrawn = LARGE_TACH_10.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+
+  TACHOMETER_VALUE.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
+  TACHOMETER_MAX.draw(AUTOMOBILE_PANEL, was_redrawn, tmeFrame_Time);
 
   //-----------
   // Steering
@@ -2218,6 +2282,9 @@ bool AUTOMOBILE_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   // Tachometer
 
   TORQUE_DESC.draw(AUTOMOBILE_PANEL, Refresh);
+  TORQUE_VAL.draw(AUTOMOBILE_PANEL, Refresh);
+  TORQUE_MIN.draw(AUTOMOBILE_PANEL, Refresh);
+  TORQUE_MAX.draw(AUTOMOBILE_PANEL, Refresh);
   TORQUE.draw(AUTOMOBILE_PANEL, Refresh, tmeFrame_Time);
 
   //-----------

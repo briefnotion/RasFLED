@@ -518,12 +518,12 @@ class Text_Field_Multi_Line
   void set_color(int Background_Color, int Color);
   // Set Value. Updates on screen at next draw
 
-  void draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
+  bool draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time);
   // Draw all changes to Panel. Updates on screen at next draw
   //  Set Refresh to true to force redraw.
   //  tmeFrame_Time is needed for timed animations
 
-  void draw(PANEL &Panel, bool Refresh);
+  bool draw(PANEL &Panel, bool Refresh);
   // Draw all changes to Panel.
   //  Set Refresh to true to force redraw.
   //  Animations will be ignored without time reference

@@ -355,6 +355,10 @@ class AUTOMOBILE_GADGET
   Text_Field_Multi_Line LARGE_TACH_1;
   Text_Field_Multi_Line LARGE_TACH_10;
 
+  MIN_MAX_TIME TACHOMETER_MIN_MAX;
+  Text_Field TACHOMETER_VALUE;
+  Text_Field TACHOMETER_MAX;
+
   //-----------
 
   Text_Field STEERING_WHEEL_DESC;
@@ -370,6 +374,10 @@ class AUTOMOBILE_GADGET
   //-----------
 
   Text_Field TORQUE_DESC;
+  Text_Field TORQUE_VAL;
+  Text_Field TORQUE_MIN;
+  Text_Field TORQUE_MAX;
+  
   CYBR_BAR TORQUE;
 
   //-----------

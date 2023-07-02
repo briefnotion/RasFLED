@@ -780,8 +780,10 @@ void Text_Field_Multi_Line::set_color(int Background_Color, int Color)
   }
 }
 
-void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
+bool Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
 {
+  bool ret_was_redrawn = false;
+
   if (PROP.UPDATE_INDICATION == true && UPDATE_INDICATION_TIMER.blip_moved(tmeFrame_Time) == true)
   {
     Refresh = true;
@@ -837,13 +839,18 @@ void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh, unsigned long tmeFr
 
     CHANGED = false;
 
+    ret_was_redrawn = true;
+
     Panel.changed_on();
   }
+
+  return ret_was_redrawn;
 }
 
-void Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh)
+bool Text_Field_Multi_Line::draw(PANEL &Panel, bool Refresh)
 {
-  draw(Panel, Refresh, 0);
+  bool ret_was_redrawn = draw(Panel, Refresh, 0);
+  return ret_was_redrawn;
 }
 
 // -------------------------------------------------------------------------------------
@@ -2156,14 +2163,21 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
       for(int pos = 0; pos < PROP.BAR_SIZE; pos ++)
       {
         int value = 0;
+        int value_total = 0;
 
         for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
         {
-          value = value + SLICE_HISTORY[slice].VAL[pos];
+          value_total = value_total + SLICE_HISTORY[slice].VAL[pos];
         }
 
-        value = (value * 100) / update_count;
+        value = (value_total * 100) / update_count;
 
+        if (value == 0 && value_total > 0)
+        {
+          value = 1;
+        }
+
+        // Adjust the graph max value to make sure small values arent de-exposed.
         if (value > slice_graph_max_value)
         {
           slice_graph_max_value = value;
