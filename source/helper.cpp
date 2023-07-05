@@ -866,6 +866,13 @@ int get_2_pos_of_int(int Number)
   return (Number % 100 - Number % 10) / 10;
 }
 
+float mod_decimal_remainder(float Value, int Mod_Value)
+{
+  int upper = (int)Value / Mod_Value;
+  int lower = (int)Value % Mod_Value;
+  return (Value - ((float)upper * 33 + (float)lower));
+}
+
 bool get_bit_value(int baseline, int bit_set_compare)
 {
   bool ret_bit_on = false;

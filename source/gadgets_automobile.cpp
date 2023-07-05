@@ -194,6 +194,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
   // Individual Tire Speeds
 
   // Tire TTL - Unfiltered
+  /*
   LF_UNFILTERED_TTL.PROP.POSX = 2;
   LF_UNFILTERED_TTL.PROP.POSY = 5;
   LF_UNFILTERED_TTL.PROP.SIZEX = 5;
@@ -242,6 +243,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::create()
 
   RB_UNFILTERED_TTL_DATA_FILL.PROP.POSX = 23;
   RB_UNFILTERED_TTL_DATA_FILL.PROP.POSY = 18;
+  */
 
   // Tire TTL
   LF_TTL.PROP.POSX = 2;
@@ -465,6 +467,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   //-----------
 
   // Unfiltered TTL Percentage
+  /*
   LF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.life_percentage_mean());
   LF_UNFILTERED_TTL.set_color(  color_range(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LF_TTL.val_life_percentage_mean(), 0, 30, 50, 100, 200 ), COLOR_BLACK);
   RF_UNFILTERED_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.life_percentage_mean());
@@ -478,6 +481,7 @@ void AUTOMOBILE_OVERVIEW_GADGET::update(system_data &sdSysData, unsigned long &t
   RF_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RF_TTL.slice_size_max(), tmeCurrentMillis);
   LB_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_LB_TTL.slice_size_max(), tmeCurrentMillis);
   RB_UNFILTERED_TTL_DATA_FILL.set_value(sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.slice_size(), 0, sdSysData.CAR_INFO.CALCULATED.UNFILTHERED_RB_TTL.slice_size_max(), tmeCurrentMillis);
+  */
 
   // TTL Percentage
   LF_TTL.set_text(" " + sdSysData.CAR_INFO.CALCULATED.LF_TTL.life_percentage_mean());
@@ -571,6 +575,7 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   GEAR_SELECTION_LOW.draw(GADGET_PANEL, Refresh);
 
   //-----------
+  /*
   LF_UNFILTERED_TTL.draw(GADGET_PANEL, Refresh);
   RF_UNFILTERED_TTL.draw(GADGET_PANEL, Refresh);
   LB_UNFILTERED_TTL.draw(GADGET_PANEL, Refresh);
@@ -580,6 +585,7 @@ bool AUTOMOBILE_OVERVIEW_GADGET::draw(bool Refresh, unsigned long tmeFrame_Time)
   RF_UNFILTERED_TTL_DATA_FILL.draw(GADGET_PANEL, Refresh);
   LB_UNFILTERED_TTL_DATA_FILL.draw(GADGET_PANEL, Refresh);
   RB_UNFILTERED_TTL_DATA_FILL.draw(GADGET_PANEL, Refresh);
+  */
 
   LF_TTL.draw(GADGET_PANEL, Refresh);
   RF_TTL.draw(GADGET_PANEL, Refresh);

@@ -675,7 +675,7 @@ class TIRE_TTL
   float LIFE_PERCENTAGE = 0;
 
   float TOP_PERCENTAGE = 100.15;
-  float LOW_PERCENTAGE = 99.65;
+  float LOW_PERCENTAGE = 99.7;
 
   public:
 

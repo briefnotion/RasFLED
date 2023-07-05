@@ -456,6 +456,9 @@ int get_1_pos_of_int(int Number);
 
 int get_2_pos_of_int(int Number);
 
+float mod_decimal_remainder(float Value, int Mod_Value);
+// Return Mod Decimal Remainder.
+
 bool get_bit_value(int baseline, int bit_set_compare);
 // Compares Baseline with bitwise of bit_set_compare.
 // Returns true if bit is same else returns false.

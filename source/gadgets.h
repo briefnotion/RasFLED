@@ -1128,7 +1128,7 @@ class CYBR_BAR
   bool JECTO_READY = false;
   TIMED_PING JECTO_TIMER;
   CYBR_SLICE JECTO_DAT;
-  unsigned int MAX_SLICE_COUNT = 20;
+  int MAX_SLICE_COUNT = 20;
 
   bool CREATED = false;
   bool CHANGED = true;

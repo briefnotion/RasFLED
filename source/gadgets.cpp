@@ -424,7 +424,7 @@ void Text_Field::draw(PANEL &Panel, bool Refresh)
 }
 
 // -------------------------------------------------------------------------------------
-//  Text_Field Classes
+//  Char_Graph Classes
 
 bool Char_Graph::changed()
 // Returns true if any of the properties have changed.
@@ -487,12 +487,9 @@ void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time, i
 
     int pos = (int)(100 * ((VALUE - PROP.MIN) / (PROP.MAX - PROP.MIN)));
 
-    int upper = pos % 33;
     int lower = pos % 33;
 
-
     // Character
-
     //    .,:;|o   
 
     if (lower == 0)
@@ -596,7 +593,6 @@ void Char_Graph::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time, i
       }
     }
  
-
     // Draw
 
     wattron(Panel.winPANEL, COLOR_PAIR(CRT_get_color_pair(BColor, Color)));
@@ -2109,13 +2105,11 @@ void CYBR_BAR::update_via_slice(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Ti
     {
       for (int pos = 0; pos < SLICE_HISTORY.front().VAL.size(); pos ++)
       {
-        SLICE_HISTORY.front().VAL[pos] =+ new_slice.VAL[pos];
+        SLICE_HISTORY.front().VAL[pos] = SLICE_HISTORY.front().VAL[pos] + new_slice.VAL[pos];
       }
-      SLICE_HISTORY.front().UPDATE_COUNT =+ new_slice.UPDATE_COUNT;
+      SLICE_HISTORY.front().UPDATE_COUNT = SLICE_HISTORY.front().UPDATE_COUNT + new_slice.UPDATE_COUNT;
     }
   }
-
-  //check_slices(tmeFrame_Time);
 
   check_for_ejects(tmeFrame_Time);
 
@@ -2162,7 +2156,7 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
       // values of slices
       for(int pos = 0; pos < PROP.BAR_SIZE; pos ++)
       {
-        int value = 0;
+        float value = 0;
         int value_total = 0;
 
         for (int slice = 0; slice < SLICE_HISTORY.size(); slice++)
@@ -2170,12 +2164,7 @@ bool CYBR_BAR::draw(PANEL &Panel, bool Refresh, unsigned long tmeFrame_Time)
           value_total = value_total + SLICE_HISTORY[slice].VAL[pos];
         }
 
-        value = (value_total * 100) / update_count;
-
-        if (value == 0 && value_total > 0)
-        {
-          value = 1;
-        }
+        value = (float)(value_total * 100) / (float)update_count;
 
         // Adjust the graph max value to make sure small values arent de-exposed.
         if (value > slice_graph_max_value)
