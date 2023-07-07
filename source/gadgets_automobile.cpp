@@ -1430,7 +1430,8 @@ void AUTOMOBILE_GADGET::create()
   //SPEEDO.PROP.SCALE_BAR = "...1..\/..3..\/..5..\/..7...";
   //SPEEDO.PROP.SCALE_BAR = "...|..\/..|..\/..|..\/..|...";
 
-  SPEEDO.PROP.SCALE_BAR = "  .1 .][. 3. !! .5 .][. 7.  ";
+  //SPEEDO.PROP.SCALE_BAR = "  .1 .][. 3. !! .5 .][. 7.  ";
+  SPEEDO.PROP.SCALE_BAR = "  v1 v][v 3v !! v5 v][v 7v  ";
   
   SPEEDO.create();
 
@@ -2129,14 +2130,9 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   //-----------
   // Super Temp
+  SUPER_TEMP.update(sdSysData.CAR_INFO.CALCULATED.s_temp(), tmeFrame_Time);
 
-  float super_temp = (((sdSysData.CAR_INFO.STATUS.TEMPS.AMBIANT_AIR_46.val_c() +
-                    sdSysData.CAR_INFO.STATUS.TEMPS.AIR_INTAKE_0f.val_c() + 
-                    sdSysData.CAR_INFO.STATUS.TEMPS.COOLANT_05.val_c() + 
-                    (sdSysData.CAR_INFO.STATUS.TEMPS.CATALYST_3C.val_c() / 20)) / 4) - 30) * 3;
-
-  SUPER_TEMP.update(super_temp, tmeFrame_Time);
-
+  // Handle slices in the waterfall.
   if (SUPER_TEMP.jecto_ready() == true)
   {
     SUPER_TEMP_WATERFALL.update_via_slice(SUPER_TEMP.jecto(), tmeFrame_Time);

@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.954"
+#define Revision "00000001.955"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -60,6 +60,8 @@
 
 #define COMMS_RECEIVE_TEST_DATA       false
 #define COMMS_TEST_DATA_FILENAME      "/home/pi/auto/rascomms.txt"
+
+#define AUTOMOBILE_LOG_FILE_DIRECTORY "/home/pi/automobile_log/"
 
 #define COMMS_FLASH_DATA_RECORDER_ACTIVE  true
 

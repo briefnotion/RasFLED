@@ -473,11 +473,12 @@ int two_byte_complement_signed(unsigned char byte1, unsigned char byte2);
 //  Returns a hacked int, the system undermined.
 
 string file_format_system_time();
-// Unfininished but works
-// Error: off by a month
-//        formatting incorrect
-//        needs to be its own function
+// Return format "20230628_22.44.39"
 
+string file_format_system_date();
+// Return format "20230628_22.44.39"
 
+string file_format_system_hour_minutes_seconds();
+// Return format "20230628_22.44.39"
 
 #endif

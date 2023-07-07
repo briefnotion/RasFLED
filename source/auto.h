@@ -709,6 +709,8 @@ class AUTOMOBILE_CALCULATED
 
   float PREVIOUS_VELOCITY_FOR_ACC;
   unsigned long PREVIOUS_TIME_FOR_ACC;
+  
+  float S_TEMP = -1;
 
   public:
 
@@ -733,6 +735,16 @@ class AUTOMOBILE_CALCULATED
   //  Currently call just before the data is displayed.
 
   float acceleration();
+  // Acceleration computed from averageing 4 tire speeds and comparing the times
+  //  the value was sent.
+  //  Respons calculated over 1 second with 4 time slices
+
+  float s_temp();
+  // Non standand temperature score computed by 
+  //  ambiant temp + intake temp + coolant temp + catalyst temp divided by twenty
+  //  then all divided by 4 then subtracted by 30 then multiplied by 4. 
+  // The results give a better single value about the amount of heat the system 
+  //  is handling
 };
 
 class AUTOMOBILE_AVAILABILITY
@@ -771,8 +783,9 @@ class AUTOMOBILE
 
   string REQUESTED_PID = "";
 
-  // Temp Error Capture Log
-  deque<string> ERROR_LOG_MESSAGE;
+  // Satus Log File
+  deque<string> STATUS_LOG_MESSAGE;
+  TIMED_PING STATUS_LOG_TIMER;
 
   // PID Send List
   deque<string> REQUESTED_PID_SEND_LIST;

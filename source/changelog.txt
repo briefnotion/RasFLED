@@ -1,3 +1,7 @@
+V 1.955_230707
+  - Continued building Automobile_Gadgets.
+  - Changes made to Gadgets Library.
+
 V 1.954_230703
   - Continued building Automobile_Gadgets.
   - Changes made to Gadgets Library.

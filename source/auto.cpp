@@ -1313,6 +1313,7 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
   // No init process. Set first run variables
   if (FIRST_RUN == true)
   { 
+    // TTL
     UNFILTHERED_LF_TTL.first_run();
     UNFILTHERED_RF_TTL.first_run();
     UNFILTHERED_LB_TTL.first_run();
@@ -1323,6 +1324,7 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
     LB_TTL.first_run();
     RB_TTL.first_run();
 
+    // Acceleration
     ACCELERATION_MIN_MAX_HISTORY.PROP.SLICES = 6;
     ACCELERATION_MIN_MAX_HISTORY.PROP.TIME_SPAN = 30000;
 
@@ -1377,11 +1379,23 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
       }
     }
   }
+
+  // S-Temp
+  S_TEMP = (((Status.TEMPS.AMBIANT_AIR_46.val_c() + 
+              Status.TEMPS.AIR_INTAKE_0f.val_c() + 
+              Status.TEMPS.COOLANT_05.val_c() + 
+              (Status.TEMPS.CATALYST_3C.val_c() / 20)) / 4) - 30) * 3;
+
 }
 
 float AUTOMOBILE_CALCULATED::acceleration()
 {
   return ACCELERATION_QUICK_MEAN_HISTORY.mean_float();
+}
+
+float AUTOMOBILE_CALCULATED::s_temp()
+{
+  return S_TEMP;
 }
 
 //-----------
@@ -2200,6 +2214,7 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
     //  Currently call just before the data is displayed.
     CALCULATED.compute_low(STATUS, tmeFrame_Time);
 
+    /*
     // Move **********************************************************************************
     //Capture errors
     if (STATUS.GEAR.gear_selection_park() == true && STATUS.SPEED.SPEED_TRANS.val_mph() > 10)
@@ -2214,6 +2229,34 @@ void AUTOMOBILE::translate(unsigned long tmeFrame_Time)
       deque_string_to_file(ERROR_LOG_FILENAME, ERROR_LOG_MESSAGE, true);
     }
     // Move **********************************************************************************
+    */
+
+    // Log File
+    //  Create a status log file every 5 minutes
+    //  Convert to json in future.
+    if (STATUS_LOG_TIMER.ping_down(tmeFrame_Time) == false && COMMS_RECEIVE_TEST_DATA == false)
+    {
+      STATUS_LOG_MESSAGE.push_back(
+                  file_format_system_hour_minutes_seconds() + ", " +
+                  "Voltage, " + STATUS.ELECTRICAL.CONTROL_UNIT_42.v() + ", " + 
+                  "Amiant Air Temp, " + STATUS.TEMPS.AMBIANT_AIR_46.c() + ", " + 
+                  "Air Intake Temp, " + STATUS.TEMPS.AIR_INTAKE_0f.c() + ", " + 
+                  "Coolant Temp, " + STATUS.TEMPS.COOLANT_05.c() + ", " + 
+                  "Catalyst Temp, " + STATUS.TEMPS.CATALYST_3C.c() + ", " + 
+                  "S-Temp, " + to_string(CALCULATED.s_temp()) + ", " + 
+
+                  "TTL LF, " + CALCULATED.LF_TTL.life_percentage_mean() + ", "
+                  "TTL RF, " + CALCULATED.RF_TTL.life_percentage_mean() + ", "
+                  "TTL LB, " + CALCULATED.LB_TTL.life_percentage_mean() + ", "
+                  "TTL RB, " + CALCULATED.RB_TTL.life_percentage_mean()
+      );
+
+      deque_string_to_file(AUTOMOBILE_LOG_FILE_DIRECTORY + file_format_system_date() + ".txt", STATUS_LOG_MESSAGE, true);
+
+      STATUS_LOG_MESSAGE.clear();
+
+      STATUS_LOG_TIMER.ping_up(tmeFrame_Time, 60000 * 5);
+    }
   }
 }
 

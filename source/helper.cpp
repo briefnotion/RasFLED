@@ -922,6 +922,42 @@ string file_format_system_time()
   return ret_date_time;
 }
 
+string file_format_system_date()
+{
+  FLED_TIME_VAR time; 
+  string ret_date_time = "";
+
+  std::chrono::time_point<std::chrono::system_clock> tmeNow = std::chrono::system_clock::now();
+  std::chrono::duration<double>  dur = tmeNow.time_since_epoch();
+
+  time.put_seconds((unsigned long)dur.count());
+
+  ret_date_time = linemerge_right_justify(4, "0000", to_string(time.get_year())) + 
+                  linemerge_right_justify(2, "00", to_string(time.get_month())) + 
+                  linemerge_right_justify(2, "00", to_string(time.get_day()));
+
+  return ret_date_time;
+}
+
+string file_format_system_hour_minutes_seconds()
+{
+  FLED_TIME_VAR time; 
+  string ret_date_time = "";
+
+  std::chrono::time_point<std::chrono::system_clock> tmeNow = std::chrono::system_clock::now();
+  std::chrono::duration<double>  dur = tmeNow.time_since_epoch();
+
+  time.put_seconds((unsigned long)dur.count());
+
+  ret_date_time = linemerge_right_justify(2, "00", to_string(time.get_hour())) + 
+                  "." + 
+                  linemerge_right_justify(2, "00", to_string(time.get_minute())) + 
+                  "." + 
+                  linemerge_right_justify(2, "00", to_string(time.get_second()));
+
+  return ret_date_time;
+}
+
 
 
 #endif
