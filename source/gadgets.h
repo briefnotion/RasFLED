@@ -1120,7 +1120,7 @@ class CYBR_BAR
 {
   private:
 
-  int VALUE = 0;
+  float VALUE = 0;
 
   deque<CYBR_SLICE> SLICE_HISTORY;
   deque<Char_Graph> SLICE_GRAPH;
@@ -1133,7 +1133,7 @@ class CYBR_BAR
   bool CREATED = false;
   bool CHANGED = true;
 
-  int get_marker_pos(int value);
+  int get_marker_pos(float value);
   // Gadget Internal:
   //  Determine position of Marker in bar
 
@@ -1153,6 +1153,9 @@ class CYBR_BAR
   MIN_MAX_TIME MIN_MAX_HISTORY;
 
   void create();
+
+  void update(float Value, unsigned long tmeFrame_Time);
+  // Set Value. Updates on screen at next draw
 
   void update(int Value, unsigned long tmeFrame_Time);
   // Set Value. Updates on screen at next draw

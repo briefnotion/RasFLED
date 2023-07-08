@@ -572,6 +572,340 @@ class SYMBOLS_6X5_SMALL
 
 // -------------------------------------------------------------------------------------
 
+// Text to ASCII Art Generator. (Much better than what I can do on my own.)
+//  https://www.patorjk.com/software/taag/#p=display&h=0&v=0&c=c&f=Small&t=ABCDEFG%0AHIJKLMN%0AOPQRSTU%0AVWXYZ
+
+// Small
+/***
+ *        _     ___    ___   ___    ___   ___    ___    
+ *       /_\   | _ )  / __| |   \  | __| | __|  / __|   
+ *      / _ \  | _ \ | (__  | |) | | _|  | _|  | (_ |   
+ *     /_/ \_\ |___/  \___| |___/  |___| |_|    \___|   
+ *                                                      
+ *      _  _   ___      _   _  __  _      __  __   _  _ 
+ *     | || | |_ _|  _ | | | |/ / | |    |  \/  | | \| |
+ *     | __ |  | |  | || | | ' <  | |__  | |\/| | | .` |
+ *     |_||_| |___|  \__/  |_|\_\ |____| |_|  |_| |_|\_|
+ *                                                      
+ *       ___    ___    ___    ___   ___   _____   _   _ 
+ *      / _ \  | _ \  / _ \  | _ \ / __| |_   _| | | | |
+ *     | (_) | |  _/ | (_) | |   / \__ \   | |   | |_| |
+ *      \___/  |_|    \__\_\ |_|_\ |___/   |_|    \___/ 
+ *                                                      
+ *     __   __ __      __ __  __ __   __  ____          
+ *     \ \ / / \ \    / / \ \/ / \ \ / / |_  /          
+ *      \ V /   \ \/\/ /   >  <   \ V /   / /           
+ *       \_/     \_/\_/   /_/\_\   |_|   /___|          
+ *                                                      
+ */
+
+
+/***
+ *             _              _          __           
+ *      __ _  | |__   __   __| |  ___   / _|  __ _    
+ *     / _` | | '_ \ / _| / _` | / -_) |  _| / _` |   
+ *     \__,_| |_.__/ \__| \__,_| \___| |_|   \__, |   
+ *                                           |___/    
+ *      _      _     _   _     _                      
+ *     | |_   (_)   (_) | |__ | |  _ __    _ _    ___ 
+ *     | ' \  | |   | | | / / | | | '  \  | ' \  / _ \
+ *     |_||_| |_|  _/ | |_\_\ |_| |_|_|_| |_||_| \___/
+ *                |__/                                
+ *                               _                    
+ *      _ __   __ _   _ _   ___ | |_   _  _  __ __    
+ *     | '_ \ / _` | | '_| (_-< |  _| | || | \ V /    
+ *     | .__/ \__, | |_|   /__/  \__|  \_,_|  \_/     
+ *     |_|       |_|                                  
+ *                                                    
+ *     __ __ __ __ __  _  _   ___                     
+ *     \ V  V / \ \ / | || | |_ /                     
+ *      \_/\_/  /_\_\  \_, | /__|                     
+ *                     |__/                           
+ */
+
+//  https://www.patorjk.com/software/taag/#p=display&h=0&v=0&c=c&f=Small&t=!%40%23%24%25%5E%26*()%0A-%3D_%2B%5B%5D%7B%7D%0A%3B'%3A%22%2C.%2F%3C%3E%3F%0A%5C%7C%60~
+/***
+ *      _    ____      _ _          _  __   /\   __             __ __  
+ *     | |  / __ \   _| | |_   ||_ (_)/ /  |/\| / _|___  _/\_  / / \ \ 
+ *     |_| / / _` | |_  .  _| (_-<   / /_       > _|_ _| >  < | |   | |
+ *     (_) \ \__,_| |_     _| / _/  /_/(_)      \_____|   \/  | |   | |
+ *          \____/    |_|_|    ||                              \_\ /_/ 
+ *                          _     __   __     __ __                    
+ *      ___   ___         _| |_  | _| |_ |   / / \ \                   
+ *     |___| |___|       |_   _| | |   | | _| |   | |_                 
+ *           |___|  ___    |_|   | |   | |  | |   | |                  
+ *                 |___|         |__| |__|   \_\ /_/                   
+ *      _   _   _   _ _             __   __ __    ___                  
+ *     (_) ( ) (_) ( | )           / /  / / \ \  |__ \                 
+ *      _  |/   _   V V   _   _   / /  < <   > >   /_/                 
+ *     ( )     (_)       ( ) (_) /_/    \_\ /_/   (_)                  
+ *     |/                |/                                            
+ *     __     _   _   /\/|                                             
+ *     \ \   | | ( ) |/\/                                              
+ *      \ \  | |  \|                                                   
+ *       \_\ | |                                                       
+ *           |_|                                                       
+ */
+
+
+// Notable: Mini, Straight, Goofy, Bigfig
+
+class SYMBOLS_6X5_CHARACTER_SMALL
+{
+  private:
+
+  string SPACE_01 = "      \n";
+  string SPACE_02 = "      \n";
+  string SPACE_03 = "      \n";
+  string SPACE_04 = "      \n";
+  string SPACE_05 = "      \n";
+
+  string A_01 = "__  __\n";
+  string A_02 = "\\ \\/ /\n";
+  string A_03 = " >  < \n";
+  string A_04 = "/_/\\_\\\n";
+  string A_05 = "      \n";
+
+  string B_01 = "__  __\n";
+  string B_02 = "\\ \\/ /\n";
+  string B_03 = " >  < \n";
+  string B_04 = "/_/\\_\\\n";
+  string B_05 = "      \n";
+
+  string C_01 = "__  __\n";
+  string C_02 = "\\ \\/ /\n";
+  string C_03 = " >  < \n";
+  string C_04 = "/_/\\_\\\n";
+  string C_05 = "      \n";
+
+  string D_01 = "__  __\n";
+  string D_02 = "\\ \\/ /\n";
+  string D_03 = " >  < \n";
+  string D_04 = "/_/\\_\\\n";
+  string D_05 = "      \n";
+
+  string E_01 = "__  __\n";
+  string E_02 = "\\ \\/ /\n";
+  string E_03 = " >  < \n";
+  string E_04 = "/_/\\_\\\n";
+  string E_05 = "      \n";
+
+  string F_01 = "__  __\n";
+  string F_02 = "\\ \\/ /\n";
+  string F_03 = " >  < \n";
+  string F_04 = "/_/\\_\\\n";
+  string F_05 = "      \n";
+
+  string G_01 = "__  __\n";
+  string G_02 = "\\ \\/ /\n";
+  string G_03 = " >  < \n";
+  string G_04 = "/_/\\_\\\n";
+  string G_05 = "      \n";
+
+  string H_01 = "__  __\n";
+  string H_02 = "\\ \\/ /\n";
+  string H_03 = " >  < \n";
+  string H_04 = "/_/\\_\\\n";
+  string H_05 = "      \n";
+
+  string I_01 = "__  __\n";
+  string I_02 = "\\ \\/ /\n";
+  string I_03 = " >  < \n";
+  string I_04 = "/_/\\_\\\n";
+  string I_05 = "      \n";
+
+  string J_01 = "__  __\n";
+  string J_02 = "\\ \\/ /\n";
+  string J_03 = " >  < \n";
+  string J_04 = "/_/\\_\\\n";
+  string J_05 = "      \n";
+
+  string K_01 = "__  __\n";
+  string K_02 = "\\ \\/ /\n";
+  string K_03 = " >  < \n";
+  string K_04 = "/_/\\_\\\n";
+  string K_05 = "      \n";
+
+  string L_01 = "__  __\n";
+  string L_02 = "\\ \\/ /\n";
+  string L_03 = " >  < \n";
+  string L_04 = "/_/\\_\\\n";
+  string L_05 = "      \n";
+
+  string M_01 = "__  __\n";
+  string M_02 = "\\ \\/ /\n";
+  string M_03 = " >  < \n";
+  string M_04 = "/_/\\_\\\n";
+  string M_05 = "      \n";
+
+  string N_01 = "__  __\n";
+  string N_02 = "\\ \\/ /\n";
+  string N_03 = " >  < \n";
+  string N_04 = "/_/\\_\\\n";
+  string N_05 = "      \n";
+
+  string O_01 = "__  __\n";
+  string O_02 = "\\ \\/ /\n";
+  string O_03 = " >  < \n";
+  string O_04 = "/_/\\_\\\n";
+  string O_05 = "      \n";
+
+  string P_01 = "__  __\n";
+  string P_02 = "\\ \\/ /\n";
+  string P_03 = " >  < \n";
+  string P_04 = "/_/\\_\\\n";
+  string P_05 = "      \n";
+
+  string Q_01 = "__  __\n";
+  string Q_02 = "\\ \\/ /\n";
+  string Q_03 = " >  < \n";
+  string Q_04 = "/_/\\_\\\n";
+  string Q_05 = "      \n";
+
+  string R_01 = "__  __\n";
+  string R_02 = "\\ \\/ /\n";
+  string R_03 = " >  < \n";
+  string R_04 = "/_/\\_\\\n";
+  string R_05 = "      \n";
+
+  string S_01 = "__  __\n";
+  string S_02 = "\\ \\/ /\n";
+  string S_03 = " >  < \n";
+  string S_04 = "/_/\\_\\\n";
+  string S_05 = "      \n";
+
+  string T_01 = "__  __\n";
+  string T_02 = "\\ \\/ /\n";
+  string T_03 = " >  < \n";
+  string T_04 = "/_/\\_\\\n";
+  string T_05 = "      \n";
+
+  string U_01 = "__  __\n";
+  string U_02 = "\\ \\/ /\n";
+  string U_03 = " >  < \n";
+  string U_04 = "/_/\\_\\\n";
+  string U_05 = "      \n";
+
+  string V_01 = "__  __\n";
+  string V_02 = "\\ \\/ /\n";
+  string V_03 = " >  < \n";
+  string V_04 = "/_/\\_\\\n";
+  string V_05 = "      \n";
+
+  string W_01 = "__  __\n";
+  string W_02 = "\\ \\/ /\n";
+  string W_03 = " >  < \n";
+  string W_04 = "/_/\\_\\\n";
+  string W_05 = "      \n";
+
+  string X_01 = "__  __\n";
+  string X_02 = "\\ \\/ /\n";
+  string X_03 = " >  < \n";
+  string X_04 = "/_/\\_\\\n";
+  string X_05 = "      \n";
+
+  string Y_01 = "__  __\n";
+  string Y_02 = "\\ \\/ /\n";
+  string Y_03 = " >  < \n";
+  string Y_04 = "/_/\\_\\\n";
+  string Y_05 = "      \n";
+
+  string Z_01 = "__  __\n";
+  string Z_02 = "\\ \\/ /\n";
+  string Z_03 = " >  < \n";
+  string Z_04 = "/_/\\_\\\n";
+  string Z_05 = "      \n";
+
+  string SPACE = "";
+  string CHAR_A = "";
+  string CHAR_B = "";
+  string CHAR_C = "";
+  string CHAR_D = "";
+  string CHAR_E = "";
+  string CHAR_F = "";
+  string CHAR_G = "";
+  string CHAR_H = "";
+  string CHAR_I = "";
+  string CHAR_J = "";
+  string CHAR_K = "";
+  string CHAR_L = "";
+  string CHAR_M = "";
+  string CHAR_N = "";
+  string CHAR_O = "";
+  string CHAR_P = "";
+  string CHAR_Q = "";
+  string CHAR_R = "";
+  string CHAR_S = "";
+  string CHAR_T = "";
+  string CHAR_U = "";
+  string CHAR_V = "";
+  string CHAR_W = "";
+  string CHAR_X = "";
+  string CHAR_Y = "";
+  string CHAR_Z = "";
+
+  bool SPACE_MADE = false;
+  bool CHAR_A_MADE = false;
+  bool CHAR_B_MADE = false;
+  bool CHAR_C_MADE = false;
+  bool CHAR_D_MADE = false;
+  bool CHAR_E_MADE = false;
+  bool CHAR_F_MADE = false;
+  bool CHAR_G_MADE = false;
+  bool CHAR_H_MADE = false;
+  bool CHAR_I_MADE = false;
+  bool CHAR_J_MADE = false;
+  bool CHAR_K_MADE = false;
+  bool CHAR_L_MADE = false;
+  bool CHAR_M_MADE = false;
+  bool CHAR_N_MADE = false;
+  bool CHAR_O_MADE = false;
+  bool CHAR_P_MADE = false;
+  bool CHAR_Q_MADE = false;
+  bool CHAR_R_MADE = false;
+  bool CHAR_S_MADE = false;
+  bool CHAR_T_MADE = false;
+  bool CHAR_U_MADE = false;
+  bool CHAR_V_MADE = false;
+  bool CHAR_W_MADE = false;
+  bool CHAR_X_MADE = false;
+  bool CHAR_Y_MADE = false;
+  bool CHAR_Z_MADE = false;
+
+  public:
+  string space();
+  string char_A();
+  string char_B();
+  string char_C();
+  string char_D();
+  string char_E();
+  string char_F();
+  string char_G();
+  string char_H();
+  string char_I();
+  string char_J();
+  string char_K();
+  string char_L();
+  string char_M();
+  string char_N();
+  string char_O();
+  string char_P();
+  string char_Q();
+  string char_R();
+  string char_S();
+  string char_T();
+  string char_U();
+  string char_V();
+  string char_W();
+  string char_X();
+  string char_Y();
+  string char_Z();
+
+  string character(char Character);
+};
+
+// -------------------------------------------------------------------------------------
+
 class SYMBOLS_3X3_NUMBERS
 {
   private:

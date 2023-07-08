@@ -1973,10 +1973,10 @@ bool BAR::draw(PANEL &Panel, bool Refresh)
 // ---------------------------------------------------------------------------------------
 // Bar Classes
 
-int CYBR_BAR::get_marker_pos(int Value)
+int CYBR_BAR::get_marker_pos(float Value)
 // calculate the size of the fill bar with respects to full bar size.
 {
-  int pos = abs((PROP.BAR_SIZE) * Value / PROP.MAX_VALUE);
+  int pos = (int)abs(((float)PROP.BAR_SIZE) * Value / (float)PROP.MAX_VALUE);
 
   // Check bounds
   if (pos > PROP.BAR_SIZE - 1)
@@ -2072,7 +2072,7 @@ void CYBR_BAR::create()
   CREATED = true;
 }
 
-void CYBR_BAR::update(int Value, unsigned long tmeFrame_Time)
+void CYBR_BAR::update(float Value, unsigned long tmeFrame_Time)
 {
   if (CREATED == true)
   {
@@ -2083,6 +2083,11 @@ void CYBR_BAR::update(int Value, unsigned long tmeFrame_Time)
 
     CHANGED = true;
   }
+}
+
+void CYBR_BAR::update(int Value, unsigned long tmeFrame_Time)
+{
+  update((float)Value, tmeFrame_Time);
 }
 
 void CYBR_BAR::update_via_slice(CYBR_SLICE CYBR_Slice, unsigned long tmeFrame_Time)

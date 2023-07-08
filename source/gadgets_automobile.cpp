@@ -2108,8 +2108,8 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   //-----------
   // Tachometer
-  TACHOMETER.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100, tmeFrame_Time);
-  TACHOMETER2.update(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100, tmeFrame_Time);
+  TACHOMETER.update((float)sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100, tmeFrame_Time);
+  TACHOMETER2.update((float)sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100, tmeFrame_Time);
 
   //-----------
   // Torque
