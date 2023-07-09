@@ -1431,7 +1431,7 @@ void AUTOMOBILE_GADGET::create()
   //SPEEDO.PROP.SCALE_BAR = "...|..\/..|..\/..|..\/..|...";
 
   //SPEEDO.PROP.SCALE_BAR = "  .1 .][. 3. !! .5 .][. 7.  ";
-  SPEEDO.PROP.SCALE_BAR = "  v1 v][v 3v !! v5 v][v 7v  ";
+  SPEEDO.PROP.SCALE_BAR = "  v1 v][v 3v \\/ v5 v][v 7v  ";
   
   SPEEDO.create();
 
@@ -2076,7 +2076,7 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   // Large GEAR
   
   LARGE_GEAR_1.set_text(NUMBERS_6X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeFrame_Time);
-  //LARGE_GEAR_S.set_text(NUMBERS_6X5.number(sdSysData.CAR_INFO.STATUS.GEAR.GEAR_SELECTION_LONG_DESC()), tmeFrame_Time);
+  LARGE_GEAR_S.set_text(CHARACTERS_6X5.character(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_short_desc()[0]), tmeFrame_Time);
 
   // Large TACH
   LARGE_TACH_1.set_text(NUMBERS_6X5.number(get_2_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);

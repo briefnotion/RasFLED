@@ -678,10 +678,10 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string C_04 = "/_/\\_\\\n";
   string C_05 = "      \n";
 
-  string D_01 = "__  __\n";
-  string D_02 = "\\ \\/ /\n";
-  string D_03 = " >  < \n";
-  string D_04 = "/_/\\_\\\n";
+  string D_01 = " ___  \n";
+  string D_02 = "|   \\ \n";
+  string D_03 = "| |) |\n";
+  string D_04 = "|___/ \n";
   string D_05 = "      \n";
 
   string E_01 = "__  __\n";
@@ -726,22 +726,22 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string K_04 = "/_/\\_\\\n";
   string K_05 = "      \n";
 
-  string L_01 = "__  __\n";
-  string L_02 = "\\ \\/ /\n";
-  string L_03 = " >  < \n";
-  string L_04 = "/_/\\_\\\n";
+  string L_01 = " _    \n";
+  string L_02 = "| |   \n";
+  string L_03 = "| |__ \n";
+  string L_04 = "|____|\n";
   string L_05 = "      \n";
 
-  string M_01 = "__  __\n";
-  string M_02 = "\\ \\/ /\n";
-  string M_03 = " >  < \n";
-  string M_04 = "/_/\\_\\\n";
-  string M_05 = "      \n";
+  string M_01 = " __  __ \n";
+  string M_02 = "|  \\/  |\n";
+  string M_03 = "| |\\/| |\n";
+  string M_04 = "|_|  |_|\n";
+  string M_05 = "        \n";
 
   string N_01 = "__  __\n";
-  string N_02 = "\\ \\/ /\n";
-  string N_03 = " >  < \n";
-  string N_04 = "/_/\\_\\\n";
+  string N_02 = "| \\| |\n";
+  string N_03 = "| .` |\n";
+  string N_04 = "|_|\\_|\n";
   string N_05 = "      \n";
 
   string O_01 = "__  __\n";
@@ -750,10 +750,10 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string O_04 = "/_/\\_\\\n";
   string O_05 = "      \n";
 
-  string P_01 = "__  __\n";
-  string P_02 = "\\ \\/ /\n";
-  string P_03 = " >  < \n";
-  string P_04 = "/_/\\_\\\n";
+  string P_01 = " ___  \n";
+  string P_02 = "| _ \\ \n";
+  string P_03 = "|  _/ \n";
+  string P_04 = "|_|   \n";
   string P_05 = "      \n";
 
   string Q_01 = "__  __\n";
@@ -762,10 +762,10 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string Q_04 = "/_/\\_\\\n";
   string Q_05 = "      \n";
 
-  string R_01 = "__  __\n";
-  string R_02 = "\\ \\/ /\n";
-  string R_03 = " >  < \n";
-  string R_04 = "/_/\\_\\\n";
+  string R_01 = " ___  \n";
+  string R_02 = "| _ \\ \n";
+  string R_03 = "|   / \n";
+  string R_04 = "|_|_\\ \n";
   string R_05 = "      \n";
 
   string S_01 = "__  __\n";

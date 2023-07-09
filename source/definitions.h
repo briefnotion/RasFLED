@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.956"
+#define Revision "00000001.957"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -62,6 +62,19 @@
 #define COMMS_TEST_DATA_FILENAME      "/home/pi/auto/rascomms.txt"
 
 #define AUTOMOBILE_LOG_FILE_DIRECTORY "/home/pi/automobile_log/"
+
+// TTL Values - Individually adjust the TTL values of the auto.
+#define TTL_LF_Top_Percentage   100.15
+#define TTL_LF_Low_Percentage   99.7
+
+#define TTL_RF_Top_Percentage   100.15
+#define TTL_RF_Low_Percentage   99.7
+
+#define TTL_LB_Top_Percentage   100.15
+#define TTL_LB_Low_Percentage   99.7
+
+#define TTL_RB_Top_Percentage   99.35
+#define TTL_RB_Low_Percentage   98.90
 
 #define COMMS_FLASH_DATA_RECORDER_ACTIVE  true
 

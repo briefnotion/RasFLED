@@ -616,6 +616,7 @@ class AUTOMOBILE_TRANSMISSION_GEAR
 
   // Transmission Gear Selection
   int GEAR_SELECTION_REPORTED = -1;
+  string GEAR_SELECTION_SHORT_DESC = "X";
   string GEAR_SELECTION_LONG_DESC = "X";
   bool GEAR_SELECTION_PARK = false;
   bool GEAR_SELECTION_REVERSE = false;
@@ -635,6 +636,7 @@ class AUTOMOBILE_TRANSMISSION_GEAR
 
   void store_gear_selection(int Gear, int Gear_Alt, int Transmission_Gear_Reported);
   int gear_selection_reported();
+  string gear_selection_short_desc();
   string gear_selection_long_desc();
   bool gear_selection_park();
   bool gear_selection_reverse();
@@ -679,7 +681,7 @@ class TIRE_TTL
 
   public:
 
-  void first_run();
+  void first_run(float Low_Percentage, float Top_Percentage);
 
   void calculate(VELOCITY Tire_Speed, VELOCITY Transmission_Speed, 
                   unsigned long tmeFrame_Time);

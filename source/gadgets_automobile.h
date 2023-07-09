@@ -329,6 +329,7 @@ class AUTOMOBILE_GADGET
   //-----------
 
   SYMBOLS_6X5_SMALL NUMBERS_6X5;
+  SYMBOLS_6X5_CHARACTER_SMALL CHARACTERS_6X5;
 
   //-----------
   // Large Velocity

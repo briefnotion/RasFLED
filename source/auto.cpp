@@ -1148,7 +1148,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
   if (Gear == 0 && Gear_Alt == 0 && Transmission_Gear_Reported == 19)
   {
     // Park
-    SHORT_DESC = "Park";
+    GEAR_SELECTION_SHORT_DESC = "P";
+    GEAR_SELECTION_LONG_DESC = "Park";
     GEAR_SELECTION_PARK = true;
     GEAR_SELECTION_REVERSE = false;
     GEAR_SELECTION_NEUTRAL = false;
@@ -1158,7 +1159,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
   else if (Gear == 0xe0 && Gear_Alt == 0x1e && Transmission_Gear_Reported == 0)
   {
     // Reverse
-    SHORT_DESC = "Reverse";
+    GEAR_SELECTION_SHORT_DESC = "R";
+    GEAR_SELECTION_LONG_DESC = "Reverse";
     GEAR_SELECTION_PARK = false;
     GEAR_SELECTION_REVERSE = true;
     GEAR_SELECTION_NEUTRAL = false;
@@ -1168,7 +1170,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
   else if (Gear == 0 && Gear_Alt > 0 && Transmission_Gear_Reported == 19)
   {
     // Reverse
-    SHORT_DESC = "Neutral";
+    GEAR_SELECTION_SHORT_DESC = "N";
+    GEAR_SELECTION_LONG_DESC = "Neutral";
     GEAR_SELECTION_PARK = false;
     GEAR_SELECTION_REVERSE = false;
     GEAR_SELECTION_NEUTRAL = true;
@@ -1179,7 +1182,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
                                                                         Transmission_Gear_Reported <= 6)
   {
     // Drive
-    SHORT_DESC = "Drive";
+    GEAR_SELECTION_SHORT_DESC = "D";
+    GEAR_SELECTION_LONG_DESC = "Drive";
     GEAR_SELECTION_PARK = false;
     GEAR_SELECTION_REVERSE = false;
     GEAR_SELECTION_NEUTRAL = false;
@@ -1189,7 +1193,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
   else if (Gear >= 10 && Gear <= 96 && get_bit_value(Gear_Alt, 64) && Transmission_Gear_Reported == 1)
   {
     // Low
-    SHORT_DESC = "Low";
+    GEAR_SELECTION_SHORT_DESC = "L";
+    GEAR_SELECTION_LONG_DESC = "Low";
     GEAR_SELECTION_PARK = false;
     GEAR_SELECTION_REVERSE = false;
     GEAR_SELECTION_NEUTRAL = false;
@@ -1199,7 +1204,8 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
   else
   {
     // Unknown  - 00 D0 7F 50 35 00 0D 08 0D 08 010F3FCE
-    SHORT_DESC = "Unknown";
+    GEAR_SELECTION_SHORT_DESC = "X";
+    GEAR_SELECTION_LONG_DESC = "Unknown";
     //GEAR_SELECTION_PARK = false;
     //GEAR_SELECTION_REVERSE = false;
     //GEAR_SELECTION_NEUTRAL = false;
@@ -1211,6 +1217,11 @@ void AUTOMOBILE_TRANSMISSION_GEAR::store_gear_selection(int Gear, int Gear_Alt, 
 int AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_reported()
 {
   return GEAR_SELECTION_REPORTED;
+}
+
+string AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_short_desc()
+{
+  return GEAR_SELECTION_SHORT_DESC;
 }
 
 string AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_long_desc()
@@ -1245,8 +1256,11 @@ bool AUTOMOBILE_TRANSMISSION_GEAR::gear_selection_low()
 
 //-----------
 
-void TIRE_TTL::first_run()
+void TIRE_TTL::first_run(float Low_Percentage, float Top_Percentage)
 {
+  LOW_PERCENTAGE = Low_Percentage;
+  TOP_PERCENTAGE = Top_Percentage;
+
   WHEEL_SPEED_PECENTAGE_DIFF_MEAN.PROP.SLICES = 20;
   WHEEL_SPEED_PECENTAGE_DIFF_MEAN.PROP.SAMPLE_LIMIT = 100;
   WHEEL_SPEED_PECENTAGE_DIFF_MEAN.PROP.SAMPLE_LIMITED_SPANS = true;
@@ -1314,15 +1328,15 @@ void AUTOMOBILE_CALCULATED::compute_low(AUTOMOBILE_TRANSLATED_DATA &Status, unsi
   if (FIRST_RUN == true)
   { 
     // TTL
-    UNFILTHERED_LF_TTL.first_run();
-    UNFILTHERED_RF_TTL.first_run();
-    UNFILTHERED_LB_TTL.first_run();
-    UNFILTHERED_RB_TTL.first_run();
+    UNFILTHERED_LF_TTL.first_run(TTL_LF_Low_Percentage, TTL_LF_Top_Percentage);
+    UNFILTHERED_RF_TTL.first_run(TTL_RF_Low_Percentage, TTL_RF_Top_Percentage);
+    UNFILTHERED_LB_TTL.first_run(TTL_LB_Low_Percentage, TTL_LB_Top_Percentage);
+    UNFILTHERED_RB_TTL.first_run(TTL_RB_Low_Percentage, TTL_RB_Top_Percentage);
 
-    LF_TTL.first_run();
-    RF_TTL.first_run();
-    LB_TTL.first_run();
-    RB_TTL.first_run();
+    LF_TTL.first_run(TTL_LF_Low_Percentage, TTL_LF_Top_Percentage);
+    RF_TTL.first_run(TTL_RF_Low_Percentage, TTL_RF_Top_Percentage);
+    LB_TTL.first_run(TTL_LB_Low_Percentage, TTL_LB_Top_Percentage);
+    RB_TTL.first_run(TTL_RB_Low_Percentage, TTL_RB_Top_Percentage);
 
     // Acceleration
     ACCELERATION_MIN_MAX_HISTORY.PROP.SLICES = 6;
