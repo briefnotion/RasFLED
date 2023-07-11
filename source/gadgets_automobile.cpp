@@ -2010,14 +2010,14 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   // Large Velocity
   if (sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph() >= 10)
   {
-    LARGE_SPEED_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
+    LARGE_SPEED_10.set_text(CHARACTERS_6X5.number(get_2_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
   }
   else
   {
-    LARGE_SPEED_10.set_text(NUMBERS_6X5.space(), tmeFrame_Time);
+    LARGE_SPEED_10.set_text(CHARACTERS_6X5.space(), tmeFrame_Time);
   }
 
-  LARGE_SPEED_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
+  LARGE_SPEED_1.set_text(CHARACTERS_6X5.number(get_1_pos_of_int((int)sdSysData.CAR_INFO.STATUS.SPEED.SPEED_TRANS.val_mph())), tmeFrame_Time);
 
   if (sdSysData.CAR_INFO.STATUS.INDICATORS.cruise_control() == true)
   {
@@ -2042,8 +2042,8 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   //-----------
   // Large ACCELERATION
-  LARGE_ACCELERATION_10.set_text(NUMBERS_6X5.number(get_2_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
-  LARGE_ACCELERATION_1.set_text(NUMBERS_6X5.number(get_1_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
+  LARGE_ACCELERATION_10.set_text(CHARACTERS_6X5.number(get_2_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration())), true), tmeFrame_Time);
+  LARGE_ACCELERATION_1.set_text(CHARACTERS_6X5.number(get_1_pos_of_int(10 * abs(sdSysData.CAR_INFO.CALCULATED.acceleration()))), tmeFrame_Time);
 
   if (sdSysData.CAR_INFO.CALCULATED.acceleration() >= -.1)
   {
@@ -2075,12 +2075,12 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
   //-----------
   // Large GEAR
   
-  LARGE_GEAR_1.set_text(NUMBERS_6X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeFrame_Time);
+  LARGE_GEAR_1.set_text(CHARACTERS_6X5.number(sdSysData.CAR_INFO.STATUS.GEAR.reported()), tmeFrame_Time);
   LARGE_GEAR_S.set_text(CHARACTERS_6X5.character(sdSysData.CAR_INFO.STATUS.GEAR.gear_selection_short_desc()[0]), tmeFrame_Time);
 
   // Large TACH
-  LARGE_TACH_1.set_text(NUMBERS_6X5.number(get_2_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);
-  LARGE_TACH_10.set_text(NUMBERS_6X5.number(get_1_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);
+  LARGE_TACH_1.set_text(CHARACTERS_6X5.number(get_2_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);
+  LARGE_TACH_10.set_text(CHARACTERS_6X5.number(get_1_pos_of_int(sdSysData.CAR_INFO.STATUS.RPM.val_rpm() / 100)), tmeFrame_Time);
 
   TACHOMETER_MIN_MAX.put_value(sdSysData.CAR_INFO.STATUS.RPM.val_rpm(), tmeFrame_Time);
   TACHOMETER_VALUE.set_text(to_string(sdSysData.CAR_INFO.STATUS.RPM.val_rpm()), tmeFrame_Time);
@@ -2113,7 +2113,7 @@ void AUTOMOBILE_GADGET::update(system_data &sdSysData, unsigned long tmeFrame_Ti
 
   //-----------
   // Torque
-  TORQUE.update((sdSysData.CAR_INFO.STATUS.POWER.val_load()) / 3, tmeFrame_Time);
+  TORQUE.update(((float)sdSysData.CAR_INFO.STATUS.POWER.val_load()) / 3, tmeFrame_Time);
   
   TORQUE_VAL.set_text(to_string(sdSysData.CAR_INFO.STATUS.POWER.val_load() / 3), tmeFrame_Time);
   TORQUE_MIN.set_text(to_string(TORQUE.MIN_MAX_HISTORY.min()), tmeFrame_Time);

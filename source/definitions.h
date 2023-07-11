@@ -21,7 +21,7 @@
 // DEFINITIONS
 // -------------------------------------------------------------------------------------
 
-#define Revision "00000001.957"
+#define Revision "00000001.958"
 #define  QACODE  "A565"
 
 // -------------------------------------------------------------------------------------
@@ -73,8 +73,8 @@
 #define TTL_LB_Top_Percentage   100.15
 #define TTL_LB_Low_Percentage   99.7
 
-#define TTL_RB_Top_Percentage   99.35
-#define TTL_RB_Low_Percentage   98.90
+#define TTL_RB_Top_Percentage   99.37
+#define TTL_RB_Low_Percentage   98.92
 
 #define COMMS_FLASH_DATA_RECORDER_ACTIVE  true
 
