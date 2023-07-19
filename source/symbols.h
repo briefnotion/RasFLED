@@ -201,377 +201,6 @@ class AUTOMOTIVE_SYMBOLS
 
 // -------------------------------------------------------------------------------------
 
-/*
-class SYMBOLS_5X5_BLANK
-{
-  private:
-
-  string X_01 = "\n";
-  string X_02 = "\n";
-  string X_03 = "\n";
-  string X_04 = "\n";
-  string X_05 = "\n";
-
-  string N_0_01 = "\n";
-  string N_0_02 = "\n";
-  string N_0_03 = "\n";
-  string N_0_04 = "\n";
-  string N_0_05 = "\n";
-
-  string N_1_01 = "\n";
-  string N_1_02 = "\n";
-  string N_1_03 = "\n";
-  string N_1_04 = "\n";
-  string N_1_05 = "\n";
-
-  string N_2_01 = "\n";
-  string N_2_02 = "\n";
-  string N_2_03 = "\n";
-  string N_2_04 = "\n";
-  string N_2_05 = "\n";
-
-  string N_3_01 = "\n";
-  string N_3_02 = "\n";
-  string N_3_03 = "\n";
-  string N_3_04 = "\n";
-  string N_3_05 = "\n";
-  
-  string N_4_01 = "\n";
-  string N_4_02 = "\n";
-  string N_4_03 = "\n";
-  string N_4_04 = "\n";
-  string N_4_05 = "\n";
-
-  string N_5_01 = "\n";
-  string N_5_02 = "\n";
-  string N_5_03 = "\n";
-  string N_5_04 = "\n";
-  string N_5_05 = "\n";
-
-  string N_6_01 = "\n";
-  string N_6_02 = "\n";
-  string N_6_03 = "\n";
-  string N_6_04 = "\n";
-  string N_6_05 = "\n";
-
-  string N_7_01 = "\n";
-  string N_7_02 = "\n";
-  string N_7_03 = "\n";
-  string N_7_04 = "\n";
-  string N_7_05 = "\n";
-
-  string N_8_01 = "\n";
-  string N_8_02 = "\n";
-  string N_8_03 = "\n";
-  string N_8_04 = "\n";
-  string N_8_05 = "\n";
-
-  string N_9_01 = "\n";
-  string N_9_02 = "\n";
-  string N_9_03 = "\n";
-  string N_9_04 = "\n";
-  string N_9_05 = "\n";
-
-  string NUM_X = "";
-  string NUM_0 = "";
-  string NUM_1 = "";
-  string NUM_2 = "";
-  string NUM_3 = "";
-  string NUM_4 = "";
-  string NUM_5 = "";
-  string NUM_6 = "";
-  string NUM_7 = "";
-  string NUM_8 = "";
-  string NUM_9 = "";
-
-  bool NUM_X_MADE = false;
-  bool NUM_0_MADE = false;
-  bool NUM_1_MADE = false;
-  bool NUM_2_MADE = false;
-  bool NUM_3_MADE = false;
-  bool NUM_4_MADE = false;
-  bool NUM_5_MADE = false;
-  bool NUM_6_MADE = false;
-  bool NUM_7_MADE = false;
-  bool NUM_8_MADE = false;
-  bool NUM_9_MADE = false;
-
-  public:
-
-  string num_x();
-  string num_0();
-  string num_1();
-  string num_2();
-  string num_3();
-  string num_4();
-  string num_5();
-  string num_6();
-  string num_7();
-  string num_8();
-  string num_9();
-
-  string number(int Number);
-};
-*/
-
-// -------------------------------------------------------------------------------------
-
-class SYMBOLS_5X5_NUMBERS
-{
-  private:
-
-  string SPACE_01 = "     \n";
-  string SPACE_02 = "     \n";
-  string SPACE_03 = "     \n";
-  string SPACE_04 = "     \n";
-  string SPACE_05 = "     \n";
-
-  string X_01 = "#   #\n";
-  string X_02 = " # #\n";
-  string X_03 = "  #\n";
-  string X_04 = " # #\n";
-  string X_05 = "#   #\n";
-
-  string N_0_01 = "  ## \n";
-  string N_0_02 = " #  #\n";
-  string N_0_03 = " #  #\n";
-  string N_0_04 = " #  #\n";
-  string N_0_05 = "  ## \n";
-
-  string N_1_01 = "   # \n";
-  string N_1_02 = "  ## \n";
-  string N_1_03 = "   # \n";
-  string N_1_04 = "   # \n";
-  string N_1_05 = "   # \n";
-
-  string N_2_01 = " ### \n";
-  string N_2_02 = "    #\n";
-  string N_2_03 = "  ## \n";
-  string N_2_04 = " #   \n";
-  string N_2_05 = "  ###\n";
-
-  string N_3_01 = " ### \n";
-  string N_3_02 = "    #\n";
-  string N_3_03 = " ### \n";
-  string N_3_04 = "    #\n";
-  string N_3_05 = " ### \n";
-  
-  string N_4_01 = " #  #\n";
-  string N_4_02 = " #  #\n";
-  string N_4_03 = " ####\n";
-  string N_4_04 = "    #\n";
-  string N_4_05 = "    #\n";
-
-  string N_5_01 = " ####\n";
-  string N_5_02 = " #   \n";
-  string N_5_03 = " ### \n";
-  string N_5_04 = "    #\n";
-  string N_5_05 = " ### \n";
-
-  string N_6_01 = "  ## \n";
-  string N_6_02 = " #   \n";
-  string N_6_03 = " ### \n";
-  string N_6_04 = " #  #\n";
-  string N_6_05 = "  ## \n";
-
-  string N_7_01 = " ####\n";
-  string N_7_02 = "    #\n";
-  string N_7_03 = "   # \n";
-  string N_7_04 = "   # \n";
-  string N_7_05 = "   # \n";
-
-  string N_8_01 = "  ## \n";
-  string N_8_02 = " #  #\n";
-  string N_8_03 = "  ## \n";
-  string N_8_04 = " #  #\n";
-  string N_8_05 = "  ## \n";
-
-  string N_9_01 = "  ## \n";
-  string N_9_02 = " #  #\n";
-  string N_9_03 = "  ###\n";
-  string N_9_04 = "    #\n";
-  string N_9_05 = "  ## \n";
-
-  string SPACE = "";
-  string NUM_X = "";
-  string NUM_0 = "";
-  string NUM_1 = "";
-  string NUM_2 = "";
-  string NUM_3 = "";
-  string NUM_4 = "";
-  string NUM_5 = "";
-  string NUM_6 = "";
-  string NUM_7 = "";
-  string NUM_8 = "";
-  string NUM_9 = "";
-
-  bool SPACE_MADE = false;
-  bool NUM_X_MADE = false;
-  bool NUM_0_MADE = false;
-  bool NUM_1_MADE = false;
-  bool NUM_2_MADE = false;
-  bool NUM_3_MADE = false;
-  bool NUM_4_MADE = false;
-  bool NUM_5_MADE = false;
-  bool NUM_6_MADE = false;
-  bool NUM_7_MADE = false;
-  bool NUM_8_MADE = false;
-  bool NUM_9_MADE = false;
-
-  public:
-
-  string space();
-  string num_x();
-  string num_0();
-  string num_1();
-  string num_2();
-  string num_3();
-  string num_4();
-  string num_5();
-  string num_6();
-  string num_7();
-  string num_8();
-  string num_9();
-
-  string number(int Number);
-};
-
-// -------------------------------------------------------------------------------------
-
-// Text to ASCII Art Generator. (Much better than what I can do on my own.)
-//  http://www.patorjk.com/software/taag/#p=display&h=0&v=0&c=c&f=Small&t=12345678910
-
-// Small
-/***
- *      _   ___   ____  _ _    ___    __   ____   ___   ___   _    __  
- *     / | |_  ) |__ / | | |  | __|  / /  |__  | ( _ ) / _ \ / |  /  \ 
- *     | |  / /   |_ \ |_  _| |__ \ / _ \   / /  / _ \ \_, / | | | () |
- *     |_| /___| |___/   |_|  |___/ \___/  /_/   \___/  /_/  |_|  \__/ 
- *                                                                     
- */
-// Notable: Mini, Straight, Goofy, Bigfig
-
-class SYMBOLS_6X5_SMALL
-{
-  private:
-
-  string SPACE_01 = "      \n";
-  string SPACE_02 = "      \n";
-  string SPACE_03 = "      \n";
-  string SPACE_04 = "      \n";
-  string SPACE_05 = "      \n";
-
-  string X_01 = "__  __\n";
-  string X_02 = "\\ \\/ /\n";
-  string X_03 = " >  < \n";
-  string X_04 = "/_/\\_\\\n";
-  string X_05 = "      \n";
-
-  string N_0_01 = "  __  \n";
-  string N_0_02 = " /  \\ \n";
-  string N_0_03 = "| () |\n";
-  string N_0_04 = " \\__/ \n";
-  string N_0_05 = "      \n";
-
-  string N_1_01 = "  _   \n";
-  string N_1_02 = " / |  \n";
-  string N_1_03 = " | |  \n";
-  string N_1_04 = " |_|  \n";
-  string N_1_05 = "      \n";
-
-  string N_2_01 = " ___  \n";
-  string N_2_02 = "|_  ) \n";
-  string N_2_03 = " / /  \n";
-  string N_2_04 = "/___| \n";
-  string N_2_05 = "      \n";
-
-  string N_3_01 = " ____ \n";
-  string N_3_02 = "|__ / \n";
-  string N_3_03 = " |_ \\ \n";
-  string N_3_04 = "|___/ \n";
-  string N_3_05 = "      \n";
-  
-  string N_4_01 = " _ _  \n";
-  string N_4_02 = "| | | \n";
-  string N_4_03 = "|_  | \n";
-  string N_4_04 = "  |_| \n";
-  string N_4_05 = "      \n";
-
-  string N_5_01 = " ___  \n";
-  string N_5_02 = "| __| \n";
-  string N_5_03 = "|__ \\ \n";
-  string N_5_04 = "|___/ \n";
-  string N_5_05 = "      \n";
-
-  string N_6_01 = "  __  \n";
-  string N_6_02 = " / /  \n";
-  string N_6_03 = "/ _ \\ \n";
-  string N_6_04 = "\\___/ \n";
-  string N_6_05 = "      \n";
-
-  string N_7_01 = " ____ \n";
-  string N_7_02 = "|__  |\n";
-  string N_7_03 = "  / / \n";
-  string N_7_04 = " /_/  \n";
-  string N_7_05 = "      \n";
-
-  string N_8_01 = " ___  \n";
-  string N_8_02 = "( _ ) \n";
-  string N_8_03 = "/ _ \\ \n";
-  string N_8_04 = "\\___/ \n";
-  string N_8_05 = "      \n";
-
-  string N_9_01 = " ___  \n";
-  string N_9_02 = "/ _ \\ \n";
-  string N_9_03 = "\\_, / \n";
-  string N_9_04 = " /_/  \n";
-  string N_9_05 = "      \n";
-
-  string SPACE = "";
-  string NUM_X = "";
-  string NUM_0 = "";
-  string NUM_1 = "";
-  string NUM_2 = "";
-  string NUM_3 = "";
-  string NUM_4 = "";
-  string NUM_5 = "";
-  string NUM_6 = "";
-  string NUM_7 = "";
-  string NUM_8 = "";
-  string NUM_9 = "";
-
-  bool SPACE_MADE = false;
-  bool NUM_X_MADE = false;
-  bool NUM_0_MADE = false;
-  bool NUM_1_MADE = false;
-  bool NUM_2_MADE = false;
-  bool NUM_3_MADE = false;
-  bool NUM_4_MADE = false;
-  bool NUM_5_MADE = false;
-  bool NUM_6_MADE = false;
-  bool NUM_7_MADE = false;
-  bool NUM_8_MADE = false;
-  bool NUM_9_MADE = false;
-
-  public:
-  string space();
-  string num_x();
-  string num_0();
-  string num_1();
-  string num_2();
-  string num_3();
-  string num_4();
-  string num_5();
-  string num_6();
-  string num_7();
-  string num_8();
-  string num_9();
-
-  string number(int Number);
-};
-
-// -------------------------------------------------------------------------------------
-
 // Text to ASCII Art Generator. (Much better than what I can do on my own.)
 //  https://www.patorjk.com/software/taag/#p=display&h=0&v=0&c=c&f=Small&t=ABCDEFG%0AHIJKLMN%0AOPQRSTU%0AVWXYZ
 
@@ -647,6 +276,25 @@ class SYMBOLS_6X5_SMALL
  *           |_|                                                       
  */
 
+// https://www.patorjk.com/software/taag/#p=display&h=0&v=0&c=c&f=Small&t=1234%0A5678%0A90.0
+/***
+ *      _   ___   ____  _ _    
+ *     / | |_  ) |__ / | | |   
+ *     | |  / /   |_ \ |_  _|  
+ *     |_| /___| |___/   |_|   
+ *                             
+ *      ___    __   ____   ___ 
+ *     | __|  / /  |__  | ( _ )
+ *     |__ \ / _ \   / /  / _ \
+ *     |___/ \___/  /_/   \___/
+ *                             
+ *      ___    __         __   
+ *     / _ \  /  \       /  \  
+ *     \_, / | () |  _  | () | 
+ *      /_/   \__/  (_)  \__/  
+ *                             
+ */
+
 
 // Notable: Mini, Straight, Goofy, Bigfig
 
@@ -658,163 +306,283 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string SPACE_02 = "      \n";
   string SPACE_03 = "      \n";
   string SPACE_04 = "      \n";
-  string SPACE_05 = "      \n";
+  string SPACE_05 = "      ";
 
   string A_01 = "__  __\n";
   string A_02 = "\\ \\/ /\n";
   string A_03 = " >  < \n";
   string A_04 = "/_/\\_\\\n";
-  string A_05 = "      \n";
+  string A_05 = "      ";
 
   string B_01 = "__  __\n";
   string B_02 = "\\ \\/ /\n";
   string B_03 = " >  < \n";
   string B_04 = "/_/\\_\\\n";
-  string B_05 = "      \n";
+  string B_05 = "      ";
 
   string C_01 = "__  __\n";
   string C_02 = "\\ \\/ /\n";
   string C_03 = " >  < \n";
   string C_04 = "/_/\\_\\\n";
-  string C_05 = "      \n";
+  string C_05 = "      ";
 
   string D_01 = " ___  \n";
   string D_02 = "|   \\ \n";
   string D_03 = "| |) |\n";
   string D_04 = "|___/ \n";
-  string D_05 = "      \n";
+  string D_05 = "      ";
 
   string E_01 = "__  __\n";
   string E_02 = "\\ \\/ /\n";
   string E_03 = " >  < \n";
   string E_04 = "/_/\\_\\\n";
-  string E_05 = "      \n";
+  string E_05 = "      ";
 
   string F_01 = "__  __\n";
   string F_02 = "\\ \\/ /\n";
   string F_03 = " >  < \n";
   string F_04 = "/_/\\_\\\n";
-  string F_05 = "      \n";
+  string F_05 = "      ";
 
   string G_01 = "__  __\n";
   string G_02 = "\\ \\/ /\n";
   string G_03 = " >  < \n";
   string G_04 = "/_/\\_\\\n";
-  string G_05 = "      \n";
+  string G_05 = "      ";
 
   string H_01 = "__  __\n";
   string H_02 = "\\ \\/ /\n";
   string H_03 = " >  < \n";
   string H_04 = "/_/\\_\\\n";
-  string H_05 = "      \n";
+  string H_05 = "      ";
 
   string I_01 = "__  __\n";
   string I_02 = "\\ \\/ /\n";
   string I_03 = " >  < \n";
   string I_04 = "/_/\\_\\\n";
-  string I_05 = "      \n";
+  string I_05 = "      ";
 
   string J_01 = "__  __\n";
   string J_02 = "\\ \\/ /\n";
   string J_03 = " >  < \n";
   string J_04 = "/_/\\_\\\n";
-  string J_05 = "      \n";
+  string J_05 = "      ";
 
   string K_01 = "__  __\n";
   string K_02 = "\\ \\/ /\n";
   string K_03 = " >  < \n";
   string K_04 = "/_/\\_\\\n";
-  string K_05 = "      \n";
+  string K_05 = "      ";
 
   string L_01 = " _    \n";
   string L_02 = "| |   \n";
   string L_03 = "| |__ \n";
   string L_04 = "|____|\n";
-  string L_05 = "      \n";
+  string L_05 = "      ";
 
   string M_01 = " __  __ \n";
   string M_02 = "|  \\/  |\n";
   string M_03 = "| |\\/| |\n";
   string M_04 = "|_|  |_|\n";
-  string M_05 = "        \n";
+  string M_05 = "        ";
 
   string N_01 = "__  __\n";
   string N_02 = "| \\| |\n";
   string N_03 = "| .` |\n";
   string N_04 = "|_|\\_|\n";
-  string N_05 = "      \n";
+  string N_05 = "      ";
 
   string O_01 = "__  __\n";
   string O_02 = "\\ \\/ /\n";
   string O_03 = " >  < \n";
   string O_04 = "/_/\\_\\\n";
-  string O_05 = "      \n";
+  string O_05 = "      ";
 
   string P_01 = " ___  \n";
   string P_02 = "| _ \\ \n";
   string P_03 = "|  _/ \n";
   string P_04 = "|_|   \n";
-  string P_05 = "      \n";
+  string P_05 = "      ";
 
   string Q_01 = "__  __\n";
   string Q_02 = "\\ \\/ /\n";
   string Q_03 = " >  < \n";
   string Q_04 = "/_/\\_\\\n";
-  string Q_05 = "      \n";
+  string Q_05 = "      ";
 
   string R_01 = " ___  \n";
   string R_02 = "| _ \\ \n";
   string R_03 = "|   / \n";
   string R_04 = "|_|_\\ \n";
-  string R_05 = "      \n";
+  string R_05 = "      ";
 
   string S_01 = "__  __\n";
   string S_02 = "\\ \\/ /\n";
   string S_03 = " >  < \n";
   string S_04 = "/_/\\_\\\n";
-  string S_05 = "      \n";
+  string S_05 = "      ";
 
   string T_01 = "__  __\n";
   string T_02 = "\\ \\/ /\n";
   string T_03 = " >  < \n";
   string T_04 = "/_/\\_\\\n";
-  string T_05 = "      \n";
+  string T_05 = "      ";
 
   string U_01 = "__  __\n";
   string U_02 = "\\ \\/ /\n";
   string U_03 = " >  < \n";
   string U_04 = "/_/\\_\\\n";
-  string U_05 = "      \n";
+  string U_05 = "      ";
 
   string V_01 = "__  __\n";
   string V_02 = "\\ \\/ /\n";
   string V_03 = " >  < \n";
   string V_04 = "/_/\\_\\\n";
-  string V_05 = "      \n";
+  string V_05 = "      ";
 
   string W_01 = "__  __\n";
   string W_02 = "\\ \\/ /\n";
   string W_03 = " >  < \n";
   string W_04 = "/_/\\_\\\n";
-  string W_05 = "      \n";
+  string W_05 = "      ";
 
   string X_01 = "__  __\n";
   string X_02 = "\\ \\/ /\n";
   string X_03 = " >  < \n";
   string X_04 = "/_/\\_\\\n";
-  string X_05 = "      \n";
+  string X_05 = "      ";
 
   string Y_01 = "__  __\n";
   string Y_02 = "\\ \\/ /\n";
   string Y_03 = " >  < \n";
   string Y_04 = "/_/\\_\\\n";
-  string Y_05 = "      \n";
+  string Y_05 = "      ";
 
   string Z_01 = "__  __\n";
   string Z_02 = "\\ \\/ /\n";
   string Z_03 = " >  < \n";
   string Z_04 = "/_/\\_\\\n";
-  string Z_05 = "      \n";
+  string Z_05 = "      ";
+
+  string N_0_01 = "  __  \n";
+  string N_0_02 = " /  \\ \n";
+  string N_0_03 = "| () |\n";
+  string N_0_04 = " \\__/ \n";
+  string N_0_05 = "      ";
+
+  string N_1_01 = "  _   \n";
+  string N_1_02 = " / |  \n";
+  string N_1_03 = " | |  \n";
+  string N_1_04 = " |_|  \n";
+  string N_1_05 = "      ";
+
+  string N_2_01 = " ___  \n";
+  string N_2_02 = "|_  ) \n";
+  string N_2_03 = " / /  \n";
+  string N_2_04 = "/___| \n";
+  string N_2_05 = "      ";
+
+  string N_3_01 = " ____ \n";
+  string N_3_02 = "|__ / \n";
+  string N_3_03 = " |_ \\ \n";
+  string N_3_04 = "|___/ \n";
+  string N_3_05 = "      \n";
+  
+  string N_4_01 = " _ _  \n";
+  string N_4_02 = "| | | \n";
+  string N_4_03 = "|_  | \n";
+  string N_4_04 = "  |_| \n";
+  string N_4_05 = "      ";
+
+  string N_5_01 = " ___  \n";
+  string N_5_02 = "| __| \n";
+  string N_5_03 = "|__ \\ \n";
+  string N_5_04 = "|___/ \n";
+  string N_5_05 = "      ";
+
+  string N_6_01 = "  __  \n";
+  string N_6_02 = " / /  \n";
+  string N_6_03 = "/ _ \\ \n";
+  string N_6_04 = "\\___/ \n";
+  string N_6_05 = "      ";
+
+  string N_7_01 = " ____ \n";
+  string N_7_02 = "|__  |\n";
+  string N_7_03 = "  / / \n";
+  string N_7_04 = " /_/  \n";
+  string N_7_05 = "      ";
+
+  string N_8_01 = " ___  \n";
+  string N_8_02 = "( _ ) \n";
+  string N_8_03 = "/ _ \\ \n";
+  string N_8_04 = "\\___/ \n";
+  string N_8_05 = "      ";
+
+  string N_9_01 = " ___  \n";
+  string N_9_02 = "/ _ \\ \n";
+  string N_9_03 = "\\_, / \n";
+  string N_9_04 = " /_/  \n";
+  string N_9_05 = "      ";
+
+  string N_0_01_d = "  __  \n";
+  string N_0_02_d = " /  \\ \n";
+  string N_0_03_d = "| () |\n";
+  string N_0_04_d = " \\__/o\n";
+  string N_0_05_d = "      ";
+
+  string N_1_01_d = "  _   \n";
+  string N_1_02_d = " / |  \n";
+  string N_1_03_d = " | |  \n";
+  string N_1_04_d = " |_| o\n";
+  string N_1_05_d = "      ";
+
+  string N_2_01_d = " ___  \n";
+  string N_2_02_d = "|_  ) \n";
+  string N_2_03_d = " / /  \n";
+  string N_2_04_d = "/___|o\n";
+  string N_2_05_d = "      ";
+
+  string N_3_01_d = " ____ \n";
+  string N_3_02_d = "|__ / \n";
+  string N_3_03_d = " |_ \\ \n";
+  string N_3_04_d = "|___/o\n";
+  string N_3_05_d = "      ";
+  
+  string N_4_01_d = " _ _  \n";
+  string N_4_02_d = "| | | \n";
+  string N_4_03_d = "|_  | \n";
+  string N_4_04_d = "  |_|o\n";
+  string N_4_05_d = "      ";
+
+  string N_5_01_d = " ___  \n";
+  string N_5_02_d = "| __| \n";
+  string N_5_03_d = "|__ \\ \n";
+  string N_5_04_d = "|___/o\n";
+  string N_5_05_d = "      ";
+
+  string N_6_01_d = "  __  \n";
+  string N_6_02_d = " / /  \n";
+  string N_6_03_d = "/ _ \\ \n";
+  string N_6_04_d = "\\___/o\n";
+  string N_6_05_d = "      ";
+
+  string N_7_01_d = " ____ \n";
+  string N_7_02_d = "|__  |\n";
+  string N_7_03_d = "  / / \n";
+  string N_7_04_d = " /_/ o\n";
+  string N_7_05_d = "      ";
+
+  string N_8_01_d = " ___  \n";
+  string N_8_02_d = "( _ ) \n";
+  string N_8_03_d = "/ _ \\ \n";
+  string N_8_04_d = "\\___/o\n";
+  string N_8_05_d = "      ";
+
+  string N_9_01_d = " ___  \n";
+  string N_9_02_d = "/ _ \\ \n";
+  string N_9_03_d = "\\_, / \n";
+  string N_9_04_d = " /_/ o\n";
+  string N_9_05_d = "      ";
 
   string SPACE = "";
   string CHAR_A = "";
@@ -843,6 +611,26 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string CHAR_X = "";
   string CHAR_Y = "";
   string CHAR_Z = "";
+  string CHAR_0 = "";
+  string CHAR_1 = "";
+  string CHAR_2 = "";
+  string CHAR_3 = "";
+  string CHAR_4 = "";
+  string CHAR_5 = "";
+  string CHAR_6 = "";
+  string CHAR_7 = "";
+  string CHAR_8 = "";
+  string CHAR_9 = "";
+  string CHAR_0_d = "";
+  string CHAR_1_d = "";
+  string CHAR_2_d = "";
+  string CHAR_3_d = "";
+  string CHAR_4_d = "";
+  string CHAR_5_d = "";
+  string CHAR_6_d = "";
+  string CHAR_7_d = "";
+  string CHAR_8_d = "";
+  string CHAR_9_d = "";
 
   bool SPACE_MADE = false;
   bool CHAR_A_MADE = false;
@@ -871,6 +659,26 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   bool CHAR_X_MADE = false;
   bool CHAR_Y_MADE = false;
   bool CHAR_Z_MADE = false;
+  bool CHAR_0_MADE = false;
+  bool CHAR_1_MADE = false;
+  bool CHAR_2_MADE = false;
+  bool CHAR_3_MADE = false;
+  bool CHAR_4_MADE = false;
+  bool CHAR_5_MADE = false;
+  bool CHAR_6_MADE = false;
+  bool CHAR_7_MADE = false;
+  bool CHAR_8_MADE = false;
+  bool CHAR_9_MADE = false;
+  bool CHAR_0_d_MADE = false;
+  bool CHAR_1_d_MADE = false;
+  bool CHAR_2_d_MADE = false;
+  bool CHAR_3_d_MADE = false;
+  bool CHAR_4_d_MADE = false;
+  bool CHAR_5_d_MADE = false;
+  bool CHAR_6_d_MADE = false;
+  bool CHAR_7_d_MADE = false;
+  bool CHAR_8_d_MADE = false;
+  bool CHAR_9_d_MADE = false;
 
   public:
   string space();
@@ -900,27 +708,30 @@ class SYMBOLS_6X5_CHARACTER_SMALL
   string char_X();
   string char_Y();
   string char_Z();
+  string char_0();
+  string char_1();
+  string char_2();
+  string char_3();
+  string char_4();
+  string char_5();
+  string char_6();
+  string char_7();
+  string char_8();
+  string char_9();
+  string char_0_d();
+  string char_1_d();
+  string char_2_d();
+  string char_3_d();
+  string char_4_d();
+  string char_5_d();
+  string char_6_d();
+  string char_7_d();
+  string char_8_d();
+  string char_9_d();
 
   string character(char Character);
-};
-
-// -------------------------------------------------------------------------------------
-
-class SYMBOLS_3X3_NUMBERS
-{
-  private:
-
-  string X_01 = "# #\n";
-  string X_02 = " # \n";
-  string X_03 = "# #\n";
-
-  string NUM_X = "";
-
-  bool NUM_X_MADE = false;
-
-  public:
-
-  string num_x();
+  string number(int Number);
+  string number(int Number, bool Decimal);
 };
 
 // -------------------------------------------------------------------------------------
