@@ -6,7 +6,10 @@
                 "${workspaceFolder}/**",
                 "/usr/include/c++/10",
                 "/usr/include/arm-linux-gnueabihf/c++/10",
-                "/home/pi/source/RasFLED/source"
+                "/home/pi/source/RasFLED/source",
+                "/home/pi/source/imgui",
+                "/home/pi/source/imgui/backends",
+                "/home/pi/source/imgui/misc"
             ],
             "defines": [],
             "compilerPath": "/bin/g++",

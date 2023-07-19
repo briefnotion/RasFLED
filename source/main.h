@@ -68,14 +68,19 @@
 #include <termio.h>
 #include <iostream>
 
+// Graphics
+#include "../../imgui/imgui.h"
+#include "../../imgui/backends/imgui_impl_opengl2.h"
+#include "../../imgui/backends/imgui_impl_glfw.h"
+#include <GLFW/glfw3.h>
+
+//#include "../../imgui/misc/cpp/imgui_stdlib.h"
 
 // Distros: Jeremy Garff <jer @ jers.net>
 //  Zips at https://github.com/jgarff/rpi_ws281x
 //static char VERSION[] = "XX.YY.ZZ";
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -99,6 +104,7 @@
 #include "configuration_storage.h"
 #include "rasapi.h"
 #include "consoleanddata.h"
+#include "screen4.h"
 #include "LEDstuff.h"
 #include "fled_time.h"
 #include "fledcore.h"
