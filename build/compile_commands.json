@@ -1,192 +1,152 @@
 [
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/imgui.cpp.o -c /home/pi/source/imgui/imgui.cpp",
-  "file": "/home/pi/source/imgui/imgui.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/imgui_draw.cpp.o -c /home/pi/source/imgui/imgui_draw.cpp",
-  "file": "/home/pi/source/imgui/imgui_draw.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/imgui_tables.cpp.o -c /home/pi/source/imgui/imgui_tables.cpp",
-  "file": "/home/pi/source/imgui/imgui_tables.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/imgui_widgets.cpp.o -c /home/pi/source/imgui/imgui_widgets.cpp",
-  "file": "/home/pi/source/imgui/imgui_widgets.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/misc/cpp/imgui_stdlib.cpp.o -c /home/pi/source/imgui/misc/cpp/imgui_stdlib.cpp",
-  "file": "/home/pi/source/imgui/misc/cpp/imgui_stdlib.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/backends/imgui_impl_glfw.cpp.o -c /home/pi/source/imgui/backends/imgui_impl_glfw.cpp",
-  "file": "/home/pi/source/imgui/backends/imgui_impl_glfw.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/home/pi/source/imgui/backends/imgui_impl_opengl2.cpp.o -c /home/pi/source/imgui/backends/imgui_impl_opengl2.cpp",
-  "file": "/home/pi/source/imgui/backends/imgui_impl_opengl2.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/alert_system.cpp.o -c /home/pi/source/RasFLED/source/alert_system.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/alert_system.cpp.o -c /home/pi/source/RasFLED/source/alert_system.cpp",
   "file": "/home/pi/source/RasFLED/source/alert_system.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/LEDstuff.cpp.o -c /home/pi/source/RasFLED/source/LEDstuff.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/LEDstuff.cpp.o -c /home/pi/source/RasFLED/source/LEDstuff.cpp",
   "file": "/home/pi/source/RasFLED/source/LEDstuff.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/commands.cpp.o -c /home/pi/source/RasFLED/source/commands.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/commands.cpp.o -c /home/pi/source/RasFLED/source/commands.cpp",
   "file": "/home/pi/source/RasFLED/source/commands.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/comport.cpp.o -c /home/pi/source/RasFLED/source/comport.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/comport.cpp.o -c /home/pi/source/RasFLED/source/comport.cpp",
   "file": "/home/pi/source/RasFLED/source/comport.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/auto.cpp.o -c /home/pi/source/RasFLED/source/auto.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/auto.cpp.o -c /home/pi/source/RasFLED/source/auto.cpp",
   "file": "/home/pi/source/RasFLED/source/auto.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/configuration_storage.cpp.o -c /home/pi/source/RasFLED/source/configuration_storage.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/configuration_storage.cpp.o -c /home/pi/source/RasFLED/source/configuration_storage.cpp",
   "file": "/home/pi/source/RasFLED/source/configuration_storage.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/helper.cpp.o -c /home/pi/source/RasFLED/source/helper.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/helper.cpp.o -c /home/pi/source/RasFLED/source/helper.cpp",
   "file": "/home/pi/source/RasFLED/source/helper.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/stringthings.cpp.o -c /home/pi/source/RasFLED/source/stringthings.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/stringthings.cpp.o -c /home/pi/source/RasFLED/source/stringthings.cpp",
   "file": "/home/pi/source/RasFLED/source/stringthings.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/fled_time.cpp.o -c /home/pi/source/RasFLED/source/fled_time.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/fled_time.cpp.o -c /home/pi/source/RasFLED/source/fled_time.cpp",
   "file": "/home/pi/source/RasFLED/source/fled_time.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/helper_ncurses.cpp.o -c /home/pi/source/RasFLED/source/helper_ncurses.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/helper_ncurses.cpp.o -c /home/pi/source/RasFLED/source/helper_ncurses.cpp",
   "file": "/home/pi/source/RasFLED/source/helper_ncurses.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/json_interface.cpp.o -c /home/pi/source/RasFLED/source/json_interface.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/json_interface.cpp.o -c /home/pi/source/RasFLED/source/json_interface.cpp",
   "file": "/home/pi/source/RasFLED/source/json_interface.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/rasapi.cpp.o -c /home/pi/source/RasFLED/source/rasapi.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/rasapi.cpp.o -c /home/pi/source/RasFLED/source/rasapi.cpp",
   "file": "/home/pi/source/RasFLED/source/rasapi.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/hardware_module_door.cpp.o -c /home/pi/source/RasFLED/source/hardware_module_door.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/hardware_module_door.cpp.o -c /home/pi/source/RasFLED/source/hardware_module_door.cpp",
   "file": "/home/pi/source/RasFLED/source/hardware_module_door.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/hardware_status.cpp.o -c /home/pi/source/RasFLED/source/hardware_status.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/hardware_status.cpp.o -c /home/pi/source/RasFLED/source/hardware_status.cpp",
   "file": "/home/pi/source/RasFLED/source/hardware_status.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/animations_storage.cpp.o -c /home/pi/source/RasFLED/source/animations_storage.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/animations_storage.cpp.o -c /home/pi/source/RasFLED/source/animations_storage.cpp",
   "file": "/home/pi/source/RasFLED/source/animations_storage.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/animations_handler.cpp.o -c /home/pi/source/RasFLED/source/animations_handler.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/animations_handler.cpp.o -c /home/pi/source/RasFLED/source/animations_handler.cpp",
   "file": "/home/pi/source/RasFLED/source/animations_handler.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/symbols.cpp.o -c /home/pi/source/RasFLED/source/symbols.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/symbols.cpp.o -c /home/pi/source/RasFLED/source/symbols.cpp",
   "file": "/home/pi/source/RasFLED/source/symbols.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets.cpp.o -c /home/pi/source/RasFLED/source/gadgets.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets.cpp.o -c /home/pi/source/RasFLED/source/gadgets.cpp",
   "file": "/home/pi/source/RasFLED/source/gadgets.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets_radio.cpp.o -c /home/pi/source/RasFLED/source/gadgets_radio.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets_radio.cpp.o -c /home/pi/source/RasFLED/source/gadgets_radio.cpp",
   "file": "/home/pi/source/RasFLED/source/gadgets_radio.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets_alerts.cpp.o -c /home/pi/source/RasFLED/source/gadgets_alerts.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets_alerts.cpp.o -c /home/pi/source/RasFLED/source/gadgets_alerts.cpp",
   "file": "/home/pi/source/RasFLED/source/gadgets_alerts.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets_automobile.cpp.o -c /home/pi/source/RasFLED/source/gadgets_automobile.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/gadgets_automobile.cpp.o -c /home/pi/source/RasFLED/source/gadgets_automobile.cpp",
   "file": "/home/pi/source/RasFLED/source/gadgets_automobile.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/automobile_handler.cpp.o -c /home/pi/source/RasFLED/source/automobile_handler.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/automobile_handler.cpp.o -c /home/pi/source/RasFLED/source/automobile_handler.cpp",
   "file": "/home/pi/source/RasFLED/source/automobile_handler.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/interface.cpp.o -c /home/pi/source/RasFLED/source/interface.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/interface.cpp.o -c /home/pi/source/RasFLED/source/interface.cpp",
   "file": "/home/pi/source/RasFLED/source/interface.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/player.cpp.o -c /home/pi/source/RasFLED/source/player.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/player.cpp.o -c /home/pi/source/RasFLED/source/player.cpp",
   "file": "/home/pi/source/RasFLED/source/player.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/aircraft_coordinator.cpp.o -c /home/pi/source/RasFLED/source/aircraft_coordinator.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/aircraft_coordinator.cpp.o -c /home/pi/source/RasFLED/source/aircraft_coordinator.cpp",
   "file": "/home/pi/source/RasFLED/source/aircraft_coordinator.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/screen3.cpp.o -c /home/pi/source/RasFLED/source/screen3.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/screen3.cpp.o -c /home/pi/source/RasFLED/source/screen3.cpp",
   "file": "/home/pi/source/RasFLED/source/screen3.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/screen4.cpp.o -c /home/pi/source/RasFLED/source/screen4.cpp",
-  "file": "/home/pi/source/RasFLED/source/screen4.cpp"
-},
-{
-  "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/system.cpp.o -c /home/pi/source/RasFLED/source/system.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/system.cpp.o -c /home/pi/source/RasFLED/source/system.cpp",
   "file": "/home/pi/source/RasFLED/source/system.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/consoleanddata.cpp.o -c /home/pi/source/RasFLED/source/consoleanddata.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/consoleanddata.cpp.o -c /home/pi/source/RasFLED/source/consoleanddata.cpp",
   "file": "/home/pi/source/RasFLED/source/consoleanddata.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/fledcore.cpp.o -c /home/pi/source/RasFLED/source/fledcore.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/fledcore.cpp.o -c /home/pi/source/RasFLED/source/fledcore.cpp",
   "file": "/home/pi/source/RasFLED/source/fledcore.cpp"
 },
 {
   "directory": "/home/pi/source/RasFLED/build",
-  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -I/home/pi/source/RasFLED/source/../../imgui -I/home/pi/source/RasFLED/source/../../imgui/backends -I/home/pi/source/RasFLED/source/../../imgui/misc/cpp -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/main.cpp.o -c /home/pi/source/RasFLED/source/main.cpp",
+  "command": "/usr/bin/arm-linux-gnueabihf-g++ -DBOOST_ALL_NO_LIB -DBOOST_ATOMIC_DYN_LINK -DBOOST_BIND_GLOBAL_PLACEHOLDERS -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_THREAD_DYN_LINK -I/home/pi/source/RasFLED/source/./rpi_ws281x-master -O3 -DNDEBUG -o CMakeFiles/rasfled.dir/main.cpp.o -c /home/pi/source/RasFLED/source/main.cpp",
   "file": "/home/pi/source/RasFLED/source/main.cpp"
 }
 ]
